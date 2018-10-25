@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rhpml majorversion="1" minorversion="0">
+	<fontsets>
+		<fontset>
+			<name>Marlett</name>
+			<fontlist>Marlett</fontlist>
+		</fontset>
+		<fontset>
+			<name>Arial</name>
+			<fontlist>Arial</fontlist>
+		</fontset>
+		<fontset>
+			<name>Courier New</name>
+			<fontlist>Courier New</fontlist>
+		</fontset>
+		<fontset>
+			<name>Lucida Console</name>
+			<fontlist>Lucida Console</fontlist>
+		</fontset>
+		<fontset>
+			<name>Lucida Sans Unicode</name>
+			<fontlist>Lucida Sans Unicode</fontlist>
+		</fontset>
+		<fontset>
+			<name>Times New Roman</name>
+			<fontlist>Times New Roman</fontlist>
+		</fontset>
+		<fontset>
+			<name>Wingdings</name>
+			<fontlist>Wingdings</fontlist>
+		</fontset>
+		<fontset>
+			<name>Symbol</name>
+			<fontlist>Symbol</fontlist>
+		</fontset>
+		<fontset>
+			<name>Comic Sans MS</name>
+			<fontlist>Comic Sans MS</fontlist>
+		</fontset>
+		<fontset>
+			<name>Verdana</name>
+			<fontlist>Verdana</fontlist>
+		</fontset>
+		<fontset>
+			<name>Webdings</name>
+			<fontlist>Webdings</fontlist>
+		</fontset>
+		<fontset>
+			<name>Georgia</name>
+			<fontlist>Georgia</fontlist>
+		</fontset>
+		<fontset>
+			<name>Trebuchet MS</name>
+			<fontlist>Trebuchet MS</fontlist>
+		</fontset>
+		<fontset>
+			<name>Monotype.com</name>
+			<fontlist>Monotype.com</fontlist>
+		</fontset>
+		<fontset>
+			<name>Arial Narrow</name>
+			<fontlist>Arial Narrow</fontlist>
+		</fontset>
+		<fontset>
+			<name>Tahoma</name>
+			<fontlist>Tahoma</fontlist>
+		</fontset>
+		<fontset>
+			<name>MathSoftText</name>
+			<fontlist>MathSoftText</fontlist>
+		</fontset>
+		<fontset>
+			<name>SubScript VNI</name>
+			<fontlist>SubScript VNI</fontlist>
+		</fontset>
+		<fontset>
+			<name>SubScript VNI2</name>
+			<fontlist>SubScript VNI2</fontlist>
+		</fontset>
+		<fontset>
+			<name>SuperScript VNI</name>
+			<fontlist>SuperScript VNI</fontlist>
+		</fontset>
+		<fontset>
+			<name>SuperScript VNI2</name>
+			<fontlist>SuperScript VNI2</fontlist>
+		</fontset>
+		<fontset>
+			<name>Century Gothic</name>
+			<fontlist>Century Gothic</fontlist>
+		</fontset>
+		<fontset>
+			<name>StarBats</name>
+			<fontlist>StarBats</fontlist>
+		</fontset>
+		<fontset>
+			<name>StarMath</name>
+			<fontlist>StarMath</fontlist>
+		</fontset>
+		<fontset>
+			<name>Arioso</name>
+			<fontlist>Arioso</fontlist>
+		</fontset>
+		<fontset>
+			<name>ChevaraOutline</name>
+			<fontlist>ChevaraOutline</fontlist>
+		</fontset>
+		<fontset>
+			<name>Chevara</name>
+			<fontlist>Chevara</fontlist>
+		</fontset>
+		<fontset>
+			<name>Conga</name>
+			<fontlist>Conga</fontlist>
+		</fontset>
+		<fontset>
+			<name>HelmetCondensed</name>
+			<fontlist>HelmetCondensed</fontlist>
+		</fontset>
+		<fontset>
+			<name>Helmet</name>
+			<fontlist>Helmet</fontlist>
+		</fontset>
+		<fontset>
+			<name>Timmons</name>
+			<fontlist>Timmons</fontlist>
+		</fontset>
+		<fontset>
+			<name>Sydnie</name>
+			<fontlist>Sydnie</fontlist>
+		</fontset>
+		<fontset>
+			<name>Untitled Font Set 1</name>
+			<fontlist>Arial, Helvetica</fontlist>
+		</fontset>
+	</fontsets>
+</rhpml>

@@ -611,7 +611,7 @@ STDMETHODIMP CQConLEEngine::Process(BSTR *Report)
 
          CComQIPtr<ILBAMModelEnveloper> the_enveloper;
          create_hr = the_enveloper.CoCreateInstance(CLSID_LBAMModelEnveloper);
-         hr = the_enveloper->Initialize(model_array, atForce);
+         hr = the_enveloper->Initialize(model_array, atForce, optMaximize);
 
          // distribute distribution factors across our models using contraflexure locations
          CComPtr<IUnkArray> engine_array;
@@ -1263,7 +1263,7 @@ void ConfigureLrfdLoadCombinations(ILBAMModel* model)
    hr = strength1->put_Name(CComBSTR("STRENGTH-I"));
    hr = strength1->put_LoadCombinationType(lctStrength);
    hr = strength1->put_LiveLoadFactor(1.75);
-   hr = strength1->put_LiveLoadModel(lltDesign);
+   hr = strength1->AddLiveLoadModel(lltDesign);
 
    ApplyTypicalLoadFactors(strength1);
 
@@ -1275,7 +1275,7 @@ void ConfigureLrfdLoadCombinations(ILBAMModel* model)
    hr = strength2->put_Name(CComBSTR("STRENGTH-II"));
    hr = strength2->put_LoadCombinationType(lctStrength);
    hr = strength2->put_LiveLoadFactor(1.35);
-   hr = strength2->put_LiveLoadModel(lltPermit);
+   hr = strength2->AddLiveLoadModel(lltPermit);
 
    ApplyTypicalLoadFactors(strength2);
 
@@ -1287,7 +1287,7 @@ void ConfigureLrfdLoadCombinations(ILBAMModel* model)
    hr = service1->put_Name(CComBSTR("SERVICE-I"));
    hr = service1->put_LoadCombinationType(lctService);
    hr = service1->put_LiveLoadFactor(1.00);
-   hr = service1->put_LiveLoadModel(lltDesign);
+   hr = service1->AddLiveLoadModel(lltDesign);
 
    ApplyTypicalServiceLoadFactors(service1);
 
@@ -1299,7 +1299,7 @@ void ConfigureLrfdLoadCombinations(ILBAMModel* model)
    hr = service2->put_Name(CComBSTR("SERVICE-II"));
    hr = service2->put_LoadCombinationType(lctService);
    hr = service2->put_LiveLoadFactor(1.30);
-   hr = service2->put_LiveLoadModel(lltDesign);
+   hr = service2->AddLiveLoadModel(lltDesign);
 
    ApplyTypicalServiceLoadFactors(service2);
 
@@ -1311,7 +1311,7 @@ void ConfigureLrfdLoadCombinations(ILBAMModel* model)
    hr = service3->put_Name(CComBSTR("SERVICE-III")) ;
    hr = service3->put_LoadCombinationType(lctService) ;
    hr = service3->put_LiveLoadFactor(0.80) ;
-   hr = service3->put_LiveLoadModel(lltDesign) ;
+   hr = service3->AddLiveLoadModel(lltDesign) ;
 
    ApplyTypicalServiceLoadFactors(service3);
 
@@ -1323,7 +1323,7 @@ void ConfigureLrfdLoadCombinations(ILBAMModel* model)
    hr = fatigue->put_Name(CComBSTR("FATIGUE")) ;
    hr = fatigue->put_LoadCombinationType(lctFatigue) ;
    hr = fatigue->put_LiveLoadFactor(0.75) ;
-   hr = fatigue->put_LiveLoadModel(lltFatigue) ;
+   hr = fatigue->AddLiveLoadModel(lltFatigue) ;
 
    hr = loadcombos->Add(fatigue) ;
 }

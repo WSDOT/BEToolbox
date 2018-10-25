@@ -1,0 +1,61 @@
+[Target:WebHelp Pro]
+ResultFileName=!SSL!\WebHelp_Pro\Toolbox.htm
+SSLayoutType=32
+ServerProjectName=Toolbox
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+[Target:WebHelp]
+ResultFileName=!SSL!\WebHelp\Toolbox.htm
+SSLayoutType=2
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+[Target:Microsoft HTML Help]
+ResultFileName=BEToolbox.chm
+SSLayoutType=1
+CreateProjectTime=09:34, February 10, 2009
+CreateProjectUser=BriceR
+SupportMas_MPJ=1
+ActionID For Generation=1002
+Remove Folder with prompt=1
+ViewFileName=BEToolbox.chm
+ResultStatus=0
+BuildTimeHi=29985701
+BuildTimeLow=-682595677
+Enable Result Dialog=1
+[Target:FlashHelp]
+ResultFileName=!SSL!\FlashHelp\Toolbox.htm
+SSLayoutType=2
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+[Target:Printed Documentation]
+ResultFileName=!SSL!\Printed_Documentation\Toolbox.doc
+SSLayoutType=7
+[Target:XML Output]
+ResultFileName=!SSL!\XML_Output\Toolbox.xml
+SSLayoutType=8192
+[PreSingleSource]
+Html Help Project=C:\ARP\BEToolbox\HelpFile\Toolbox.hhp
+Table Of Content=C:\ARP\BEToolbox\HelpFile\Toolbox.hhc
+Index=C:\ARP\BEToolbox\HelpFile\Toolbox_merged$.hhk
+See Also Index=C:\ARP\BEToolbox\HelpFile\Toolbox.hha
+Browse Sequence=C:\ARP\BEToolbox\HelpFile\Toolbox.brs
+Topic Properties=C:\ARP\BEToolbox\HelpFile\Toolbox.trs
+Active Folders=C:\ARP\BEToolbox\HelpFile\Toolbox.trf
+Baggage Files=C:\ARP\BEToolbox\HelpFile\Toolbox.trb
+Skin List=C:\ARP\BEToolbox\HelpFile\Toolbox.trk
+OriginalHhk=C:\ARP\BEToolbox\HelpFile\Toolbox.hhk
+Active Layout Names=C:\ARP\BEToolbox\HelpFile\Toolbox.trl
+Default Topic=C:\ARP\BEToolbox\HelpFile\Welcome.htm
+Build Tags0=2240;         
+Build Tags=
+Build Expression=
+Language ID=1033
+Language Name=English
+Language=C:\ARP\BEToolbox\HelpFile\RoboHHRE.lng
+Stop List=C:\ARP\BEToolbox\HelpFile\Toolbox.stp
+[Layout Settings]
+MRULayoutCount=1
+MRULayout0=Microsoft HTML Help]11/18/08]4

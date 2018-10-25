@@ -68,14 +68,18 @@ ComGirder\ComInput.html
 Ult2Ax\Ult2AxStart.html
 ComGirder\ComOutput.html
 QConLE\QConLEStart.html
-BSSCDHTM.js
+C:\ARP\BEToolbox\HelpFile\eHelp.xml
+RoboHHRE.lng
 
+Toolbox.glo
 Toolbox.brs
 [ALIAS]
 #include Toolbox.ali
 
 [MAP]
+#include BSSCDefault.h
 
 [TEXT POPUPS]
+BSSCDefault.h
 
 
