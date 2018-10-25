@@ -1,0 +1,782 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Introduction</title>
+
+<!--(Meta)==========================================================-->
+
+<meta name="template" content="WSDOT.htt">
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=1468>
+<meta name=layout-width content=993>
+
+
+<!--(Links)=========================================================-->
+
+<link rel="StyleSheet" href="..\default.css">
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1>GirComp</h1>
+
+<p>GirComp is a program that calculations the section properties of a composite 
+ girder with either a rolled or built-up steel section.</p>
+
+<h2>Input</h2>
+
+<p><img src="GirComp.jpg"
+		x-maintain-ratio=TRUE
+		style="border: none;
+				width: 626px;
+				height: 373px;
+				float: none;"
+		width=626
+		height=373
+		border=0></p>
+
+<p>Use the input grid to enter the dimensions and modular ratio for the 
+ composite girder.</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 14.615%;">
+<col style="width: 85.385%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 14.615%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=14.615%>
+<p>Type</td>
+<td style="width: 85.385%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=85.385%>
+<p>Select the type of composite section. Options are Rolled, General, and 
+ Built-Up. Rolled sections are one of the AISC W-shape girders. General 
+ sections do not have a specific shape and are defined by their overall 
+ geometric properties. Built-up shapes are defined by their top and bottom 
+ flange and web plates.</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 14.615%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=14.615%>
+<p>Shape</td>
+<td style="width: 85.385%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=85.385%>
+<p>Select an AISC W-shape</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td rowspan=1
+	colspan=2
+	style="width: 100%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=100%>
+<p style="text-align: center;"
+	align=center>General/Rolled</td>
+<td_null></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=14.615%>
+<p>Ax</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=85.385%>
+<p>Area of the non-composite girder</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=14.615%>
+<p>D</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=85.385%>
+<p>Total depth of the non-composite girder</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=14.615%>
+<p>Ix</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=85.385%>
+<p>Moment of inertia of the non-composite girder about its centroidal axis</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=2
+	rowspan=1
+	style="width: 100%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=100%>
+<p style="text-align: center;"
+	align=center>Web</td>
+<td_null></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=14.615%>
+<p>D</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=85.385%>
+<p>Depth of built-up girder web plate</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=14.615%>
+<p>t web</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=85.385%>
+<p>Thickness of built-up girder web plate</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=2
+	rowspan=1
+	style="width: 100%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=100%>
+<p style="text-align: center;"
+	align=center>Top Flange</td>
+<td_null></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=14.615%>
+<p>width</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=85.385%>
+<p>Width of built-up girder top flange plate</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=14.615%>
+<p>thick</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=85.385%>
+<p>Thickness of built-up girder top flange web plate</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=2
+	rowspan=1
+	style="width: 100%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=100%>
+<p style="text-align: center;"
+	align=center>Bottom Flange</td>
+<td_null></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=14.615%>
+<p>width</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=85.385%>
+<p>Width of built-up girder bottom flange plate</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=14.615%>
+<p>thick</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=85.385%>
+<p>Thickness of built-up girder bottom flange plate</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=2
+	rowspan=1
+	style="width: 100%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=100%>
+<p style="text-align: center;"
+	align=center>Slab</td>
+<td_null></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=14.615%>
+<p>width</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=85.385%>
+<p>Width of the composite slab</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=14.615%>
+<p>thick</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=85.385%>
+<p>Thickness of the composite slab</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=14.615%>
+<p>G</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=85.385%>
+<p>Distance from top of girder section to bottom of composite slab</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=2
+	rowspan=1
+	style="width: 100%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=100%>
+<p style="text-align: center;"
+	align=center>Modular Ratio</td>
+<td_null></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=14.615%>
+<p>N1</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=85.385%>
+<p>Modular ratio of the component materials (Egirder/Eslab)</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=14.615%>
+<p>N2</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: Solid;"
+	width=85.385%>
+<p>Modular ratio of the component materials (Egirder/Eslab)</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 14.615%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=14.615%>
+<p>N3</td>
+<td colspan=1
+	rowspan=1
+	style="width: 85.385%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=85.385%>
+<p>Modular ratio of the component materials (Egirder/Eslab)</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Cross sections can be added by pressing the + button. Select a row by 
+ clicking on the row header in the left-most column and pressing the - 
+ button to delete a cross section.</p>
+
+<p>&nbsp;</p>
+
+<p>Select US or SI units.</p>
+
+<p>&nbsp;</p>
+
+<p>Press the Update button to update the output listing.</p>
+
+<h2>Output</h2>
+
+<p>The section properties are listed in the report window.</p>
+
+<p>&nbsp;</p>
+
+<p>The output for Rolled Beam and General Section problems consists of 
+ the moment of inertia, top and bottom section modulii, and location of 
+ the centroidal axis of the composite section for the modular ratios N1, 
+ N2, and N3. The first moment of area of the slab, Q, is also reported.</p>
+
+<p>&nbsp;</p>
+
+<p>The output for Built-up problems consists of the moment of inertia, 
+ top and bottom section modulii, and location of the centroidal axis of 
+ the composite section for the modular ratios N1, N2, and N3. The first 
+ moment of area, Q, of bottom flange, slab, and, slab and top flange are 
+ also reported.</p>
+
+<!--kadov_tag{{<placeholder id="footer">}}-->
+</body>
+
+</html>

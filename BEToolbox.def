@@ -1,0 +1,10 @@
+; BEToolbox.def : Declares the module parameters.
+
+LIBRARY      "BEToolbox.DLL"
+
+EXPORTS
+	DllCanUnloadNow		PRIVATE
+	DllGetClassObject	PRIVATE
+	DllRegisterServer	PRIVATE
+	DllUnregisterServer	PRIVATE
+	;DllInstall		PRIVATE

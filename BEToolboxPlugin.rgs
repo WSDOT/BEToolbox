@@ -1,0 +1,25 @@
+HKCR
+{
+	BEToolbox.BEToolboxPlugin.1 = s 'BEToolbox'
+	{
+		CLSID = s '{EA33DB99-86FB-4678-9442-AB1D334456E4}'
+	}
+	BEToolbox.BEToolboxPlugin = s 'BEToolbox'
+	{
+		CLSID = s '{EA33DB99-86FB-4678-9442-AB1D334456E4}'
+		CurVer = s 'BEToolbox.BEToolboxPlugin.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {EA33DB99-86FB-4678-9442-AB1D334456E4} = s 'BEToolbox'
+		{
+			ProgID = s 'BEToolbox.BEToolboxPlugin.1'
+			VersionIndependentProgID = s 'BEToolbox.BEToolboxPlugin'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{}'
+		}
+	}
+}

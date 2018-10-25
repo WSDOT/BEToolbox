@@ -1,0 +1,51 @@
+[OPTIONS]
+Compiled File=BEToolbox.chm
+Title=BEToolbox
+Contents File=BEToolbox.hhc
+Index File=BEToolbox.hhk
+Default topic=
+Default Window=NewWindow
+Error log file=
+Display compile progress=No
+Display compile notes=No
+Full-text search=Yes
+Binary Index=Yes
+Auto Index=No
+Enhanced decompilation=No
+Binary TOC=No
+Flat=No
+
+[WINDOWS]
+NewWindow="BEToolbox","BEToolbox.hhc","BEToolbox.hhk","","",,,,,0x40080420,0,0x3006,[5,5,868,583],0x0,0x0,,0,0,0
+
+[FILES]
+welcome.htm
+License_Agreement.htm
+UltCol\Introduction.htm
+UltCol\describing_the_column.htm
+Curvel\Introduction.htm
+GirComp\Introduction.htm
+GenComp\Introduction.htm
+BoxGird\Introduction.htm
+Curvel\Step2.htm
+Curvel\Step1.htm
+Curvel\Step3.htm
+Curvel\Results.htm
+UltCol\Results.htm
+eHelp.xml
+RoboHHRE.lng
+
+BEToolbox.glo
+BEToolbox.brs
+[ALIAS]
+#include BEToolbox.ali
+
+[MAP]
+#include BSSCDefault.h
+#include HelpTopics.h
+
+[TEXT POPUPS]
+BSSCDefault.h
+HelpTopics.h
+
+

@@ -1,10 +1,10 @@
-REM - Script to prepare BEToolbox for Release
+REM - Script to prepare for Release
 
 SET BINTARGET=bin
 
-copy "Samples\*.*"                         %BINTARGET%\Examples\
-copy "Redist\FORTRAN DLLs\*.*"             %BINTARGET%\FortranDLLs\
-copy "Redist\Program DLLs\*.*"             %BINTARGET%\ProgramDLLs\
-copy "HelpFile\BEToolbox.chm"              %BINTARGET%\App\
-copy "BETCore\objsafe.tlb"                 %BINTARGET%\SharedDLLs\
-copy "License.rtf"                         %BINTARGET%
+
+copy /Y \ARP\PGSuper\RegFreeCOM\Win32\Release\BEToolbox.dll	%BINTARGET%\Win32\
+copy /Y \ARP\PGSuper\RegFreeCOM\x64\Release\BEToolbox.dll	%BINTARGET%\x64\
+copy /Y \ARP\PGSuper\RegFreeCOM\BEToolbox.chm	              	%BINTARGET%\
+
+copy /Y Images\*.png						%BINTARGET%\Images\
