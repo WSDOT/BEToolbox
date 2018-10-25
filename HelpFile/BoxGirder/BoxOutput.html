@@ -1,0 +1,96 @@
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+
+<HTML>
+  <HEAD>
+    <TITLE>Box Girder Output</TITLE>
+    <STYLE TYPE="text/css">
+      .select {text-align:center; font-family: Arial; font-weight: bold; cursor: hand}
+      body {margin-top: 0pt}
+     .contents {background: white; color: black}
+    </STYLE>
+  <SCRIPT LANGUAGE="javascript" TITLE="BSSC Special Effects" SRC="..\BSSCDHTM.js">
+    </SCRIPT></HEAD>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+	//This variable and the next two functions help to show/hide the entire form.
+	// useful in making it so header shows when form is minimized.
+	// Also deselects text that may have been selected accidentally when document is clicked on.
+	var bJustMaximized = false;
+
+	//Called from BoxStart
+	function SetJustMaximized()
+	{
+		bJustMaximized = true;
+	}
+
+	function CheckMinimized()
+	{
+		if( bJustMaximized == true )
+		{
+			document.all.FormExcludingHeading.style.display="";
+			bJustMaximized = false;
+			if ( "None" != document.selection.type)
+			{
+				document.selection.empty();
+			}
+		}	
+	}
+
+	function clickedOn(my)
+	{
+		//document.all.FormExcludingHeading.style.display="";
+		parent.display(my, "Yellow");
+		parent.frames(1).Process();
+		var outputString = parent.GetOutPut();
+		if ( outputString != "" )
+		{
+	   	        outputArea.innerText = outputString;
+		}
+		FileName.innerText = "Data File Name: " + parent.GetFileName();
+	}
+
+</SCRIPT>
+
+  <BODY bgProperties="fixed" BGCOLOR="yellow" noWrap ONFOCUS="clickedOn(this)" ONMOUSEUP="CheckMinimized()" ONLOAD="BSSCOnLoad();" ONCLICK="BSSCOnClick();" ONUNLOAD="BSSCOnUnload();">
+    <P ID="header" CLASS="select" ONSELECTSTART="return false">
+      Box Girder Output
+    </P>
+
+<DIV id="FormExcludingHeading">
+
+    <P ID="FileName">Data File Name: </P>
+
+<PRE id=outputArea name = outputArea title="">
+
+       </PRE>
+
+</DIV>
+</BODY>
+</HTML>

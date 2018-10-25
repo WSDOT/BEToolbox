@@ -1,0 +1,190 @@
+<!
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+>
+
+
+<HTML>
+  <HEAD>
+    <TITLE>Curvel Info</TITLE>
+    <STYLE TYPE="text/css">
+      .select {text-align:center; font-weight: bold; font-family: Arial; cursor: hand}
+      body {margin-top: 0pt}
+	.contents {background: red; font-family: Arial; color: black}
+    </STYLE>
+  </HEAD>  
+  
+<SCRIPT LANGUAGE="JavaScript">
+
+function InfoLoaded(my)
+{
+if( parent.bLoaded == false )
+{
+parent.display(my, "Red");
+parent.bLoaded = true;
+}
+}
+
+function clickedOn(my)
+{
+//document.bgColor = "Silver";
+parent.display(my, "Red");
+}
+
+function quitting()
+{
+//document.bgColor = "Red";
+}
+</SCRIPT><STYLE
+   TYPE="text/css"><!--
+   .select { font-family : "Arial";
+             font-weight : bold;
+             text-align : center;
+             cursor: hand;}
+   BODY { margin-top : 0.0pt;}
+   .mvd-BODY { margin-top : 0.0pt;}
+   .contents { font-family : "Arial";
+               background-color : red;
+               color : black;}
+   -->
+ </STYLE>
+
+
+<!--  <BODY BGCOLOR="SILVER" ONFOCUS="clickedOn(this)" ONBLUR="quitting()"> -->
+  <BODY BGCOLOR=silver ONLOAD="InfoLoaded(this)" ONFOCUS="clickedOn(this)">  
+
+  <P>
+
+  <DIV ID="header" CLASS="select" ONSELECTSTART="return false">
+   <P>
+    <FONT FACE="Arial">Curvel Information</FONT></P>
+   </DIV>
+  <H2 STYLE="text-align : center;" ALIGN=CENTER>
+   <FONT FACE="Arial">Bridge Elevations Program</FONT></H2>
+  <P>
+   <FONT FACE="Arial">The program &quot;Curvel&quot; is intended to 
+   provide the Engineer with a rapid means of obtaining roadway 
+   elevations with respect to a given vertical curve and superelevation transition.</FONT></P>
+  <H2>
+   <FONT FACE="Arial">Input</FONT></H2>
+  <H3>
+   <FONT FACE="Arial">Vertical Curve Data:</FONT></H3>
+  <P>
+   <FONT FACE="Arial">a) G1: Grade leading into the curve</FONT><BR>
+   <FONT FACE="Arial">b) G2: Grade leading out of the vertical curve</FONT><BR>
+   <FONT FACE="Arial">c) Elevation of the PI</FONT><BR>
+   <FONT FACE="Arial">d) Curve length</FONT><BR>
+   <FONT FACE="Arial">e) Station of PIVC</FONT><BR>
+   <FONT FACE="Arial"><I>Note: Only one vertical curve is used at a 
+   time.&nbsp; For a straight grade, list the PI elevations for a 
+   convenient point on the grade and list the curve length as 0.</I></FONT><BR>
+   <FONT FACE="Arial">&nbsp;</FONT></P>
+  <H3>
+   <FONT FACE="Arial">Yes/No</FONT></H3>
+  <P>
+   <FONT FACE="Arial">a) &quot;Yes&quot; if superelevation corrections 
+   are desired.</FONT><BR>
+   <FONT FACE="Arial">b) &quot;No&quot; if not</FONT></P>
+  <H3>
+   <FONT FACE="Arial">SuperElevation Data</FONT></H3>
+  <P>
+   <FONT FACE="Arial">Offset from crown to profile grade line (feet).</FONT></P>
+  <H3>
+   <FONT FACE="Arial">Stations</FONT></H3>
+  <P>
+   <FONT FACE="Arial">Station 1: In feet</FONT><BR>
+   <FONT FACE="Arial">Station 2: In feet</FONT><BR>
+   <FONT FACE="Arial">Station 3: In feet</FONT><BR>
+   <FONT FACE="Arial">&nbsp;</FONT></P>
+  <H3>
+   <FONT FACE="Arial">Slope Left</FONT></H3>
+  <P>
+   <FONT FACE="Arial">a) Slope left for Station 1 (ft/ft all)</FONT><BR>
+   <FONT FACE="Arial">b) Slope left for Station 2</FONT><BR>
+   <FONT FACE="Arial">c) Slope left for Station 3</FONT><BR>
+   <FONT FACE="Arial">&nbsp;</FONT></P>
+  <H3>
+   <FONT FACE="Arial">Slope Right</FONT></H3>
+  <P>
+   <FONT FACE="Arial">a) Slope right for Station 1</FONT><BR>
+   <FONT FACE="Arial">b) Slope right for Station 2</FONT><BR>
+   <FONT FACE="Arial">c) Slope right for Station 3</FONT><BR>
+   <FONT FACE="Arial">&nbsp;</FONT></P>
+  <H3>
+   <FONT FACE="Arial">Individual Stations Data</FONT></H3>
+  <P>
+   <FONT FACE="Arial">a) Station</FONT><BR>
+   <FONT FACE="Arial">b) Offset (Only when superelevation and crown 
+   point data are given).</FONT><BR>
+   <FONT FACE="Arial">&nbsp;</FONT></P>
+  <H3>
+   <FONT FACE="Arial">Increment Data</FONT></H3>
+  <P>
+   <FONT FACE="Arial">a) &quot;991&quot; - Cannot be modified - for 
+   internal program use.</FONT><BR>
+   <FONT FACE="Arial">b) Initial Station</FONT><BR>
+   <FONT FACE="Arial">c) End Station</FONT><BR>
+   <FONT FACE="Arial">d) No. of Spaces</FONT><BR>
+   <FONT FACE="Arial">e) Offset</FONT><BR>
+   <FONT FACE="Arial">&nbsp;</FONT></P>
+  <H3>
+   <FONT FACE="Arial">Skew Line Data (optional entries)</FONT></H3>
+  <P>
+   <FONT FACE="Arial"><I>Note: The following are optional entries and 
+   are only used if the &quot;Yes/No&quot; option (second entry line of 
+   form) is selected to &quot;Yes&quot;.</I></FONT><BR>
+   <FONT FACE="Arial">a) Code</FONT><BR>
+   <FONT FACE="Arial">&nbsp;&nbsp;&nbsp; 1) 992 - all following offsets 
+   will be taken as being normal to and measured to the right of the 
+   crown line.</FONT><BR>
+   <FONT FACE="Arial">&nbsp;&nbsp;&nbsp; 2) 993 - all following offsets 
+   except crown line to 'L' line will be taken as being along the skew 
+   line measured to the right from the 'L' line.</FONT><BR>
+   <FONT FACE="Arial">b) Station</FONT><BR>
+   <FONT FACE="Arial">c) Offset</FONT><BR>
+   <FONT FACE="Arial">d) Skew angle, Deg. Min. Sec.</FONT><BR>
+   <FONT FACE="Arial">e) Radius to 'L' line.</FONT><BR>
+   <FONT FACE="Arial">f) Offset dis., crown line to 'L' line (ft).</FONT><BR>
+   <FONT FACE="Arial">&nbsp;</FONT><BR>
+   <FONT FACE="Arial">&nbsp;<I><B> Notes:</B></I></FONT><BR>
+   <FONT FACE="Arial"><I>These notes are referenced on the entry form 
+   with (a., b., c., etc) next to the appropriate blocks.</I></FONT><BR>
+   <FONT FACE="Arial"><I>a) This note no longer used.</I></FONT><BR>
+   <FONT FACE="Arial"><I>b) Distances to the right of crown point are 
+   (+), to left are (-).</I></FONT><BR>
+   <FONT FACE="Arial"><I>c) Leave blank if superelevation correction is 
+   not used.</I></FONT><BR>
+   <FONT FACE="Arial"><I>d) If offsets are radial measured from crown 
+   line use &quot;992&quot;.</I></FONT><BR>
+   <FONT FACE="Arial"><I>&nbsp;&nbsp;&nbsp; If offsets are long skew 
+   measured from &quot;L&quot; line use &quot;993&quot;.</I></FONT><BR>
+   <FONT FACE="Arial"><I>e) Skew angle sign is clockwise positive (See 
+   instructions above).</I></FONT><BR>
+   <FONT FACE="Arial"><I>&nbsp;&nbsp;&nbsp; For negative skew use (-) in 
+   degree field only.</I></FONT><BR>
+   <FONT FACE="Arial"><I>f) Radius is (+) if alignment curves right.</I></FONT><BR>
+   <FONT FACE="Arial"><I>g) Radial distance.</I></FONT><BR>
+   <FONT FACE="Arial">&nbsp;</FONT>
+ </BODY>
+</HTML>

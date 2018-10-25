@@ -1,0 +1,1522 @@
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+
+<HTML>
+  <HEAD>
+    <TITLE>Curvel Input</TITLE>
+    <STYLE TYPE="text/css">
+      .select {text-align:center; font-family: Arial; font-weight: bold; color: white; cursor: hand}
+      body {margin-top: 0pt}
+     .contents {background: blue; font-family: Arial; color: black}
+	TD {font-size: 14; font-weight: bold}
+    </STYLE>
+  </HEAD>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+//FRODO LIVES!!!
+
+//This JavaScript used to process files and control DHTML
+
+// Note: Throughout this page and others, the ".\..\" are dos paths for HTML and the "./../" are unix path's for
+//  javascript..MUST be this way IAW http://www.cis.ohio-state.edu/htbin/rfc/rfc1738.html>
+
+	//This variable and the next two functions help to show/hide the entire form.
+	// useful in making it so header shows when form is minimized.
+	// Also deselects text that may have been selected accidentally when document is clicked on.
+	var bJustMaximized = false;
+
+	function SetJustMaximized()
+	{
+		bJustMaximized = true;
+	}
+
+	function CheckMinimized()
+	{
+		if( bJustMaximized == true )
+		{
+			//document.all.InputFormFull.style.display="";
+			document.all.FormExcludingHeading.style.display="";
+			bJustMaximized = false;
+			if ( "None" != document.selection.type)
+			{
+				document.selection.empty();
+			}
+		}
+	}
+
+	function clickedOn(my)	//Clicked on this form, so maximize and set color for when is minimized
+	{
+		parent.display(my, "Blue");
+	}
+
+	function LoadFile()
+	{
+		var SavedFileData = parent.LoadFile();
+		if( SavedFileData != "" )
+		{
+			ClearForm();
+			Parse(SavedFileData);
+		}
+		focus();	//The button was given the focus, now return it to the form.
+	}
+
+	function SaveFile()
+	{
+		var dataString = GetFullString();
+		parent.SaveFile( dataString );
+		focus();	//The button was given the focus, now return it to the form.
+	}
+
+	function Process()
+	{
+		var dataString = CreateStringForFortran();
+		parent.SetInputString( dataString );
+		parent.Process();
+	}
+
+	function BodyLoad()
+	{
+	// This function is totally needed.  Why?  Because the HTML Help compiler does
+	//  not recognize images unless there is a specific IMG SRC to link it in...this
+	//  does NOT include putting this in a "MOUSEOVER" event or such.  Therefore,
+	//  I had to create additional "spots" within the two tables (for buttons) and
+	//  put xtra images (which are called through "MOUSEOVER").  BUT, I don't want
+	//  these images to appear to the user until the MOUSEOVER event occurs, so this
+	//  function erases them as soon as they appear. (it also initializes data)
+		document.all.EraseMe1.innerHTML="";
+		document.all.EraseMe2.innerHTML="";
+		document.all.EraseMe3.innerHTML="";
+		document.all.EraseMe4.innerHTML="";
+		//Initialize some variables:
+		IncDataRowCount = 1;
+		IndDataRowCount = 1;
+		SkewDataRowCount = 1;
+		Opt6Change();
+		IndividualStation();
+		SkewData();
+	}
+
+	function Opt6Change()	//Occurs when X6 changed
+	{
+		if( document.all.X6.selectedIndex == 1 )	//i.e.: "No"
+		{
+			document.all.chkIndStation.style.display="";
+			document.all.frmSuperElevation.style.display="";
+			document.all.frmIndStations.style.display="";
+			IncrementData();
+		}
+		else	//i.e.: "Yes"
+		{
+			document.all.chkIndStation.style.display="none";
+			document.all.frmSuperElevation.style.display="none";
+			document.all.frmIndStations.style.display="none";
+			IncrementData();
+		}
+	}
+
+/////Events for the three checkboxes://////////////////////////////////
+
+	function IndividualStation()
+	{	//Show/Hide Individual Station Data
+		if( document.all.chkIndStation.checked == true )
+		{
+			document.all.frmIndStations.style.display="";
+		}
+		else
+		{
+			document.all.frmIndStations.style.display="none";
+		}
+	}
+
+	function IncrementData()
+	{	//If X6 checked "No", so display full thing:
+		if( document.all.X6.selectedIndex == 1 )
+		{
+			if( document.all.chkIncrementData.checked == true )
+			{	//Show the full thing
+				document.all.frmFullIncData.style.display = "";
+				var count;
+				var textBox;
+				document.all.OffsetTitle.style.display = "";
+				for( count = 1; count <= IncDataRowCount; count++ )
+				{
+					textBox = GetIncDataTextBox(count);
+					textBox.style.display = ""
+				}
+			}
+			else
+			{	//Hide if unselected
+				document.all.frmFullIncData.style.display = "none";
+			}
+		}
+		else
+		{	//X6 checked "Yes" so display partial thing
+			if( document.all.chkIncrementData.checked == true )
+			{	//Show partial info:
+				document.all.frmFullIncData.style.display = "";
+				document.all.frmFullIncData.style.display = "";
+				var count;
+				var textBox;
+				for( count = 1; count <= IncDataRowCount; count++ )
+				{
+					textBox = GetIncDataTextBox(count);
+					textBox.style.display = "none"
+				}
+			}
+			else
+			{	//Hide if unselected:
+				document.all.frmFullIncData.style.display = "none";
+			}
+		}
+	}
+
+	function SkewData()
+	{
+		if ( document.all.chkSkewData.checked == true )
+		{
+			document.all.frmSkewLineData.style.display = "";
+		}
+		else
+		{
+			document.all.frmSkewLineData.style.display = "none";
+		}
+	}
+
+// These remove functions remove one row of data from the respective "form"s
+
+	function RemoveOneIndRow()
+	{
+		if( IndDataRowCount > 1 )
+		{
+			document.all.frmIndStations.innerHTML =
+				GetUpToNextToLastIndRow( document.all.frmIndStations.innerHTML );
+			IndDataRowCount--;
+		}
+	}
+
+	function RemoveOneIncRow()
+	{
+		if( IncDataRowCount > 1 )
+		{
+			document.all.frmFullIncData.innerHTML =
+				GetUpToNextToLastIncRow( document.all.frmFullIncData.innerHTML );
+			IncDataRowCount--;
+		}
+	}
+
+	function RemoveOneSkewRow()
+	{
+		if( SkewDataRowCount > 1 )
+		{
+			document.all.frmSkewLineData.innerHTML =
+				GetUpToNextToLastSkewRow( document.all.frmSkewLineData.innerHTML );
+			SkewDataRowCount--;
+		}
+	}
+
+///////////////////////////////////////////////////////////////////////
+
+// Functions to add rows to the three optional sections:
+
+	function AddIndStat()
+	{
+		var strHTML = document.all.frmIndStations.innerHTML;
+		document.all.frmIndStations.innerHTML = NewIndString( strHTML );
+	}
+
+	function AddIncData()
+	{
+		var strHTML = document.all.frmFullIncData.innerHTML;
+		document.all.frmFullIncData.innerHTML = NewIncDataString( strHTML );
+		IncrementData();
+	}
+
+	function AddSkewData()
+	{
+		var strHTML = document.all.frmSkewLineData.innerHTML;
+		document.all.frmSkewLineData.innerHTML = NewSkewDataString( strHTML );
+	}
+
+</SCRIPT>
+
+<SCRIPT LANGUAGE="VBScript">
+
+Dim IndDataRowCount     'Keeps count of how many rows in Ind Data
+Dim IncDataRowCount 	'Keeps count of how many rows in Inc Data
+Dim SkewDataRowCount    'Ditto for Skew
+
+'This VBScript is used to Process data and to call javascript which manipulates
+'     files
+
+Function GetFullString()     'Takes form data and converts it to a string (for use in saving a file)
+	Dim strLine1
+	Dim strLine2
+	Dim strLine3
+	Dim strLine4
+	Dim strLine5
+	Dim strLine6
+	Dim strLine7
+	Dim strLine8
+	Dim strLine9
+	Dim strLine10
+
+	strLine1 = CreateSaveString(1, 5)
+	strLine2 = document.All.X6.selectedIndex & Chr(13) + Chr(10)
+	strLine3 = CreateSaveString(7, 7)
+	strLine4 = CreateSaveString(8, 10)
+	strLine5 = CreateSaveString(11, 13)
+	strLine6 = CreateSaveString(14, 16)
+
+	'Checkboxes go here
+	strLine7 = CStr(document.All.chkIndStation.Checked) & "," & _
+	CStr(document.All.chkIncrementData.Checked) & "," & _
+	CStr(document.All.chkSkewData.Checked) & Chr(13) + Chr(10)
+
+      'These are the Individual Stations:
+	strLine8 = GetIndStation()
+
+      'These are the Incremental Data Boxes:
+	strLine9 = GetIncData()
+
+	strLine10 = GetSkewData()
+
+	GetFullString = strLine1 + strLine2 + strLine3 + strLine4 + strLine5 + _
+	strLine6 + strLine7 + strLine8 + strLine9 + strLine10
+
+	strLine1 = ""
+	strLine2 = ""
+	strLine3 = ""
+	strLine4 = ""
+	strLine5 = ""
+	strLine6 = ""
+	strLine7 = ""
+	strLine8 = ""
+	strLine9 = ""
+	strLine10 = ""
+
+End Function
+
+Function CreateSaveString(iStart, iEnd)
+     'This is a worker function that actually cycles through the text boxes pulling
+     '     out the text.     Note: on this form, it is only used for textboxes whose names
+     '     begin with an "X".     The reason for this is that all other textboxes are
+     '     dynamic and the names had to be retrieved in other ways.
+     '  This is used by both the function to save to a file, and by the function that passes
+     '    the string to the Fortran dll.
+	Dim myString
+	Dim count
+	Dim textbox
+	Dim strTextBoxName
+
+	For count = iStart To iEnd
+		strTextBoxName = GetTextBoxName(count)
+		Set textbox = document.All.Item(strTextBoxName)
+		If Trim(textbox.Value) = "" Then
+		        myString = myString & "0"
+		Else
+		        myString = myString & Trim(textbox.Value)
+		End If
+
+		If count < iEnd Then
+			myString = myString & ","
+		Else
+			myString = myString & Chr(13) + Chr(10)
+		End If
+	Next
+
+	Set textbox = Nothing
+	CreateSaveString = myString
+
+End Function
+
+Sub Parse(text)
+     'This takes the input string (from file), parses it, and then places the data inside
+     '     the form.
+	Dim iStartOfWord     'These are used to pull the entry out of the file
+	Dim iEndOfWord
+	Dim iEndOfString
+	Dim count
+	Dim strWord
+	Dim strChar
+	Dim iLengthOfWord
+	Dim iEntryCount
+	Dim iSection              'Keeps track of which dynamic section we're in
+	                          '     1 = IndStation, 2 = Inc Data, 3 = Skew Line
+	iEntryCount = 1
+	iEndOfString = Len(text)
+
+	Dim iIndStationTextBox     'To keep track of which textbox we're on
+	Dim iIndStationTotalRows
+	Dim iIndStationCurrentRow
+	Dim iIndStationCurrentColumn
+	Dim iIndStationRowCount
+
+	Dim iIncDataTextBox
+	Dim iIncDataTotalRows
+	Dim iIncDataCurrentColumn
+	Dim iIncDataCurrentRow
+	Dim iIncDataRowCount
+
+	Dim iSkewTextBox
+	Dim iSkewTotalRows
+	Dim iSkewCurrentColumn
+	Dim iSkewCurrentRow
+	Dim iSkewRowCount
+
+	Dim strHTML
+
+	Dim optionBoxName
+	Dim optionBox
+
+	Dim strTemp
+
+On Error Resume Next
+
+	count = 1
+	iStartOfWord = 0
+	iEndOfWord = 1
+
+'********************************************************************
+' WARNING: This function is extremely messy.  This was my first attempt
+'   at getting this dynamic stuff to work, so...it might look like it.
+'   If you are reading this, then "No", I did not have enough time to
+'   to back and rewrite it.
+'********************************************************************
+
+For count = 1 To iEndOfString
+	'If parser finds an entry:
+
+   If (Mid(text, count, 1) = ",") Or (Mid(text, count, 1) = Chr(13)) Then
+      '----Get a hold of the entry and assign to "strWord" *note: not "Word" in the computer meaning*
+										'nor in the Rap meaning...lol...I need sleep...
+      iEndOfWord = count
+      iLengthOfWord = ((iEndOfWord - 1) - (iStartOfWord))
+      strWord = Mid(text, iStartOfWord + 1, iLengthOfWord)
+      iStartOfWord = iEndOfWord
+      '----Get first 16 entries (nondynamic):
+
+      If iEntryCount <= 16 Then
+
+         If iEntryCount <> 6 Then     'Line 2 is an optionbox (X6)
+            InstallTextToBox strWord, iEntryCount
+
+         Else
+            document.All.X6.selectedIndex = strWord
+            Opt6Change              'Calls function to setup page according to X6 status
+         End If
+
+      End If
+
+      'Next three entries:     If entry is one of these three checkboxes:
+
+      If ((iEntryCount > 16) And (iEntryCount < 20)) Then
+
+         Select Case iEntryCount
+
+         Case 17
+		If Right(strWord,4) = "True" then
+	            document.All.chkIndStation.Checked = true
+		Else
+			document.All.chkIndStation.Checked = false
+		End If
+            IndividualStation 'Call function to setup page accordingly
+
+         Case 18
+		If Right(strWord,4) = "True" then
+	            document.All.chkIncrementData.Checked = true
+		Else
+	            document.All.chkIncrementData.Checked = false
+		End If
+            IncrementData     'Call function to setup page accordingly
+
+         Case 19
+		If Right(strWord,4) = "True" then
+	            document.All.chkSkewData.Checked = true
+		Else
+	            document.All.chkSkewData.Checked = false
+		End If
+            SkewData			'Call function to setup page accordingly
+            iSection = 1		'Sets us up to enter Ind Station Section
+
+         Case Else
+            MsgBox "Error in load-parse code."
+         End Select
+
+      End If
+
+      If iEntryCount > 19 Then
+         'Begin loading data into dynamic textboxes/section.
+         ''''''''''''''''Check for/load up Individual Stations Data:
+
+         If (document.All.chkIndStation.Checked = True) And (iSection = 1) Then
+
+            If iIndStationCurrentRow = 0 Then iIndStationCurrentRow = 1
+
+            If iIndStationCurrentColumn = 0 Then iIndStationCurrentColumn = 1
+
+            If Mid(strWord, 2, 1) = "<" Then 'Going to tell us how many rows
+               iIndStationTotalRows = CInt(Mid(strWord, 3, (Len(strWord) - 3)))
+
+               For iIndStationRowCount = 2 To iIndStationTotalRows     '1st row already exists
+                  strHTML = document.All.frmIndStations.innerHTML
+                  document.All.frmIndStations.innerHTML = NewIndString(strHTML)
+               Next
+
+            Else
+               strTemp = ("IndStations" & _
+	               CStr(iIndStationCurrentRow) & CStr(iIndStationCurrentColumn))
+               InstallTextToDynamicTextBox strWord, strTemp
+
+               If iIndStationCurrentColumn >= 2 Then
+                  iIndStationCurrentColumn = 1
+                  iIndStationCurrentRow = iIndStationCurrentRow + 1
+
+                  If iIndStationCurrentRow > iIndStationTotalRows Then
+                     iSection = 2
+                  End If
+
+               Else
+                  iIndStationCurrentColumn = iIndStationCurrentColumn + 1
+               End If
+
+            End If
+
+         ElseIf (document.All.chkIndStation.Checked = False) And (iSection = 1) Then
+            iSection = 2     'Not using IndStation, so move to next section
+         End If
+
+         ''''''''''''''''Check for/load up Increment Data Section:
+
+         If ((document.All.chkIncrementData.Checked = True) And (iSection = 2)) Then
+
+            If CanIEnterIncDataYet = "YES" Then
+
+               If iIncDataCurrentRow = 0 Then iIncDataCurrentRow = 1
+
+               If iIncDataCurrentColumn = 0 Then iIncDataCurrentColumn = 1
+
+               If Mid(strWord, 2, 1) = "<" Then 	'Going to tell us how many rows
+                  iIncDataTotalRows = Cint(Mid(strWord, 3, (Len(strWord) - 3)))
+
+                  For iIncDataRowCount = 2 To iIncDataTotalRows     '1st row already exists
+                     strHTML = document.All.frmFullIncData.innerHTML
+                     document.All.frmFullIncData.innerHTML = NewIncDataString(strHTML)
+			   IncrementData()
+                  Next
+
+               Else
+
+                  If Cint(strWord) <> 991 Then
+                     strTemp = ("IncData" & _
+	                     CStr(iIncDataCurrentRow) & CStr(iIncDataCurrentColumn))
+                     InstallTextToDynamicTextBox strWord, strTemp
+
+                     If ((document.All.X6.selectedIndex = 0) And _
+	                        (iIncDataCurrentColumn >= 4)) Then      'Ignore Superelevation
+                        iIncDataCurrentColumn = 2     'Avoid "991"
+                        iIncDataCurrentRow = iIncDataCurrentRow + 1
+
+                        If (iIncDataCurrentRow > iIncDataTotalRows) Then iSection = 3
+
+                     Else     'Chosen not to ignore superelevation (go to second column)
+
+                        If iIncDataCurrentColumn >= 5 Then
+                           iIncDataCurrentColumn = 1
+                           iIncDataCurrentRow = iIncDataCurrentRow + 1
+
+                           If (iIncDataCurrentRow > iIncDataTotalRows) Then iSection = 3
+                        Else
+                           iIncDataCurrentColumn = iIncDataCurrentColumn + 1
+                        End If
+                     End If
+                  Else
+                     iIncDataCurrentColumn = iIncDataCurrentColumn + 1     'Move to next
+                  End If
+
+               End If
+            Else
+               Dim CanIEnterIncDataYet
+               CanIEnterIncDataYet = "YES"
+            End If
+         ElseIf ((document.All.chkIncrementData.Checked = False) And (iSection = 2)) Then
+         	iSection = 3     'Not using IncData, so move to next section
+
+         End If
+
+         ''''''''''''''''Check for/load up Skew Data Section:
+
+         If ((document.All.chkSkewData.Checked = True) And (iSection = 3)) Then
+
+            If CanIEnterSkewYet = "YES" Then
+
+               If iSkewCurrentRow = 0 Then iSkewCurrentRow = 1
+
+               If iSkewCurrentColumn = 0 Then iSkewCurrentColumn = 1
+
+               If Mid(strWord, 2, 1) = "<" Then     'Going to tell us how many rows
+                  iSkewTotalRows = Cint(Mid(strWord, 3, (Len(strWord) - 3)))
+
+                  For iSkewRowCount = 2 To iSkewTotalRows     '1st row already exists
+                     strHTML = document.All.frmSkewLineData.innerHTML
+                     document.All.frmSkewLineData.innerHTML = NewSkewDataString(strHTML)
+                  Next
+
+               Else
+
+                  If (iSkewCurrentColumn <> 1) Then     'column 1 is special
+                     strTemp = ("Skew" & _
+	                     CStr(iSkewCurrentRow) & CStr(iSkewCurrentColumn))
+                     InstallTextToDynamicTextBox strWord, strTemp
+
+                     If iSkewCurrentColumn = 8 Then
+                        iSkewCurrentColumn = 1
+                        iSkewCurrentRow = iSkewCurrentRow + 1
+
+                        If (iSkewCurrentRow > iSkewTotalRows) Then
+                           count = iEndOfString '(exit out of parse function)
+                        End If
+
+                     Else
+                        iSkewCurrentColumn = iSkewCurrentColumn + 1
+                     End If
+
+                  Else
+                     optionBoxName = "Skew" & CStr(iSkewCurrentRow) _
+	                     & CStr(iSkewCurrentColumn)
+                     Set optionBox = document.All.Item(optionBoxName)
+
+                     If strWord = 992 Then
+                        optionBox.selectedIndex = 0
+
+                     ElseIf strWord = 993 Then
+                        optionBox.selectedIndex = 1
+
+                     Else
+                        MsgBox "Error in SkewData Parse Section"
+                     End If
+                     iSkewCurrentColumn = iSkewCurrentColumn + 1
+                  End If
+               End If
+            Else
+               Dim CanIEnterSkewYet
+               CanIEnterSkewYet = "YES"
+            End If
+
+         ElseIf ((document.All.chkSkewData.Checked = False) And (iSection = 3)) Then
+            count = iEndOfString
+         End If
+
+      End If
+      iEntryCount = iEntryCount + 1
+   End If
+
+'Parse Error:
+If Err.Number > 4 Then
+	msgbox "You may be using a corrupted file.  Please contact Software Support."
+	Exit Sub
+End If
+
+Next
+End Sub
+
+Sub InstallTextToBox(strText, strTextBoxNumber)
+    'This function takes the parsed bit of string (from a saved file)
+    '     and places it within a text box
+    Dim name
+    Dim count
+    Dim textbox
+    name = GetTextBoxName(strTextBoxNumber)
+    Set textbox = document.All.Item(name)
+    textbox.Value = strText
+    Set textbox = Nothing
+End Sub
+
+
+Sub InstallTextToDynamicTextBox( strWord, strTemp )
+    'This function takes the parsed bit of string (from a saved file)
+    '     and places it within a text box
+    Dim textbox
+    Set textbox = document.All.Item(strTemp)
+    textbox.Value = strWord
+    Set textbox = Nothing
+End Sub
+
+
+	Function GetTextBoxName(number)
+	    GetTextBoxName = "X" & number
+
+	End Function
+
+	Sub OddDay()
+		msgbox "This Function written on the last 'Odd Day' of my life: " & _
+			"11/19/1999 - each digit is odd.  An odd day will not occur " & _
+			"again until: 11/11/3111"
+	End Sub
+
+'****************************************************************************************
+'These "New???" functions are used to dynamically insert one new row (problems).
+'  What these functions do is retrieve a "form", delete everything following the last-row
+'  (the end tags), then appending the new row tags/end tags/buttons to the end of the string,
+'  and then placing the new string back into the form.
+'****************************************************************************************
+
+	Function NewIndString( oldHTML )
+		Dim count
+		Dim strNewString
+		strNewString = ""
+		oldHTML = GetUpToLastTableRow( oldHTML )
+		IndDataRowCount = IndDataRowCount + 1
+		strNewString = strNewString + "<TR>" & _
+			"<TD> <INPUT id=IndStations" & CStr(IndDataRowCount) + "1" & _
+				" size=10 > </TD>" & _
+			"<TD> <INPUT id=IndStations" & CStr(IndDataRowCount) + "2" & _
+				" size=10 > </TD></TR>"
+
+
+		strNewString = strNewString & _
+			"<TABLE>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR>" & _
+			"	<TD><IMG src="".\..\Buttons\BoxDarkAddButton.jpg"" id=""cmdAddIndStatRow"" " & _
+			"		ONMOUSEOUT=""cmdAddIndStatRow.src='./../Buttons/BoxDarkAddButton.jpg'"" " & _
+			"		ONMOUSEOVER=""cmdAddIndStatRow.src='./../Buttons/BoxLightAddButton.jpg'"" " & _
+			" 		ONCLICK=""AddIndStat()""></TD>" & _
+			"	<TD></TD>" & _
+			"	<TD><IMG src="".\..\Buttons\BoxDarkDeleteButton.jpg"" id=""cmdRemoveIndStatRow"" " & _
+			"		ONMOUSEOUT=""cmdRemoveIndStatRow.src='./../Buttons/BoxDarkDeleteButton.jpg'"" " & _
+			"		ONMOUSEOVER=""cmdRemoveIndStatRow.src='./../Buttons/BoxLightDeleteButton.jpg'"" " & _
+			"		ONCLICK=""RemoveOneIndRow()""></TD>" & _
+			"	</TR>" & _
+			"</TABLE>"
+
+		NewIndString = oldHTML + strNewString
+	End Function
+
+	Function NewIncDataString( oldHTML )
+		Dim strNewString
+		strNewString = ""
+		oldHTML = GetUpToLastTableRow( oldHTML )
+		IncDataRowCount = IncDataRowCount + 1
+		strNewString = strNewString & "<TR>" & _
+			"<TD id=IncData" + Cstr(IncDataRowCount) + "1 " & _
+			" name=IncData" + Cstr(IncDataRowCount) + "1 " + ">991</TD>" & _
+			" <TD> <INPUT id=IncData" + Cstr(IncDataRowCount) + "2 " & _
+			" name=IncData" + Cstr(IncDataRowCount) + "2 " + " size='10' > </TD>" & _
+			" <TD> <INPUT id=IncData" + Cstr(IncDataRowCount) + "3 " & _
+			" name=IncData" + Cstr(IncDataRowCount) + "3 " + " size='10' > </TD>" & _
+			" <TD> <INPUT id=IncData" + Cstr(IncDataRowCount) + "4 " & _
+			" name=IncData" + Cstr(IncDataRowCount) + "4 " + " size='10' > </TD>" & _
+			" <TD> <INPUT id=IncData" + Cstr(IncDataRowCount) + "5 " & _
+			" name=IncData" + Cstr(IncDataRowCount) + "5 " + " size='10'" & _
+			" STYLE='display:none'> </TD></TR>"
+
+		strNewString = strNewString & _
+			"<TABLE>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR>" & _
+			"	<TD><IMG src="".\..\Buttons\BoxDarkAddButton.jpg"" id=""cmdAddIncDataRow"" " & _
+			"		ONMOUSEOUT=""cmdAddIncDataRow.src='./../Buttons/BoxDarkAddButton.jpg'"" " & _
+			"		ONMOUSEOVER=""cmdAddIncDataRow.src='./../Buttons/BoxLightAddButton.jpg'"" " & _
+			"		ONCLICK=""AddIncData()""></TD>" & _
+			"	<TD></TD>" & _
+			"	<TD><IMG src="".\..\Buttons\BoxDarkDeleteButton.jpg"" id=""cmdRemoveIncRow"" " & _
+			"		ONMOUSEOUT=""cmdRemoveIncRow.src='./../Buttons/BoxDarkDeleteButton.jpg'"" " & _
+			"		ONMOUSEOVER=""cmdRemoveIncRow.src='./../Buttons/BoxLightDeleteButton.jpg'"" " & _
+			"		ONCLICK=""RemoveOneIncRow()""></TD>" & _
+			"	</TR>" & _
+			"</TABLE>"
+
+		NewIncDataString = oldHTML + strNewString
+	End Function
+
+
+	Function NewSkewDataString( oldHTML )
+		Dim strNewString
+		strNewString = ""
+		oldHTML = GetUpToLastTableRow( oldHTML )
+		SkewDataRowCount = SkewDataRowCount + 1
+		strNewString = strNewString & _
+			"<TR>" & _
+			"<TD> <SELECT id=Skew" + Cstr(SkewDataRowCount) & _
+				"1> <OPTION>992</OPTION> <OPTION>993</OPTION> </SELECT>" & _
+			"<TD> <INPUT id=Skew" + Cstr(SkewDataRowCount) + "2 size=""10""> </TD>" & _
+			"<TD> <INPUT id=Skew" + Cstr(SkewDataRowCount) + "3 size=""10""> </TD>" & _
+			"<TD> <INPUT id=Skew" + Cstr(SkewDataRowCount) + "4 size=""10""> </TD>" & _
+			"<TD> <INPUT id=Skew" + Cstr(SkewDataRowCount) + "5 size=""10""> </TD>" & _
+			"<TD> <INPUT id=Skew" + Cstr(SkewDataRowCount) + "6 size=""10""> </TD>" & _
+			"<TD> <INPUT id=Skew" + Cstr(SkewDataRowCount) + "7 size=""10""> </TD>" & _
+			"<TD> <INPUT id=Skew" + Cstr(SkewDataRowCount) + "8 size=""10""> </TD>" & _
+			"</TR>" & _
+			"</TABLE>"
+
+		strNewString = strNewString & _
+			"<TABLE>" & _
+			"<TR></TR>" & _
+			"<TR></TR>" & _
+			"<TR></TR>" & _
+			"<TR></TR>" & _
+			"<TR>" & _
+			"<TD><IMG src="".\..\Buttons\BoxDarkAddButton.jpg"" id=""cmdAddSkewDataRow"" " & _
+			"	ONMOUSEOUT=""cmdAddSkewDataRow.src='./../Buttons/BoxDarkAddButton.jpg'"" " & _
+			"	ONMOUSEOVER=""cmdAddSkewDataRow.src='./../Buttons/BoxLightAddButton.jpg'"" " & _
+				"ONCLICK=""AddSkewData()""></TD>" & _
+			"<TD></TD>" & _
+			"<TD><IMG src="".\..\Buttons\BoxDarkDeleteButton.jpg"" id=""cmdRemoveSkewRow"" " & _
+			"	ONMOUSEOUT=""cmdRemoveSkewRow.src='./../Buttons/BoxDarkDeleteButton.jpg'"" " & _
+			"	ONMOUSEOVER=""cmdRemoveSkewRow.src='./../Buttons/BoxLightDeleteButton.jpg'"" " & _
+			"	ONCLICK=""RemoveOneSkewRow()""></TD>" & _
+			"</TR></TABLE>" & _
+			"<hr WIDTH = ""100%"">" & _
+			"<hr WIDTH = ""100%"">"
+
+		NewSkewDataString = oldHTML + strNewString
+	End Function
+
+
+        'For saving to file (not fortran dll)
+	Function GetIndStation()
+		Dim Row
+		Dim Column
+		Dim tmpString
+		Dim tmpBoxName
+		Dim textBox
+
+		If document.all.X6.selectedIndex = 0 Then	'ignore superelevation
+			tmpString = ""
+		Else
+			If document.all.chkIndStation.checked = true Then 	'Use it
+				tmpString = "<" + Cstr(IndDataRowCount) + ">,"
+				For Row = 1 to IndDataRowCount
+					For Column = 1 to 2
+						tmpBoxName = "IndStations" + Cstr(Row) + Cstr(Column)
+						Set textBox = document.all.Item(tmpBoxName)
+						tmpString = tmpString & textBox.value & ","
+					Next
+				Next
+			Else
+				tmpString = ""
+			End If
+			If tmpString <> "" Then tmpString = Left(tmpString, (len(tmpString)-1))	'Gets rid of last ","
+			tmpString = tmpString + Chr(13) + Chr(10)
+		End If
+		GetIndStation = tmpString
+	End Function
+
+
+        'For saving to file (not fortran dll)
+	Function GetIncData()
+		Dim Row
+		Dim Column
+		Dim tmpString
+		Dim tmpBoxName
+		Dim textBox
+		Dim maxColumns
+		If document.all.X6.selectedIndex = 0 Then	'ignore superelevation
+			maxColumns = 4
+		Else
+			maxColumns = 5
+		End If
+		If document.all.chkIncrementData.checked = true Then 	'Use it
+			tmpString = "<" + Cstr(IncDataRowCount) + ">,"
+			For Row = 1 to IncDataRowCount
+				For Column = 1 to maxColumns
+					If Column = 1 Then
+						tmpString = tmpString + "991,"
+					Else
+						tmpBoxName = "IncData" + Cstr(Row) + Cstr(Column)
+						Set textBox = document.all.Item(tmpBoxName)
+						tmpString = tmpString & textBox.value & ","
+					End If
+				Next
+			Next
+		End If
+		If tmpString <> "" Then
+			tmpString = Left(tmpString, (len(tmpString)-1))	'Gets rid of last ","
+			tmpString = tmpString + Chr(13) + Chr(10)
+		End If
+		GetIncData = tmpString
+
+	End Function
+
+
+        'For saving to file (not fortran dll)
+	Function GetSkewData()
+		Dim Row
+		Dim Column
+		Dim tmpString
+		Dim tmpBoxName
+		Dim textBox
+		Dim tmpString2
+
+		If document.all.chkSkewData.checked = true Then 	'Use it
+			tmpString = "<" + Cstr(SkewDataRowCount) + ">,"
+			For Row = 1 to SkewDataRowCount
+				For Column = 1 to 8
+					If Column = 1 Then
+						tmpBoxName = "Skew" + Cstr(Row) + Cstr(Column)
+						Set textBox = document.all.Item(tmpBoxName)
+						If textBox.selectedIndex = 0 Then
+							tmpString = tmpString & "992,"
+						Else
+							tmpString = tmpString & "993,"
+						End If
+					Else
+						tmpBoxName = "Skew" + Cstr(Row) + Cstr(Column)
+						Set textBox = document.all.Item(tmpBoxName)
+						tmpString = tmpString & Cstr(textBox.value) & ","
+					End If
+				Next
+			Next
+		Else
+			tmpString = ""
+		End If
+		If tmpString <> "" Then tmpString = Left(tmpString, (len(tmpString)-1))	'Gets rid of last ","
+		tmpString = tmpString + Chr(13) + Chr(10)
+		GetSkewData = tmpString
+	End Function
+
+
+	Function GetIncDataTextBox(row)
+		Dim strTextBoxName
+		strTextBoxName = "IncData" & Cstr(row) & "5"
+	      Set GetIncDataTextBox = Document.All.Item(strTextBoxName)
+
+	End Function
+
+'****************************************************************************************
+' This function takes a piece of HTML retrieved from a "form", then gives you back the
+'   HTML without the end tags (everything after the last row of problems).
+'****************************************************************************************
+
+	Function GetUpToLastTableRow( strHTML )
+		Dim LastPosition
+		Dim count
+		Dim count2
+		LastPosition = len(strHTML)
+		For count = LastPosition to 1 Step -1
+			If Mid(strHTML, count, 5) = "</TR>" Then
+				count2 = count2 + 1
+				If count2 = 6 Then
+					LastPosition = count
+					count = 1	'Exit loop
+				End If
+			End If
+		Next
+		GetUpToLastTableRow = Mid(strHTML, 1, (LastPosition - 1))
+	End Function
+
+'****************************************************************************************
+'These "GetUpToNextTOLast???Row" functions are used to dynamically delete rows of problems.
+'  What these functions do is retrieve a "form", delete everything following the next-to-last-row
+'  (thereby eliminating the last row), then appending the end tags/buttons to the end of the string,
+'  and then placing the new string back into the form.
+'****************************************************************************************
+
+	Function GetUpToNextToLastSkewRow( strHTML )
+		Dim LastPosition
+		Dim count
+		Dim count2
+		Dim tmpString
+		count2 = 0
+		LastPosition = len(strHTML)
+		For count = LastPosition to 1 Step -1
+			If (Mid(strHTML, count, 4) = "<TR>") Then
+				LastPosition = count
+				count2 = count2 + 1
+				If count2 >= 6 Then count = 1
+			End If
+		Next
+		tmpString = Mid(strHTML, 1, (LastPosition - 1))
+
+		tmpString = tmpString & _
+			"</TR>" & _
+			"</TABLE>" & _
+			"<TABLE>" & _
+			"<TR></TR>" & _
+			"<TR></TR>" & _
+			"<TR></TR>" & _
+			"<TR></TR>" & _
+			"<TR>" & _
+			"<TD><IMG src="".\..\Buttons\BoxDarkAddButton.jpg"" id=""cmdAddSkewDataRow"" " & _
+			"	ONMOUSEOUT=""cmdAddSkewDataRow.src='./../Buttons/BoxDarkAddButton.jpg'"" " & _
+			"	ONMOUSEOVER=""cmdAddSkewDataRow.src='./../Buttons/BoxLightAddButton.jpg'"" " & _
+				"ONCLICK=""AddSkewData()""></TD>" & _
+			"<TD></TD>" & _
+			"<TD><IMG src="".\..\Buttons\BoxDarkDeleteButton.jpg"" id=""cmdRemoveSkewRow"" " & _
+			"	ONMOUSEOUT=""cmdRemoveSkewRow.src='./../Buttons/BoxDarkDeleteButton.jpg'"" " & _
+			"	ONMOUSEOVER=""cmdRemoveSkewRow.src='./../Buttons/BoxLightDeleteButton.jpg'"" " & _
+				"NAME=""cmdRemoveSkewRow"" " & _
+				"ONCLICK=""RemoveOneSkewRow()""></TD>" & _
+			"</TR></TABLE>" & _
+			"<hr WIDTH = ""100%"">" & _
+			"<hr WIDTH = ""100%"">"
+
+		GetUpToNextToLastSkewRow = tmpString
+	End Function
+
+
+	Function GetUpToNextToLastIncRow( strHTML )
+		Dim LastPosition
+		Dim count
+		Dim count2
+		Dim tmpString
+		count2 = 0
+		LastPosition = len(strHTML)
+		For count = LastPosition to 1 Step -1
+			If (Mid(strHTML, count, 4) = "<TR>") Then
+				LastPosition = count
+				count2 = count2 + 1
+				If count2 >= 6 Then count = 1
+			End If
+		Next
+		tmpString = Mid(strHTML, 1, (LastPosition - 1))
+
+		tmpString = tmpString & _
+			"<TABLE>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR>" & _
+			"	<TD><IMG src="".\..\Buttons\BoxDarkAddButton.jpg"" id=""cmdAddIncDataRow"" " & _
+			"		ONMOUSEOUT=""cmdAddIncDataRow.src='./../Buttons/BoxDarkAddButton.jpg'"" " & _
+			"		ONMOUSEOVER=""cmdAddIncDataRow.src='./../Buttons/BoxLightAddButton.jpg'"" " & _
+			"		ONCLICK=""AddIncData()""></TD>" & _
+			"	<TD></TD>" & _
+			"	<TD><IMG src="".\..\Buttons\BoxDarkDeleteButton.jpg"" id=""cmdRemoveIncRow"" " & _
+			"		ONMOUSEOUT=""cmdRemoveIncRow.src='./../Buttons/BoxDarkDeleteButton.jpg'"" " & _
+			"		ONMOUSEOVER=""cmdRemoveIncRow.src='./../Buttons/BoxLightDeleteButton.jpg'"" " & _
+			"		ONCLICK=""RemoveOneIncRow()""></TD>" & _
+			"	</TR>" & _
+			"</TABLE>"
+
+		GetUpToNextToLastIncRow = tmpString
+	End Function
+
+
+	Function GetUpToNextToLastIndRow( strHTML )
+		Dim LastPosition
+		Dim count
+		Dim count2
+		Dim tmpString
+		count2 = 0
+		LastPosition = len(strHTML)
+		For count = LastPosition to 1 Step -1
+			If (Mid(strHTML, count, 4) = "<TR>") Then
+				LastPosition = count
+				count2 = count2 + 1
+				If count2 >= 6 Then count = 1
+			End If
+		Next
+		tmpString = Mid(strHTML, 1, (LastPosition - 1))
+
+		tmpString = tmpString & _
+			"<TABLE>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR></TR>" & _
+			"	<TR>" & _
+			"	<TD><IMG src="".\..\Buttons\BoxDarkAddButton.jpg"" id=""cmdAddIndStatRow"" " & _
+			"		ONMOUSEOUT=""cmdAddIndStatRow.src='./../Buttons/BoxDarkAddButton.jpg'"" " & _
+			"		ONMOUSEOVER=""cmdAddIndStatRow.src='./../Buttons/BoxLightAddButton.jpg'"" " & _
+			"		ONCLICK=""AddIndStat()""></TD>" & _
+			"	<TD></TD>" & _
+			"	<TD><IMG src="".\..\Buttons\BoxDarkDeleteButton.jpg"" id=""cmdRemoveIndStatRow"" " & _
+			"		ONMOUSEOUT=""cmdRemoveIndStatRow.src='./../Buttons/BoxDarkDeleteButton.jpg'"" " & _
+			"		ONMOUSEOVER=""cmdRemoveIndStatRow.src='./../Buttons/BoxLightDeleteButton.jpg'"" " & _
+			"		ONCLICK=""RemoveOneIndRow()""></TD>" & _
+			"	</TR>" & _
+			"</TABLE>"
+
+		GetUpToNextToLastIndRow = tmpString
+	End Function
+
+
+Function ClearForm()
+          ClearTextBox 1, 5
+          document.All.X6.selectedIndex = 0
+          ClearTextBox 7, 16
+
+          document.All.chkIndStation.Checked = false
+          document.All.chkIncrementData.Checked = false
+          document.All.chkSkewData.Checked = false
+
+          ClearIndStation()
+
+          ClearIncData()
+
+          ClearSkewData()
+End Function
+
+
+Sub ClearTextBox( iStartBox, iEndBox )
+	Dim count
+	Dim strTextBoxName
+	Dim textBox
+	For count = iStartBox to iEndBox
+		strTextBoxName = GetTextBoxName(count)
+		set textBox = document.all.Item(strTextBoxName)
+		textBox.value = ""
+	Next
+End Sub
+
+
+Sub ClearIndStation()
+
+	Dim count
+	Dim strTextBoxName
+	Dim textBox
+	For count = 2 to IndDataRowCount
+		RemoveOneIndRow
+	Next
+
+	For count = 1 to 2
+		strTextBoxName = "IndStations1" & Cstr(count)
+		Set textBox = document.all.Item(strTextBoxName)
+		textBox.value = ""
+	Next
+
+End Sub
+
+
+Sub ClearIncData()
+
+	Dim count
+	Dim strTextBoxName
+	Dim textBox
+	For count = 2 to IncDataRowCount
+		RemoveOneIncRow
+	Next
+
+	'Leave "IncData11" alone...it is nothing.
+
+	For count = 2 to 5
+		strTextBoxName = "IncData1" & Cstr(count)
+		Set textBox = document.all.Item(strTextBoxName)
+		textBox.value = ""
+	Next
+
+End Sub
+
+
+Sub ClearSkewData()
+
+	Dim count
+	Dim strTextBoxName
+	Dim textBox
+	For count = 2 to SkewDataRowCount	'don't cut off first line
+		RemoveOneSkewRow()
+	Next
+
+	For count = 1 to 8
+		strTextBoxName = "Skew1" & Cstr(count)
+		Set textBox = document.all.Item(strTextBoxName)
+		textBox.value = ""
+	Next
+
+End Sub
+
+
+	Function CreateStringForFortran()  'Takes data from the form and prepares for passing it to the Fortran.
+		strLine1 = CreateSaveString(1, 5)
+		strLine2 = document.All.X6.selectedIndex & Chr(13) + Chr(10)
+		strLine3 = CreateSaveString(7, 7)
+		strLine4 = CreateSaveString(8, 10)
+		strLine5 = CreateSaveString(11, 13)
+		strLine6 = CreateSaveString(14, 16)
+		strLine7 = GetIndStationForFortran
+		strLine8 = GetIncDataForFortran
+		strLine9 = GetSkewDataForFortran
+
+		CreateStringForFortran = strLine1 + strLine2 + strLine3 + strLine4 + _
+			strLine5 + strLine6 + strLine7 + strLine8 + strLine9
+
+	End Function
+
+
+	Function GetIndStationForFortran()
+		Dim Row
+		Dim Column
+		Dim tmpString
+		Dim tmpBoxName
+		Dim textBox
+
+		If document.all.X6.selectedIndex = 0 Then	'ignore superelevation
+			tmpString = ""
+		Else
+			If document.all.chkIndStation.checked = true Then 	'Use it
+				For Row = 1 to IndDataRowCount
+					For Column = 1 to 2
+						tmpBoxName = "IndStations" + Cstr(Row) + Cstr(Column)
+						Set textBox = document.all.Item(tmpBoxName)
+						If Trim(textBox.value) = "" Then
+						        tmpString = tmpString & "0"
+						Else
+						        tmpString = tmpString & Trim(textBox.value)
+						End If
+						If Column = 1 Then tmpString = tmpString + ","
+					Next
+					tmpString = tmpString + Chr(13) + Chr(10)
+				Next
+			Else
+				tmpString = ""
+			End If
+		End If
+		GetIndStationForFortran = tmpString
+	End Function
+
+
+	Function GetIncDataForFortran()
+		Dim Row
+		Dim Column
+		Dim tmpString
+		Dim tmpBoxName
+		Dim textBox
+		Dim maxColumns
+		If document.all.X6.selectedIndex = 0 Then	'ignore superelevation
+			maxColumns = 4
+		Else
+			maxColumns = 5
+		End If
+		If document.all.chkIncrementData.checked = true Then 	'Use it
+			For Row = 1 to IncDataRowCount
+				For Column = 1 to maxColumns
+					If Column = 1 Then
+						tmpString = tmpString + "991,"
+					Else
+						tmpBoxName = "IncData" + Cstr(Row) + Cstr(Column)
+						Set textBox = document.all.Item(tmpBoxName)
+						If Trim(textBox.value) = "" Then
+						        tmpString = tmpString & "0"
+						Else
+						        tmpString = tmpString & Trim(textBox.value)
+						End If
+						If Column <> maxColumns Then tmpString = tmpString & ","
+					End If
+				Next
+				tmpString = tmpString + Chr(13) + Chr(10)
+			Next
+		End If
+		GetIncDataForFortran = tmpString
+
+	End Function
+
+
+	Function GetSkewDataForFortran()
+		Dim Row
+		Dim Column
+		Dim tmpString
+		Dim tmpBoxName
+		Dim textBox
+		Dim tmpString2
+
+		If document.all.chkSkewData.checked = true Then 	'Use it
+			For Row = 1 to SkewDataRowCount
+				For Column = 1 to 8
+					If Column = 1 Then
+						tmpBoxName = "Skew" + Cstr(Row) + Cstr(Column)
+						Set textBox = document.all.Item(tmpBoxName)
+						If textBox.selectedIndex = 0 then
+							tmpString = tmpString & "992,"
+						Else
+							tmpString = tmpString & "993,"
+						End If
+					Else
+						tmpBoxName = "Skew" + Cstr(Row) + Cstr(Column)
+						Set textBox = document.all.Item(tmpBoxName)
+						If Trim(textBox.value) = "" Then
+						        tmpString = tmpString & "0"
+						Else
+						        tmpString = tmpString & Cstr(textBox.value)
+						End If
+						If Column < 8 Then tmpString = tmpString & ","
+					End If
+				Next
+				tmpString = tmpString + Chr(13) + Chr(10)
+			Next
+		Else
+			tmpString = ""
+		End If
+		GetSkewDataForFortran = tmpString
+	End Function
+
+
+</SCRIPT>
+
+<FONT FACE="Arial">
+
+<BODY bgProperties=fixed BGCOLOR=blue noWrap ONFOCUS="clickedOn(this)" ONLOAD="BodyLoad()"
+				 ONMOUSEUP="CheckMinimized()">
+
+   <P ID="header" CLASS="select" ONSELECTSTART="return false">
+      Curvel Input
+   </P>
+
+<! <DIV id="InputFormFull" >
+<DIV id="FormExcludingHeading">
+
+<H2>Vertical Curve Data Properties:</H2>
+<hr WIDTH = "100%">
+
+<TABLE>
+    <TR>
+	<TD> <IMG id=cmdLoad onclick=LoadFile()
+		onmouseout="cmdLoad.src='./../Buttons/BoxDarkLoadButton.jpg'"
+		onmouseover="cmdLoad.src='./../Buttons/BoxLightLoadButton.jpg'" src=".\..\Buttons\BoxDarkLoadButton.jpg" >
+            </TD>
+    	<TD></TD>
+	<TD> <IMG id=cmdSave onclick=SaveFile()
+		onmouseout="cmdSave.src='./../Buttons/BoxDarkSaveButton.jpg'"
+		onmouseover="cmdSave.src='./../Buttons/BoxLightSaveButton.jpg'" src=".\..\Buttons\BoxDarkSaveButton.jpg">
+            </TD>
+	<TD id="EraseMe1"> <IMG src=".\..\Buttons/BoxLightLoadButton.jpg"> </TD>
+	<TD id="EraseMe2"> <IMG src=".\..\Buttons/BoxLightSaveButton.jpg"> </TD>
+    </TR>
+</TABLE>
+
+<hr WIDTH = "100%" id=HR1>
+
+<H3>Vertical Curve Data:</H3>
+<TABLE>
+    <TR>
+	<TD>G1</TD> <TD></TD> <TD>G2</TD> <TD></TD> <TD>Elev. Of P.I.</TD> <TD></TD> <TD>Curve Length</TD> <TD></TD> <TD>Sta. Of P.I.V.C.</TD>
+    <TR>
+	<TD>(%)</TD> <TD></TD> <TD>(%)</TD> <TD></TD> <TD><B>(ft)</B></TD> <TD></TD> <TD><B>(ft)</B></TD> <TD></TD> <TD>(ft)</TD>
+    <TR>
+        <TD> <INPUT id=X1 name=X1 size="10" ></TD>
+	<TD></TD>
+        <TD> <INPUT id=X2 name=X2 size="10" > </TD>
+	<TD></TD>
+        <TD> <INPUT id=X3 name=X3 size="10" > </TD>
+	<TD></TD>
+        <TD> <INPUT id=X4 name=X4 size="10" > </TD>
+	<TD></TD>
+        <TD> <INPUT id=X5 name=X5 size="10" > </TD>
+    </TR>
+</TABLE>
+<hr WIDTH = "100%">
+
+<TABLE>
+	<TR>
+	<TD><B>Yes or No</B></TD>
+	<TR>
+	<TD>Ignore SuperElevation &amp; Crown Effects?</TD>
+	<TR>
+	<TD> <SELECT id=X6 name=X6 ONCHANGE="Opt6Change()"> <OPTION selected>Yes</OPTION> <OPTION>No</OPTION> </SELECT></TD>
+	</TR>
+</TABLE>
+<hr WIDTH = "100%">
+
+<FORM name="frmSuperElevation" id="frmSuperElevation">
+<H3>SuperElevation Data</H3>
+<TABLE>
+	<TR>
+	<TD><B>Offset From Crown To Profile Grade Line (Ft.)(c.)</B></TD>
+	<TR>
+	<TD> <INPUT id=X7 name=X7 size="10" > </TD>
+	</TR>
+</TABLE>
+<hr WIDTH = "100%">
+
+<TABLE>
+	<TR>
+	<TD><B>Sta. 1 (c.)</B></TD> <TD><B>Sta. 2 (c.)</B></TD> <TD><B>Sta. 3 (c.)</B></TD>
+	<TR>
+	<TD> <INPUT id=X8 name=X8> </TD>
+	<TD> <INPUT id=X9 name=X9> </TD>
+	<TD> <INPUT id=X10 name=X10> </TD>
+	<TR>
+	<TD><B>Slope Left (c.)</B></TD> <TD><B>Slope Left (c.)</B></TD> <TD><B>Slope Left (c.)</B></TD>
+	<TR>
+	<TD> <INPUT id=X11 name=X11> </TD>
+	<TD> <INPUT id=X12 name=X12> </TD>
+	<TD> <INPUT id=X13 name=X13> </TD>
+	<TR>
+	<TD><B>Slope Right (c.)</B></TD> <TD><B>Slope Right (c.)</B></TD> <TD><B>Slope Right (c.)</B></TD>
+	<TR>
+	<TD> <INPUT id=X14 name=X14> </TD>
+	<TD> <INPUT id=X15 name=X15> </TD>
+	<TD> <INPUT id=X16 name=X16> </TD>
+	</TR>
+</TABLE>
+
+<hr WIDTH = "100%">
+
+</FORM>
+
+<TABLE>
+	<TR>
+	<TD><B>Select Data Sections You Want To Include:</B></TD>
+	<TR>
+	<TD>
+	<INPUT TYPE="checkbox" NAME="chkIndStation" ID="chkIndStation"
+	  ONCLICK="IndividualStation()">Input Individual Stations Data</INPUT>
+	</TD>
+	<TR>
+	<TD>
+	<INPUT TYPE="checkbox" NAME="chkIncrementData" ID="chkIncrementData"
+	  ONCLICK="IncrementData()">Input Increment Data</INPUT>
+	</TD>
+	<TR>
+	<TD>
+	<INPUT TYPE="checkbox" NAME="chkSkewData" ID="chkSkewData"
+	  ONCLICK="SkewData()">Input Skew Data</INPUT>
+	</TD>
+	</TR>
+</TABLE>
+
+<FORM name="frmIndStations" id="frmIndStations">
+<hr WIDTH = "100%">
+<H3>Individual Stations Data</H3>
+
+<TABLE>
+	<TR>
+	<TD><B>Station (c.)</B></TD> <TD><B>Offset (b.)(c)</B></TD>
+	<TD WIDTH="50"> </TD>
+	<TR>
+	<TD> <INPUT id="IndStations11" name="IndStations11" size="10" > </TD>
+	<TD> <INPUT id="IndStations12" name="IndStations12" size="10" > </TD>
+	<TR>
+	</TR>
+</TABLE>
+
+<TABLE>
+	<TR></TR>
+	<TR></TR>
+	<TR></TR>
+	<TR></TR>
+	<TR>
+	<TD><IMG id=cmdAddIndStatRow onclick=AddIndStat()
+		onmouseout="cmdAddIndStatRow.src='./../Buttons/BoxDarkAddButton.jpg'"
+		onmouseover="cmdAddIndStatRow.src='./../Buttons/BoxLightAddButton.jpg'"
+ 		src=".\..\Buttons\BoxDarkAddButton.jpg"></TD>
+	<TD id="EraseMe3"><IMG src=".\..\Buttons\BoxLightAddButton.jpg"></TD>
+	<TD></TD>
+	<TD><IMG id=cmdRemoveIndStatRow onclick=RemoveOneIndRow() 		onmouseout="cmdRemoveIndStatRow.src='./../Buttons/BoxDarkDeleteButton.jpg'" 		onmouseover="cmdRemoveIndStatRow.src='./../Buttons/BoxLightDeleteButton.jpg'"
+		src=".\..\Buttons\BoxDarkDeleteButton.jpg"></TD>
+	<TD id="EraseMe4"><IMG src=".\..\Buttons\BoxLightDeleteButton.jpg"></TD>
+	</TR>
+</TABLE>
+
+</FORM>
+
+<FORM id="frmFullIncData" name="frmFullIncData">
+<hr WIDTH = "100%">
+<H3>Incremental Data</H3>
+
+<TABLE>
+	<TR>
+	<TD><B>Code</B></TD> <TD><B>From Station</B></TD>
+	<TD><B>To Station</B></TD> <TD><B>No. Of Spaces</B></TD>
+	<TD id=OffsetTitle STYLE="DISPLAY: none"><B>Offset (c.)</B></TD>
+	<TD WIDTH="50"> </TD>
+	<TR>
+	<TD id=IncData11 name="IncData11">991</TD>
+	<TD> <INPUT id=IncData12 name=IncData12 size="10" > </TD>
+	<TD> <INPUT id=IncData13 name=IncData13 size="10" > </TD>
+	<TD> <INPUT id=IncData14 name=IncData14 size="10" > </TD>
+	<TD> <INPUT id=IncData15 name=IncData15 size="10" STYLE="DISPLAY: none"> </TD>
+	</TR>
+</TABLE>
+
+<TABLE>
+	<TR></TR>
+	<TR></TR>
+	<TR></TR>
+	<TR></TR>
+	<TR>
+	<TD><IMG id=cmdAddIncDataRow onclick=AddIncData()
+		onmouseout="cmdAddIncDataRow.src='./../Buttons/BoxDarkAddButton.jpg'"
+		onmouseover="cmdAddIncDataRow.src='./../Buttons/BoxLightAddButton.jpg'"
+ 		src=".\..\Buttons\BoxDarkAddButton.jpg"></TD>
+	<TD></TD>
+	<TD><IMG id=cmdRemoveIncRow onclick=RemoveOneIncRow() 		onmouseout="cmdRemoveIncRow.src='./../Buttons/BoxDarkDeleteButton.jpg'" 		onmouseover="cmdRemoveIncRow.src='./../Buttons/BoxLightDeleteButton.jpg'"
+		src=".\..\Buttons\BoxDarkDeleteButton.jpg"></TD>
+	</TR>
+</TABLE>
+
+</FORM>
+
+<FORM id="frmSkewLineData" name="frmSkewLineData">
+<hr WIDTH = "100%">
+<H3>Skew Line Data</H3>
+
+<TABLE>
+	<TR>
+	<TD><B>Code(d.)</B></TD> <TD><B>Station</B></TD>
+	<TD><B>Offset (d.)</B></TD> <TD><B>Skew Angle (e.)</B></TD>
+	<TD><B>Skew Angle (e.)</B></TD> <TD><B>Skew Angle (e.)</B></TD>
+	<TD><B>Radius To "L" Line (f.)</B></TD>
+	<TD><B>Offset Dist. Crown Line To "L" Line (Ft) (g.)</B></TD>
+	<TD WIDTH="50"> </TD>
+	<TR>
+	<TD> <SELECT id=Skew11 name=Skew11> <OPTION selected>992</OPTION> <OPTION>993</OPTION> </SELECT>
+	<TD> <INPUT id=Skew12 name=Skew12 size="10"> </TD>
+	<TD> <INPUT id=Skew13 name=Skew13 size="10"> </TD>
+	<TD> <INPUT id=Skew14 name=Skew14 size="10"> </TD>
+	<TD> <INPUT id=Skew15 name=Skew15 size="10"> </TD>
+	<TD> <INPUT id=Skew16 name=Skew16 size="10"> </TD>
+	<TD> <INPUT id=Skew17 name=Skew17 size="10"> </TD>
+	<TD> <INPUT id=Skew18 name=Skew18 size="10"> </TD>
+	</TR>
+</TABLE>
+
+<TABLE>
+	<TR></TR>
+	<TR></TR>
+	<TR></TR>
+	<TR></TR>
+	<TR>
+	<TD><IMG id=cmdAddSkewDataRow onclick=AddSkewData()
+		onmouseout="cmdAddSkewDataRow.src='./../Buttons/BoxDarkAddButton.jpg'"
+		onmouseover="cmdAddSkewDataRow.src='./../Buttons/BoxLightAddButton.jpg'"
+ 		src=".\..\Buttons\BoxDarkAddButton.jpg"></TD>
+	<TD></TD>
+	<TD><IMG id=cmdRemoveSkewRow onclick=RemoveOneSkewRow() 		onmouseout="cmdRemoveSkewRow.src='./../Buttons/BoxDarkDeleteButton.jpg'" 		onmouseover="cmdRemoveSkewRow.src='./../Buttons/BoxLightDeleteButton.jpg'"  		src=".\..\Buttons\BoxDarkDeleteButton.jpg"></TD>
+	</TR>
+</TABLE>
+
+<hr WIDTH = "100%">
+<hr WIDTH = "100%">
+
+</FORM>
+
+<H3>Enter Data Then Click On "Curvel Output" Frame</H3>
+
+</DIV>
+</BODY>
+</FONT>
+</HTML>

@@ -1,0 +1,179 @@
+<html>
+<head>
+   <title>Ult2Ax Info</title>
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+<style TYPE="text/css">
+      .select {text-align:center; font-family: Arial; font-weight: bold; cursor: hand}
+      body {margin-top: 0pt}
+     .contents {background: red; font-family: Arial; color: black}
+    </style>
+<script LANGUAGE="JavaScript">
+
+	function InfoLoaded(my)
+	{
+		if( parent.bLoaded == false )
+		{
+			parent.display(my, "Red");
+			parent.bLoaded = true;
+		}
+	}
+
+	function clickedOn(my)
+	{
+		parent.display(my, "Red");
+	}
+
+</script>
+</head>
+<body bgcolor="#C0C0C0" ONLOAD="InfoLoaded(this)" ONFOCUS="clickedOn(this)">
+
+<div ID="header" CLASS="select" ONSELECTSTART="return false"><font face="Arial">Ult2Ax
+Info</font></div>
+
+<center>
+<h2>
+<font face="Arial">Ultimate Strength Design For Biaxial<br>
+Bending And Axial Load Analysis</font></h2></center>
+<font face="Arial">Ult2Ax computes the ultimate moment capacity about two
+perpendicular axes for a given concrete section subjected to a given axial
+load.&nbsp; The axial load may be compression, tension, or zero.&nbsp;
+The concrete section may contain voids and/or be composed of more than
+one concrete strength.&nbsp; The reinforcement may be steel bars and/or
+270</font><font face="SuperScript VNI2">k</font><font face="Arial"> strands.</font>
+<h3>
+<font face="Arial">Input</font></h3>
+<img SRC=".\..\Pics\Ult2AxInfoPic1.jpg" BORDER=0 height=231 width=307>
+<p><font face="Arial">A section may be defined by giving the section vertices
+relative to an arbitrary co-ordinate system.&nbsp; The vertices are consecutively
+numbered clockwise for a section, counterclockwise for a void.</font>
+<br><font face="Arial">The X axis is positive to the right and the Y axis
+is positive upward.&nbsp; All input data is positive with the following
+two exceptions:</font>
+<p><font face="Arial">1) Coordinates may be negative.</font>
+<br><font face="Arial">2) Axial loads: Compressive axial loads are positive.&nbsp;
+Tensile axial loads are negative.</font>
+<h3>
+<font face="Arial">Description:</font></h3>
+
+<h4>
+<font face="Arial">Concrete Coordinates</font></h4>
+<font face="Arial">a) Number of concrete areas.&nbsp; Maximum of 15.</font>
+<br><font face="Arial">b) Number of vertices, concrete strength in ksi.&nbsp;
+Maximum of 50 for each area.</font>
+<br><font face="Arial">c) "X" and "Y" coordinates of vertex "n" in inches.&nbsp;
+"n"=number of vertex.&nbsp; Repeat for each vertex.</font>
+<br>&nbsp;
+<h4>
+<font face="Arial">Prestress</font></h4>
+<font face="Arial">d) Number of 270 kips strands and/or tendons.&nbsp;
+Maximum of 50.</font>
+<br><font face="Arial">e) "X" and "Y" coordinates in inches, area in inches</font><font face="SuperScript VNI">2</font><font face="Arial">,
+and prestress level of strand 'n' in ksi.</font>
+<br>&nbsp;
+<h4>
+<font face="Arial">Individual Bars</font></h4>
+<font face="Arial">f) Number of individuual rebars.</font>
+<br><font face="Arial">g) "X" and "Y" coordinates in inches and area of
+rebar 'n' in inches</font><font face="SuperScript VNI">2</font><font face="Arial,Helvetica">.&nbsp;
+'n'= rebar number.&nbsp; Repeat for each rebar.</font>
+<br>&nbsp;
+<h4>
+<font face="Arial,Helvetica">Lines of Rebar</font></h4>
+<font face="Arial,Helvetica">h) Number of rebar lines.&nbsp; Maximum of
+50.</font>
+<br><font face="Arial,Helvetica">i) Area in inches</font><font face="SuperScript VNI">2</font><font face="Arial,Helvetica">,
+coordinates of first bar in inches, number of bars in line, and coordinates
+of last bar in inches.&nbsp; Repeat for each rebar line.</font>
+<br>&nbsp;
+<h4>
+<font face="Arial,Helvetica">Rebar Properties</font></h4>
+<font face="Arial,Helvetica">j) Rebar yield stress reduction PHI factor
+in ksi.</font>
+<br>&nbsp;
+<h4>
+<font face="Arial,Helvetica">Computations</font></h4>
+<font face="Arial,Helvetica">k) Number of readings.</font>
+<br><font face="Arial,Helvetica">l) Total degrees of rotation of the neutral
+axis.</font>
+<br><font face="Arial,Helvetica">m) Printing input of data ("Yes" or "No").</font>
+<br>&nbsp;
+<h4>
+<font face="Arial,Helvetica">Axial Loads</font></h4>
+<font face="Arial,Helvetica">n) Number of axial loads coordinates of centroid.</font>
+<br><font face="Arial,Helvetica">o) P in kips.&nbsp; Repeat for each magnitude
+of P.</font>
+<p><font face="Arial,Helvetica">Note: P is located at the centroid of the
+section.&nbsp; Rebar input may be as individual bars, rows of bars, or
+a combination.&nbsp; Total number of rebars given individually, and in
+a line should not exceed 200.&nbsp; If a void area is included in a larger
+concrete area and then subtracted from the section by listing coordinates
+counterclickwise then the void concrete strength should be indicated the
+same as the larger surrounding area.</font>
+<br>&nbsp;
+<h3>
+<font face="Arial">Output:</font></h3>
+<font face="Arial">The input data is printed out first, if desired, and
+is self-explanatory.&nbsp; The interaction data for the section is printed
+out in tabular form.&nbsp; This table represents the intersection of a
+horizontal plan on the three-dimensional interaction diagram.&nbsp; The
+horizontal plane is the level of constant axial load.&nbsp; The intersection
+is the M</font><font face="SubScript VNI">x</font><font face="Arial">,
+M</font><font face="SubScript VNI">y</font><font face="Arial"> interaction
+curve.</font><font face="Arial"></font>
+<p><font face="Arial">The output values od Pult, Mxult, and Myult ontain
+the capacity reduction factor PHI.&nbsp; They are computed by the program
+as follows:</font><font face="Arial"></font>
+<p><font face="Arial">1) The input P (frame analysis) is divided by PHI
+to obtain a magnified axial load.</font>
+<br><font face="Arial">2) Using this magnified axial load corresponding
+ultimate moment capacities are computed.</font>
+<br><font face="Arial">3) The values of axial load and moments in (2.)
+are then multiplied by PHI and printed out.&nbsp; The results in (3.) represent
+the capacity of the member reduced by PHI.</font><font face="Arial"></font>
+<p><font face="Arial">The internal program computations include the strain
+produced by the 270</font><font face="SuperScript VNI">k</font><font face="Arial">
+strand axial formces and as such the input external axial force does not
+have to be modified to include axial forces due to prestressing in the
+270</font><font face="SuperScript VNI">k</font><font face="Arial"> strands.</font><font face="Arial"></font>
+<p><font face="Arial">Output units are kips, feet, and degrees.</font><font face="Arial"></font>
+<p><font face="Arial">The angle of the neutral axis is defined as shown
+below:</font><font face="Arial,Helvetica"></font>
+<p><img SRC=".\..\Pics\Ult2AxInfoPic2.jpg" BORDER=0 height=154 width=229><font face="Arial,Helvetica"></font>
+<p><font face="Arial,Helvetica">The positive direction of the moment vectors
+about the X and Y axes are as shown at the right.&nbsp; In the example
+below, if Mx and My were positive quantities the general location of the
+compression area would be as shown.</font><font face="Arial,Helvetica"></font>
+<p><img SRC=".\..\Pics\Ult2AxInfoPic3.jpg" height=278 width=279>
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

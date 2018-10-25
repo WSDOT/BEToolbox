@@ -1,0 +1,937 @@
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+
+<html>
+<head>
+<title>PSGDES Input</title>
+<style TYPE="text/css">
+      .select {text-align:center; font-family: Arial; font-weight: bold; color: white; cursor: hand}
+      body {margin-top: 0pt}
+     .contents {background: blue; font-family: Arial; color: black}
+	TD {font-size: 14; width: 60}
+	INPUT {width: 60}
+</style>
+</head>
+
+<script LANGUAGE="JavaScript">
+// javascript used to manipulate form.  vbscript used to manipulate data.
+// visual basic used to manipulate files.  fortran used to process data.
+
+// Note: Throughout this page and others, the ".\..\" are dos paths for HTML and the "./../" are unix path's for
+//  javascript..MUST be this way IAW http://www.cis.ohio-state.edu/htbin/rfc/rfc1738.html>
+
+	//This variable and the next two functions help to show/hide the entire form.
+	// useful in making it so header shows when form is minimized.
+	// Also deselects text that may have been selected accidentally when document is clicked on.
+	var bJustMaximized = false;
+
+	function SetJustMaximized()
+	{	//We just maximized the form
+		bJustMaximized = true;
+	}
+
+	function CheckMinimized()
+	{	//Form may have been maximized
+		// Check form to see if anything is highlighted...if so, unhighlight it.
+		if( bJustMaximized == true )
+		{
+//			document.all.InputFormFull.style.display="";
+			document.all.FormExcludingHeading.style.display = "";
+			bJustMaximized = false;
+			if ( "None" != document.selection.type)
+			{
+				document.selection.empty();
+			}
+		}
+	}
+
+	function GoToInfo(textLocation)
+	{	//goes to info form and displays appropriate topic
+		parent.frames(0).ViewTopic( textLocation );
+	}
+
+	function BodyLoad()
+	{
+		document.all.EraseMe1.innerHTML="";
+		document.all.EraseMe2.innerHTML="";
+		document.all.EraseMe3.innerHTML="";
+	}
+
+	function PicWindow()
+	{
+		window.open("HelpPopUp.html", "HelpCodes", 		// open the help-code pop-up window
+			'scrollbars,resizable,width=480,height=466');
+	}
+
+	function clickedOn(my)
+	{	//Clicked on form, so expand it and change color (old color = Blue)
+		parent.display(my, "Blue");
+	}
+
+	function LoadFile()	// Load from a file
+	{
+		var SavedFileData = parent.LoadFile();
+		if( SavedFileData != "")
+		{
+			ClearForm();
+			Parse(SavedFileData);
+		}
+		focus();	//The button was given the focus, now return it to the form.
+	}
+
+	function SaveFile()	//Save to a file
+	{
+		var dataString = GetSaveString();
+		parent.SaveFile( dataString );
+		focus();	//The button was given the focus, now return it to the form.
+	}
+
+	function Process()	//Called from "Output" page...this processes the data w/Fortran dll
+	{
+		var dataString = GetSaveString();
+		parent.SetInputString( dataString );
+		parent.Process();
+	}
+
+</script>
+<script LANGUAGE="VBScript">
+
+	Sub ClearForm	'Clears the form from any previous data entry
+		Dim count
+		Dim txtBoxName
+		Dim textBox
+
+		'Clear out line 1
+		For count = 1 to 10
+			If count = 1 Then
+				document.all.Line11.selectedIndex = 0
+			Else
+				txtBoxName = "Line1" + Cstr(count)
+				Set textBox = document.all.Item(txtBoxName)
+				textBox.value = ""
+			End If
+		Next
+
+		'Clear out line 2
+		For count = 1 to 11
+			If count = 11 Then
+				document.all.Line211.selectedIndex = 0
+			Else
+				txtBoxName = "Line2" + Cstr(count)
+				Set textBox = document.all.Item(txtBoxName)
+				textBox.value = ""
+			End If
+		Next
+
+		'Clear out line 3
+		For count = 1 to 9
+			If count = 1 Then
+				document.all.Line31.selectedIndex = 0
+			Else
+				txtBoxName = "Line3" + Cstr(count)
+				Set textBox = document.all.Item(txtBoxName)
+				textBox.value = ""
+			End If
+		Next
+
+		'Clear out line 4
+		For count = 1 to 18
+			txtBoxName = "Line4" + Cstr(count)
+			Set textBox = document.all.Item(txtBoxName)
+			textBox.value = ""
+		Next
+
+		'Clear out line 5
+		For count = 1 to 2
+			txtBoxName = "Line5" + Cstr(count)
+			Set textBox = document.all.Item(txtBoxName)
+			textBox.value = ""
+		Next
+
+		'Clear out line 6
+		For count = 1 to 5
+			txtBoxName = "Line6" + Cstr(count)
+			Set textBox = document.all.Item(txtBoxName)
+			textBox.value = ""
+		Next
+
+	End Sub
+
+	Function GetSaveString()
+		'Creates the string that will be saved to a file
+		'  Used for both saving to a file and for processing by Fortran dll.
+		Dim txtBoxName
+		Dim textBox
+		Dim tmpString
+		Dim strLine1
+		Dim strLine2
+		Dim strLine3
+		Dim strLine4
+		Dim strLine5
+		Dim strLine6
+		Dim strTmpValue
+		tmpString = ""
+		strLine1 = ""
+		strLine2 = ""
+		strLine3 = ""
+		strLine4 = ""
+		strLine5 = ""
+		strLine6 = ""
+
+		'Get line 1
+		strLine1 = "1,1,"		'line number AND identity number
+		For count = 1 to 10
+			If count = 1 Then
+				strLine1 = strLine1 & Cstr(document.all.Line11.selectedIndex) & ","
+			Else
+				txtBoxName = "Line1" + Cstr(count)
+				Set textBox = document.all.Item(txtBoxName)
+				strTmpValue = textBox.value
+				If count >=9 Then						'"-1" Defaults
+					If Trim(strTmpValue) = "" Then strTmpValue = "-1"
+				End If
+				If Trim(strTmpValue) = "" Then strTmpValue = "0"	'"0" Defaults
+				strLine1 = strLine1 & Cstr(strTmpValue) & ","
+			End If
+		Next
+		strLine1 = Mid(strLine1,1,(Len(strLine1)-1))	'Get rid of last comma
+		strLine1 = strLine1 + Chr(13) + Chr(10)
+
+		'Get line 2
+		strLine2 = "2,"		'line number
+		For count = 1 to 11
+			If count = 11 Then
+				strLine2 = strLine2 & Cstr(document.all.Line211.selectedIndex)& ","
+			Else
+				txtBoxName = "Line2" + Cstr(count)
+				Set textBox = document.all.Item(txtBoxName)
+				strTmpValue = textBox.value
+				If Trim(strTmpValue) = "" Then 	'set defaults
+					If count = 7 Then
+						strTmpValue = "6.0"
+					ElseIf count = 8 Then
+						strTmpValue = "7.0"
+					ElseIf count = 9 Then
+						strTmpValue = "25"
+					ElseIf count = 10 Then
+						strTmpValue = "3"
+					Else
+					        'Just in case it (strTmpvalue) didn't get set:
+					        strTmpValue = "0"
+					End If
+				End If
+				strLine2 = strLine2 & Cstr(strTmpValue) & ","
+			End If
+		Next
+		strLine2 = Mid(strLine2,1,(Len(strLine2)-1))	'Get rid of last comma
+		strLine2 = strLine2 + Chr(13) + Chr(10)
+
+		'Get line 3
+		strLine3 = "3,1,"		'line number AND problem number
+		For count = 1 to 9
+			txtBoxName = "Line3" + Cstr(count)
+			Set textBox = document.all.Item(txtBoxName)
+
+			'Deal with the combo box:
+			If count = 1 Then
+				Select Case document.all.Line31.selectedIndex	'Although it's really a combo box
+					Case 0
+						strTmpValue = "2"
+					Case 1
+						strTmpValue = "3"
+					Case 2
+						strTmpValue = "35"
+					Case 3
+						strTmpValue = "42"
+					Case 4
+						strTmpValue = "50"
+					Case 5
+						strTmpValue = "53"
+					Case 6
+						strTmpValue = "58"
+					Case 7
+						strTmpValue = "73"
+				End Select
+			Else
+				strTmpValue = textBox.value
+			End If
+
+			If Trim(strTmpValue) = "" Then
+				If count = 3 Then
+					strTmpValue = ".153"
+				ElseIf count = 4 Then
+					strTmpValue = "270"
+				Else
+				        'Just in case it (strTmpValue) somehow didn't get set:
+				        strTmpValue = "0"
+				End If
+			End If
+			strLine3 = strLine3 & Cstr(strTmpValue) & ","
+		Next
+		strLine3 = Mid(strLine3,1,(Len(strLine3)-1))	'Get rid of last comma
+		strLine3 = strLine3 + Chr(13) + Chr(10)
+
+		'Get line 4
+		strLine4 = "4,"		'line number
+		For count = 1 to 18
+			txtBoxName = "Line4" + Cstr(count)
+			Set textBox = document.all.Item(txtBoxName)
+			strTmpValue = textBox.value
+			If strTmpValue = "" Then	'set defaults
+				If count = 4 Then
+					strTmpValue = "-1"
+				ElseIf count = 7 Then
+					strTmpValue = "3.0"
+				ElseIf count = 8 Then
+					strTmpValue = "24.0"
+				ElseIf count = 9 Then
+					strTmpValue = "6.0"
+				ElseIf count = 14 Then
+					strTmpvalue = "48"
+				ElseIf count = 15 Then
+					strTmpValue = "4.0"
+				Else
+				        'Just in case it (strTmpValue) didn't get set:
+				        If Trim(strTmpValue) = "" Then strTmpValue = "0"
+				End If
+			End If
+
+			strLine4 = strLine4 & Cstr(strTmpValue) & ","
+		Next
+		strLine4 = Mid(strLine4,1,(Len(strLine4)-1))	'Get rid of last comma
+		strLine4 = strLine4 + Chr(13) + Chr(10)
+
+		'Clear out line 5
+		strLine5 = "5,"		'line number
+		For count = 1 to 2
+			txtBoxName = "Line5" + Cstr(count)
+			Set textBox = document.all.Item(txtBoxName)
+			strTmpValue = textBox.value
+			If strTmpValue = "" Then
+				If count = 1 Then
+					strTmpValue = "2.0"
+				ElseIf count = 2 Then
+					strTmpValue = "120"
+				End If
+			End If
+			If Trim(strTmpValue) = "" Then strTmpValue = "0"
+			strLine5 = strLine5 & Cstr(strTmpValue) & ","
+		Next
+		strLine5 = Mid(strLine5,1,(Len(strLine5)-1))	'Get rid of last comma
+		strLine5 = strLine5 + Chr(13) + Chr(10)
+
+		'Clear out line 6
+		strLine6 = "6,"		'line number
+		For count = 1 to 5
+			txtBoxName = "Line6" + Cstr(count)
+			Set textBox = document.all.Item(txtBoxName)
+			strTmpValue = textBox.value
+			If strTmpValue = "" Then	'set defaults
+				If count = 2 Then
+					strTmpValue = "0.00"
+				ElseIf count = 3 Then
+					strTmpValue = "0.20"
+				ElseIf count = 4 Then
+					strTmpValue = "20"
+				ElseIf count = 5 Then
+					strTmpValue = "35"
+				Else
+				        'Just in case it (strTmpValue) didn't get set:
+				        If Trim(strTmpValue) = "" Then strTmpValue = "0"
+				End If
+			End If
+			strLine6 = strLine6 & Cstr(strTmpValue) & ","
+		Next
+		strLine6 = Mid(strLine6,1,(Len(strLine6)-1))	'Get rid of last comma
+		strLine6 = strLine6 + Chr(13) + Chr(10)
+
+		tmpString = strLine1 & strLine2 & strLine3 & strLine4 & strLine5 & strLine6
+
+		GetSaveString = tmpString
+
+		strLine1 = ""
+		strLine2 = ""
+		strLine3 = ""
+		strLine4 = ""
+		strLine5 = ""
+		strLine6 = ""
+
+	End Function
+
+
+    Sub Parse(text)
+         'This takes the input string (from file), parses it, and then places the data inside
+         '     the form.
+        Dim iStartOfWord      'These are used to pull the entry out of the file
+        Dim iEndOfWord
+        Dim iEndOfString
+        Dim count       	'cycles through the file
+        Dim strWord		'holds the "word" pulled from the file
+        Dim iLengthOfWord
+        Dim iCurrentTextBox
+        Dim iCurrentTextBoxRow
+        Dim strBoxName		'name of the textbox...used to grab a reference to it
+        Dim textBox		'the reference to the textbox
+
+On Error Resume Next
+
+        iEndOfString = Len(text)
+        count = 1
+        iStartOfWord = 0
+        iEndOfWord = 1
+	  iCurrentTextBoxRow = 1
+
+	  text = RemoveJunkFromFileString(text)		'removes extraneous garbage from the file
+									' (which is used by the fortran, not "us")
+        For count = 1 To iEndOfString
+        'If parser finds an entry:
+
+            If ((Mid(text, count, 1) = ",") Or (Mid(text, count, 1) = Chr(13)) Or _
+			(Mid(text, count, 1) = Chr(10))) Then
+		'-----Move to the next textbox or line depending on current position in line
+		    If ( (Mid(text,count,1) = ",") Or (Mid(text,count,1) = Chr(13)) ) Then
+			  iCurrentTextBox = iCurrentTextBox + 1
+		    ElseIf Mid(text,count,1) = Chr(10) Then
+			  iCurrentTextBox = 0
+			  iCurrentTextBoxRow = iCurrentTextBoxRow + 1
+		    End If
+
+            '----Get a hold of the entry and assign to "strWord"
+                iEndOfWord = count
+                iLengthOfWord = ((iEndOfWord - 1) - (iStartOfWord))
+                strWord = Mid(text, iStartOfWord + 1, iLengthOfWord)
+                If Left(strWord,1) = Chr(10) Then strWord = Mid(strWord,2,(len(strWord)-1))
+                iStartOfWord = iEndOfWord
+
+	          If ((strWord <> Chr(13)) AND (strWord <> Chr(10)) _
+			   And (strWord <> "" )) Then
+
+		   	'Enter data into textboxes
+		   	strBoxName = "Line" & Cstr(iCurrentTextBoxRow) & Cstr(iCurrentTextBox)
+			Set textBox = document.all.Item(strBoxName)
+
+			Select Case strBoxName
+				Case "Line11"
+					If strWord = "0" Then
+		                        textBox.selectedIndex = 0	'actually an option box
+            	         	ElseIf strWord = "1" Then
+                  		      textBox.selectedIndex = 1	'actually an option box
+					End If
+				Case "Line211"
+					If strWord = "0" Then
+		                        textBox.selectedIndex = 0	'actually an option box
+            	         	ElseIf strWord = "1" Then
+                  		      textBox.selectedIndex = 1	'actually an option box
+					End If
+				Case "Line31"
+					Select Case strWord
+						Case "2"
+							textBox.selectedIndex = 0	'actually an option box
+						Case "3"
+							textBox.selectedIndex = 1	'actually an option box
+						Case "35"
+							textBox.selectedIndex = 2	'actually an option box
+						Case "42"
+							textBox.selectedIndex = 3	'actually an option box
+						Case "50"
+							textBox.selectedIndex = 4	'actually an option box
+						Case "53"
+							textBox.selectedIndex = 5	'actually an option box
+						Case "58"
+							textBox.selectedIndex = 6	'actually an option box
+						Case "73"
+							textBox.selectedIndex = 7	'actually an option box
+					End Select
+				Case Else
+				   	textBox.value = strWord
+			End Select
+		  End If
+            End If
+
+'Parse Error:
+If Err.Number > 4 Then
+	msgbox "You may be using a corrupted file.  Please contact Software Support."
+	Exit Sub
+End If
+
+        Next
+	  text = ""
+    End Sub
+
+
+	Function RemoveJunkFromFileString(text)
+         	'This takes the input string (from file), and removes the garbage needed by the fortran,
+		'  but not by this form
+	        Dim iStartOfWord      'These are used to pull the entry out of the file
+	        Dim iEndOfWord
+	        Dim iEndOfString
+	        Dim count       	'cycles through the file
+	        Dim strWord
+	        Dim iLengthOfWord
+	        Dim iCurrentTextBox
+	        Dim iCurrentTextBoxRow
+		  Dim NewString
+		  Dim strPosition
+
+		  NewString = ""
+	        iEndOfString = Len(text)
+	        count = 1
+	        iStartOfWord = 0
+	        iEndOfWord = 1
+		  iCurrentTextBoxRow = 1
+
+	        For count = 1 To iEndOfString
+	        'If parser finds an entry:
+
+	            If ((Mid(text, count, 1) = ",") Or (Mid(text, count, 1) = Chr(13)) Or _
+				(Mid(text, count, 1) = Chr(10))) Then
+			'-----Move to the next textbox or line depending on current position in line
+			    If ( (Mid(text,count,1) = ",") Or (Mid(text,count,1) = Chr(13)) ) Then
+				  iCurrentTextBox = iCurrentTextBox + 1
+			    ElseIf Mid(text,count,1) = Chr(10) Then
+				  iCurrentTextBox = 0
+				  iCurrentTextBoxRow = iCurrentTextBoxRow + 1
+			    End If
+
+      	      '----Get a hold of the entry and assign to "strWord"
+            	    iEndOfWord = count
+	                iLengthOfWord = ((iEndOfWord - 1) - (iStartOfWord))
+      	          strWord = Mid(text, iStartOfWord + 1, iLengthOfWord)
+            	    If Left(strWord,1) = Chr(10) Then strWord = Mid(strWord,2,(len(strWord)-1))
+	                iStartOfWord = iEndOfWord
+
+		          If ((strWord <> Chr(13)) AND (strWord <> Chr(10)) _
+				   And (strWord <> "" )) Then
+					strPosition = Cstr(iCurrentTextBoxRow) + Cstr(iCurrentTextBox)
+
+					Select Case strPosition		'Go through the entries and remove the ones not
+						Case "11"			'  needed
+							'Do nothing
+						Case "12"
+							'Do nothing
+						Case "21"
+							'Get rid of last comma:
+							NewString = Mid(NewString,1,(Len(NewString)-1))
+							'Add carraige return and line feed:
+							NewString = NewString + Chr(13) + Chr(10)
+						Case "31"
+							'Get rid of last comma:
+							NewString = Mid(NewString,1,(Len(NewString)-1))
+							'Add carraige return and line feed:
+							NewString = NewString + Chr(13) + Chr(10)
+						Case "32"
+							'Do nothing
+						Case "41"
+							'Get rid of last comma:
+							NewString = Mid(NewString,1,(Len(NewString)-1))
+							'Add carraige return and line feed:
+							NewString = NewString + Chr(13) + Chr(10)
+						Case "51"
+							'Get rid of last comma:
+							NewString = Mid(NewString,1,(Len(NewString)-1))
+							'Add carraige return and line feed:
+							NewString = NewString + Chr(13) + Chr(10)
+						Case "61"
+							'Get rid of last comma:
+							NewString = Mid(NewString,1,(Len(NewString)-1))
+							'Add carraige return and line feed:
+							NewString = NewString + Chr(13) + Chr(10)
+						Case Else
+							NewString = NewString & strWord + ","
+					End Select
+			    End If
+			End If
+		Next
+
+		RemoveJunkFromFileString = NewString
+		NewString = ""
+
+	End Function
+
+
+</script>
+
+
+
+<FONT FACE="Arial">
+
+<body bgProperties="fixed" BGCOLOR="blue" noWrap ONFOCUS="clickedOn(this)" ONLOAD="BodyLoad()"
+		ONMOUSEUP="CheckMinimized()">
+
+<p ID="header" CLASS="select" ONSELECTSTART="return false">PSGDES Input</p>
+
+<! <DIV id="InputFormFull">
+<DIV id="FormExcludingHeading"
+
+<hr WIDTH="100%">
+
+<table>
+  <tr>
+    <td><img src=".\..\Buttons\BoxDarkLoadButton.jpg" id="cmdLoad"
+    ONMOUSEOUT="cmdLoad.src='./../Buttons/BoxDarkLoadButton.jpg'"
+    ONMOUSEOVER="cmdLoad.src='./../Buttons/BoxLightLoadButton.jpg'" ONCLICK="LoadFile()"
+    width="156" height="25"> </td>
+
+    <td><img src=".\..\Buttons\BoxDarkSaveButton.jpg" id="cmdSave"
+    ONMOUSEOUT="cmdSave.src='./../Buttons/BoxDarkSaveButton.jpg'"
+    ONMOUSEOVER="cmdSave.src='./../Buttons/BoxLightSaveButton.jpg'" ONCLICK="SaveFile()"
+    width="156" height="25"> </td>
+
+    <td></td>
+
+    <td><img src=".\..\Buttons\BoxDarkHelpButton.jpg" id="cmdHelp"
+    ONMOUSEOUT="cmdHelp.src='./../Buttons/BoxDarkHelpButton.jpg'"
+    ONMOUSEOVER="cmdHelp.src='./../Buttons/BoxLightHelpButton.jpg'" ONCLICK="PicWindow()"
+    width="156" height="25"> </td>
+
+    <td id="EraseMe1"><img src=".\..\Buttons\BoxLightLoadButton.jpg" width="156" height="25"> </td>
+    <td id="EraseMe2"><img src=".\..\Buttons\BoxLightSaveButton.jpg" width="156" height="25"> </td>
+    <td id="EraseMe3"><img src=".\..\Buttons\BoxLightHelpButton.jpg" width="156" height="25"> </td>
+  </tr>
+</table>
+
+<hr WIDTH = "100%">
+
+<TABLE>
+<TR>
+	<TD width=10><h3 STYLE="cursor:hand; color:blue; text-decoration:underline" ONCLICK="GoToInfo('PsgdesInfo.html#INPUT_Line1')">Line 1</h3></TD>
+</TR>
+</TABLE>
+
+<table>
+  <tr>
+    <td></td>
+    <td><b>End Blocks</b></td>
+    <td><b>DLG (k/ft.)</b></td>
+    <td><b>Y bg (in)</b></td>
+    <td><b>A g (in<sup>2</sup>)</b></td>
+    <td><b>ZTG (in<sup>3</sup>)</b></td>
+    <td><b>I g (in<sup>4</sup>)</b></td>
+    <td><b>Top Flg. W (in)</b></td>
+    <td><b>Top Flg. Thick. (in)</b></td>
+    <td><b>Max. Harped</b></td>
+    <td><b>Max Str.</b></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><select id="Line11" size="1">
+      <option>No End Blocks</option>
+      <option>End Blocks</option>
+    </select> </td>
+    <td><input id="Line12" size="20"> </td>
+    <td><input id="Line13" size="20"> </td>
+    <td><input id="Line14" size="20"> </td>
+    <td><input id="Line15" size="20"> </td>
+    <td><input id="Line16" size="20"> </td>
+    <td><input id="Line17" size="20"> </td>
+    <td><input id="Line18" size="20"> </td>
+    <td><input id="Line19" size="20"> </td>
+    <td><input id="Line110" size="20"> </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="#FF00FF">(i)</font></td>
+    <td><p align="center"><font color="#FF00FF">(i)</font></td>
+  </tr>
+</table>
+
+<TABLE>
+<TR>
+	<TD width=10><h3 STYLE="cursor:hand; color:blue; text-decoration:underline" ONCLICK="GoToInfo('PsgdesInfo.html#INPUT_Line2')">Line 2</h3></TD>
+</TR>
+</TABLE>
+
+<table>
+  <tr>
+    <td></td>
+    <td width="10"><b>A End Blocks (in<sup>2</sup>)</b></td>
+    <td width="10"><b>I End Bld (in<sup>4</sup>)</b></td>
+    <td width="10"><b>Yt End Blk</b></td>
+    <td width="10"><b>Cont.</b></td>
+    <td width="10"><b>No. Harp</b></td>
+    <td width="10"><b>No. Str.</b></td>
+    <td width="10"><b>F'<sub>ci</sub> Gir. (ksi)</b></td>
+    <td width="10"><b>F'<sub>c</sub> Gir. (ksi)</b></td>
+    <td width="10"><b>HS Load</b></td>
+    <td width="10"><b>Max Gird Per Curb</b></td>
+    <td width="10"><b>Strand Type</b></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><input id="Line21" size="10"> </td>
+    <td><input id="Line22" size="10"> </td>
+    <td><input id="Line23" size="10"> </td>
+    <td><input id="Line24" size="10"> </td>
+    <td><input id="Line25" size="10"> </td>
+    <td><input id="Line26" size="10"> </td>
+    <td><input id="Line27" size="10"> </td>
+    <td><input id="Line28" size="10"> </td>
+    <td><input id="Line29" size="10" value="25"> </td>
+    <td><input id="Line210" size="10"> </td>
+    <td><select id="Line211" size="1">
+      <option>low-relaxation</option>
+      <option>stress-relieved</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="darkorchid">(b)</font></td>
+    <td><p align="center"><font color="deeppink">(c)</font></td>
+    <td><p align="center"><font color="deeppink">(c)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="#0080C0">(j)</font></td>
+    <td></td>
+  </tr>
+</table>
+
+<TABLE>
+<TR>
+	<TD width=10><h3 STYLE="cursor:hand; color:blue; text-decoration:underline" ONCLICK="GoToInfo('PsgdesInfo.html#INPUT_Line3')">Line 3</h3></TD>
+</TR>
+</TABLE>
+
+<table>
+  <tr>
+    <td></td>
+    <td width="10"><b>Gir Type</b></td>
+    <td width="10"><b>Span C-C Brg (Ft)</b></td>
+    <td width="10"><b>A s Strand (in<sup>2</sup>)</b></td>
+    <td width="10"><b>Ult Stress (ksi)</b></td>
+    <td width="10"><b>Slab DL (k/ft)</b></td>
+    <td width="10"><b>Vi/Mmax (k/k-ft)</b></td>
+    <td width="10"><b>Pos L.L. Moment (k+ft)</b></td>
+    <td width="10"><b>L.L.Dist N</b></td>
+    <td width="10"><b>GS. Slab Thick (in)</b></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><select id="Line31" size="1">
+      <option>nonstandard composite</option>
+      <option>nonstandard noncomposite</option>
+	<option>W35DG</option>
+	<option>W42G</option>
+	<option>W50G</option>
+	<option>W53DG</option>
+	<option>W58G</option>
+	<option>W74G</option>
+    </select></td>
+    <td><input id="Line32" size="10"></td>
+    <td><input id="Line33" size="10"></td>
+    <td><input id="Line34" size="10"></td>
+    <td><input id="Line35" size="10"></td>
+    <td><input id="Line36" size="10"></td>
+    <td><input id="Line37" size="10"></td>
+    <td><input id="Line38" size="10"></td>
+    <td><input id="Line39" size="10"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="seagreen">(e)</font></td>
+    <td><p align="center"><font color="seagreen">(e)</font> (k)</td>
+    <td><p align="center"><font color="seagreen">(e)</font></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+<TABLE>
+<TR>
+	<TD width=10><h3 STYLE="cursor:hand; color:blue; text-decoration:underline" ONCLICK="GoToInfo('PsgdesInfo.html#INPUT_Line4')">Line 4</h3></TD>
+</TR>
+</TABLE>
+
+<table>
+  <tr>
+    <td></td>
+    <td width="10"><b>Girder Spacing (ft)</b></td>
+    <td width="10"><b>&quot;A&quot; Dist (in)</b></td>
+    <td width="10"><b>Gir/Span</b></td>
+    <td width="10"><b>Curb Weight (k/ft)</b></td>
+    <td width="10"><b>E (in)</b></td>
+    <td width="10"><b>Harped Strand Rise (in)</b></td>
+    <td width="10"><b>FCL (in)</b></td>
+    <td width="10"><b>Stirr. Av Fy (k)</b></td>
+    <td width="10"><b>Web Th. (in)</b></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><input id="Line41" size="10"></td>
+    <td><input id="Line42" size="10"></td>
+    <td><input id="Line43" size="10"></td>
+    <td><input id="Line44" size="10"></td>
+    <td><input id="Line45" size="10"></td>
+    <td><input id="Line46" size="10"></td>
+    <td><input id="Line47" size="10"></td>
+    <td><input id="Line48" size="10"></td>
+    <td><input id="Line49" size="10"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td><p align="center"><font color="yellow">(f)</font></td>
+    <td></td>
+    <td><p align="center"><font color="maroon">(g)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+  </tr>
+</table>
+
+<TABLE>
+<TR>
+	<TD width=10><h3 STYLE="cursor:hand; color:blue; text-decoration:underline" ONCLICK="GoToInfo('PsgdesInfo.html#INPUT_Line4')">Line 4 (continued)</h3></TD>
+</TR>
+</TABLE>
+
+<table>
+  <tr>
+    <td></td>
+    <td width="10"><b>Extra Slab Width (in)</b></td>
+    <td width="10"><b>XHarp (ft)</b></td>
+    <td width="10"><b>Asph. Th. (in)</b></td>
+    <td width="10"><b>Eff. Slab Width (in)</b></td>
+    <td width="10"><b>Final Design Losses (ksi)</b></td>
+    <td width="10"><b>Slab F'<sub>c</sub> (ksi)</b></td>
+    <td width="10"><b>End Block Length (ft)</b></td>
+    <td width="10"><b>End Block Taper Length (ft)</b></td>
+    <td width="10"><b>End Block Thick (in)</b></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><input id="Line410" size="10"> </td>
+    <td><input id="Line411" size="10"> </td>
+    <td><input id="Line412" size="10"> </td>
+    <td><input id="Line413" size="10"> </td>
+    <td><input id="Line414" size="10"> </td>
+    <td><input id="Line415" size="10"> </td>
+    <td><input id="Line416" size="10"> </td>
+    <td><input id="Line417" size="10"> </td>
+    <td><input id="Line418" size="10"> </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td></td>
+    <td><p align="center"><font color="blue">(a)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+<TABLE>
+<TR>
+	<TD width=10><h3 STYLE="cursor:hand; color:blue; text-decoration:underline" ONCLICK="GoToInfo('PsgdesInfo.html#INPUT_Line5')">Line 5</h3></TD>
+</TR>
+</TABLE>
+
+<table>
+  <tr>
+    <td></td>
+    <td width="10"><b>Creep</b></td>
+    <td width="10"><b>Days</b></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><input id="Line51" size="10"></td>
+    <td><input id="Line52" size="10"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+  </tr>
+</table>
+
+<TABLE>
+<TR>
+	<TD width=10><h3 STYLE="cursor:hand; color:blue; text-decoration:underline" ONCLICK="GoToInfo('PsgdesInfo.html#INPUT_Line6')">Line 6</h3></TD>
+</TR>
+</TABLE>
+
+<table>
+  <tr>
+    <td></td>
+    <td width="10"><b>Pick Pt. (ft)</b></td>
+    <td width="10"><b>Impact Factor Lift</b></td>
+    <td width="10"><b>Impact Factor Ship</b></td>
+    <td width="10"><b>Losses - Lift (ksi)</b></td>
+    <td width="10"><b>Losses - Ship (ksi)</b></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><input id="Line61" size="10"></td>
+    <td><input id="Line62" size="10"></td>
+    <td><input id="Line63" size="10"></td>
+    <td><input id="Line64" size="10"></td>
+    <td><input id="Line65" size="10"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+    <td><p align="center"><font color="red">(d)</font></td>
+  </tr>
+</table>
+
+<hr WIDTH="100%">
+
+<hr WIDTH="100%">
+
+<h3>Enter Data Then Click On &quot;PSGDES Output&quot; Frame</h3>
+
+</DIV>
+</body>
+</FONT>
+</html>

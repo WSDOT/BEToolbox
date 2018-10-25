@@ -1,0 +1,124 @@
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+
+<HTML>
+  <HEAD>
+    <TITLE>Trssmem Output</TITLE>
+    <STYLE TYPE="text/css">
+      .select {text-align:center; font-family: Arial; font-weight: bold; cursor: hand}
+      body {margin-top: 0pt}
+     .contents {background: white; color: black}
+    </STYLE>
+  </HEAD>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+	//This variable and the next two functions help to show/hide the entire form.
+	// useful in making it so header shows when form is minimized.
+	// Also deselects text that may have been selected accidentally when document is clicked on.
+	var bJustMaximized = false;
+
+	function SetJustMaximized()
+	{
+		bJustMaximized = true;
+	}
+
+	function CheckMinimized()
+	{
+		if( bJustMaximized == true )
+		{
+			document.all.FormExcludingHeading.style.display="";
+			bJustMaximized = false;
+			if ( "None" != document.selection.type)
+			{
+				document.selection.empty();
+			}
+		}	
+	}
+
+	function clickedOn(my)
+	{
+		parent.display(my, "Yellow");
+		parent.frames(1).Process();
+		var outputString = parent.GetOutPut();
+		if ( outputString != "" )
+		{
+	   		outputArea.innerText = outputString;
+		}
+	      FileName.innerText = "Data File Name: " + parent.GetFileName();
+	}
+
+</SCRIPT>
+
+  <BODY bgProperties=fixed BGCOLOR=yellow noWrap ONFOCUS="clickedOn(this)" ONMOUSEUP="CheckMinimized()">
+    <P ID="header" CLASS="select" ONSELECTSTART="return false">
+      Trssmem Output
+    </P>
+    
+<DIV id="FormExcludingHeading">    
+    
+    <P ID="FileName">Data File Name: </P>
+
+<PRE id=outputArea name = outputArea title=""> <OBJECT classid=CLSID:F9043C85-F6F2-101A-A3C9-08002B2F49FB id=dlgCommonDialog style="HEIGHT: 211px; LEFT: -54px; POSITION: absolute; TOP: 30px; WIDTH: 307px">
+	<PARAM NAME="_ExtentX" VALUE="847">
+	<PARAM NAME="_ExtentY" VALUE="847">
+	<PARAM NAME="_Version" VALUE="393216">
+	<PARAM NAME="CancelError" VALUE="0">
+	<PARAM NAME="Color" VALUE="0">
+	<PARAM NAME="Copies" VALUE="1">
+	<PARAM NAME="DefaultExt" VALUE="">
+	<PARAM NAME="DialogTitle" VALUE="">
+	<PARAM NAME="FileName" VALUE="">
+	<PARAM NAME="Filter" VALUE="">
+	<PARAM NAME="FilterIndex" VALUE="0">
+	<PARAM NAME="Flags" VALUE="0">
+	<PARAM NAME="FontBold" VALUE="0">
+	<PARAM NAME="FontItalic" VALUE="0">
+	<PARAM NAME="FontName" VALUE="">
+	<PARAM NAME="FontSize" VALUE="6">
+	<PARAM NAME="FontStrikeThru" VALUE="0">
+	<PARAM NAME="FontUnderLine" VALUE="0">
+	<PARAM NAME="FromPage" VALUE="0">
+	<PARAM NAME="HelpCommand" VALUE="0">
+	<PARAM NAME="HelpContext" VALUE="0">
+	<PARAM NAME="HelpFile" VALUE="">
+	<PARAM NAME="HelpKey" VALUE="">
+	<PARAM NAME="InitDir" VALUE="">
+	<PARAM NAME="Max" VALUE="0">
+	<PARAM NAME="Min" VALUE="0">
+	<PARAM NAME="MaxFileSize" VALUE="260">
+	<PARAM NAME="PrinterDefault" VALUE="1">
+	<PARAM NAME="ToPage" VALUE="0">
+	<PARAM NAME="Orientation" VALUE="1"></OBJECT>
+
+
+       </PRE>
+
+</DIV>
+</BODY>
+</HTML>

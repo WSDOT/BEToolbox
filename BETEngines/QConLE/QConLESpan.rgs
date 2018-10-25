@@ -1,0 +1,26 @@
+HKCR
+{
+	QConLE.QConLESpan.1 = s 'QConLESpan Class'
+	{
+		CLSID = s '{415902F4-6933-440D-9100-0D6A21743BDD}'
+	}
+	QConLE.QConLESpan = s 'QConLESpan Class'
+	{
+		CLSID = s '{415902F4-6933-440D-9100-0D6A21743BDD}'
+		CurVer = s 'QConLE.QConLESpan.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {415902F4-6933-440D-9100-0D6A21743BDD} = s 'QConLESpan Class'
+		{
+			ProgID = s 'QConLE.QConLESpan.1'
+			VersionIndependentProgID = s 'QConLE.QConLESpan'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{979C7861-24E4-438E-9047-9A017C54AE52}'
+		}
+	}
+}

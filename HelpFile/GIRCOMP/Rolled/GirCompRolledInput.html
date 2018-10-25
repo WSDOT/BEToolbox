@@ -1,0 +1,540 @@
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+
+<HTML>
+  <HEAD>
+    <TITLE>GirComp Rolled Input</TITLE>
+    <STYLE TYPE="text/css">
+      .select {text-align:center; font-family: Arial; font-weight: bold; color: white; cursor: hand}
+      body {margin-top: 0pt}
+     .contents {background: blue; font-family: Arial; color: black}
+	TD {font-size: 14; width: 60; font-weight: bold}
+	INPUT {width: 60}
+    </STYLE>
+  </HEAD>
+
+<SCRIPT LANGUAGE="JavaScript">
+// javascript used to manipulate form.  vbscript used to manipulate data.
+// visual basic used to manipulate files.  fortran used to process data.
+
+// Note: Throughout this page and others, the ".\..\" are dos paths for HTML and the "./../" are unix path's for
+//  javascript..MUST be this way IAW http://www.cis.ohio-state.edu/htbin/rfc/rfc1738.html>
+
+	//This variable and the next two functions help to show/hide the entire form.
+	// useful in making it so header shows when form is minimized.
+	// Also deselects text that may have been selected accidentally when document is clicked on.
+	var bJustMaximized = false;
+
+	function SetJustMaximized()
+	{
+		bJustMaximized = true;
+	}
+
+	function CheckMinimized()
+	{
+		if( bJustMaximized == true )
+		{
+			//document.all.InputFormFull.style.display="";
+			document.all.FormExcludingHeading.style.display="";
+			bJustMaximized = false;
+			if ( "None" != document.selection.type)
+			{
+				document.selection.empty();
+			}
+		}
+	}
+
+	function BodyLoad()
+	{
+		//Erases buttons that need to be linked in for compiler to see them
+		document.all.EraseMe1.innerHTML="";
+		document.all.EraseMe2.innerHTML="";
+		document.all.EraseMe3.innerHTML="";
+		document.all.EraseMe4.innerHTML="";
+		Problems = 1;
+	}
+
+	function clickedOn(my)
+	{	//Clicked on form, so expand it and change color (old color = Blue)
+		parent.display(my, "Blue");
+	}
+
+	function LoadFile()	// Load from a file
+	{
+		var SavedFileData = parent.LoadFile();
+		if( SavedFileData != "")
+		{
+			ClearForm();
+			Parse(SavedFileData);
+		}
+		focus();	//The button was given the focus, now return it to the form.
+	}
+
+	function SaveFile()	//Save to a file
+	{
+		var dataString = GetSaveString();
+		parent.SaveFile( dataString );
+		focus();	//The button was given the focus, now return it to the form.
+	}
+
+	function Process()	//Called from "Output" page...this processes the data w/Fortran dll
+	{
+		var dataString = CreateStringForFortran();
+		parent.SetInputString( dataString );
+		parent.Process();
+	}
+
+	function RemoveOneProblem()	//Remove one row of problems.
+	{
+		if( Problems > 1 )
+		{
+			document.all.frmInput.innerHTML =
+				GetUpToNextToLastTableRow( document.all.frmInput.innerHTML );
+			Problems--;
+		}
+	}
+
+	function AddProblem()		//Adds one row of problems
+	{
+		var strHTML = document.all.frmInput.innerHTML;
+		document.all.frmInput.innerHTML = NewProblem( strHTML );
+		//Don't have to increment "Problems" cuz the last function does that for us.
+	}
+
+</SCRIPT>
+
+<SCRIPT LANGUAGE="VBScript">
+
+	Dim Problems	'To keep track of how many rows of problems there currently are.
+
+	Sub ClearForm
+		'Remove the "excess" problems
+		While Problems > 1
+			RemoveOneProblem
+		Wend
+
+		document.all.Identity.value = ""
+		document.all.Area.value = ""
+		document.all.Depth.value = ""
+		document.all.Inertia.value = ""
+
+
+		'Clear out all the other text boxes left
+		Dim count
+		Dim strTextBoxName
+		Dim textBox
+		For count = 1 to 6
+			strTextBoxName = "Input1" & Cstr(count)
+			Set textBox = document.all.Item(strTextBoxName)
+			textBox.value = ""
+		Next
+
+	End Sub
+
+	Function GetSaveString()
+		'Creates the string that will be saved to a file
+		dim tmpString
+		tmpString = ""
+		tmpString = tmpString & "<RU>" & ",<PRB=" & Cstr(Problems) & ">"
+		tmpString = tmpString + Chr(13) + Chr(10)
+		tmpString = tmpString & CreateStringForFortran
+		GetSaveString = tmpString
+
+	End Function
+
+
+	Function CreateStringForFortran()     'Takes form data and converts it to a string
+							  ' used for both saving the file and for
+							  ' processing by the Fortran dll.
+		Dim strLine1
+		Dim strLine2
+
+                If Trim(document.all.Identity.value) = "" Then
+                        strLine1 = "1,0," & GetDimensions + Chr(13) + Chr(10)
+                Else
+                        strLine1 = "1," & Trim(document.all.Identity.value) & "," & GetDimensions + Chr(13) + Chr(10)
+                End If
+
+		strLine2 = GetFormData() + Chr(13) + Chr(10)
+
+		CreateStringForFortran = strLine1 + strLine2
+
+		strLine1 = ""
+		strLine2 = ""
+
+	End Function
+
+	Function GetDimensions()
+		Dim tmpString
+		Dim tmpVar
+		tmpString = ""
+		tmpVar = Cstr(document.all.Area.value)
+		If tmpVar = "" Then tmpVar = "0"
+		tmpString = tmpString & tmpVar & ","
+		tmpVar = Cstr(document.all.Depth.value)
+		If tmpVar = "" Then tmpVar = "0"
+		tmpString = tmpString & tmpVar & ","
+		tmpVar = Cstr(document.all.Inertia.value)
+		If tmpVar = "" Then tmpVar = "0"
+		tmpString = tmpString & tmpVar
+		GetDimensions = tmpString
+
+	End Function
+
+	Function GetFormData()
+		Dim count1
+		Dim count2
+		Dim tmpString
+		Dim textBox
+		Dim strBoxName
+		Dim strTextValue
+		tmpString = ""
+		For count1 = 1 to Problems
+			tmpString = tmpString & "2," & Cstr(count1)
+			tmpString = tmpString & ",0,0,0,0,0,0"
+			For count2 = 1 to 6	'total number of boxes excluding 1st one.
+				strBoxName = "Input" + Cstr(count1) + Cstr(count2)
+				Set textBox = document.all.Item(strBoxName)
+				strTextValue = textBox.value
+				If Trim(strTextValue) = "" Then strTextValue = "0"
+				tmpString = tmpString & "," & strTextValue
+			Next
+			tmpString = tmpString + Chr(13) + Chr(10)
+		Next
+
+		GetFormData = tmpString
+	End Function
+
+
+    Sub Parse(text)
+         'This takes the input string (from file), parses it, and then places the data inside
+         '     the form.
+        Dim iStartOfWord     'These are used to pull the entry out of the file
+        Dim iEndOfWord
+        Dim iEndOfString
+        Dim count       'cycles through the file
+        Dim count2      'open for use by anyone
+        Dim strWord
+        Dim iLengthOfWord
+        Dim iCurrentTextBox
+        Dim iCurrentTextBoxRow
+        Dim strBoxName
+        Dim textBox
+        Dim tmpProblems
+
+On Error Resume Next
+
+        iEndOfString = Len(text)
+        iCurrentTextBox = -2    'used to avoid first two numbers of line for problems
+        iCurrentTextBoxRow = -1  'used to find the first row containing the identity
+        count = 1
+        iStartOfWord = 0
+        iEndOfWord = 1
+
+        For count = 1 To iEndOfString
+        'If parser finds an entry:
+
+            If (Mid(text, count, 1) = ",") Or (Mid(text, count, 1) = Chr(13)) Or _
+			(Mid(text, count, 1) = Chr(10)) Then
+		'-----Move to the next textbox or line depending on current position in line
+		    If ( (Mid(text,count,1) = ",") Or (Mid(text,count,1) = Chr(13)) ) Then
+			  iCurrentTextBox = iCurrentTextBox + 1
+		    ElseIf Mid(text,count,1) = Chr(10) Then
+			  iCurrentTextBox = -2
+			  iCurrentTextBoxRow = iCurrentTextBoxRow + 1
+		    End If
+
+            '----Get a hold of the entry and assign to "strWord"
+                iEndOfWord = count
+                iLengthOfWord = ((iEndOfWord - 1) - (iStartOfWord))
+                strWord = Mid(text, iStartOfWord + 1, iLengthOfWord)
+                If Left(strWord,1) = Chr(10) Then strWord = Mid(strWord,2,(len(strWord)-1))
+                iStartOfWord = iEndOfWord
+
+                'Check to see if it is the file description
+                If strWord = "<BU>" Then
+                    MsgBox "Please use the ""Built-Up"" version of the program for this file."
+                    Exit Sub
+
+                'See how many problems there are and make enough rows for them
+                ElseIf Mid(strWord, 2, 3) = "PRB" Then
+                    tmpProblems = CInt(Mid(strWord, 6, (Len(strWord) - 6)))    'strWord = how many probs
+                End If
+
+                If tmpProblems > 1 Then
+                    For count2 = 2 To tmpProblems	'ignore first problem, as row already exists
+                        AddProblem
+                    Next
+			  tmpProblems = 0				'Avoids going through this function again.
+                    'iCurrentTextBoxRow = 0		'Don't need to stick in the second row
+                End If
+
+		    If (( iCurrentTextBoxRow = 0 ) And ( iCurrentTextBox >= 0 )) Then
+			  Select Case iCurrentTextBox
+				Case 0
+				  document.all.Identity.value = strWord
+				Case 1
+				  document.all.Area.value = strWord
+				Case 2
+				  document.all.Depth.value = strWord
+				Case 3
+				  document.all.Inertia.value = strWord
+			  End Select
+		    End If
+
+		    If (( iCurrentTextBoxRow > 0 ) And (iCurrentTextBox > 6 )) Then
+			  strBoxName = "Input" & Cstr(iCurrentTextBoxRow ) & Cstr(iCurrentTextBox-6)
+			  Set textBox = document.all.Item(strBoxName)
+			  textBox.value = strWord
+		    End If
+            End If
+        Next
+
+'Parse Error:
+If Err.Number > 4 Then
+	msgbox "You may be using a corrupted file.  Please contact Software Support."
+	Exit Sub
+End If
+
+    End Sub
+
+'****************************************************************************************
+'These "GetUpToNextTOLast???Row" functions are used to dynamically delete rows of problems.
+'  What these functions do is retrieve a "form", delete everything following the next-to-last-row
+'  (thereby eliminating the last row), then appending the end tags/buttons to the end of the string,
+'  and then placing the new string back into the form.
+'****************************************************************************************
+
+	Function GetUpToNextToLastTableRow( strHTML )
+		Dim LastPosition
+		Dim count
+		Dim count2
+		Dim tmpString
+		count2 = 0
+		LastPosition = len(strHTML)
+		For count = LastPosition to 1 Step -1
+			If ((Mid(strHTML, count, 3) = "<hr") Or (Mid(strHTML, count, 3) = "<HR"))Then
+				LastPosition = count
+				count2 = count2 + 1
+				If count2 >= 4 Then count = 1	'exit the loop
+			End If
+		Next
+		tmpString = Mid(strHTML, 1, (LastPosition - 1))
+		tmpString = tmpString + "<TABLE><TR></TR><TR></TR><TR></TR><TR></TR><TD>" & _
+				"<IMG src="".\..\..\Buttons\BoxDarkAddButton.jpg"" id=""cmdAddProblem""" & _
+				"ONMOUSEOUT=""cmdAddProblem.src='./../../Buttons/BoxDarkAddButton.jpg'""" & _
+				"ONMOUSEOVER=""cmdAddProblem.src='./../../Buttons/BoxLightAddButton.jpg'""" & _
+				"NAME=""cmdAddProblem""" & _
+		 		"ONCLICK=""AddProblem()""></TD><TD></TD>" & _
+				"<TD><IMG src="".\..\..\Buttons\BoxDarkDeleteButton.jpg"" id=""cmdRemoveProblem""" & _
+				"ONMOUSEOUT=""cmdRemoveProblem.src='./../../Buttons/BoxDarkDeleteButton.jpg'""" & _
+				"ONMOUSEOVER=""cmdRemoveProblem.src='./../../Buttons/BoxLightDeleteButton.jpg'""" & _
+				"NAME=""cmdRemoveProblem"" ONCLICK=""RemoveOneProblem()""></TD>" & _
+				"</TR></TABLE><hr WIDTH = ""100%""><hr WIDTH = ""100%"">"
+
+		GetUpToNextToLastTableRow = tmpString
+	End Function
+
+'****************************************************************************************
+'These "New???" functions are used to dynamically insert one new row (problems).
+'  What these functions do is retrieve a "form", delete everything following the last-row
+'  (the end tags), then appending the new row tags/end tags/buttons to the end of the string,
+'  and then placing the new string back into the form.
+'****************************************************************************************
+
+	Function NewProblem( oldHTML )
+		dim count
+		dim strNewString
+		strNewString = ""
+		oldHTML = GetUpToLastTableRow( oldHTML )
+		Problems = Problems + 1
+		strNewString = "" & _
+			"<hr WIDTH = ""100%""><hr WIDTH = ""100%"">" & _
+			"<BIG id=Problem" & Cstr(Problems) & _
+			"><U>Problem: " & Cstr(Problems) & "</U></BIG>" & _
+			"<TABLE>" & _
+			"<TD width=10><B>Slab Width</B></TD>" & _
+			"<TD width=10><B>Slab Thickness</B></TD>" & _
+			"<TD width=10><B>""G""</B></TD>" & _
+			"<TD width=20><B>N<SUB>1</SUB> (Es/Ec<SUB>1</SUB>)</B></TD>" & _
+			"<TD width=20><B>N<SUB>2</SUB> (Es/Ec<SUB>2</SUB>)</B></TD>" & _
+			"<TD width=20><B>N<SUB>3</SUB> (Es/Ec<SUB>3</SUB>)</B></TD>" & _
+			"<TR>" & _
+			"<TD> <INPUT id=""Input" & Cstr(Problems) & "1"" size=""10"" > </TD>" & _
+			"<TD> <INPUT id=""Input" & Cstr(Problems) & "2"" size=""10"" > </TD>" & _
+			"<TD> <INPUT id=""Input" & Cstr(Problems) & "3"" size=""10"" > </TD>" & _
+			"<TD> <INPUT id=""Input" & Cstr(Problems) & "4"" size=""10"" > </TD>" & _
+			"<TD> <INPUT id=""Input" & Cstr(Problems) & "5"" size=""10"" > </TD>" & _
+			"<TD> <INPUT id=""Input" & Cstr(Problems) & "6"" size=""10"" > </TD>" & _
+			"</TR>" & _
+			"</TABLE>"
+
+		strNewString = strNewString + "<TABLE><TR></TR><TR></TR><TR></TR><TR></TR><TD>" & _
+				"<IMG src="".\..\..\Buttons\BoxDarkAddButton.jpg"" id=""cmdAddProblem""" & _
+				"ONMOUSEOUT=""cmdAddProblem.src='./../../Buttons/BoxDarkAddButton.jpg'""" & _
+				"ONMOUSEOVER=""cmdAddProblem.src='./../../Buttons/BoxLightAddButton.jpg'""" & _
+				"NAME=""cmdAddProblem""" & _
+		 		"ONCLICK=""AddProblem()""></TD><TD></TD>" & _
+				"<TD><IMG src="".\..\..\Buttons\BoxDarkDeleteButton.jpg"" id=""cmdRemoveProblem""" & _
+				"ONMOUSEOUT=""cmdRemoveProblem.src='./../../Buttons/BoxDarkDeleteButton.jpg'""" & _
+				"ONMOUSEOVER=""cmdRemoveProblem.src='./../../Buttons/BoxLightDeleteButton.jpg'""" & _
+				"NAME=""cmdRemoveProblem"" ONCLICK=""RemoveOneProblem()""></TD>" & _
+				"</TR></TABLE> <hr WIDTH = ""100%""><hr WIDTH = ""100%"">"
+		NewProblem = oldHTML + strNewString
+	End Function
+
+'****************************************************************************************
+' This function takes a piece of HTML retrieved from a "form", then gives you back the
+'   HTML without the end tags (everything after the last row of problems).
+'***************************************************************************************
+
+	Function GetUpToLastTableRow( strHTML )
+		Dim LastPosition
+		Dim count
+		Dim count2
+		LastPosition = len(strHTML)
+		For count = LastPosition to 1 Step -1
+			If ((Mid(strHTML, count, 7) = "<TABLE>") OR (Mid(strHTML, count, 8) = "</TABLE>")) THEN
+				LastPosition = count
+				count2 = count2 + 1
+				If count2 >= 2 Then count = 1	'exit the loop
+			End If
+		Next
+		GetUpToLastTableRow = Mid(strHTML, 1, (LastPosition - 1))
+	End Function
+
+</SCRIPT>
+
+
+
+
+<FONT FACE="Arial">
+
+<BODY bgProperties=fixed BGCOLOR=blue noWrap ONFOCUS="clickedOn(this)" ONLOAD="BodyLoad()"
+			ONMOUSEUP="CheckMinimized()">
+
+   <P ID="header" CLASS="select" ONSELECTSTART="return false">
+      Composite Girder Section Properties: Rolled Input   </P>
+
+<! <DIV id="InputFormFull">
+<DIV id="FormExcludingHeading">
+
+<H4>Composite Girder Diagram</H4>
+<IMG src=".\..\..\Pics\GirderDrawingRolled.jpg">
+
+<hr WIDTH = "100%">
+
+<TABLE>
+    <TR>
+	<TD> <IMG src=".\..\..\Buttons\BoxDarkLoadButton.jpg" id="cmdLoad"
+		 	ONMOUSEOUT="cmdLoad.src='./../../Buttons/BoxDarkLoadButton.jpg'"
+			ONMOUSEOVER="cmdLoad.src='./../../Buttons/BoxLightLoadButton.jpg'"
+			NAME="cmdLoad" ONCLICK="LoadFile()" > </TD>
+    	<TD></TD>
+ 	<TD> <IMG src=".\..\..\Buttons\BoxDarkSaveButton.jpg" id="cmdSave"
+		ONMOUSEOUT="cmdSave.src='./../../Buttons/BoxDarkSaveButton.jpg'"
+		ONMOUSEOVER="cmdSave.src='./../../Buttons/BoxLightSaveButton.jpg'"
+		NAME="cmdSave" ONCLICK="SaveFile()"> </TD>
+	<TD id="EraseMe1"> <IMG src=".\..\..\Buttons\BoxLightLoadButton.jpg"> </TD>
+	<TD id="EraseMe2"> <IMG src=".\..\..\Buttons\BoxLightSaveButton.jpg"> </TD>
+    </TR>
+</TABLE>
+
+<hr WIDTH = "100%">
+
+<H3>Initialization Data:</H3>
+<TABLE>
+    <TR>
+	<TD><B>Identity</B></TD>
+	<TR>
+	<TD><INPUT id="Identity" size="10" ></TD>
+    </TR>
+</TABLE>
+<hr WIDTH = "100%">
+<hr WIDTH = "100%">
+
+<TABLE>
+	<TR>
+	<TD><B>Area</B></TD> <TD><B>Depth</B><TD><B>Inertia</B></TD>
+	<TR>
+	<TD><INPUT id="Area" size="10"></TD>
+	<TD><INPUT id="Depth" size="10"></TD>
+	<TD><INPUT id="Inertia" size="10"></TD>
+	</TR>
+</TABLE>
+</FORM>
+<hr WIDTH = "100%">
+
+<FORM id=frmInput>
+
+<BIG id=Problem1><U>Problem: 1</U></BIG>
+
+<TABLE>
+	<TD width=10><B>Slab Width</B></TD>
+	<TD width=10><B>Slab Thickness</B></TD>
+	<TD width=10><B>"G"</B></TD>
+	<TD width=20><B>N<sub>1</sub> (Es/Ec<sub>1</sub>)</B></TD>
+	<TD width=20><B>N<sub>2</sub> (Es/Ec<sub>2</sub>)</B></TD>
+	<TD width=20><B>N<sub>3</sub> (Es/Ec<sub>3</sub>)</B></TD>
+	<TR>
+	<TD> <INPUT id="Input11" size="10"></TD>
+	<TD> <INPUT id="Input12" size="10"></TD>
+	<TD> <INPUT id="Input13" size="10"></TD>
+	<TD> <INPUT id="Input14" size="10"></TD>
+	<TD> <INPUT id="Input15" size="10"></TD>
+	<TD> <INPUT id="Input16" size="10"></TD>
+	</TR>
+</TABLE>
+
+<TABLE>
+	<TR></TR>
+	<TR></TR>
+	<TR></TR>
+	<TR></TR>
+	<TD><IMG src=".\..\..\Buttons\BoxDarkAddButton.jpg" id="cmdAddProblem"
+		ONMOUSEOUT="cmdAddProblem.src='./../../Buttons/BoxDarkAddButton.jpg'"
+		ONMOUSEOVER="cmdAddProblem.src='./../../Buttons/BoxLightAddButton.jpg'"
+ 		ONCLICK="AddProblem()"></TD>
+	<TD id="EraseMe3"><IMG src=".\..\..\Buttons\BoxLightAddButton.jpg"></TD>
+	<TD></TD>
+	<TD><IMG src=".\..\..\Buttons\BoxDarkDeleteButton.jpg" id="cmdRemoveProblem" 		ONMOUSEOUT="cmdRemoveProblem.src='./../../Buttons/BoxDarkDeleteButton.jpg'" 		ONMOUSEOVER="cmdRemoveProblem.src='./../../Buttons/BoxLightDeleteButton.jpg'"  		ONCLICK="RemoveOneProblem()"></TD>
+	<TD id="EraseMe4"><IMG src=".\..\..\Buttons\BoxLightDeleteButton.jpg"></TD>
+	</TR>
+</TABLE>
+
+<hr WIDTH = "100%">
+<hr WIDTH = "100%">
+
+</FORM>
+
+<H3>Enter Data Then Click On "GirComp Output" Frame</H3>
+
+</DIV>
+</BODY>
+</FONT>
+</HTML>

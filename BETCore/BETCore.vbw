@@ -1,0 +1,17 @@
+clsBoxGir = -1, -2, 786, 386, 
+General = -38, 260, 775, 576, 
+mdlRegistry = 110, 110, 705, 554, C
+Form1 = 44, 44, 586, 468, C, 24, 111, 619, 555, C
+clsComGir = 44, 44, 639, 488, 
+clsGeneral = 4, -11, 803, 385, 
+clsCurvel = 108, 20, 707, 464, 
+basSafeCtl = 65, 56, 643, 472, 
+clsGirComp = 44, 44, 642, 488, 
+clsGPile = 6, 111, 798, 496, 
+clsPSGDES = 44, 44, 657, 488, 
+clsTorsion = 47, 59, 660, 503, 
+clsTrssmem = 130, 2, 715, 424, 
+Ult2Ax = 141, 33, 683, 457, 
+Points = 22, 22, 632, 446, C
+Shapes = 49, 62, 553, 455, C
+Shape = 88, 88, 692, 484, C
