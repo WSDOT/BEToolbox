@@ -28,12 +28,9 @@ class CCurvelTitlePageBuilder :
 {
 public:
    CCurvelTitlePageBuilder(void);
-   CCurvelTitlePageBuilder(const CCurvelTitlePageBuilder& other);
    ~CCurvelTitlePageBuilder(void);
 
    virtual rptChapter* Build(boost::shared_ptr<CReportSpecification>& pRptSpec);
-
-   virtual CTitlePageBuilder* Clone() const;
 
 private:
 };

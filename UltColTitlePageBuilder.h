@@ -28,10 +28,7 @@ class CUltColTitlePageBuilder :
 {
 public:
    CUltColTitlePageBuilder(void);
-   CUltColTitlePageBuilder(const CUltColTitlePageBuilder& other);
    ~CUltColTitlePageBuilder(void);
 
    virtual rptChapter* Build(boost::shared_ptr<CReportSpecification>& pRptSpec);
-
-   virtual CTitlePageBuilder* Clone() const;
 };
