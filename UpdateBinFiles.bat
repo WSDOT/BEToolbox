@@ -7,3 +7,4 @@ copy "Redist\FORTRAN DLLs\*.*"             %BINTARGET%\FortranDLLs\
 copy "Redist\Program DLLs\*.*"             %BINTARGET%\ProgramDLLs\
 copy "HelpFile\BEToolbox.chm"              %BINTARGET%\App\
 copy "BETCore\objsafe.tlb"                 %BINTARGET%\SharedDLLs\
+copy "License.rtf"                         %BINTARGET%

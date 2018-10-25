@@ -892,27 +892,27 @@ void ModelReporter::ReportSpecificCombo(ILoadCombinationResponse* response, BSTR
 
    CComPtr<ILoadCombinationSectionResults> max_moments, min_moments, max_shears, min_shears, max_defls, min_defls;
    hr=response->ComputeForces(loadCombo, m_PoiIds, stage, roMember, rsCumulative,
-                              fetMz, optMinimize, VARIANT_TRUE,
+                              fetMz, optMinimize, VARIANT_TRUE, VARIANT_TRUE,
                               VARIANT_FALSE, &min_moments);
 
    hr=response->ComputeForces(loadCombo, m_PoiIds, stage, roMember, rsCumulative,
-                              fetMz, optMaximize, VARIANT_TRUE,
+                              fetMz, optMaximize, VARIANT_TRUE, VARIANT_TRUE,
                               VARIANT_FALSE, &max_moments);
 
    hr=response->ComputeForces(loadCombo, m_PoiIds, stage, roMember, rsCumulative,
-                              fetFy, optMinimize, VARIANT_TRUE,
+                              fetFy, optMinimize, VARIANT_TRUE, VARIANT_TRUE,
                               VARIANT_FALSE, &min_shears);
 
    hr=response->ComputeForces(loadCombo, m_PoiIds, stage, roMember, rsCumulative,
-                              fetFy, optMaximize, VARIANT_TRUE,
+                              fetFy, optMaximize, VARIANT_TRUE, VARIANT_TRUE,
                               VARIANT_FALSE, &max_shears);
 
    hr=response->ComputeDeflections(loadCombo, m_PoiIds, stage, rsCumulative,
-                              fetFy, optMinimize, VARIANT_TRUE,
+                              fetFy, optMinimize, VARIANT_TRUE, VARIANT_TRUE,
                               VARIANT_FALSE, &min_defls);
 
    hr=response->ComputeDeflections(loadCombo, m_PoiIds, stage, rsCumulative,
-                              fetFy, optMaximize, VARIANT_TRUE,
+                              fetFy, optMaximize, VARIANT_TRUE, VARIANT_TRUE,
                               VARIANT_FALSE, &max_defls);
 
    long num_pois;

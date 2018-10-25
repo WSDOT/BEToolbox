@@ -7,10 +7,6 @@ Project: "BoxGir"=.\BOXGIRD\BoxGir.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/BOXGIRD", ADTAAAAA
-    .\boxgird
-    end source code control
 }}}
 
 Package=<4>
@@ -23,10 +19,6 @@ Project: "ComGir"=.\COMGIR\ComGir.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/COMGIR", BDTAAAAA
-    .\comgir
-    end source code control
 }}}
 
 Package=<4>
@@ -39,10 +31,6 @@ Project: "Curvel"=.\CURVEL\Curvel.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/CURVEL", CDTAAAAA
-    .\curvel
-    end source code control
 }}}
 
 Package=<4>
@@ -55,17 +43,10 @@ Project: "GPile"=.\GPILE\GPile.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/GPILE", EDTAAAAA
-    .\gpile
-    end source code control
 }}}
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name QConLE
-    End Project Dependency
 }}}
 
 ###############################################################################
@@ -74,10 +55,6 @@ Project: "GirComp"=.\GirComp\GirComp.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/GIRCOMP", DDTAAAAA
-    .\gircomp
-    end source code control
 }}}
 
 Package=<4>
@@ -90,10 +67,6 @@ Project: "PSGDES"=.\PSGDES\PSGDES.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/PSGDES", FDTAAAAA
-    .\psgdes
-    end source code control
 }}}
 
 Package=<4>
@@ -118,10 +91,6 @@ Project: "TORSION"=.\TORSION\TORSION.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/TORSION", GDTAAAAA
-    .\torsion
-    end source code control
 }}}
 
 Package=<4>
@@ -134,10 +103,6 @@ Project: "Trsmem"=.\TRSSMEM\Trssmem.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/TRSSMEM", HDTAAAAA
-    .\trssmem
-    end source code control
 }}}
 
 Package=<4>
@@ -150,10 +115,6 @@ Project: "Ult2Ax"=.\Ult2Ax\Ult2Ax.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    "$/ARP/BEToolbox/BETEngines/Ult2Ax", JPTAAAAA
-    .\ult2ax
-    end source code control
 }}}
 
 Package=<4>
