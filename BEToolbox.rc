@@ -1,0 +1,553 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include <PGSuperVersion.h>
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include <PGSuperVersion.h>\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "1 TYPELIB ""BEToolbox.tlb""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// METAFILE
+//
+
+BOXGDR                  METAFILE                "res\\BoxGdr.emf"
+GIRCOMP                 METAFILE                "res\\GirComp.emf"
+VERTCURVE               METAFILE                "res\\VertCurve.emf"
+SUPERELEVATION          METAFILE                "res\\Superelevation.emf"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,0,0,0
+ PRODUCTVERSION 2,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "Comments", "A member of the Alternate Route Project"
+            VALUE "CompanyName", "Washington State Department of Transportation"
+            VALUE "FileDescription", "WSDOT BEToolbox"
+            VALUE "FileVersion", "2.0.0.0"
+            VALUE "InternalName", "BEToolbox.dll"
+            VALUE "LegalCopyright", "Copyright © 1999-2013, Washington State Department of Transportation, All Rights Reserved"
+            VALUE "OriginalFilename", "BEToolbox.dll"
+            VALUE "ProductName", "WSDOT BEToolbox"
+            VALUE "ProductVersion", "2.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_BETOOLBOX           REGISTRY                "BEToolbox.rgs"
+IDR_BETOOLBOXPLUGIN     REGISTRY                "BEToolboxPlugin.rgs"
+IDR_BETOOLBOXCOMPONENTINFO REGISTRY                "BEToolboxComponentInfo.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_BOXGDR DIALOGEX 0, 0, 791, 227
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,734,7,25,10
+    CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,761,7,23,10
+    CONTROL         "",IDC_SCHEMATIC,"Static",SS_ENHMETAFILE,151,7,440,122
+    CONTROL         "Custom1",IDC_DIMENSIONS,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,6,139,719,81
+    DEFPUSHBUTTON   "Update",IDC_UPDATE,734,26,50,14
+    PUSHBUTTON      "+",IDC_ADD,731,138,18,14
+    PUSHBUTTON      "-",IDC_REMOVE,731,155,18,14
+END
+
+IDD_GENCOMP DIALOGEX 0, 0, 176, 430
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    LTEXT           "Modular Ratio, n=Ecomposite/Ebasic",IDC_STATIC,6,26,118,8
+    EDITTEXT        IDC_N,129,26,40,14,ES_AUTOHSCROLL
+    LTEXT           "Basic Section",IDC_STATIC,6,40,42,8
+    CONTROL         "Custom1",IDC_PRIMARY_SHAPE_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,6,51,133,178
+    PUSHBUTTON      "+",IDC_ADD_PRIMARY,143,51,18,14
+    PUSHBUTTON      "-",IDC_REMOVE_PRIMARY,143,68,18,14
+    LTEXT           "Composite Piece",IDC_STATIC,6,234,53,8
+    CONTROL         "Custom1",IDC_SECONDARY_SHAPE_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,6,245,133,178
+    PUSHBUTTON      "+",IDC_ADD_SECONDARY,144,245,18,14
+    PUSHBUTTON      "-",IDC_REMOVE_SECONDARY,144,262,18,14
+    CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,6,7,25,10
+    CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,33,7,23,10
+    DEFPUSHBUTTON   "Update",IDC_UPDATE,66,7,50,14
+END
+
+IDD_GIRCOMP_TOP DIALOGEX 0, 0, 652, 163
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,547,7,25,10
+    CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,574,7,23,10
+    CONTROL         "Custom1",IDC_DIMENSIONS,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,0,26,617,129
+    DEFPUSHBUTTON   "Update",IDC_UPDATE,595,7,50,14
+    PUSHBUTTON      "+",IDC_ADD,627,26,18,14
+    PUSHBUTTON      "-",IDC_REMOVE,627,43,18,14
+END
+
+IDD_GIRCOMP_LEFT DIALOGEX 0, 0, 190, 300
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_SCHEMATIC,"Static",SS_ENHMETAFILE,6,7,177,285
+END
+
+IDD_ULTCOL DIALOGEX 0, 0, 608, 54
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    LTEXT           "Diameter",IDC_STATIC,15,25,30,8
+    EDITTEXT        IDC_DIAMETER,47,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_DIAMETER_UNIT,89,25,14,8
+    LTEXT           "f'c",IDC_STATIC,116,25,8,8
+    EDITTEXT        IDC_FC,130,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_FC_UNIT,172,25,14,8
+    LTEXT           "Cover",IDC_STATIC,205,25,20,8
+    EDITTEXT        IDC_COVER,227,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_COVER_UNIT,270,25,14,8
+    LTEXT           "As",IDC_STATIC,288,25,9,8
+    EDITTEXT        IDC_AS,301,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_AS_UNIT,344,25,14,8
+    LTEXT           "Es",IDC_STATIC,363,25,8,8
+    EDITTEXT        IDC_ES,373,23,50,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_ES_UNIT,425,25,14,8
+    LTEXT           "fy",IDC_STATIC,445,25,8,8
+    EDITTEXT        IDC_FY,456,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_FY_UNIT,498,25,14,8
+    CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,525,14,25,10
+    CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,551,14,23,10
+    DEFPUSHBUTTON   "Update",IDC_UPDATE,527,33,50,14
+    GROUPBOX        "Section",IDC_STATIC,6,7,186,40,BS_NOTIFY
+    GROUPBOX        "Reinforcement",IDC_STATIC,198,7,323,40,BS_NOTIFY
+END
+
+IDD_CURVEL_WIZ_1 DIALOGEX 0, 0, 316, 182
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Curvel - Step 1"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "g1",IDC_STATIC,18,33,9,8
+    EDITTEXT        IDC_G1,30,31,31,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "%",IDC_G1_UNIT,64,33,8,8
+    LTEXT           "g2",IDC_STATIC,78,33,9,8
+    EDITTEXT        IDC_G2,88,31,31,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "%",IDC_G2_UNIT,123,33,8,8
+    LTEXT           "Curve Length",IDC_STATIC,137,33,44,8
+    EDITTEXT        IDC_LENGTH,183,31,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_LENGTH_UNIT,227,33,19,8
+    LTEXT           "PVI Station",IDC_STATIC,19,54,36,8
+    EDITTEXT        IDC_PVI_STATION,60,52,56,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "PVI Elevation",IDC_STATIC,123,54,43,8
+    EDITTEXT        IDC_PVI_ELEVATION,170,52,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_PVI_ELEVATION_UNIT,216,54,19,8
+    GROUPBOX        "Vertical Curve Data",IDC_STATIC,7,7,302,168
+    CONTROL         "",IDC_IMAGE,"Static",SS_ENHMETAFILE | SS_CENTERIMAGE,15,70,285,98
+END
+
+IDD_CURVEL_WIZ_2 DIALOGEX 0, 0, 369, 209
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Curvel - Step 2"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Correct for superelevation or crown",IDC_CROWN_OPTION,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,8,131,10
+    LTEXT           "Offset from crown to profile grade line",IDC_CROWN_OFFSET_LABEL,151,9,124,8
+    EDITTEXT        IDC_CROWN_OFFSET,283,7,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_CROWN_OFFSET_UNIT,327,9,19,8
+    LTEXT           "Station",IDC_STATION_LABEL_1,24,40,24,8
+    EDITTEXT        IDC_STATION_1,51,38,54,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Left Slope",IDC_LEFT_SLOPE_LABEL_1,114,40,33,8
+    EDITTEXT        IDC_LEFT_SLOPE_1,149,38,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_LEFT_SLOPE_UNIT_1,191,40,19,8
+    LTEXT           "Right Slope",IDC_RIGHT_SLOPE_LABEL_1,220,40,37,8
+    EDITTEXT        IDC_RIGHT_SLOPE_1,259,38,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_RIGHT_SLOPE_UNIT_1,302,40,19,8
+    LTEXT           "Station",IDC_STATION_LABEL_2,24,59,24,8
+    EDITTEXT        IDC_STATION_2,51,56,54,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Left Slope",IDC_LEFT_SLOPE_LABEL_2,114,59,33,8
+    EDITTEXT        IDC_LEFT_SLOPE_2,149,56,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_LEFT_SLOPE_UNIT_2,191,59,19,8
+    LTEXT           "Right Slope",IDC_RIGHT_SLOPE_LABEL_2,220,59,37,8
+    EDITTEXT        IDC_RIGHT_SLOPE_2,259,56,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_RIGHT_SLOPE_UNIT_2,302,59,19,8
+    LTEXT           "Station",IDC_STATION_LABEL_3,24,77,24,8
+    EDITTEXT        IDC_STATION_3,51,74,54,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Left Slope",IDC_LEFT_SLOPE_LABEL_3,114,77,33,8
+    EDITTEXT        IDC_LEFT_SLOPE_3,149,74,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_LEFT_SLOPE_UNIT_3,191,77,19,8
+    LTEXT           "Right Slope",IDC_RIGHT_SLOPE_LABEL_3,220,77,37,8
+    EDITTEXT        IDC_RIGHT_SLOPE_3,259,74,40,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Static",IDC_RIGHT_SLOPE_UNIT_3,302,77,19,8
+    GROUPBOX        "Superelevation Data",IDC_STATIC,7,27,355,175
+    CONTROL         "",IDC_IMAGE,"Static",SS_ENHMETAFILE | SS_CENTERIMAGE,15,92,335,104
+END
+
+IDD_CURVEL_WIZ_3 DIALOGEX 0, 0, 374, 206
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Curvel - Step 3"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Individual Stations",IDC_STATIC,7,7,60,8
+    LTEXT           "Station Range",IDC_STATIC,160,7,46,8
+    LTEXT           "Skew Line",IDC_STATIC,7,95,32,8
+    CONTROL         "Custom1",IDC_INDIVIDUAL_STATIONS,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,17,127,74
+    PUSHBUTTON      "+",IDC_INDIVIDUAL_STATION_ADD,137,16,18,14
+    PUSHBUTTON      "-",IDC_INDIVIDUAL_STATION_REMOVE,137,33,18,14
+    CONTROL         "Custom1",IDC_STATION_RANGE,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,160,17,184,74
+    PUSHBUTTON      "+",IDC_STATION_RANGE_ADD,349,16,18,14
+    PUSHBUTTON      "-",IDC_STATION_RANGE_REMOVE,349,33,18,14
+    CONTROL         "Custom1",IDC_SKEW_LINE,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,104,338,95
+    PUSHBUTTON      "+",IDC_SKEW_LINE_ADD,350,103,18,14
+    PUSHBUTTON      "-",IDC_SKEW_LINE_REMOVE,350,120,18,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_BOXGDR MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   ID_APP_ABOUT
+    END
+END
+
+IDR_GENCOMP MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   ID_APP_ABOUT
+    END
+END
+
+IDR_GIRCOMP MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   ID_APP_ABOUT
+    END
+END
+
+IDR_ULTCOL MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   ID_APP_ABOUT
+    END
+END
+
+IDR_CURVEL MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_BOXGDR, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 784
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 220
+    END
+
+    IDD_GENCOMP, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 169
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 423
+    END
+
+    IDD_GIRCOMP_TOP, DIALOG
+    BEGIN
+        RIGHTMARGIN, 645
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 155
+    END
+
+    IDD_GIRCOMP_LEFT, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 183
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 292
+    END
+
+    IDD_CURVEL_WIZ_1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 175
+    END
+
+    IDD_CURVEL_WIZ_2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 362
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 202
+    END
+
+    IDD_CURVEL_WIZ_3, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 367
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 199
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_BETOOLBOX           ICON                    "res\\BEToolbox.ico"
+IDR_BOXGDR              ICON                    "res\\BoxGdr.ico"
+IDR_GENCOMP             ICON                    "res\\GenComp.ico"
+IDR_GIRCOMP             ICON                    "res\\GirComp.ico"
+IDR_ULTCOL              ICON                    "res\\UltCol.ico"
+IDR_CURVEL              ICON                    "res\\Curvel.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_TOOLBAR             BITMAP                  "res\\toolbar.bmp"
+IDB_CURVEL_HEADER       BITMAP                  "res\\CurvelHeader.bmp"
+IDB_CURVEL_WATERMARK    BITMAP                  "res\\CurvelWatermark.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_TOOLBAR TOOLBAR  16, 16
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    BUTTON      ID_FILE_PRINT_DIRECT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_PROJNAME            "BEToolbox"
+    IDR_GENCOMP             "GenComp\nGenComp\nBEToolbox\nGenComp (*.GenComp)\n.GenComp\nGenComp.Document\nGenComp Document"
+    IDR_BOXGDR              "BoxGdr\nBoxGdr\nBEToolbox\nBoxGdr (*.BoxGirder)\n.BoxGirder\nBoxGdr.Document\nBoxGdr Document"
+    IDR_GIRCOMP             "GirComp\nGirComp\nBEToolbox\nGirComp (*.GirComp)\n.GirComp\nGirComp.Document\nGirComp Document"
+    IDR_ULTCOL              "UltCol\nUltCol\nBEToolbox\nUltCol (*.UltCol)\n.UltCol\nUltCol.Document\nUltCol Document"
+END
+
+STRINGTABLE 
+BEGIN
+    IDR_CURVEL              "Curvel\nCurvel\nBEToolbox\nCurvel (*.Curvel)\n.Curvel\nCurvel.Document\nCurvel Document"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+1 TYPELIB "BEToolbox.tlb"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

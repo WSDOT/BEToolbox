@@ -1,0 +1,56 @@
+///////////////////////////////////////////////////////////////////////
+// BEToolbox
+// Copyright © 1999-2013  Washington State Department of Transportation
+//                        Bridge and Structures Office
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as 
+// published by the Washington State Department of Transportation, 
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful, but 
+// distribution is AS IS, WITHOUT ANY WARRANTY; without even the implied 
+// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See 
+// the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Route Open Source 
+// License along with this program; if not, write to the Washington 
+// State Department of Transportation, Bridge and Structures Office, 
+// P.O. Box  47340, Olympia, WA 98503, USA or e-mail 
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+// BEToolbox.idl : IDL source for BEToolbox
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (BEToolbox.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(B00EE67C-9FBF-42ef-8B80-CECD5AE5CC23),
+	version(1.0),
+	helpstring("BEToolbox 1.0 Type Library")
+]
+library BEToolboxLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(EA33DB99-86FB-4678-9442-AB1D334456E4),
+		helpstring("BEToolboxPlugin Class")
+	]
+	coclass BEToolboxPlugin
+	{
+		[default] interface IUnknown;
+	};
+
+   [
+      uuid(71B4631C-5AB5-468e-A1AD-5764A728E419)
+   ]
+   coclass BEToolboxComponentInfo
+   {
+      interface IUnknown;
+   }
+};

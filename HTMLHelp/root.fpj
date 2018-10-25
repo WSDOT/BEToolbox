@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rhpml majorversion="1" minorversion="0">
+	<folders>
+		<folder>
+			<name>UltCol</name>
+		</folder>
+		<folder>
+			<name>GenComp</name>
+		</folder>
+		<folder>
+			<name>GirComp</name>
+		</folder>
+		<folder>
+			<name>BoxGird</name>
+		</folder>
+		<folder>
+			<name>Curvel</name>
+		</folder>
+	</folders>
+	<topics>
+		<topic>
+			<name>License_Agreement.htm</name>
+			<comments></comments>
+			<frameset>0</frameset>
+		</topic>
+		<topic>
+			<name>welcome.htm</name>
+			<comments></comments>
+			<frameset>0</frameset>
+		</topic>
+	</topics>
+</rhpml>

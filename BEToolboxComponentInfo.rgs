@@ -1,0 +1,25 @@
+HKCR
+{
+	BEToolbox.BEToolboxComponentInfo.1 = s 'BEToolbox Component Info'
+	{
+		CLSID = s '{71B4631C-5AB5-468e-A1AD-5764A728E419}'
+	}
+	BEToolbox.BEToolboxComponentInfo = s 'BEToolbox Component Info'
+	{
+		CLSID = s '{71B4631C-5AB5-468e-A1AD-5764A728E419}'
+		CurVer = s 'BEToolbox.BEToolboxComponentInfo.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {71B4631C-5AB5-468e-A1AD-5764A728E419} = s 'BEToolbox Component Info'
+		{
+			ProgID = s 'BEToolbox.BEToolboxComponentInfo.1'
+			VersionIndependentProgID = s 'BEToolbox.BEToolboxComponentInfo'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{}'
+		}
+	}
+}
