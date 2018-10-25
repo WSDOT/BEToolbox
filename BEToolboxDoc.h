@@ -51,10 +51,12 @@ protected:
    virtual void LoadToolbarState();
    virtual void SaveToolbarState();
 
+   afx_msg void OnAbout();
+
 	DECLARE_MESSAGE_MAP()
 public:
-
-   // over-ride default behavior by destroying column
+   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
+   virtual BOOL OpenOldFormat(LPCTSTR lpszPathName);
    virtual void OnCloseDocument();
 
 protected:

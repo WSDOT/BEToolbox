@@ -36,8 +36,6 @@ public:
 
    virtual CString GetToolbarSectionName();
 
-   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
-
    CReportBuilderManager* GetReportBuilderManager();
    boost::shared_ptr<CReportSpecificationBuilder> GetReportSpecificationBuilder();
    boost::shared_ptr<CReportSpecification> GetDefaultReportSpecification();

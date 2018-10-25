@@ -361,26 +361,6 @@ CString CBoxGdrDoc::GetToolbarSectionName()
    return _T("BoxGdr");
 }
 
-BOOL CBoxGdrDoc::OpenTheDocument(LPCTSTR lpszPathName)
-{
-   // Open the file and see if it starts with XML... if it does
-   // pass it on for normal processing, otherwise, assume it is an old fortran fixed format file
-   std::_tifstream is;
-   is.open(lpszPathName);
-   TCHAR buffer[80];
-   is.getline(buffer,ARRAYSIZE(buffer));
-
-   std::_tstring strHeader;
-   strHeader.insert(strHeader.end(),&buffer[0],&buffer[0]+5);
-
-   is.close();
-
-   if ( strHeader != _T("<?xml") )
-      return OpenOldFormat(lpszPathName);
-   else
-      return CEAFDocument::OpenTheDocument(lpszPathName);
-}
-
 BOOL CBoxGdrDoc::OpenOldFormat(LPCTSTR lpszPathName)
 {
    std::_tifstream is;

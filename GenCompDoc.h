@@ -39,8 +39,6 @@ public:
 
    virtual CString GetToolbarSectionName();
 
-   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
-
    void Clear();
 
    void SetModularRatio(Float64 n);

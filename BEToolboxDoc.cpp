@@ -27,6 +27,7 @@
 #include "resource.h"
 #include "BEToolboxDoc.h"
 #include "BEToolboxStatusBar.h"
+#include "AboutDlg.h"
 
 // CBEToolboxDoc
 
@@ -50,7 +51,15 @@ CBEToolboxDoc::~CBEToolboxDoc()
 
 
 BEGIN_MESSAGE_MAP(CBEToolboxDoc, CEAFDocument)
+   ON_COMMAND(ID_HELP_ABOUTBETOOLBOX,OnAbout)
 END_MESSAGE_MAP()
+
+void CBEToolboxDoc::OnAbout()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   CAboutDlg dlg;
+   dlg.DoModal();
+}
 
 
 // CBoxGdrDoc diagnostics
@@ -79,6 +88,50 @@ BOOL CBEToolboxDoc::Init()
    LPCTSTR lpszHelpFile = AfxGetApp()->m_pszHelpFilePath;
    EAFGetApp()->SetHelpFileName(lpszHelpFile);
 
+   return TRUE;
+}
+
+BOOL CBEToolboxDoc::OpenTheDocument(LPCTSTR lpszPathName)
+{
+   // Open the file and see if it starts with XML... if it does
+   // pass it on for normal processing, otherwise, assume it is an old fortran fixed format file
+   DWORD dwResults = GetFileAttributes(lpszPathName);
+   if ( dwResults == INVALID_FILE_ATTRIBUTES ) // if we couldn't get the file attributes, it probably doesn't exist
+   {
+      CString strError;
+      strError.Format(_T("Error opening %s. File not found."),lpszPathName);
+      AfxMessageBox(strError);
+      return FALSE;
+   }
+
+   std::_tifstream is;
+   is.open(lpszPathName);
+
+   if ( !is.is_open() )
+   {
+      CString strError;
+      strError.Format(_T("Error: % could not be opened."),lpszPathName);
+      AfxMessageBox(strError);
+      return FALSE;
+   }
+
+   TCHAR buffer[80];
+   is.getline(buffer,ARRAYSIZE(buffer));
+
+   std::_tstring strHeader;
+   strHeader.insert(strHeader.end(),&buffer[0],&buffer[0]+5);
+
+   is.close();
+
+   if ( strHeader != _T("<?xml") )
+      return OpenOldFormat(lpszPathName);
+   else
+      return CEAFDocument::OpenTheDocument(lpszPathName);
+}
+
+BOOL CBEToolboxDoc::OpenOldFormat(LPCTSTR lpszPathName)
+{
+   // Do nothing by default
    return TRUE;
 }
 

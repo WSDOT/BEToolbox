@@ -57,9 +57,6 @@ public:
 
    virtual CString GetToolbarSectionName();
 
-   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
-
-
    IndexType GetProblemCount() const;
    void AddProblem(const BOXGDRDIMENSIONS& problem);
    void AddProblems(const std::vector<BOXGDRDIMENSIONS>& problems);

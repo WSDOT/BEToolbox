@@ -45,8 +45,10 @@ CUltColDocTemplate::CUltColDocTemplate(UINT nIDResource,
    GetDocString(strDocName,CDocTemplate::docName);
  
    HICON hIcon = AfxGetApp()->LoadIcon(IDR_ULTCOL);
-   m_TemplateGroup.SetIcon(hIcon);
    m_TemplateGroup.AddItem( new CEAFTemplateItem(this,strDocName,NULL,hIcon) );
+
+   hIcon = AfxGetApp()->LoadIcon(IDR_BETOOLBOX);
+   m_TemplateGroup.SetIcon(hIcon);
 }
 
 CString CUltColDocTemplate::GetTemplateGroupItemDescription(const CEAFTemplateItem* pItem) const

@@ -20,43 +20,28 @@
 // Bridge_Support@wsdot.wa.gov
 ///////////////////////////////////////////////////////////////////////
 
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently,
-// but are changed infrequently
-
 #pragma once
 
-#include <WBFLAll.h>
+#include <afxlinkctrl.h>
 
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>			// MFC support for Windows Common Controls
-#endif // _AFX_NO_AFXCMN_SUPPORT
+// CAboutDlg dialog
 
-#include <atlbase.h>
-#include <atlcom.h>
-#include <atlimage.h> // for CImage used in the chapter builder code
+class CAboutDlg : public CDialog
+{
+	DECLARE_DYNAMIC(CAboutDlg)
 
-#include <grid\gxall.h>
-#include <System\System.h>
-#include <MathEx.h>
-#include <ReportManager\ReportManager.h>
-#include <Reporter\Reporter.h>
-#include <MFCTools\MFCTools.h>
-#include <UnitMgt\UnitMgt.h>
-#include <EAF\EAFUtilities.h>
+public:
+	CAboutDlg(CWnd* pParent = NULL);   // standard constructor
+	virtual ~CAboutDlg();
 
-#include <WBFLRCCapacity.h>
-#include <WBFLTools.h>
-#include <WBFLUnitServer.h>
-#include <WBFLSections.h>
-#include <WBFLCogo.h>
+// Dialog Data
+	enum { IDD = IDD_ABOUTBOX };
 
-#include "BEToolboxTypes.h"
-#include <afxwin.h>
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual BOOL OnInitDialog();
 
-// prior to WBFL Version 3.3.0 the _WBFL_VERSION macro did not exist
-// we need it for conditional compilation so if it isn't defined
-// define it here
-#ifndef _WBFL_VERSION
-#define _WBFL_VERSION 320
-#endif
+   CMFCLinkCtrl m_WSDOT;
+
+	DECLARE_MESSAGE_MAP()
+};
