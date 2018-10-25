@@ -28,10 +28,6 @@
 CUltColTitlePageBuilder::CUltColTitlePageBuilder(void)
 {
 }
-CUltColTitlePageBuilder::CUltColTitlePageBuilder(const CUltColTitlePageBuilder& other) :
-CTitlePageBuilder(other)
-{
-}
 
 CUltColTitlePageBuilder::~CUltColTitlePageBuilder(void)
 {
@@ -80,9 +76,4 @@ rptChapter* CUltColTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificatio
 
    (*pPara) << rptNewPage;
    return pTitlePage;
-}
-
-CTitlePageBuilder* CUltColTitlePageBuilder::Clone() const
-{
-   return new CUltColTitlePageBuilder(*this);
 }

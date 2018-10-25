@@ -28,12 +28,9 @@ class CGenCompTitlePageBuilder :
 {
 public:
    CGenCompTitlePageBuilder(void);
-   CGenCompTitlePageBuilder(const CGenCompTitlePageBuilder& other);
    ~CGenCompTitlePageBuilder(void);
 
    virtual rptChapter* Build(boost::shared_ptr<CReportSpecification>& pRptSpec);
-
-   virtual CTitlePageBuilder* Clone() const;
 
 private:
    std::_tstring m_strImagePath;

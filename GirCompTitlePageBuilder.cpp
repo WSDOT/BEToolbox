@@ -31,11 +31,6 @@ CGirCompTitlePageBuilder::CGirCompTitlePageBuilder(void)
 {
 }
 
-CGirCompTitlePageBuilder::CGirCompTitlePageBuilder(const CGirCompTitlePageBuilder& other) :
-CTitlePageBuilder(other)
-{
-}
-
 CGirCompTitlePageBuilder::~CGirCompTitlePageBuilder(void)
 {
 }
@@ -86,9 +81,4 @@ rptChapter* CGirCompTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificati
    *pPara << rptRcImage(GetImagePath() + _T("GirComp.png"));
 
    return pTitlePage;
-}
-
-CTitlePageBuilder* CGirCompTitlePageBuilder::Clone() const
-{
-   return new CGirCompTitlePageBuilder(*this);
 }
