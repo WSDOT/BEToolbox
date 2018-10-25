@@ -281,7 +281,10 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
    graph.SetGridPenStyle(PS_DOT, 1, GRID_COLOR);
 
+#if 400 <= _WBFL_VERSION
    graph.SetIsotropicAxes(true);
+#endif 
+
    graph.SetDoDrawGrid(true);
    graph.DrawLegend(false);
 

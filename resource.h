@@ -16,6 +16,7 @@
 #define IDD_GIRCOMP_LEFT                107
 #define IDR_ULTCOL                      108
 #define IDD_ULTCOL                      108
+#define IDI_WSDOT                       200
 #define IDC_UPDATE                      202
 #define IDR_TOOLBAR                     207
 #define IDR_CURVEL                      209
@@ -98,15 +99,23 @@
 #define IDC_AS_UNIT                     313
 #define IDC_ES_UNIT                     314
 #define IDC_FY_UNIT                     315
+#define IDD_ABOUTBOX                    999
+#define IDC_VERSION                     1002
+#define IDC_COPYRIGHT                   1003
+#define IDC_APPICON                     1005
 #define IDC_DIMENSIONS                  1156
+#define IDC_WSDOT                       1666
+#define IDC_TXDOT                       1668
 #define ID_REFRESH_REPORT               36864
+#define ID_HELP_ABOUTBETOOLBOX          36865
+#define ID_HELP_ABOUTBETOOLBOX36866     36866
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        214
-#define _APS_NEXT_COMMAND_VALUE         36865
+#define _APS_NEXT_COMMAND_VALUE         36867
 #define _APS_NEXT_CONTROL_VALUE         263
 #define _APS_NEXT_SYMED_VALUE           106
 #endif

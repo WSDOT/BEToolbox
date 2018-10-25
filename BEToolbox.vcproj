@@ -423,6 +423,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\AboutDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\BEToolbox.cpp"
 				>
 			</File>
@@ -537,6 +541,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\AboutDlg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BEToolboxApp.h"
 				>
 			</File>
@@ -632,6 +640,10 @@
 			</File>
 			<File
 				RelativePath=".\res\UltCol.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\Wsdot.ico"
 				>
 			</File>
 		</Filter>
