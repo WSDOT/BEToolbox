@@ -58,6 +58,8 @@ public:
    virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
    virtual BOOL OpenOldFormat(LPCTSTR lpszPathName);
    virtual void OnCloseDocument();
+   virtual CString GetRootNodeName();
+   virtual Float64 GetRootNodeVersion();
 
 protected:
    CEAFToolBar* m_pMyToolBar;

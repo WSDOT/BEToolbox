@@ -27,6 +27,7 @@
 #include "resource.h"
 #include "BEToolboxDoc.h"
 #include "BEToolboxStatusBar.h"
+#include "BEToolboxPlugin.h"
 #include "AboutDlg.h"
 
 // CBEToolboxDoc
@@ -36,6 +37,7 @@ IMPLEMENT_DYNAMIC(CBEToolboxDoc, CEAFDocument)
 #define ID_MYTOOLBAR ID_MAINFRAME_TOOLBAR+1
 #define PLUGIN_COMMAND_COUNT 256
 
+static const Float64 FILE_VERSION = 1.0;
 
 CBEToolboxDoc::CBEToolboxDoc()
 {
@@ -89,6 +91,16 @@ BOOL CBEToolboxDoc::Init()
    EAFGetApp()->SetHelpFileName(lpszHelpFile);
 
    return TRUE;
+}
+
+CString CBEToolboxDoc::GetRootNodeName()
+{
+   return _T("BEToolbox");
+}
+
+Float64 CBEToolboxDoc::GetRootNodeVersion()
+{
+   return FILE_VERSION;
 }
 
 BOOL CBEToolboxDoc::OpenTheDocument(LPCTSTR lpszPathName)
