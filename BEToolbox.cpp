@@ -32,8 +32,7 @@
 #include <EAF\EAFAppPlugin.h>
 #include <System\ComCatMgr.h>
 
-//#include <BridgeLinkCATID.h>   // BEToolbox.exe prototype application
-#include <BridgeLinkCatCom.h>  // PGSuper.exe production application (could become BridgeLink)
+#include <BridgeLinkCatCom.h>
 
 // Used to determine whether the DLL can be unloaded by OLE
 STDAPI DllCanUnloadNow(void)

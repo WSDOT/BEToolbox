@@ -22,25 +22,20 @@
 
 #pragma once
 
-// CCurvelDoc document
-#include "BEToolboxDoc.h"
-#include "CurvelReportSpecification.h"
+// CBEToolboxDoc document
+#include <EAF\EAFDocument.h>
 
-class CCurvelDoc : public CBEToolboxDoc
+class CBEToolboxDoc : public CEAFDocument
 {
-	DECLARE_DYNCREATE(CCurvelDoc)
+	DECLARE_DYNAMIC(CBEToolboxDoc)
 
 public:
-	CCurvelDoc();
-	virtual ~CCurvelDoc();
+	CBEToolboxDoc();
+	virtual ~CBEToolboxDoc();
 
-   virtual CString GetToolbarSectionName();
-
-   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
-
-   CReportBuilderManager* GetReportBuilderManager();
-   boost::shared_ptr<CReportSpecificationBuilder> GetReportSpecificationBuilder();
-   boost::shared_ptr<CReportSpecification> GetDefaultReportSpecification();
+   virtual void DoIntegrateWithUI(BOOL bIntegrate);
+   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const;
+   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
 
 #ifdef _DEBUG
 	virtual void AssertValid() const;
@@ -53,22 +48,19 @@ protected:
    /// called when a document is created (New or Open)
    virtual BOOL Init(); 
 
-   // Called by the framework when the document is to be loaded and saved
-   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
-   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
+   virtual void LoadToolbarState();
+   virtual void SaveToolbarState();
 
-   BOOL OpenOldFormat(LPCTSTR lpszPathName);
-
-   DECLARE_MESSAGE_MAP()
+	DECLARE_MESSAGE_MAP()
 public:
 
    // over-ride default behavior by destroying column
    virtual void OnCloseDocument();
 
-private:
-   CReportBuilderManager m_RptMgr;
+protected:
+   CEAFToolBar* m_pMyToolBar;
 
-   boost::shared_ptr<CReportSpecificationBuilder> m_pRptSpecBuilder;
-   boost::shared_ptr<CCurvelReportSpecification> m_pDefaultRptSpec; // this is the default spec that is
-   // used to get things started... after the report is displayed, the view holds the real repost spec
+   HICON m_hMainFrameBigIcon;
+   HICON m_hMainFrameSmallIcon;
+
 };

@@ -57,7 +57,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="\ARP\BridgeLink;..\Include;\ARP\PGSuper\Include;&quot;\ARP\PGSuper\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;"
+				AdditionalIncludeDirectories="\ARP\PGSuper;..\Include;\ARP\PGSuper\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -115,7 +115,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to PGSuper\Image folder"
-				CommandLine="copy $(ProjectDir)\Images\*.png \ARP\PGSuper\Images"
+				CommandLine="copy $(ProjectDir)Images\*.png \ARP\PGSuper\Images"
 			/>
 		</Configuration>
 		<Configuration
@@ -155,7 +155,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="\ARP\BridgeLink;..\Include;\ARP\PGSuper\Include;&quot;\ARP\PGSuper\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;"
+				AdditionalIncludeDirectories="\ARP\PGSuper;..\Include;\ARP\PGSuper\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -213,7 +213,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to PGSuper\Image folder"
-				CommandLine="copy $(ProjectDir)\Images\*.png \ARP\PGSuper\Images"
+				CommandLine="copy $(ProjectDir)Images\*.png \ARP\PGSuper\Images"
 			/>
 		</Configuration>
 		<Configuration
@@ -254,7 +254,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="\ARP\BridgeLink;..\Include;\ARP\PGSuper\Include;&quot;\ARP\PGSuper\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;"
+				AdditionalIncludeDirectories="\ARP\PGSuper;..\Include;\ARP\PGSuper\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -312,7 +312,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to PGSuper\Image folder"
-				CommandLine="copy $(ProjectDir)\Images\*.png \ARP\PGSuper\Images"
+				CommandLine="copy $(ProjectDir)Images\*.png \ARP\PGSuper\Images"
 			/>
 		</Configuration>
 		<Configuration
@@ -352,7 +352,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="\ARP\BridgeLink;..\Include;\ARP\PGSuper\Include;&quot;\ARP\PGSuper\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;"
+				AdditionalIncludeDirectories="\ARP\PGSuper;..\Include;\ARP\PGSuper\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -410,7 +410,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to PGSuper\Image folder"
-				CommandLine="copy $(ProjectDir)\Images\*.png \ARP\PGSuper\Images"
+				CommandLine="copy $(ProjectDir)Images\*.png \ARP\PGSuper\Images"
 			/>
 		</Configuration>
 	</Configurations>
@@ -436,6 +436,10 @@
 			</File>
 			<File
 				RelativePath=".\BEToolboxComponentInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BEToolboxDoc.cpp"
 				>
 			</File>
 			<File
@@ -538,6 +542,10 @@
 			</File>
 			<File
 				RelativePath=".\BEToolboxComponentInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BEToolboxDoc.h"
 				>
 			</File>
 			<File

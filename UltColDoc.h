@@ -23,14 +23,14 @@
 #pragma once
 
 // CUltColDoc document
-#include <EAF\EAFDocument.h>
+#include "BEToolboxDoc.h"
 #include <WBFLTools.h>
 #include <WBFLGeometry.h>
 #include <WBFLUnitServer.h>
 #include <WBFLRCCapacity.h>
 #include <ReportManager\ReportManager.h>
 
-class CUltColDoc : public CEAFDocument
+class CUltColDoc : public CBEToolboxDoc
 {
 	DECLARE_DYNCREATE(CUltColDoc)
 
@@ -39,9 +39,6 @@ public:
 	virtual ~CUltColDoc();
 
    virtual CString GetToolbarSectionName();
-   virtual void DoIntegrateWithUI(BOOL bIntegrate);
-   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const;
-   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
 
 #ifdef _DEBUG
 	virtual void AssertValid() const;
@@ -53,9 +50,6 @@ public:
 protected:
    /// called when a document is created (New or Open)
    virtual BOOL Init(); 
-
-   virtual void LoadToolbarState();
-   virtual void SaveToolbarState();
 
    // Called by the framework when the document is to be loaded and saved
    virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
@@ -72,7 +66,4 @@ public:
    CComPtr<IRoundColumn> m_Column;
    CReportBuilderManager m_RptMgr;
    afx_msg void OnRefreshReport();
-
-private:
-   CEAFToolBar* m_pMyToolBar;
 };

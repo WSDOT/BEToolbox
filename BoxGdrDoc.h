@@ -23,7 +23,7 @@
 #pragma once
 
 // CBoxGdrDoc document
-#include <EAF\EAFDocument.h>
+#include "BEToolboxDoc.h"
 #include <WBFLTools.h>
 #include <WBFLGeometry.h>
 #include <WBFLUnitServer.h>
@@ -47,7 +47,7 @@ struct BOXGDRDIMENSIONS
    Float64 BR;
 };
 
-class CBoxGdrDoc : public CEAFDocument
+class CBoxGdrDoc : public CBEToolboxDoc
 {
 	DECLARE_DYNCREATE(CBoxGdrDoc)
 
@@ -56,9 +56,6 @@ public:
 	virtual ~CBoxGdrDoc();
 
    virtual CString GetToolbarSectionName();
-   virtual void DoIntegrateWithUI(BOOL bIntegrate);
-   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const;
-   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
 
    virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
 
@@ -82,9 +79,6 @@ public:
 protected:
    /// called when a document is created (New or Open)
    virtual BOOL Init(); 
-
-   virtual void LoadToolbarState();
-   virtual void SaveToolbarState();
 
    // Called by the framework when the document is to be loaded and saved
    virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);

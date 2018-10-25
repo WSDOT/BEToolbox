@@ -34,9 +34,6 @@
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 
-#define ID_MYTOOLBAR ID_MAINFRAME_TOOLBAR+1
-#define GIRCOMP_PLUGIN_COMMAND_COUNT 256
-
 GIRCOMPDIMENSIONS::GIRCOMPDIMENSIONS()
 {
    Type = General;
@@ -61,7 +58,7 @@ GIRCOMPDIMENSIONS::GIRCOMPDIMENSIONS()
 
 // CGirCompDoc
 
-IMPLEMENT_DYNCREATE(CGirCompDoc, CEAFDocument)
+IMPLEMENT_DYNCREATE(CGirCompDoc, CBEToolboxDoc)
 
 CGirCompDoc::CGirCompDoc()
 {
@@ -74,11 +71,6 @@ CGirCompDoc::CGirCompDoc()
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
-
-   m_pMyToolBar = NULL;
-
-   // Reserve command IDs for document plug ins
-   GetPluginCommandManager()->ReserveCommandIDRange(GIRCOMP_PLUGIN_COMMAND_COUNT);
 }
 
 CGirCompDoc::~CGirCompDoc()
@@ -86,7 +78,7 @@ CGirCompDoc::~CGirCompDoc()
 }
 
 
-BEGIN_MESSAGE_MAP(CGirCompDoc, CEAFDocument)
+BEGIN_MESSAGE_MAP(CGirCompDoc, CBEToolboxDoc)
 END_MESSAGE_MAP()
 
 
@@ -95,20 +87,20 @@ END_MESSAGE_MAP()
 #ifdef _DEBUG
 void CGirCompDoc::AssertValid() const
 {
-	CEAFDocument::AssertValid();
+	CBEToolboxDoc::AssertValid();
 }
 
 #ifndef _WIN32_WCE
 void CGirCompDoc::Dump(CDumpContext& dc) const
 {
-	CEAFDocument::Dump(dc);
+	CBEToolboxDoc::Dump(dc);
 }
 #endif
 #endif //_DEBUG
 
 BOOL CGirCompDoc::Init()
 {
-   if ( !CEAFDocument::Init() )
+   if ( !CBEToolboxDoc::Init() )
       return FALSE;
 
    InitRolledSections();
@@ -131,17 +123,11 @@ BOOL CGirCompDoc::Init()
 
    m_Problems.push_back(problem);
 
-
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   LPCTSTR lpszHelpFile = AfxGetApp()->m_pszHelpFilePath;
-   EAFGetApp()->SetHelpFileName(lpszHelpFile);
-
    return TRUE;
 }
 
 void CGirCompDoc::OnCloseDocument()
 {
-   EAFGetApp()->SetHelpFileName(NULL);
    EAFGetApp()->SetUnitsMode(eafTypes::umUS);
 
    CEAFDocument::OnCloseDocument();
@@ -423,58 +409,6 @@ HRESULT CGirCompDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
 CString CGirCompDoc::GetToolbarSectionName()
 {
    return _T("GirComp");
-}
-
-void CGirCompDoc::LoadToolbarState()
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   __super::LoadToolbarState();
-}
-
-void CGirCompDoc::SaveToolbarState()
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   __super::SaveToolbarState();
-}
-
-void CGirCompDoc::DoIntegrateWithUI(BOOL bIntegrate)
-{
-   CEAFMainFrame* pFrame = EAFGetMainFrame();
-
-   if ( bIntegrate )
-   {
-      // set up the toolbar here
-      {
-      AFX_MANAGE_STATE(AfxGetStaticModuleState());
-      UINT tbID = pFrame->CreateToolBar(_T("GirComp"),GetPluginCommandManager());
-      m_pMyToolBar = pFrame->GetToolBar(tbID);
-      m_pMyToolBar->LoadToolBar(IDR_TOOLBAR,NULL);
-      m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,NULL,BTNS_DROPDOWN);
-      }
-
-      // use our status bar
-      CBEToolboxStatusBar* pSB = new CBEToolboxStatusBar;
-      pSB->Create(EAFGetMainFrame());
-      pFrame->SetStatusBar(pSB);
-   }
-   else
-   {
-      // remove toolbar here
-      pFrame->DestroyToolBar(m_pMyToolBar);
-      m_pMyToolBar = NULL;
-   }
-}
-
-BOOL CGirCompDoc::GetStatusBarMessageString(UINT nID,CString& rMessage) const
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return __super::GetStatusBarMessageString(nID,rMessage);
-}
-
-BOOL CGirCompDoc::GetToolTipMessageString(UINT nID, CString& rMessage) const
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return __super::GetToolTipMessageString(nID,rMessage);
 }
 
 BOOL CGirCompDoc::OpenTheDocument(LPCTSTR lpszPathName)
