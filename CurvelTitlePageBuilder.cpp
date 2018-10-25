@@ -31,6 +31,11 @@ CCurvelTitlePageBuilder::CCurvelTitlePageBuilder(void)
 {
 }
 
+CCurvelTitlePageBuilder::CCurvelTitlePageBuilder(const CCurvelTitlePageBuilder& other) :
+CTitlePageBuilder(other)
+{
+}
+
 CCurvelTitlePageBuilder::~CCurvelTitlePageBuilder(void)
 {
 }
@@ -83,4 +88,9 @@ rptChapter* CCurvelTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificatio
    (*pPara) << rptNewPage;
 
    return pTitlePage;
+}
+
+CTitlePageBuilder* CCurvelTitlePageBuilder::Clone() const
+{
+   return new CCurvelTitlePageBuilder(*this);
 }
