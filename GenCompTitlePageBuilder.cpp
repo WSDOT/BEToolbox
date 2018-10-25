@@ -32,6 +32,11 @@ CGenCompTitlePageBuilder::CGenCompTitlePageBuilder(void)
 {
 }
 
+CGenCompTitlePageBuilder::CGenCompTitlePageBuilder(const CGenCompTitlePageBuilder& other) :
+CTitlePageBuilder(other)
+{
+}
+
 CGenCompTitlePageBuilder::~CGenCompTitlePageBuilder(void)
 {
 }
@@ -78,4 +83,9 @@ rptChapter* CGenCompTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificati
    *pPara << str << rptNewLine;
 
    return pTitlePage;
+}
+
+CTitlePageBuilder* CGenCompTitlePageBuilder::Clone() const
+{
+   return new CGenCompTitlePageBuilder(*this);
 }
