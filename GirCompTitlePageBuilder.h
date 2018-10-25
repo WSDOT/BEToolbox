@@ -28,9 +28,12 @@ class CGirCompTitlePageBuilder :
 {
 public:
    CGirCompTitlePageBuilder(void);
+   CGirCompTitlePageBuilder(const CGirCompTitlePageBuilder& other);
    ~CGirCompTitlePageBuilder(void);
 
    virtual rptChapter* Build(boost::shared_ptr<CReportSpecification>& pRptSpec);
+
+   virtual CTitlePageBuilder* Clone() const;
 
 private:
    std::_tstring m_strImagePath;

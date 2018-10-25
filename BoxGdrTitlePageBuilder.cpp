@@ -31,6 +31,11 @@ CBoxGdrTitlePageBuilder::CBoxGdrTitlePageBuilder(void)
 {
 }
 
+CBoxGdrTitlePageBuilder::CBoxGdrTitlePageBuilder(const CBoxGdrTitlePageBuilder& other) :
+CTitlePageBuilder(other)
+{
+}
+
 CBoxGdrTitlePageBuilder::~CBoxGdrTitlePageBuilder(void)
 {
 }
@@ -81,4 +86,9 @@ rptChapter* CBoxGdrTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificatio
    *pPara << rptRcImage(GetImagePath() + _T("BoxGdr.png"));
 
    return pTitlePage;
+}
+
+CTitlePageBuilder* CBoxGdrTitlePageBuilder::Clone() const
+{
+   return new CBoxGdrTitlePageBuilder(*this);
 }
