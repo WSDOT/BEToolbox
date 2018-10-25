@@ -1,0 +1,127 @@
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+
+<html>
+<head>
+   <title>GPile Info</title>
+<style TYPE="text/css">
+      .select {text-align:center; font-family: Arial; font-weight: bold; cursor: hand}
+      body {margin-top: 0pt}
+     .contents {background: red; font-family: Arial; color: black}
+    </style>
+<script LANGUAGE="JavaScript">
+
+	function InfoLoaded(my)
+	{
+		if( parent.bLoaded == false )
+		{
+			parent.display(my, "Red");
+			parent.bLoaded = true;
+		}
+	}
+
+	function clickedOn(my)
+	{
+		parent.display(my, "Red");
+	}
+
+</script>
+</head>
+
+<FONT FACE="Arial">
+
+<body bgcolor="#C0C0C0" ONLOAD="InfoLoaded(this)" ONFOCUS="clickedOn(this)">
+
+<div ID="header" CLASS="select" ONSELECTSTART="return false">GPile Information</div>
+
+<center>
+<h2>
+Stiffness Analysis of a Pile Group</h2></center>
+
+GPILE is a program that uses the stiffness method to calculate individual
+pile loads in a pile group.&nbsp; The program also condenses the stiffness
+of the individual piles into a 6x6 stiffness matrix that can be used in
+STRUDL and SEISAB models.
+<br>&nbsp;
+<h3>
+Design Methodology:</h3>
+
+<p><br>This method is only as good as the stiffness springs given for the
+piles.&nbsp; Generally, unless the deflections are very minute, pile group
+response to lateral loads is not elastic.&nbsp; Enough iterations in the
+design process should be used to assure that the response springs match
+the loads.
+<p>The first step in the analysis is to estimate the stiffness of the individual
+piles. Vertical and torsional spring constants can be estimated by the
+methods outlined in section 4.4.3C of the WSDOT Bridge Design Manual. The
+LPile+ computer program from Ensoft Inc, is used to find the P/<font face="Symbol">d</font>, M/<font face="Symbol">q</font>,
+P/<font face="Symbol">q</font>, and M/<font face="Symbol">d</font> spring constants for the two lateral axes of the pile. These
+spring constants vary with the axial pile load as well as lateral forces
+and moments. Close results can often be found by using a range of forces
+and moments to identify a linear range.
+<p>The lateral force over lateral displacement (P/<font face="Symbol">d</font>) is found by applying
+a range of lateral forces to the top of the pile.&nbsp; Case 2 of LPILE+
+is used to hold the pile slope constant at 0.0 at the top.&nbsp; Use a
+range of axial loads to verify that P/<font face="Symbol">d</font> is not seriously affected by changes
+in axial load.&nbsp; Use a range of lateral loads from very small to higher
+than the expected required capacity.&nbsp; The lateral force can then be
+divided by the deflection at the pile head reported by LPILE+.&nbsp; Plot
+the P/<font face="Symbol">d</font> vs. deflection.&nbsp; A linear range should be apparent from the
+graph, however some shaft problems did not show any linearity.&nbsp; For
+the first try, use the linear value for the spring constant.&nbsp; Similarly,
+the M/<font face="Symbol">d</font> can be found from the same runs.
+<p>The M/<font face="Symbol">q</font> is found by using Case 4 of LPILE+.&nbsp; The pile top is held
+to 0.0 dflection and a range of moments are applies.&nbsp; The pile top
+rotation (<font face="Symbol">q</font>) is found by dividing the deflection at the first interval
+by the interval length.&nbsp; M/<font face="Symbol">q</font> and P/<font face="Symbol">q</font> are found by dividing the applied
+moment and computed shear at the pile head by the pile top rotation.&nbsp;
+As with the other spring constants, there should be a linear range.
+<p>After the pile springs have been estimated for all the piles, they are
+input along with the pile group geometry and pile group loads.&nbsp; GPILE
+then computes the group stiffness matrix for the pile group by changing
+to global coordinates and summing up the individual pile stiffness matrices.
+<p>The pile group matrix is inverted and multiplied by the force matrix
+to solve for the foundational deflections.&nbsp; The pile cap is assumed
+to be rigid and does not deform.&nbsp; The foundational displacements are
+changed to pile coordinates (u, v, and w) and the individual pile forces
+are computed.
+<p>If pile deflections are outside the linear range, the spring constants
+must be adjusted for the pile deflection and the problem rerun.&nbsp; Iterate
+until satisfied with the results.
+<p>As a final check, LPILE+ can be run with the individual pile loads from
+GPILE.&nbsp; The pile deflections reported by both programs should be similar.
+<br>&nbsp;
+<h3>
+Theory:</h3>
+The program and theory are described in "Foundational Analysis and Design"
+by Bowles, 3rd ed., Chapter 18-9.&nbsp; This reference should always be
+read by the first time user.&nbsp; The program has been changed to better
+reflect Bridge Office practice.
+</body>
+</FONT>
+</html>

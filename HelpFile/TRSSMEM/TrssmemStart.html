@@ -1,0 +1,179 @@
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+
+<HTML>
+<HEAD>
+  <TITLE>Trssmem Sliding Frames</TITLE>
+	<object
+	   classid="clsid:E440EB7F-D9CF-11D3-932F-006097DF3C68" id="clsTrssmem">
+	</object>
+
+	<object
+	   classid="clsid:CD338529-9C3E-11D3-92F4-006097DF3C68" id="clsGeneral">
+	</object>
+
+</HEAD>
+
+  <SCRIPT LANGUAGE="Javascript">
+    var defSize = 25;
+    var _current = null;
+    var old_color;
+    var bLoaded = false;	//tells BoxInfo if it was just loaded or not
+
+	function display(f, new_color) 
+	{
+		var newRows = ""
+		// Check if already active
+		if (f==_current) 
+		{
+			return;
+		}
+
+		if ( _current != null )			  //prevents errors on startup
+		{
+			_current.document.bgColor = old_color;    //sets the last doc to it's "min" color
+			old_color = new_color;			  // saves the "min" color of curr doc
+
+			//If it is the input form, reduce it to nothing but the title.
+			// This stops problems with selecting large portions of it when opening on it again.
+			if( _current != TrssmemInfo )
+			{
+				//_current.document.all.InputFormFull.style.display="none";
+				_current.document.all.FormExcludingHeading.style.display="none";
+			}
+		}
+		else	//sets the "old_color" for the first doc to load
+		{
+			_current = f;
+			old_color = new_color;	
+			return;		
+		}
+
+		_current = f;
+		_current.document.bgColor = "Silver";	//set current doc color to silver
+	
+		//Play Sliding Door Sound
+		clsGeneral.SoundDoor();
+
+		// Determine where the first frame is in the all collection
+		var startIndex = document.body.sourceIndex+1
+		for (var intFrames=0; intFrames< frames.length; intFrames++) 
+		{
+			var curF = frames[intFrames].document
+			if (curF.body == f.document.body) 
+			{
+				// Give selected frame all the space
+				newRows+="*,"
+				// Make the header much bigger
+				curF.all.header.style.fontSize="200%"
+				// Change header color:
+				curF.all.header.style.color="Black"
+
+				/* Turn on scrollbars for the active frame
+				This is done by accessing the FRAME element
+				in this frameset document. */
+				document.all[startIndex+intFrames].scrolling="auto"
+
+				//If it is the input form, enlarge it from the title to the entire document.
+				// This stops problems with selecting large portions of it when opening on it again.
+				if( _current != TrssmemInfo )
+				{
+					_current.SetJustMaximized();
+				}
+			}
+			else 
+			{
+				// Set to the default size
+				newRows+=defSize.toString() + ","
+				// Reset header font-size
+				curF.all.header.style.fontSize="" 
+				// Change header color:
+				if ( curF.title != "Trssmem Output" )
+					curF.all.header.style.color="White"
+				// Turn off scrolling
+				document.all[startIndex+intFrames].scrolling="no"
+			}
+		}
+		document.body.rows=newRows   
+		// Remove Selection
+	}
+
+    function LoadFile()
+    {
+    	var SavedFileData = clsTrssmem.LoadDataFile();
+	return SavedFileData;
+    }
+
+    function SaveFile( dataString )
+    {
+	clsTrssmem.InputString = dataString;
+	clsTrssmem.SaveDataFile();
+    }
+
+    function InputStringFull()
+    {
+	var InputString = clsTrssmem.InputString;
+	if ( InputString == "") 
+		return false;
+	else
+		return true;
+    }
+
+    function SetInputString( dataString )
+    {
+	clsTrssmem.InputString = dataString;
+    }
+
+    function Process()
+    {
+	clsTrssmem.Process();
+    }
+
+    function GetFileName()
+    {
+	return clsTrssmem.FileName;
+    }
+
+  </SCRIPT>
+  <SCRIPT LANGUAGE="VBScript">
+	function GetOutPut()
+		dim outputString
+		outputString = clsTrssmem.OutputString
+		if outputString <> "" then
+			GetOutPut = outputString
+		else
+			GetOutPut = "Please Enter Data"
+		end if
+	end function
+  </SCRIPT>
+  <FRAMESET ROWS="*, 25, 25">
+    <FRAME SRC="TrssmemInfo.html" NORESIZE Name="TrssmemInfo">
+    <FRAME SRC="TrssmemInput.html" NORESIZE  Name="TrssmemInput">
+    <FRAME SRC="TrssmemOutput.html" NORESIZE Name="TrssmemOutput">
+  </FRAMESET>
+</HTML>

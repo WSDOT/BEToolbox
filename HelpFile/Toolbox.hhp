@@ -1,0 +1,81 @@
+[OPTIONS]
+Compiled File=Toolbox.chm
+Title=BEToolbox
+Contents File=Toolbox.hhc
+Index File=Toolbox.hhk
+Default topic=Welcome.htm
+Default Window=NewWindow
+Error log file=
+Display compile progress=Yes
+Display compile notes=No
+Full-text search=No
+Binary Index=No
+Auto Index=No
+Enhanced decompilation=No
+Binary TOC=No
+Flat=No
+
+[WINDOWS]
+NewWindow="BEToolbox","Toolbox.hhc","Toolbox.hhk","","",,,,,0x20,0,0x200e,[0,0,800,600],0x1000000,0x0,,0,0,0
+
+[FILES]
+Welcome.htm
+GPile\GPileInfo.html
+Curvel\CurvelInfo.html
+Curvel\CurvelStart.html
+Curvel\CurvelOutput.html
+Curvel\CurvelInput.html
+License.htm
+GirComp\Rolled\GirCompRolledInput.html
+GPile\Pictures.html
+PSGDES\PsgdesInfo.html
+GirComp\Rolled\GirCompRolledStart.html
+GirComp\BuiltUp\GirCompBuiltUpStart.html
+GPile\GPileStart.html
+GirComp\BuiltUp\GirCompBuiltUpInput.html
+GPile\GPileInput.html
+GPile\GPileOutput.html
+GirComp\GirCompOutput.html
+GirComp\GirCompInfo.html
+Trssmem\TrssmemOutput.html
+Instructions.html
+About.html
+Online.htm
+Trssmem\TrssmemInput.html
+PSGDES\HelpPopUp.html
+Torsion\TorsionInput.html
+Trssmem\TrssmemInfo.html
+PSGDES\PsgdesInput.html
+Trssmem\TrssmemStart.html
+Torsion\TorsionInfo.html
+Torsion\TorsionOutput.html
+Torsion\TorsionStart.html
+PSGDES\PsgdesStart.html
+PSGDES\PsgdesOutput.html
+BoxGirder\BoxStart.html
+ComGirder\ComInfo.html
+ComGirder\ComStart.html
+BoxGirder\BoxInfo.html
+BoxGirder\BoxInput.html
+BoxGirder\BoxOutput.html
+QConLE\QConLEInput.html
+QConLE\QConLEOutput.html
+QConLE\QConLEInfo.html
+Ult2Ax\Ult2AxInfo.html
+Ult2Ax\Ult2AxInput.html
+Ult2Ax\Ult2AxOutput.html
+ComGirder\ComInput.html
+Ult2Ax\Ult2AxStart.html
+ComGirder\ComOutput.html
+QConLE\QConLEStart.html
+BSSCDHTM.js
+
+Toolbox.brs
+[ALIAS]
+#include Toolbox.ali
+
+[MAP]
+
+[TEXT POPUPS]
+
+

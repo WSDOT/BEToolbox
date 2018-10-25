@@ -1,0 +1,771 @@
+<!
+
+///////////////////////////////////////////////////////////////////////
+// BEToolbox - Bridge Engineering Toolbox
+// Copyright (C) 2000, Washington State Department of Transportation
+//                     Bridge and Structures Office
+//
+// This software was developed as part of the Alternate Route Project
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as
+// published by the Washington State Department of Transportation,
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful,
+// but is distributed AS IS, WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+// PURPOSE.  See the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Open Source License
+// along with this program; if not, write to the Washington State
+// Department of Transportation, Bridge and Structures Office,
+// 4500 3rd Ave SE, P.O. Box 47340, Olympia, WA 98503, USA or e-mail
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+>
+
+<html>
+<head>
+   <title>PSGDES Info</title>
+<style TYPE="text/css">
+      .select {text-align:center; font-family: Arial; font-weight: bold; cursor: hand}
+      body {margin-top: 0pt}
+      .contents {background: red; font-family: Arial; color: black;}
+</style>
+<script LANGUAGE="JavaScript">
+	
+	function ViewTopic( Topic )
+	{
+		clickedOn(document.body);		//opens THIS frame
+		focus();				//sets focus to THIS frame
+		document.location=Topic;		//changes to the appropriate topic
+	}
+
+	function InfoLoaded(my)
+	{
+		if( parent.bLoaded == false )
+		{
+			parent.display(my, "Red");
+			parent.bLoaded = true;
+		}
+	}
+
+	function clickedOn(my)
+	{
+		parent.display(my, "Red");
+	}
+
+</script>
+</head>
+
+<FONT FACE="Arial">
+
+<body bgcolor="#C0C0C0" ONLOAD="InfoLoaded(this)" ONFOCUS="clickedOn(this)">
+
+<div ID="header" CLASS="select" ONSELECTSTART="return false">PSGDES Information</div>
+
+<center>
+<h3>
+PSGDES Information Table Of Contents</h3></center>
+
+<ol><a href="#PGDP">Prestressed Girder Design Program</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDP_DESCRIPTION">Description</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDP_DESIGN">Prestressed Girder Design</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDP_THEORY">Theory</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDP_CONSTANT_VALUES">Constant Values
+Used</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDP_CRITERIA">Criteria</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDP_INPUT">Input</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDP_OUTPUT">Output</a>
+<p><a href="#PGDA">Prestressed Girder Deflection Analysis</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDA_DESCRIPTION">Description</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDA_THEORY">Theory</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PGDA_OUTPUT">Output</a>
+<p><a href="#PICK_POINT">Pick Point Analysis</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PICK_POINT_DESCRIPTION">Description</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PICK_POINT_THEORY">Theory</a>
+<br>&nbsp;&nbsp;&nbsp; <a href="#PICK_POINT_OUTPUT">Output</a></ol>
+
+<hr>
+<p><br>
+<center>
+<h2>
+<a NAME="PGDP"></a>PRESTRESSED GIRDER DESIGN PROGRAM</h2></center>
+<a NAME="PGDP_DESCRIPTION"></a><u><b>DESCRIPTION</b>:</u>
+<p>PSGDES is a program for the analysis and design of prestressed girders.
+Both composite and noncomposite girders may be designed by PSGDES. Washington
+State standard girder properties are coded in the program for easy input.
+<p><a NAME="PGDP_DESIGN"></a><u><b>PRESTRESSED GIRDER DESIGN</b>:</u>
+<p>The Prestressed Girder Design portion of the PSGDES program selects
+the number and arrangement of harped and straight strands for simple span
+bridges and prestressed girder bridges made continuous for live loads.
+If the number of harped and straight strands are given, the program performs
+a check. Girders are designed as simple spans in flexure for all girders.
+See the "THEORY" section below for shear design assumptions.
+<p><a NAME="PGDP_THEORY"></a><u><b>THEORY</b>:</u>
+<p>In general, the program follows AASHTO Standard Specifications for Highway
+Bridges dated 1989. The procedure in the program follows that which would
+be used by a designer in reaching the same objective.
+<p>Dead loads, live loads, and section properties are computed and used
+to find girder stresses at bottom midspan. In noncomposite girders all
+loads are applied to the girder. In composite girders, the girder, slab,
+and diaphragm loads are applied to the girder without slab, while live
+loads and continuous dead loads (curb and asphalt) are applied to the composite
+girder with slab.
+<p>The composite girder I is based upon the girder section and the transformed
+slab.
+<p>Assuming a value for eccentricity, the required number of strands at
+midspan are estimated and reduced by one. This ensures that more strands
+than are needed are not used. Only an even number of straight strands are
+allowed for standard WSDOT girders and bulb-tees. For simple span girders
+the program initially harps strands only if the estimated number of strands
+required exceeds the maximum allowable number of straight strands.
+<p>Strands are added if stresses at midspan are above allowable limits
+or the ultimate capacity of the girder is less than Mu or 1.2Mcr. If stresses
+at the end of the girder are above allowable limits, more strands are harped.
+If tension at the top of the girder at harping point is above allowable
+limits, the harped strands are raised through the center section of the
+girder.
+<p>After all minimum criteria have been met, the program tries to reduce
+stresses at the end of noncomposite girders and composite girders made
+continuous for live load. More straight strands are harped until any of
+the following is true:
+<blockquote>
+<ol>
+<li>
+Stresses are compressive on the top of noncomposite girders at D/2.</li>
+
+<li>
+A change would require more strands.</li>
+
+<li>
+The maximum number of harped strands already exists.</li>
+
+<li>
+There are only four straight strands left.</li>
+
+<li>
+A change would leave more harped strands than straight strands.</li>
+
+<li>
+The hold down force at the harping point would exceed 45 kips.</li>
+</ol>
+</blockquote>
+If the girder is being checked, none of these operations will take place.
+<p>Office practice is to design prestressed girders as simple span, even
+if the girders are made continuous for live load. All moments and shears
+in the program assume simple span loading.
+<p>Shear capacity is based on AASHTO 9.20. The girder web is designed to
+carry all shears. Mmax and Vi are due to LL+I and added dead load (curb
+and asphalt) only. Mcr is the cracking moment at the bottom of the girder.
+<p>Girders made continuous for live load use a different approach at d/2,
+d or the end of taper. Vi/Mmax cannot be calculated without a frame analysis.
+If this value is not given, then the following is assumed:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Lspan Vi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Lspan Vi
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+----------- = 2 when Lspan &lt;= 65 feet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+---------- = 5 when Lspan > 65 feet
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Mmax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Mmax
+<p>The girder depth in the AASHTO shear equations is assumed to be:
+<p>d = Girder Height + "A" dimension - 4.5" for composite girders.
+<p>d = .8 Girder Height for noncomposite girders.
+<p>However, Vu is still calculated assuming simple span. Shear calculations
+at the harping point assume simple span conditions.
+<p>Prestress losses at the time of release are considered to be Elastic
+Shortening and 2 percent Steel Relaxation. Such that:
+<p><img SRC=".\..\Pics\PSGDES1.gif" height=172 width=576>
+<p><a NAME="PGDP_CONSTANT_VALUES"></a><b><u>CONSTANT VALUES USED</u></b>:
+<p>Ultimate strength of slab concrete - 5.0 kips per square inch. This
+value is used only to transform the slab. Positions of strands are as for
+Washington State Standard Girder, filling the lowest positions first. Harped
+strands are assumed to be bundled between harping points with a C.G. Height
+of 3 inches above the bottom of the girder unless modified. The top pair
+of harped strands is normally 2 inches below the top, except for short
+girders where the rise in strands in normally 2 inches below the top, except
+for short girders where the rise in strands is reduced just enough to keep
+the slope of the centroid of the harped strands less than 1 in 7. That
+way all of the strands are within 1 in 6.
+<p>Section properties of Washington State Standard Girder Types W42G, W50G,
+W58G, and W74G are stored in the program. Standard W35DG and W53DG Deck
+Bulb Tee girders are also stored in the program.
+<p>Standard curb load is a New Jersey barrier. If a New Jersey barrier
+is used, the curb weight is .427 kips per foot. The curb is normally distributed
+over three girders. The asphalt weight is added to the curb weight and
+is based on .15 kips per cubic foot and the girder spacing. If asphalt
+is present, the New Jersey barrier is assumed to weight .470 kips per foot.
+<p>Slab dead load includes the weight of standard intermediate diaphragms,
+two for spans over 80 feet, one for spans over 40 feet to 80 feet, and
+none for 40 feet and below. For composite girders, a slab pad is included
+over the top girder flange width with a depth equal to the difference between
+"A" and the slab thickness. All concrete weights are taken as 0.16 kip
+per cubic foot. End diaphragms are not included in the slab weight or end
+reactions.
+<p>Modulus of elasticity of steel = 28,000,000 #/sq. in.
+<p>Modulus of elasticity of concrete = W<sup>(3/2)</sup> x (33) x (f'<sub>c</sub>)<sup>(1/2)</sup>
+with W = 155 or E = 63,700 (f'<sub>c</sub>)<sup>(1/2)</sup>
+<p>The harping point distance is taken as 0.4 x span length for girder
+types W58G and W73G and all noncomposite girders, 0.333 x span length for
+other types. (For nonstandard composite girders, the harping point distance,
+maximum number of straight strands, and maximum number of harped strands
+will default to the same values as an equivalent depth standard girder.)
+Harped strands are bundled in the middle portion of the span. Spacing at
+girder ends are per standard girder plans. C.G. Bundled strands are 3 inches
+above bottom of girder at centerline of span for 12 strands or less. For
+more than 12 strands, the excess is carried in a second bundle at 6 inches
+from bottom of girder.
+<p>The weight of the end block when specified is ignored for flexure design
+in the program. Design stresses and shear calculations at D/2 include end
+block properties when end blocks are specified. Reactions calculated by
+the program include end block weight to the Centerline.
+<p><a NAME="PGDP_CRITERIA"></a><b><u>CRITERIA</u></b>:
+<p>Allowable Stresses:
+<p>&nbsp;&nbsp;&nbsp; <u>Concrete</u> -
+<br>&nbsp;&nbsp;&nbsp; Temporary stresses before losses due to creep and
+shrinkage:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compression - 0.60 f'<sub>ci</sub>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tension without mild steel
+check - 3(f'<sub>ci</sub>)<sup>(1/2)</sup> (0.200 ksi max)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tension with mild steel
+check - 7.5(f'<sub>ci</sub>)<sup>(1/2)</sup>
+<br>&nbsp;&nbsp;&nbsp; Stresses @ Design Load after losses:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compression - 0.40 f'<sub>c</sub>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tension in top without mild
+steel check - 3(f'<sub>c</sub>)<sup>(1/2)</sup> (0.200 ksi max)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tension in top with mild
+steel check - 7.5(f'<sub>c</sub>)<sup>(1/2)</sup>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tension in bottom (Precompressed
+Tensile Zone) - 3(f'<sub>c</sub>)<sup>(1/2)</sup>
+<br>&nbsp;&nbsp;&nbsp; <u>Strands</u> -
+<br>&nbsp;
+<table BORDER WIDTH="36%" HEIGHT="60" >
+<tr>
+<td WIDTH="35%" HEIGHT="19"><u>Strand Type</u></td>
+
+<td WIDTH="24%" HEIGHT="19"><u>Jacking Stress</u></td>
+
+<td WIDTH="52%" HEIGHT="19"><u>Final Stress</u></td>
+</tr>
+
+<tr>
+<td WIDTH="35%" HEIGHT="4">Stress-relieved&nbsp;</td>
+
+<td WIDTH="24%" HEIGHT="4">0.7* fsu</td>
+
+<td WIDTH="52%" HEIGHT="4">0.7* fsu - 45 ksi</td>
+</tr>
+
+<tr>
+<td WIDTH="35%" HEIGHT="19">Low-relaxation</td>
+
+<td WIDTH="24%" HEIGHT="19">0.75* fsu</td>
+
+<td WIDTH="52%" HEIGHT="19">&nbsp; 0.75* fsu - 45 ksi</td>
+</tr>
+</table>
+
+<p>Loading:
+<br>L.L. + I : HS-20, 2-24 kip axles, or lane loading. DL Curb &amp; Sidewalk:
+Design weight of one sidewalk and curb distributed over a maximum of three
+girders (acting on composite section).
+<p><a NAME="PGDP_INPUT"></a><b><u>INPUT</u></b>
+<blockquote>Line 1
+<blockquote><font color="#000000"><u>Ident</u> -</font><font color="#FF0000">
+&lt;Not used in current version, although it is still echoed in the output
+as "1">&nbsp; </font><font color="#000000">Any set of numbers used to identify
+the group of following problems.</font>
+<p><font color="#000000"><u>End Blocks</u> - Select either "No End Blocks"
+or "End Blocks" (composite girders only).</font>
+<p>The next seven items must be used if the girder is nonstandard (Types
+2 or 3).<font color="#000000">&nbsp; Code "0" or leave blank if you are
+designing a WSDOT standard girder. The values used for standard girders
+are stored in the program.</font>
+<p><u>DLG</u> - Girder dead load in kips per foot.
+<p><u>Ybg</u> - Distance from bottom of girder to girder center of gravity
+in inches.
+<p><u>Ag</u> - Cross-sectional area of girder in sq. Inches.
+<p><u>Z<sub>TG</sub></u> - Section modulus of the top fiber of the girder
+in inches<sup>3</sup>.
+<p><u>Ig</u> - Moment of inertia of girder in inches<sup>4</sup>.
+<p><u>Top Flg W.</u> - Width of the girder top flange in inches.
+<p><u>Top Flg. Thick</u> - Average top flange thickness in inches.</blockquote>
+
+<blockquote><u>Max Harped</u> - Maximum number of harped strands. Must
+be input for nonstandard girders.<font color="#000000">&nbsp; Code "-1"
+or leave blank for standard girders or if the nonstandard girder has the
+same strand arrangement as a standard girder of the same height.</font></blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>Max Str.</u> - Maximum number of straight strands. Must
+be input for nonstandard girders.<font color="#000000">&nbsp; Code "-1"
+or leave blank for standard girders or if the nonstandard girder has the
+same strand arrangement as a standard girder of the same height.</font></blockquote>
+</blockquote>
+
+<blockquote>Line 2
+<blockquote>The next three items must be used if the girder is nonstandard.
+<font color="#000000">Code "0" or leave blank if you are designing a WSDOT
+standard girder:</font>
+<p><u>A of End Block</u> - Cross-sectional area of end block in square
+inches.
+<p><u>I End Block</u> - Moment of inertia of endblock in inches<sup>4</sup>.
+<p><u>Yt End Block</u> - Centroid distance to top of end block section
+in inches.
+<p><u>Cont.</u> - Number of girder ends that are continuous for live load
+(0,1,2). A 1 or 2 causes shear to be designed continuous for LL+I and continuous
+DL. See theory.
+<p><u>No. Harped</u> - List number of harped strands to be used for problems
+under this ident number.&nbsp; (Use for checking girders only<font color="#000000">.&nbsp;
+Code "0" or leave blank&nbsp; for design.)</font>
+<p><u>No. Straight</u> - List number of straight strands to be used for
+problems under this ident number.&nbsp; (Use for checking girders only.<font color="#000000">&nbsp;
+Code "0" or leave blank for design.)</font>
+<p><u>f’ci</u> -Concrete strength at time of release of prestress.<font color="#000000">&nbsp;
+Code "0" or leave blank&nbsp; for default of 6.0 ksi.&nbsp;</font> (For
+preliminary runs, list the same as f’cg.)
+<p><u>f’cg</u> - Concrete strength of girder, final.<font color="#000000">&nbsp;
+Code "0" or leave blank for default of 7.0 ksi.</font>
+<p><font color="#000000"><u>HS LOAD</u> - Code "0" or leave blank for default
+of HS-25.&nbsp; Military Live Load of 2-24 kip axles at 4 foot centers
+is used for all HS loadings.</font>
+<p><u>Max. No. Of Girs. Per Curb</u> - Maximum number of girders to distribute
+1 curb over.&nbsp; If left blank, the default of<font color="#000000">
+3 will be used. </font>Used only with New Jersey barrier. New Jersey barrier
+weight is distributed over half the girders, but not more than the "Max.
+No. of Girs Per Curb".
+<p><u>Strand Type</u> - Select either low-relaxation strands or stress-relieved
+strands.</blockquote>
+Line 3
+<blockquote><font color="#000000"><u>PBM No.</u> -&nbsp; </font><font color="#FF0000">&lt;Not
+used in current version, although it is still echoed in the output as "1"></font><font color="#000000">&nbsp;
+Any number to describe the particular problem within the group having the
+same ident number. Problem numbers need not be in numerical order.</font></blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>Girder Type</u> - Select appropriate Girder type.&nbsp;
+Types 35 and 53 must have spacing greater than 49 inches.</blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>Span Length</u> - Code the distance from center to center
+of bearings (feet).
+<p><u>As strand</u> - List cross-sectional area of one prestressing strand.<font color="#000000">&nbsp;
+Code "0" or leave blank for default of 0.153 square inches. </font>(1/2
+inch <font face="Symbol">&AElig;</font> stands).</blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>Ult. Str. Stress</u> - Code the ultimate strength of the
+steel used in strands.<font color="#000000">&nbsp; Code "0" or leave blank
+for default of 270 ksi.</font></blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>Slab D.L.</u> - Slab dead load, in kips per foot, to be
+applied to one girder (exclusive of diaphragm weight).<font color="#000000">&nbsp;
+If coded "0" or left blank, the program will compute the weight based on
+slab thickness and girder spacing.&nbsp; Code "0" or leave blank for noncomposite
+girders.</font>
+<p><u>Vi/Mmax</u> - Shear to moment ratio at D/2 for externally applied
+loads. (See AASHTO 9.20)<font color="#000000">&nbsp;&nbsp; Code "0" or
+leave blank for approximation by the program. (See theory.)</font>
+<p><u>Live Load Moment</u> - Total live load moment, with impact, to be
+designed for at the midspan of one girder. (Kip feet.)<font color="#000000">&nbsp;
+If not coded "0" or left blank, the next item, "L.L. Dist. N," must be
+coded "0" or left blank.</font>
+<p><u>L.L. Dist. N</u> - The live load distribution factor for wheels per
+girder as found in AASHTO Specifications, Article 3.23, or as appropriate.
+(Usually 5.5 for composite girders. Use alternate means to find the distribution
+for noncomposite.<font color="#000000"><font face="Arial">&nbsp; </font>If
+this item is coded zero or left blank, the program will default to your
+listed value of live load moment. </font>Distribution is based on S/N where
+S is the girder spacing.
+<p><u>Gross slab Th</u> - The thickness of the slab in inches before deducting
+wearing surface. The program deducts &frac12;" for wearing for calculating
+the composite section properties, when asphalt overlay is not used.&nbsp;
+<font color="#000000">Code "0" or leave blank for noncomposite girders.</font></blockquote>
+Line 4
+<blockquote><u>Girder spacing</u> - Center to center spacing of girders
+in feet. For standard W35DG and W53DG decked bulb-tees, spacing less than
+49 inches are not allowed.</blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>"A" Dist.</u> - For composite girders, the distance from
+top of slab to top of girders at C.L. bearing, in inches (see Washington
+Standard Girder Plans). For noncomposite girders, the amount of slab thickening
+for camber (must be positive). Same as final girder camber.</blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>GIR./SPAN</u> - Number of girders in span.
+<p><u>Curb Wt.</u> - Curb wt. Per foot of curb per girder (k/ft).<font color="#000000">
+Coding "-1" or leaving blank will default the curb wt. to weight of a New
+Jersey barrier. </font>New Jersey barrier weight is distributed over half
+the girders, but not more than three girders.</blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>E</u> - Height of c.g. straight strands from bottom of girder
+in inches.<font color="#000000">&nbsp; Code "0" or leave blank for standard
+girder configuration.</font></blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>Harped Strand Rise</u> - Rise in c.g. harped strands in
+inches.<font color="#000000">&nbsp;&nbsp; Code "0" or leave blank for standard
+girder configuration.</font></blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>FCL - Height of harped strands between harping points</u>
+- Code the distance from bottom of girder to C.G. of harped strands in
+inches.<font color="#000000">&nbsp; Code "0" or leave blank for default
+of 3.0 inches from bottom of girder to centroid of bottom strand bundle.</font>
+The bottom bundle contains a maximum of 12 strands.
+<p><u>Stir Av Fy</u> - Cross-sectional area of one stirrup set in square
+inches times the yield stress of the steel in ksi.<font color="#000000">
+Code "0" or leave blank for default of 24.0 kips (2 x .2 x 60 = 24.0, which
+assumes two #4 bars).&nbsp; </font>WSDOT office criteria is to use the
+default value.
+<p><u>Web Th</u> - The width of the girder web. (Inches).<font color="#000000">
+Code "0" or leave blank for default of 6 inches.</font>
+<p><u>Extra Slab Width for D.L.</u> - Where the width of the slab is more
+or less than the distance center to center of girder as on exterior girders,
+this extra slab will be added as DL.
+<p><u>X HARP</u> - Distance to the harping point from the centerline of
+bearing (feet).<font color="#000000"> Code "0" or leave blank for the standard
+harping point distance.</font>
+<p><u>Asph. Th</u> - Code the thickness of the asphalt overlay in inches.
+The weight due to this is computed at 150#/ft.<sup>3</sup> and added to
+curb D.L.
+<p><u>Eff. Slab Width (in)</u> - The designer may override the computed
+width.<font color="#000000"> Otherwise code "0" or leave blank. Code "0"
+or leave blank for noncomposite girders.</font>
+<p><u>Final Design Losses (ksi)</u> -<font color="#000000"> Code "0" or
+leave blank for default of 48 ksi.</font>
+<p><u>SLAB f’c</u> - Ultimate strength of the slab concrete at 28 days
+(ksi).<font color="#000000"> Code "0" or leave blank for default of 4.0
+ksi. </font>1.2 x slab f’c is passed to PSGDEF.&nbsp; Used for composite
+girders only.
+<p><u>End Block Length (ft)</u> - Length of end block from centerline bearing
+including the taper.
+<p><u>End Block Taper Length (ft)</u> - Length of taper.
+<p><u>End Block Thickness (in)</u> - Thickness of web in the end blocks.</blockquote>
+Line 5
+<blockquote><u>CREEP</u> - Creep deflection factor at 720 days. This factor
+is the ratio of deflections.&nbsp; (Creep/Initial.)&nbsp; Default is 2.0
+which means the deflection due to creep will be twice the initial elastic
+deflection, making the final deflection three times the initial.<font color="#000000">&nbsp;
+Code "0" or leave blank for default of 2.</font></blockquote>
+</blockquote>
+
+<blockquote>
+<blockquote><u>DAYS</u> - Number of days from the time of release of prestress
+until the slab is poured.<font color="#000000"> Code "0" or leave blank
+for default at 120 days. </font>Used for composite girders only.</blockquote>
+</blockquote>
+
+<blockquote>Line 6</blockquote>
+
+<blockquote>
+<blockquote><u>PICKPT</u> - Optional pickup point. This is the distance
+from center of bearing to the lifting lug.&nbsp; This allows the user to
+review the effects of lifting the girder at any specified point (feet).
+Code a nonzero number to activate this calculation.</blockquote>
+</blockquote>
+
+<blockquote>&nbsp;&nbsp;&nbsp;&nbsp; Impact Factors:
+<blockquote><u>LIFT</u> - Lifting impact factor (decimal fraction).<font color="#000000">
+Code "0" or leave blank for default of 0.0 (0%).</font>
+<p><u>SHIP</u> - Shipping and erection impact factor (decimal fraction).<font color="#000000">
+Code "0" or leave blank for default of .2 (20%).</font></blockquote>
+&nbsp;&nbsp;&nbsp;&nbsp; Losses:
+<blockquote><u>LIFT</u> - Prestress losses at the time of lifting (ksi).<font color="#000000">
+Code "0" or leave blank for default of 20 ksi.</font>
+<p><u>SHIPPING</u> - Prestress losses at the time of shipping and erection
+(ksi).<font color="#000000"> Code "0" or leave blank for default 35 ksi.</font></blockquote>
+</blockquote>
+<a NAME="PGDP_OUTPUT"></a><b><u>OUTPUT</u></b>
+<p>The output is preceeded by a listing of the input file. The output is
+nearly self-explanatory. On line four of each problem are listed the numbers
+of harped and straight strands arrived at by the computer and the stresses
+listed are with this strand arrangement. If harped strands were raised
+between harping pts or lowered on the ends, it will be reported between
+lines four and five. Lines five through eight list some of the parameters
+of the problem as given on the input sheet.
+<blockquote><u>FINAL DESIGN STRESS, BOT. CENTERLINE</u>
+<p>Stress in ksi at bottom of girder at midspan with dead load, live load,
+impact, and prestress after all losses. (3(f’c)<sup>1/2</sup> tension allowed.)
+<p><u>FINAL DESIGN STRESS, TOP CENTERLINE</u>:
+<p>Same as above, but occurring at the top of the girder. (.40(f’c) compression
+allowed.)
+<p><u>FINAL DESIGN STRESS, TOP AT D/2</u>:
+<p>Stress in ksi at top of girder at a distance of one-half of the girder
+depth from centerline of bearing with total dead load and prestress after
+all lossses. (3(f’c)<sup>1/2</sup> tension allowed.) This stress may be
+exceeded if more analysis is performed and the required mild steel added.
+<p><u>STRESS TOP AT HAPR POINT AT RELEASE</u>
+<p>Stress in ksi at top of girder at harping point at the time of release
+of prestress. (Girder dead load plus prestress after losses due to elastic
+shortening and steel relaxation.) (3(f’ci)<sup>1/2</sup>, but not more
+than 0.200 ksi, tension allowed.) This stress may be exceeded if more analysis
+is performed and the required mild steel added.
+<p><u>STRESS BOT., AT HARP POINT AT RELEASE</u>:
+<p>Stress in ksi at bottom of girder at the harping point at the time of
+release of prestress. (Girder dead load plus prestress after losses due
+to elastic shortening and steel relaxation. (.60(f’ci) compression allowed.)
+<p><u>STRESS TOP AT D/2 AT RELEASE</u>
+<p>Stress at top of girder at a distance of one-half the girder depth from
+the centerline of bearing with girder dead load and prestress with elastic
+shortening and steel relaxation losses only. (3(f’ci)<sup>1/2</sup>, but
+not more than 0.200 ksi, tension allowed.) This stress may be exceeded
+if more analysis is performed and the required mild steel added.
+<p><u>STRESS BOT. AT D/2 AT RELEASE</u>:
+<p>Same as above at the bottom of the girder. (.60(f’ci) compression allowed.)
+The following line lists computed values in the problem which may be used
+to verify results.
+<p><u>WS</u> -
+<p>Weight of slab and intermediate diaphragms per foot of girder (K/ft.).
+<p><u>WC</u> -
+<p>Weight of curb and asphalt overlay per foot of girder (K/ft.). The width
+of asphalt overlay is taken equal to the girder spacing.
+<p><u>E</u> -
+<p>Distance from bottom of girder to center of gravity of the straight
+strands (inches).
+<p><u>FCL</u> -
+<p>Distance from bottom of girder to C.G. of the harped strands at centerline
+span (inches). This will normally be 3.0" or the value listed on the Input
+sheet, however, if the harped strands have been raised during the computations,
+the revised value will appear here and a note will be printed under the
+numbers of harped and straight strands. Maximum number of harped strands
+in a single bundle is limited to 12. Where the number of harped strands
+exceeds 12 the strands are placed in one bundle of 12 at 3 inches from
+the bottom, and a bundle of the remaining harped strands at 6 inches from
+the bottom.</blockquote>
+
+<blockquote><u>FO</u> -
+<p>Distance from the top of the girder to the C.G. of the harped strands
+at the end of the girder.&nbsp; If the harped strand pattern has been lowered
+at D/2 during design, a note will be printed.</blockquote>
+
+<blockquote><u>RISE IN HARPED STRANDS</u> -
+<p>The change in elevation of the C.G. of the harped strands from the end
+of the girder to the harping point. (Inches.)
+<p><u>COMPOSITE SECTION I</u> -
+<p>The moment of inertia of the composite girder and slab (in.<sup>4</sup>).
+The composite section properties are computed using the transformed area
+of the slab.
+<p><u>BOT.</u> -
+<p>The distance from the bottom fiber of the girder to the concrete center
+of gravity of the composite section. (Inches.)
+<p><u>FLG.W</u> -
+<p>The effective width of the slab used in computing the composite section.
+This width is determined in accordance with AASHTO Specifications, Article
+8.10.1, except the effective flange width for composite girders is based
+on twelve times the net slab thickness (1/2 inch deducted if no asphalt
+is present) plus one-half of the girder’s top flange width. (Inches.)
+<p><u>Q SLAB</u> -
+<p>The statical moment of the area of the effective slab about the C.G.
+of the composite section.
+<p><u>ULTIMATE MOMENT REQUIRED</u> -
+<p>Composite girder after slab or noncomposite girder:
+<blockquote>DL + 2.17 (LL + I),</blockquote>
+
+<blockquote>or 1.2* Mcr,</blockquote>
+
+<blockquote>whichever is greater.</blockquote>
+Composite girder before slab:
+<blockquote>(DL girder + DL slab + DL diaph.),</blockquote>
+
+<blockquote>or 1.2* Mcr,
+<p>whichever is greater.</blockquote>
+<u>AVAILABLE</u> -
+<p>The ultimate moment capacity of the composite section is calculated
+using total strands and the "d" from the extreme compression fiber to the
+center of gravity of total strands.&nbsp; The computations are made using
+the equations given in AASHTO Specifications Article and 9.18.</blockquote>
+
+<blockquote><u>ULTIMATE SHEAR &amp; STIRRUP SPACING</u> -
+<p>The maximum ultimate shear and the stirrup spacing are reported at D/2,
+end of end block taper or D and the harping point. The live load that goverened
+is also reported.
+<p><u>S</u> -
+<p>The stirrup spacing to be used in the WSDOT standard girder sheets.
+<p><u>LS</u> -
+<p>The distance from the standard end stirrup spacing to where 18 inch
+stirrup spacing (the office practice maximum) may begin. (Standard end
+reinforcement assumed to end D from centerline bearing.)
+<p><u>GIR D.L. END REACTION</u> -
+<p>The total simple span dead load reaction. This includes the girder,
+intermediate diaphragms, contributory slab, curb, and overlay. The end
+diaphragm is not included. End block weight when specified is included.
+Girder, slab, curb, and overlay weight beyond centerline bearing are not
+included.&nbsp; Following the above data, a breakdown of stresses at the
+centerline of the span is given.
+<p><u>SBDG</u> -
+<p>Stress at bottom of the girder due to dead load of the girder only,
+on the girder section (K/in.<sup>2</sup>).
+<p><u>SBDS</u> -
+<p>Stress at the bottom of the girder due to dead load of the slab and
+diaphragms only, acting on the girder section (K/in.<sup>2</sup>).
+<p><u>SBDC</u> -
+<p>Stress at bottom of the girder due to dead load of the curb and any
+weight of asphalt overlay acting on the composite section.
+<p><u>SBXML</u> -
+<p>Stress at bottom of the girder due to live load plus impact only, acting
+on the composite section (K/in.<sup>2</sup>).
+<p><u>SBPRE</u> -
+<p>Stress at bottom of the girder due to prestress only, acting on the
+girder section (K/in.<sup>2</sup>), after all losses.</blockquote>
+
+<p><br>
+<hr>
+<p><br>
+<center>
+<h2>
+<a NAME="PGDA"></a>PRESTRESSED GIRDER DEFLECTION ANALYSIS</h2></center>
+<a NAME="PGDA_DESCRIPTION"></a><u><b>DESCRIPTION</b>:</u>
+<p>The deflection analysis portion of the LSGDES program computes the deflections
+expected in prestressed girders. This portion of the program no longer
+can be run as a separate program, it can only be run as an integrated part
+of the prestressed girder design portion as described in the previous section.&nbsp;
+The output, as described below, will be appended to the output for the
+main PSGDES program.
+<p><a NAME="PGDA_THEORY"></a><b><u>THEORY</u></b>:
+<p>Composite Girders:
+<blockquote>The following curve describes the deflection history of a composite
+prestressed girder.</blockquote>
+
+<center><img SRC=".\..\Pics\PSGDES2.gif" height=334 width=469></center>
+
+<blockquote>The initial deflection (Ci) is found using traditional formulas.
+Dead load deflections use:
+<p><img SRC=".\..\Pics\PSGDES3.gif" height=58 width=576>
+<p>Camber due to prestressing uses:
+<p><img SRC=".\..\Pics\PSGDES4.gif" height=68 width=272>
+<p>Where M<sub>1</sub> = prestress moment Pe at midspan
+<p>M<sub>2</sub> = prestress moment Pe at girder end
+<p>a = length from harping point to centerline bearing.
+<p>Ci = Cps - DL girder weight
+<p>This deflection is due to girder self weight and prestressing moments.
+Deflections due to prestressing assumes losses of 35 ksi and 28-day concrete
+strength (f’c). The modules of elasticity assumes 155 pcf for concrete
+weight. After release, deflection (C(t)) is a function of time.
+<p>Creep is based upon experimental data gathered from actual prestressed
+girders. The formula for creep with time is:
+<p>C(t) = Ci * ( 1 + ( <font face="Symbol">&AElig;</font> * .152 ln (t
++ 1 ) )
+<p>where <font face="Symbol">&AElig;</font> is the total amount of additional
+deflections due to creep. This value is often taken as 2.0. The maximum
+value for t is 720 days.
+<p>Screen camber is the deflection due to slab, diaphragm, curb, and asphalt
+weights. Slab and diaphragm weights are applied to the girder only. Curb
+and asphalt weights are applied to the composite girder. Field measurements
+show no additional creep after pouring the slab. As with the design program,
+all deflections assume simple span.</blockquote>
+Noncomposite Girders:
+<blockquote>Initial cambers due to prestressing and girder weight are computed
+as for composite girders. Curb and asphalt weights are also applied to
+the noncomposite girder. Final camber is the sum of initial cambers due
+to prestressing, girder-weight, diaphragm weight, and curb weight, all
+adjusted for creep.
+<p>Cf = Ci (1 + <font face="Symbol">&AElig;</font>)</blockquote>
+
+<p><a NAME="PGDA_OUTPUT"></a><b><u>OUTPUT</u></b>:
+<blockquote>The upper part of the output consists of the heading and an
+echo of the input or default values used by the program.
+<p>For composite prestressed girders:
+<blockquote><u>"D" - GIRDER CAMBER AT TIME OF SLAB POUR (XX DAYS)</u> -
+<p>Girder deflection from horizontal just before the slab pour.
+<p><u>DEFLECTION DUE TO SLAB WT.</u> -
+<p>Instantaneous deflection to slab and diaphragm load.
+<p><u>DEFLECTION DUE TO CURB + ASPH</u> -
+<p>Instantaneous deflection due to curb and asphalt loads.
+<p><u>SET SCREEDS FOR A TOTAL OF X.XX INCHES CAMBER ("C") ABOVE GRADE AT
+C.L. SPAN -</u>
+<p>This is the amount that the girder will deflect from the time the slab
+pour starts until final deflection is obtained, and is the amount that
+the screeds should be set above (or below) grade in order to have the final
+slab elevation be equal to the grade elevation.
+<p><u>FINAL CAMBER OF GIRDER</u> -
+<p>Final deflection including creep of the girder above horizontal after
+all dead loads have been applied.
+<p><u>EXCESS GIRDER CAMBER ALLOWANCE FOR ESTABLISHING THE "A" DIMENSION
+PER BRIDGE DESIGN MANUAL IS X.XX INCHES -</u>
+<p>Value to be used to determine the "A" dimension. This is the girder
+camber at time of slab pour less the deflection due to slab dead load.
+<p><u>APPROXIMATE LIVE LOAD + IMPACT DEFL. IS X.XX INCHES</u> -
+<p>The live load deflection using the input value of "Stress Bot. LL +
+I" and an assumed parabolic moment distribution along the length of the
+girder.</blockquote>
+For noncomposite girders:
+<blockquote><u>GIRDER CAMBER AT RELEASE = X.XX INCHES ABOVE THE HORIZONTAL
+POSITION</u> -
+<p>The initial deflection due to prestressing and girder weight.
+<p><u>FINAL CAMBER OF GIRDER = X.XX INCHES ABOVE THE HORIZONTAL POSITION</u>
+-
+<p>The final deflection, including creep, of the girder above horizontal.
+<p><u>APPROXIMATE LIVE LOAD + IMPACT DEFL. IS X.XX INCHES</u> -
+<p>The live load deflection using the input value of "Stress Bot. LL +
+I" and an assumed parabolic moment distribution along the length of the
+girder.</blockquote>
+All output deflections are in inches and are positive downward. All output
+cambers are in inches and are positive upward.</blockquote>
+
+<p><br>
+<hr>
+<p><br>
+<center>
+<h2>
+<a NAME="PICK_POINT"></a>PICK POINT ANALYSIS</h2></center>
+<a NAME="PICK_POINT_DESCRIPTION"></a><u><b>DESCRIPTION</b>:</u>
+<p>The pick-point analysis portion of the PSGDES program computes the maximum
+distance from center line bearing that a girder can be picked up or supported
+based on stresses at the harping point. Both lifting at release and shipping
+conditions are examined. Girder stresses at the harping point (point on
+the girder assumed to be critical during handling) are given for maximum
+pick-points and any pick-point specified.
+<p><i>Note: The program does not check stresses at the pick point. For
+large pick point values, the cantilever moment stress combined with the
+prestressing stress can be critical at the pick point. It is the designer’s
+responsibility to check this stress.</i>
+<p>The program can no longer be run as a separate program, it can only
+be run as an integrated part of the prestressed girder design portion as
+described in the first section.&nbsp; The output, as described below, will
+be appended to the output for the main PSGDES program.
+<p><a NAME="PICK_POINT_THEORY"></a><b><u>THEORY</u></b>:
+<p>The program solves a quadratic equation for the pick-point that produces
+the maximum allowable stress at the harping point. It solves this quadratic
+for allowable compression, the allowable tension without mild reinforcement,
+and the allowable tension with mild reinforcement for the lifting case
+and the shipping case.
+<p>These pick-points are compared and the least maximum is reported in
+the output along with the stresses at the harping point. Stresses at the
+harping point for the specified pick-point are also specified. The maximum
+pick-point will not exceed the harping point or midspan.
+<p><a NAME="PICK_POINT_OUTPUT"></a><b><u>OUTPUT</u></b>:
+<blockquote>The upper part of the output consists of the heading and an
+echo of the input or default values used by the program.
+<p><u>PICK-POINT DISTANCES (FROM CL BRG) FOR</u>: -
+<p>The least maximum pick-point and the controlling condition (lifting
+or shipping) are given for each allowable stress.
+<p><u>STRESSES AT HARPING POINT (KSI)</u>: - From the above maximum pick-points,
+the least maximum pick-point is given for the two allowable tensions and
+stresses at the harping point are given. These stresses can be used to
+check the mild steel required if the tension exceeds 3(f’c)<sup>1/2</sup>
+or 200 psi.
+<p>The program output then reminds the Engineer that the standard specs
+specify some minimum pick-points. The girder should be designed so that
+the maximum pick-point is above these minimums.</blockquote>
+
+</body>
+</FONT>
+</html>
