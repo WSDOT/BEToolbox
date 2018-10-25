@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2013  Washington State Department of Transportation
+// Copyright © 1999-2014  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -64,6 +64,8 @@ public:
    virtual void OnCloseDocument();
 
    CComPtr<IRoundColumn> m_Column;
+   Float64 m_ecl;
+   Float64 m_etl;
    CReportBuilderManager m_RptMgr;
    afx_msg void OnRefreshReport();
 };

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2013  Washington State Department of Transportation
+// Copyright © 1999-2014  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -104,6 +104,9 @@ BOOL CUltColDoc::Init()
    m_Column->put_fy( ::ConvertToSysUnits(60.0,unitMeasure::KSI));
    m_Column->put_Es( ::ConvertToSysUnits(29000.0,unitMeasure::KSI));
 
+   m_ecl = 0.0020;
+   m_etl = 0.0050;
+
    return TRUE;
 }
 
@@ -120,7 +123,7 @@ void CUltColDoc::OnRefreshReport()
 
 HRESULT CUltColDoc::WriteTheDocument(IStructuredSave* pStrSave)
 {
-   HRESULT hr = pStrSave->BeginUnit(_T("UltCol"),1.0);
+   HRESULT hr = pStrSave->BeginUnit(_T("UltCol"),2.0);
    if ( FAILED(hr) )
       return hr;
 
@@ -159,6 +162,16 @@ HRESULT CUltColDoc::WriteTheDocument(IStructuredSave* pStrSave)
       return hr;
 
    hr = pStrSave->put_Property(_T("Es"),CComVariant(Es));
+   if ( FAILED(hr) )
+      return hr;
+
+   // added in version 2.0
+   hr = pStrSave->put_Property(_T("ecl"),CComVariant(m_ecl));
+   if ( FAILED(hr) )
+      return hr;
+
+   // added in version 2.0
+   hr = pStrSave->put_Property(_T("etl"),CComVariant(m_etl));
    if ( FAILED(hr) )
       return hr;
 
@@ -215,6 +228,21 @@ HRESULT CUltColDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    if ( FAILED(hr) )
       return hr;
    m_Column->put_Es(var.dblVal);
+
+   Float64 version;
+   pStrLoad->get_Version(&version);
+   if ( 1 < version )
+   {
+      hr = pStrLoad->get_Property(_T("ecl"),&var);
+      if ( FAILED(hr) )
+         return hr;
+      m_ecl = var.dblVal;
+
+      hr = pStrLoad->get_Property(_T("etl"),&var);
+      if ( FAILED(hr) )
+         return hr;
+      m_etl = var.dblVal;
+   }
 
    hr = pStrLoad->EndUnit();
    if ( FAILED(hr) )
