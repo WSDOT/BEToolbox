@@ -34,12 +34,9 @@
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 
-#define ID_MYTOOLBAR ID_MAINFRAME_TOOLBAR+1
-#define GENCOMP_PLUGIN_COMMAND_COUNT 256
-
 // CGenCompDoc
 
-IMPLEMENT_DYNCREATE(CGenCompDoc, CEAFDocument)
+IMPLEMENT_DYNCREATE(CGenCompDoc, CBEToolboxDoc)
 
 CGenCompDoc::CGenCompDoc()
 {
@@ -53,13 +50,7 @@ CGenCompDoc::CGenCompDoc()
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
 
-   m_pMyToolBar = NULL;
-
    m_ModularRatio = 1.0;
-
-   // Reserve command IDs for document plug ins
-   GetPluginCommandManager()->ReserveCommandIDRange(GENCOMP_PLUGIN_COMMAND_COUNT);
-
 }
 
 CGenCompDoc::~CGenCompDoc()
@@ -67,7 +58,7 @@ CGenCompDoc::~CGenCompDoc()
 }
 
 
-BEGIN_MESSAGE_MAP(CGenCompDoc, CEAFDocument)
+BEGIN_MESSAGE_MAP(CGenCompDoc, CBEToolboxDoc)
 END_MESSAGE_MAP()
 
 
@@ -76,34 +67,27 @@ END_MESSAGE_MAP()
 #ifdef _DEBUG
 void CGenCompDoc::AssertValid() const
 {
-	CEAFDocument::AssertValid();
+	CBEToolboxDoc::AssertValid();
 }
 
 #ifndef _WIN32_WCE
 void CGenCompDoc::Dump(CDumpContext& dc) const
 {
-	CEAFDocument::Dump(dc);
+	CBEToolboxDoc::Dump(dc);
 }
 #endif
 #endif //_DEBUG
 
 BOOL CGenCompDoc::Init()
 {
-   if ( !CEAFDocument::Init() )
+   if ( !CBEToolboxDoc::Init() )
       return FALSE;
-
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   LPCTSTR lpszHelpFile = AfxGetApp()->m_pszHelpFilePath;
-   EAFGetApp()->SetHelpFileName(lpszHelpFile);
 
    return TRUE;
 }
 
 void CGenCompDoc::OnCloseDocument()
 {
-   EAFGetApp()->SetHelpFileName(NULL);
-   EAFGetApp()->SetUnitsMode(eafTypes::umUS);
-
    CEAFDocument::OnCloseDocument();
 }
 
@@ -318,58 +302,6 @@ HRESULT CGenCompDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
 CString CGenCompDoc::GetToolbarSectionName()
 {
    return _T("GenComp");
-}
-
-void CGenCompDoc::LoadToolbarState()
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   __super::LoadToolbarState();
-}
-
-void CGenCompDoc::SaveToolbarState()
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   __super::SaveToolbarState();
-}
-
-void CGenCompDoc::DoIntegrateWithUI(BOOL bIntegrate)
-{
-   CEAFMainFrame* pFrame = EAFGetMainFrame();
-
-   if ( bIntegrate )
-   {
-      // set up the toolbar here
-      {
-      AFX_MANAGE_STATE(AfxGetStaticModuleState());
-      UINT tbID = pFrame->CreateToolBar(_T("GenComp"),GetPluginCommandManager());
-      m_pMyToolBar = pFrame->GetToolBar(tbID);
-      m_pMyToolBar->LoadToolBar(IDR_TOOLBAR,NULL);
-      m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,NULL,BTNS_DROPDOWN);
-      }
-
-      // use our status bar
-      CBEToolboxStatusBar* pSB = new CBEToolboxStatusBar;
-      pSB->Create(EAFGetMainFrame());
-      pFrame->SetStatusBar(pSB);
-   }
-   else
-   {
-      // remove toolbar here
-      pFrame->DestroyToolBar(m_pMyToolBar);
-      m_pMyToolBar = NULL;
-   }
-}
-
-BOOL CGenCompDoc::GetStatusBarMessageString(UINT nID,CString& rMessage) const
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return __super::GetStatusBarMessageString(nID,rMessage);
-}
-
-BOOL CGenCompDoc::GetToolTipMessageString(UINT nID, CString& rMessage) const
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return __super::GetToolTipMessageString(nID,rMessage);
 }
 
 BOOL CGenCompDoc::OpenTheDocument(LPCTSTR lpszPathName)

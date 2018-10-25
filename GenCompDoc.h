@@ -23,13 +23,13 @@
 #pragma once
 
 // CGenCompDoc document
-#include <EAF\EAFDocument.h>
+#include "BEToolboxDoc.h"
 #include <WBFLTools.h>
 #include <WBFLUnitServer.h>
 #include <ReportManager\ReportManager.h>
 #include <WBFLSections.h>
 
-class CGenCompDoc : public CEAFDocument
+class CGenCompDoc : public CBEToolboxDoc
 {
 	DECLARE_DYNCREATE(CGenCompDoc)
 
@@ -38,9 +38,6 @@ public:
 	virtual ~CGenCompDoc();
 
    virtual CString GetToolbarSectionName();
-   virtual void DoIntegrateWithUI(BOOL bIntegrate);
-   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const;
-   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
 
    virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
 
@@ -74,9 +71,6 @@ protected:
    /// called when a document is created (New or Open)
    virtual BOOL Init(); 
 
-   virtual void LoadToolbarState();
-   virtual void SaveToolbarState();
-
    // Called by the framework when the document is to be loaded and saved
    virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
    virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
@@ -94,7 +88,4 @@ public:
    virtual void OnCloseDocument();
 
    CReportBuilderManager m_RptMgr;
-
-private:
-   CEAFToolBar* m_pMyToolBar;
 };

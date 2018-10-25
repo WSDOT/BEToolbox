@@ -28,16 +28,14 @@
 #include "UltColDoc.h"
 #include "UltColTitlePageBuilder.h"
 #include "UltColChapterBuilder.h"
+#include "BEToolboxStatusBar.h"
 
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 
-#define ID_MYTOOLBAR ID_MAINFRAME_TOOLBAR+1
-#define ULTCOL_PLUGIN_COMMAND_COUNT 256
-
 // CUltColDoc
 
-IMPLEMENT_DYNCREATE(CUltColDoc, CEAFDocument)
+IMPLEMENT_DYNCREATE(CUltColDoc, CBEToolboxDoc)
 
 CUltColDoc::CUltColDoc()
 {
@@ -50,12 +48,6 @@ CUltColDoc::CUltColDoc()
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
-
-   m_pMyToolBar = NULL;
-
-   // Reserve command IDs for document plug ins
-   GetPluginCommandManager()->ReserveCommandIDRange(ULTCOL_PLUGIN_COMMAND_COUNT);
-
 }
 
 CUltColDoc::~CUltColDoc()
@@ -63,7 +55,7 @@ CUltColDoc::~CUltColDoc()
 }
 
 
-BEGIN_MESSAGE_MAP(CUltColDoc, CEAFDocument)
+BEGIN_MESSAGE_MAP(CUltColDoc, CBEToolboxDoc)
    ON_COMMAND(ID_REFRESH_REPORT, &CUltColDoc::OnRefreshReport)
 END_MESSAGE_MAP()
 
@@ -73,13 +65,13 @@ END_MESSAGE_MAP()
 #ifdef _DEBUG
 void CUltColDoc::AssertValid() const
 {
-	CEAFDocument::AssertValid();
+	CBEToolboxDoc::AssertValid();
 }
 
 #ifndef _WIN32_WCE
 void CUltColDoc::Dump(CDumpContext& dc) const
 {
-	CEAFDocument::Dump(dc);
+	CBEToolboxDoc::Dump(dc);
 }
 #endif
 #endif //_DEBUG
@@ -98,7 +90,7 @@ BOOL CUltColDoc::CreateColumn()
 
 BOOL CUltColDoc::Init()
 {
-   if ( !CEAFDocument::Init() )
+   if ( !CBEToolboxDoc::Init() )
       return FALSE;
 
    if ( !CreateColumn() )
@@ -112,20 +104,13 @@ BOOL CUltColDoc::Init()
    m_Column->put_fy( ::ConvertToSysUnits(60.0,unitMeasure::KSI));
    m_Column->put_Es( ::ConvertToSysUnits(29000.0,unitMeasure::KSI));
 
-
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   LPCTSTR lpszHelpFile = AfxGetApp()->m_pszHelpFilePath;
-   EAFGetApp()->SetHelpFileName(lpszHelpFile);
-
    return TRUE;
 }
 
 void CUltColDoc::OnCloseDocument()
 {
-   EAFGetApp()->SetHelpFileName(NULL);
-
    m_Column.Release();
-   CEAFDocument::OnCloseDocument();
+   CBEToolboxDoc::OnCloseDocument();
 }
 
 void CUltColDoc::OnRefreshReport()
@@ -241,61 +226,4 @@ HRESULT CUltColDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
 CString CUltColDoc::GetToolbarSectionName()
 {
    return _T("UltCol");
-}
-
-void CUltColDoc::LoadToolbarState()
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   __super::LoadToolbarState();
-}
-
-void CUltColDoc::SaveToolbarState()
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   __super::SaveToolbarState();
-}
-
-void CUltColDoc::DoIntegrateWithUI(BOOL bIntegrate)
-{
-   CEAFMainFrame* pFrame = EAFGetMainFrame();
-
-   if ( bIntegrate )
-   {
-      // set up the toolbar here
-      {
-      AFX_MANAGE_STATE(AfxGetStaticModuleState());
-      UINT tbID = pFrame->CreateToolBar(_T("UltCol"),GetPluginCommandManager());
-#if defined _EAF_USING_MFC_FEATURE_PACK
-      m_pMyToolBar = pFrame->GetToolBarByID(tbID);
-      m_pMyToolBar->LoadToolBar(IDR_TOOLBAR,NULL);
-#else
-      m_pMyToolBar = pFrame->GetToolBar(tbID);
-      m_pMyToolBar->LoadToolBar(IDR_TOOLBAR,NULL);
-      m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,NULL,BTNS_DROPDOWN);
-#endif
-      }
-
-      //// use our status bar
-      //CUltColStatusBar* pSB = new CUltColStatusBar;
-      //pSB->Create(EAFGetMainFrame());
-      //pFrame->SetStatusBar(pSB);
-   }
-   else
-   {
-      // remove toolbar here
-      pFrame->DestroyToolBar(m_pMyToolBar);
-      m_pMyToolBar = NULL;
-   }
-}
-
-BOOL CUltColDoc::GetStatusBarMessageString(UINT nID,CString& rMessage) const
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return __super::GetStatusBarMessageString(nID,rMessage);
-}
-
-BOOL CUltColDoc::GetToolTipMessageString(UINT nID, CString& rMessage) const
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return __super::GetToolTipMessageString(nID,rMessage);
 }
