@@ -287,10 +287,10 @@ BOOL CCurvelSkewLineGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
 	return CGXGridWnd::OnValidateCell(nRow, nCol);
 }
    
-void CCurvelSkewLineGrid::OnModifyCell(ROWCOL nRow,ROWCOL nCol)
+BOOL CCurvelSkewLineGrid::OnEndEditing(ROWCOL nRow,ROWCOL nCol)
 {
-   CGXGridWnd::OnModifyCell(nRow,nCol);
-   ResizeColWidthsToFit(CGXRange().SetCols(0,GetColCount()));
+   ResizeColWidthsToFit(CGXRange(0,0,GetRowCount(),GetColCount()));
+   return CGXGridWnd::OnEndEditing(nRow,nCol);
 }
 
 void CCurvelSkewLineGrid::UpdateColumnHeaders()

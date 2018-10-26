@@ -61,7 +61,7 @@ protected:
 
    // virtual overrides for grid
    virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
-   virtual void OnModifyCell(ROWCOL nRow,ROWCOL nCol);
+   virtual BOOL OnEndEditing(ROWCOL nRow,ROWCOL nCol);
 
    void UpdateColumnHeaders();
 

@@ -234,11 +234,11 @@ BOOL CCurvelIndividualStationGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
 
 	return CGXGridWnd::OnValidateCell(nRow, nCol);
 }
-   
-void CCurvelIndividualStationGrid::OnModifyCell(ROWCOL nRow,ROWCOL nCol)
+
+BOOL CCurvelIndividualStationGrid::OnEndEditing(ROWCOL nRow,ROWCOL nCol)
 {
-   CGXGridWnd::OnModifyCell(nRow,nCol);
-   ResizeColWidthsToFit(CGXRange().SetCols(0,GetColCount()));
+   ResizeColWidthsToFit(CGXRange(0,0,GetRowCount(),GetColCount()));
+   return CGXGridWnd::OnEndEditing(nRow,nCol);
 }
 
 void CCurvelIndividualStationGrid::UpdateColumnHeaders()
