@@ -48,7 +48,7 @@ boost::shared_ptr<CReportSpecification> CCurvelReportSpecificationBuilder::Creat
 
    CCurvelDoc* pDoc = (CCurvelDoc*)EAFGetDocument();
 
-   boost::shared_ptr<CCurvelReportSpecification> pInitRptSpec( boost::shared_dynamic_cast<CCurvelReportSpecification>(pRptSpec) );
+   boost::shared_ptr<CCurvelReportSpecification> pInitRptSpec( boost::dynamic_pointer_cast<CCurvelReportSpecification>(pRptSpec) );
    CCurvelReportWizard wiz(pInitRptSpec);
 
    if ( wiz.DoModal() == ID_WIZFINISH )
