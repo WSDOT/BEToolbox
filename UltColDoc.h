@@ -55,6 +55,9 @@ protected:
    virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
    virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
 
+   virtual void LoadDocumentSettings();
+   virtual void SaveDocumentSettings();
+
    BOOL CreateColumn();
 
 	DECLARE_MESSAGE_MAP()

@@ -48,6 +48,8 @@ CUltColDoc::CUltColDoc()
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
+
+   UIHints(FALSE); // not using UIHints feature
 }
 
 CUltColDoc::~CUltColDoc()
@@ -254,4 +256,16 @@ HRESULT CUltColDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
 CString CUltColDoc::GetToolbarSectionName()
 {
    return _T("UltCol");
+}
+
+void CUltColDoc::LoadDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::LoadDocumentSettings();
+}
+
+void CUltColDoc::SaveDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::SaveDocumentSettings();
 }
