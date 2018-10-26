@@ -37,6 +37,8 @@ public:
    Float64 m_Es;
    Float64 m_Fy;
    Float64 m_Fc;
+   Float64 m_ecl;
+   Float64 m_etl;
 
 protected:
 	DECLARE_MESSAGE_MAP()

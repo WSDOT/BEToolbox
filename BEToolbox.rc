@@ -69,8 +69,8 @@ SUPERELEVATION          METAFILE                "res\\Superelevation.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,4
- PRODUCTVERSION 3,0,0,4
+ FILEVERSION 3,0,0,5
+ PRODUCTVERSION 3,0,0,5
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -88,12 +88,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.0.0.4"
+            VALUE "FileVersion", "3.0.0.5"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2013, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.0.0.4"
+            VALUE "ProductVersion", "3.0.0.5"
         END
     END
     BLOCK "VarFileInfo"
@@ -168,16 +168,18 @@ BEGIN
     CONTROL         "",IDC_SCHEMATIC,"Static",SS_ENHMETAFILE,6,7,177,285
 END
 
-IDD_ULTCOL DIALOGEX 0, 0, 608, 54
+IDD_ULTCOL DIALOGEX 0, 0, 705, 54
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 400, 0, 0x0
 BEGIN
+    GROUPBOX        "Section",IDC_STATIC,6,7,186,40,BS_NOTIFY
     LTEXT           "Diameter",IDC_STATIC,15,25,30,8
     EDITTEXT        IDC_DIAMETER,47,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_DIAMETER_UNIT,89,25,14,8
     LTEXT           "f'c",IDC_STATIC,116,25,8,8
     EDITTEXT        IDC_FC,130,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_FC_UNIT,172,25,14,8
+    GROUPBOX        "Reinforcement",IDC_STATIC,198,7,440,40,BS_NOTIFY
     LTEXT           "Cover",IDC_STATIC,205,25,20,8
     EDITTEXT        IDC_COVER,227,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_COVER_UNIT,270,25,14,8
@@ -185,16 +187,18 @@ BEGIN
     EDITTEXT        IDC_AS,301,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_AS_UNIT,344,25,14,8
     LTEXT           "Es",IDC_STATIC,363,25,8,8
-    EDITTEXT        IDC_ES,373,23,50,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_ES_UNIT,425,25,14,8
     LTEXT           "fy",IDC_STATIC,445,25,8,8
     EDITTEXT        IDC_FY,456,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_FY_UNIT,498,25,14,8
-    CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,525,14,25,10
-    CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,551,14,23,10
-    DEFPUSHBUTTON   "Update",IDC_UPDATE,527,33,50,14
-    GROUPBOX        "Section",IDC_STATIC,6,7,186,40,BS_NOTIFY
-    GROUPBOX        "Reinforcement",IDC_STATIC,198,7,323,40,BS_NOTIFY
+    LTEXT           "e cl",IDC_STATIC,517,25,12,8
+    EDITTEXT        IDC_ECL,529,23,40,14,ES_AUTOHSCROLL
+    LTEXT           "e tl",IDC_STATIC,574,25,11,8
+    EDITTEXT        IDC_ETL,587,23,40,14,ES_AUTOHSCROLL
+    CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,643,11,25,10
+    CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,669,11,23,10
+    DEFPUSHBUTTON   "Update",IDC_UPDATE,645,30,50,14
+    EDITTEXT        IDC_ES,373,23,50,14,ES_RIGHT | ES_AUTOHSCROLL
 END
 
 IDD_CURVEL_WIZ_1 DIALOGEX 0, 0, 316, 182
@@ -471,6 +475,12 @@ BEGIN
         RIGHTMARGIN, 183
         TOPMARGIN, 7
         BOTTOMMARGIN, 292
+    END
+
+    IDD_ULTCOL, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 695
     END
 
     IDD_CURVEL_WIZ_1, DIALOG
