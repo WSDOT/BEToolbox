@@ -101,7 +101,8 @@ CPGStableModel::CPGStableModel()
    m_HaulingStabilityProblem.SetImpactUsage(stbTypes::NormalCrown);
    m_HaulingStabilityProblem.SetVelocity(0);
    m_HaulingStabilityProblem.SetTurningRadius(::ConvertToSysUnits(100,unitMeasure::Feet));
-   m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(true);
+   m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope, true);
+   m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::Superelevation, true);
 
    m_Hgb = ::ConvertToSysUnits(72.0,unitMeasure::Inch);
 
@@ -992,7 +993,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->put_Property(_T("ImpactUsage"),CComVariant(impactUsage));
 
    // added in version 2
-   bool bEvaluateStressesAtEquilibriumAngle = haulingProblem.EvaluateStressesAtEquilibriumAngle();
+   bool bEvaluateStressesAtEquilibriumAngle = haulingProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope);
    pStrSave->put_Property(_T("EvaluateStressesAtEquilibriumAngle"), CComVariant(bEvaluateStressesAtEquilibriumAngle));
 
    stbTypes::WindType windLoadType;
@@ -1311,7 +1312,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       {
          // added in version 2
          hr = pStrLoad->get_Property(_T("EvaluateStressesAtEquilibriumAngle"), &var);
-         m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(var.boolVal == VARIANT_TRUE ? true : false);
+         m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope,var.boolVal == VARIANT_TRUE ? true : false);
       }
 
       var.vt = VT_I4;

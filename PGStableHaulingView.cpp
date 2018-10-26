@@ -234,7 +234,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER,m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,strHaulingTag);
 
-   bool bEvaluateStressesAtEquilibriumAngle = problem.EvaluateStressesAtEquilibriumAngle();
+   bool bEvaluateStressesAtEquilibriumAngle = problem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope);
    DDX_CBItemData(pDX, IDC_STRESSES, bEvaluateStressesAtEquilibriumAngle);
 
    if ( pDX->m_bSaveAndValidate )
@@ -277,7 +277,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
       problem.SetCamber(bDirectCamber,camber);
       problem.SetCamberMultiplier(camberMultiplier);
 
-      problem.EvaluateStressesAtEquilibriumAngle(bEvaluateStressesAtEquilibriumAngle);
+      problem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope,bEvaluateStressesAtEquilibriumAngle);
 
       pDoc->SetHaulingStabilityProblem(problem);
       pDoc->SetHaulingMaterials(fc,!bComputeEc,frCoefficient);
