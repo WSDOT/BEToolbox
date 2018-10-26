@@ -587,6 +587,15 @@
     <ClInclude Include="PGStablePluginCATID.h">
       <Filter>PGStable\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BEToolboxTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\BoxGdr.ico">
@@ -685,6 +694,27 @@
     </None>
     <None Include="res\VertCurve.emf">
       <Filter>Curvel\Resource Files</Filter>
+    </None>
+    <None Include="UltColTool.rgs">
+      <Filter>UltCol\Resource Files</Filter>
+    </None>
+    <None Include="BoxGdrTool.rgs">
+      <Filter>BoxGdr\Resource Files</Filter>
+    </None>
+    <None Include="CurvelTool.rgs">
+      <Filter>Curvel\Resource Files</Filter>
+    </None>
+    <None Include="GenCompTool.rgs">
+      <Filter>GenComp\Resource Files</Filter>
+    </None>
+    <None Include="GirCompTool.rgs">
+      <Filter>GirComp\Resource Files</Filter>
+    </None>
+    <None Include="PGStableTool.rgs">
+      <Filter>PGStable\Resource Files</Filter>
+    </None>
+    <None Include="SpectraTool.rgs">
+      <Filter>Spectra\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

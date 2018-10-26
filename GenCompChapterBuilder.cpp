@@ -27,6 +27,13 @@
 #include "BEToolboxColors.h"
 #include <GraphicsLib\GraphicsLib.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+
 //////////////////////////////////
 CGenCompChapterBuilder::CGenCompChapterBuilder(CGenCompDoc* pDoc)
 {
@@ -150,14 +157,24 @@ void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,IShapePro
    INIT_UV_PROTOTYPE( rptLength2UnitValue,  area, pDispUnits->Area, true);
    INIT_UV_PROTOTYPE( rptLength4UnitValue,  momentOfInertia, pDispUnits->MomentOfInertia, true);
 
-   Float64 Area,I,yb;
+   Float64 Area,Ixx,Iyy,Ixy,yt,yb,xl,xr;
    pShapeProp->get_Area(&Area);
-   pShapeProp->get_Ixx(&I);
+   pShapeProp->get_Ixx(&Ixx);
+   pShapeProp->get_Iyy(&Iyy);
+   pShapeProp->get_Ixy(&Ixy);
    pShapeProp->get_Ybottom(&yb);
+   pShapeProp->get_Ytop(&yt);
+   pShapeProp->get_Xleft(&xl);
+   pShapeProp->get_Xright(&xr);
 
    para << _T("Area = ") << area.SetValue(Area) << rptNewLine;
-   para << _T("Bar Y = ") << length.SetValue(yb) << rptNewLine;
-   para << _T("I = ") << momentOfInertia.SetValue(I) << rptNewLine;
+   para << _T("Xl = ") << length.SetValue(xl) << rptNewLine;
+   para << _T("Xr = ") << length.SetValue(xr) << rptNewLine;
+   para << _T("Yt = ") << length.SetValue(yt) << rptNewLine;
+   para << _T("Yb = ") << length.SetValue(yb) << rptNewLine;
+   para << _T("Ixx = ") << momentOfInertia.SetValue(Ixx) << rptNewLine;
+   para << _T("Iyy = ") << momentOfInertia.SetValue(Iyy) << rptNewLine;
+   para << _T("Ixy = ") << momentOfInertia.SetValue(Ixy) << rptNewLine;
 }
 
 CChapterBuilder* CGenCompChapterBuilder::Clone() const

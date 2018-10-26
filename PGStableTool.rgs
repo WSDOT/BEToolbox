@@ -1,0 +1,25 @@
+HKCR
+{
+	BEToolbox.PGStable.1 = s 'PGStable'
+	{
+		CLSID = s '{876DBB2E-ECF9-4439-8F8F-E09A486018DF}'
+	}
+	BEToolbox.PGStable = s 'PGStable'
+	{
+		CLSID = s '{876DBB2E-ECF9-4439-8F8F-E09A486018DF}'
+		CurVer = s 'BEToolbox.PGStable.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {876DBB2E-ECF9-4439-8F8F-E09A486018DF} = s 'PGStable'
+		{
+			ProgID = s 'BEToolbox.PGStable.1'
+			VersionIndependentProgID = s 'BEToolbox.PGStable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{}'
+		}
+	}
+}

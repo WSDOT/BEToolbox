@@ -75,8 +75,8 @@ PRISMATICSTRANDLAYOUT   METAFILE                "res\\PrismaticStrandLayout.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,2,0,0
- PRODUCTVERSION 3,2,0,0
+ FILEVERSION 3,2,1,0
+ PRODUCTVERSION 3,2,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -94,12 +94,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.2.0.0"
+            VALUE "FileVersion", "3.2.1.0"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2018, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.2.0.0"
+            VALUE "ProductVersion", "3.2.1.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -127,6 +127,14 @@ IDR_CURVELEXPORTER      REGISTRY                "CurvelExporter.rgs"
 IDR_CURVELIMPORTER      REGISTRY                "CurvelImporter.rgs"
 
 IDR_GENCOMPEXPORTER     REGISTRY                "GenCompExporter.rgs"
+
+IDR_ULTCOLTOOL REGISTRY DISCARDABLE    "UltColTool.rgs"
+IDR_BOXGDRTOOL REGISTRY DISCARDABLE    "BoxGdrTool.rgs"
+IDR_GENCOMPTOOL REGISTRY DISCARDABLE "GenCompTool.rgs"
+IDR_GIRCOMPTOOL REGISTRY DISCARDABLE "GirCompTool.rgs"
+IDR_CURVELTOOL REGISTRY DISCARDABLE "CurvelTool.rgs"
+IDR_PGSTABLETOOL REGISTRY DISCARDABLE "PGStableTool.rgs"
+IDR_SPECTRATOOL REGISTRY DISCARDABLE "SpectraTool.rgs"
 
 
 /////////////////////////////////////////////////////////////////////////////

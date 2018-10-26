@@ -29,6 +29,13 @@
 #include "UltColDlgBar.h"
 #include <MFCTools\CustomDDX.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+
 // CUltColDlgBar
 
 IMPLEMENT_DYNAMIC(CUltColDlgBar, CDialogBar)

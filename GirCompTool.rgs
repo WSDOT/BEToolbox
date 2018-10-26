@@ -1,0 +1,25 @@
+HKCR
+{
+	BEToolbox.GirComp.1 = s 'GirComp'
+	{
+		CLSID = s '{AFF95666-CCDE-45A3-85DA-6E10336D4A79}'
+	}
+	BEToolbox.GirComp = s 'GirComp'
+	{
+		CLSID = s '{AFF95666-CCDE-45A3-85DA-6E10336D4A79}'
+		CurVer = s 'BEToolbox.GirComp.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {AFF95666-CCDE-45A3-85DA-6E10336D4A79} = s 'GirComp'
+		{
+			ProgID = s 'BEToolbox.GirComp.1'
+			VersionIndependentProgID = s 'BEToolbox.GirComp'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{}'
+		}
+	}
+}

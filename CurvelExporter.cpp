@@ -32,6 +32,13 @@
 #include <Curvel.h>
 #include <MFCTools\Prompts.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+
 class CSuperelevationValidator : public CMultiChoiceValidator
 {
 public:
@@ -170,7 +177,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
       curvelXML->UnitsDeclaration(unitsDeclaration);
 
       GET_IFACE2(pBroker,IRoadwayData,pRoadway);
-      ProfileData2 profileData = pRoadway->GetProfileData2();
+      const ProfileData2& profileData = pRoadway->GetProfileData2();
       VerticalCurveDataType& vCurveXML = curvelXML->VerticalCurveData();
 
       if ( profileData.VertCurves.size() == 0 )
@@ -231,7 +238,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
       CrownSlopeType crownXML;
       CrownSlopeType::SuperelevationProfilePoint_sequence& superelevationPointsXML(crownXML.SuperelevationProfilePoint());
 
-      RoadwaySectionData sectionData = pRoadway->GetRoadwaySectionData();
+      const RoadwaySectionData& sectionData = pRoadway->GetRoadwaySectionData();
       std::size_t nSections = sectionData.Superelevations.size();
       if ( nSections <= 3 )
       {
@@ -293,7 +300,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
       ///////////////////////////////////////////////////////////////
       // Export vertical profile
       ///////////////////////////////////////////////////////////////
-      ProfileData2 profileData = pRoadway->GetProfileData2();
+      const ProfileData2& profileData = pRoadway->GetProfileData2();
       VerticalCurveDataType& vCurveXML = curvelXML->VerticalCurveData();
 
       if ( profileData.VertCurves.size() == 0 )
@@ -315,12 +322,12 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
          {
             GET_IFACE2(pBroker,IEAFDisplayUnits,pDisplayUnits);
             CString strList;
-            std::vector<VertCurveData>::iterator iter(profileData.VertCurves.begin());
-            std::vector<VertCurveData>::iterator end(profileData.VertCurves.end());
+            auto iter(profileData.VertCurves.cbegin());
+            auto end(profileData.VertCurves.cend());
             int idx = 1;
             for ( ; iter != end; iter++, idx++ )
             {
-               VertCurveData& vCurve(*iter);
+               const auto& vCurve(*iter);
                CString str;
                str.Format(_T("Curve %d: PVI Station %s"),idx,::FormatStation(pDisplayUnits->GetStationFormat(),vCurve.PVIStation));
                strList += str + _T("\n");
@@ -331,7 +338,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
                return S_FALSE;
          }
          
-         VertCurveData& vCurve(profileData.VertCurves[curveIdx]);
+         const auto& vCurve(profileData.VertCurves[curveIdx]);
          if ( !IsEqual(vCurve.L1,vCurve.L2) && !IsZero(vCurve.L2) )
          {
             AfxMessageBox(_T("Cannot export profile information. Curvel does not support unsymmetric vertical curves"),MB_OK | MB_ICONSTOP);
@@ -363,7 +370,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
       CrownSlopeType crownXML;
       CrownSlopeType::SuperelevationProfilePoint_sequence& superelevationPointsXML(crownXML.SuperelevationProfilePoint());
 
-      RoadwaySectionData sectionData = pRoadway->GetRoadwaySectionData();
+      const RoadwaySectionData& sectionData = pRoadway->GetRoadwaySectionData();
       std::size_t nSections = sectionData.Superelevations.size();
       if ( nSections <= 3 )
       {
@@ -371,7 +378,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
          bool bNotifyCrownPointOffset = false;
          for ( std::size_t i = 0; i < nSections; i++ )
          {
-            CrownData2& crown = sectionData.Superelevations[i];
+            const auto& crown = sectionData.Superelevations[i];
             if ( i == 0 )
             {
                crownPointOffset = crown.CrownPointOffset;
@@ -414,7 +421,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
          GET_IFACE2(pBroker,IEAFDisplayUnits,pDisplayUnits);
          for ( std::size_t i = 0; i < nSections; i++ )
          {
-            CrownData2& crown = sectionData.Superelevations[i];
+            const auto& crown = sectionData.Superelevations[i];
             CString str;
             str.Format(_T("Section %d: Station %s, Left Slope: %s, Right Slope %s"), i+1,
                        ::FormatStation(pDisplayUnits->GetStationFormat(),crown.Station),
@@ -441,7 +448,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
          int i = 0;
          for ( ; iter != end; iter++, i++ )
          {
-            CrownData2& crown = sectionData.Superelevations[*iter];
+            const auto& crown = sectionData.Superelevations[*iter];
             if ( i == 0 )
             {
                crownPointOffset = crown.CrownPointOffset;
@@ -474,16 +481,16 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
       // Curvel does not model horizontal curves the same way PGSuper does
       // Create a skew line reporting point for each horizontal curve
       // This is the best way to export the horizontal curve information
-      AlignmentData2 alignmentData = pRoadway->GetAlignmentData2();
-      std::vector<HorzCurveData>::iterator iter(alignmentData.HorzCurves.begin());
-      std::vector<HorzCurveData>::iterator end(alignmentData.HorzCurves.end());
+      const AlignmentData2& alignmentData = pRoadway->GetAlignmentData2();
+      auto iter(alignmentData.HorzCurves.cbegin());
+      auto end(alignmentData.HorzCurves.cend());
       bool bSpiral = false;
       bool bCurves = false;
       SkewLinesType skewLines;
       for ( ; iter != end; iter++ )
       {
          bCurves = true;
-         HorzCurveData& hCurve(*iter);
+         const auto& hCurve(*iter);
          SkewLineType skewLine(hCurve.PIStation,OffsetType::RadialFromCrownLine,0.0,_T("0.0 L"),hCurve.Radius,0.0);
          if ( !IsZero(hCurve.EntrySpiral) || !IsZero(hCurve.ExitSpiral) )
          {

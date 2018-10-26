@@ -1,0 +1,25 @@
+HKCR
+{
+	BEToolbox.GenComp.1 = s 'GenComp'
+	{
+		CLSID = s '{D84CBB4B-97C9-47A9-A7D1-83702A99A9CE}'
+	}
+	BEToolbox.GenComp = s 'GenComp'
+	{
+		CLSID = s '{D84CBB4B-97C9-47A9-A7D1-83702A99A9CE}'
+		CurVer = s 'BEToolbox.GenComp.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {D84CBB4B-97C9-47A9-A7D1-83702A99A9CE} = s 'GenComp'
+		{
+			ProgID = s 'BEToolbox.GenComp.1'
+			VersionIndependentProgID = s 'BEToolbox.GenComp'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{}'
+		}
+	}
+}

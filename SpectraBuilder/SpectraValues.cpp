@@ -24,6 +24,13 @@
 #include "SpectraValues.h"
 #include <WBFLGeometry.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+
 void GetSpectralValueIndies(Float64 lat,Float64 lng,long* i1,long* i2,long* i3,long* i4)
 {
    long k = (long)floor((MAX_LATITUDE - lat)/INC_LATITUDE);
