@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2017  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -480,113 +480,7 @@ Uint32 CSpectraDoc::GetResponseSpectra(Float64 lat,Float64 lng,SiteClass siteCla
 
 void CSpectraDoc::GetSpectralValues(Float64 lat,Float64 lng,Float64* pS1,Float64* pSs,Float64* pPGA)
 {
-   long i1,i2,i3,i4;
-   GetSpectralValueIndies(lat,lng,&i1,&i2,&i3,&i4);
-
-#if defined _DEBUG
-   // make sure we've got the right values.
-   ATLASSERT(m_pValues[i3].lat <= lat && lat <= m_pValues[i1].lat);
-   ATLASSERT(m_pValues[i4].lat <= lat && lat <= m_pValues[i2].lat);
-   ATLASSERT(m_pValues[i1].lng <= lng && lng <= m_pValues[i2].lng);
-   ATLASSERT(m_pValues[i3].lng <= lng && lng <= m_pValues[i4].lng);
-#endif
-
-   // Don't assume that all four points are co-planar
-   // Assume we have two triangles and we need to determine
-   // which triangle forms the plane we want to evaluate
-   //
-   //  1          2
-   //   +--------+ 
-   //   |       /|
-   //   |      / |
-   //   |     /  |
-   //   |    /   |
-   //   |   /    |
-   //   |  /     |
-   //   | /      |
-   //   |/       |
-   //   +--------+
-   //  3          4
-   //
-
-   CComPtr<IGeomUtil2d> geomUtil;
-   geomUtil.CoCreateInstance(CLSID_GeomUtil);
-
-   CComPtr<IPoint2d> pnt;
-   pnt.CoCreateInstance(CLSID_Point2d);
-   pnt->Move(lng,lat);
-   
-   CComPtr<IPoint2d> pnt1, pnt2, pnt3, pnt4;
-   pnt1.CoCreateInstance(CLSID_Point2d);
-   pnt2.CoCreateInstance(CLSID_Point2d);
-   pnt3.CoCreateInstance(CLSID_Point2d);
-   pnt4.CoCreateInstance(CLSID_Point2d);
-
-   pnt1->Move(m_pValues[i1].lng,m_pValues[i1].lat);
-   pnt2->Move(m_pValues[i2].lng,m_pValues[i2].lat);
-   pnt3->Move(m_pValues[i3].lng,m_pValues[i3].lat);
-   pnt4->Move(m_pValues[i4].lng,m_pValues[i4].lat);
-
-   CComPtr<IPoint3d> pntA, pntB, pntC;
-   pntA.CoCreateInstance(CLSID_Point3d);
-   pntB.CoCreateInstance(CLSID_Point3d);
-   pntC.CoCreateInstance(CLSID_Point3d);
-
-   VARIANT_BOOL bPntInTriangle;
-   geomUtil->PointInTriangle(pnt,pnt1,pnt2,pnt3,&bPntInTriangle);
-   if ( bPntInTriangle == VARIANT_TRUE )
-   {
-      pntA->Move(m_pValues[i1].lng,m_pValues[i1].lat,m_pValues[i1].v1hz);
-      pntB->Move(m_pValues[i2].lng,m_pValues[i2].lat,m_pValues[i2].v1hz);
-      pntC->Move(m_pValues[i3].lng,m_pValues[i3].lat,m_pValues[i3].v1hz);
-   }
-   else
-   {
-#if defined _DEBUG
-      VARIANT_BOOL bResult;
-      geomUtil->PointInTriangle(pnt,pnt2,pnt3,pnt4,&bResult);
-      ATLASSERT(bResult == VARIANT_TRUE);
-#endif
-      pntA->Move(m_pValues[i2].lng,m_pValues[i2].lat,m_pValues[i2].v1hz);
-      pntB->Move(m_pValues[i3].lng,m_pValues[i3].lat,m_pValues[i3].v1hz);
-      pntC->Move(m_pValues[i4].lng,m_pValues[i4].lat,m_pValues[i4].v1hz);
-   }
-
-   CComPtr<IPlane3d> plane;
-   plane.CoCreateInstance(CLSID_Plane3d);
-
-   plane->ThroughPoints(pntA,pntB,pntC);
-   plane->GetZ(lng,lat,pS1);
-
-   if ( bPntInTriangle == VARIANT_TRUE )
-   {
-      pntA->Move(m_pValues[i1].lng,m_pValues[i1].lat,m_pValues[i1].v5hz);
-      pntB->Move(m_pValues[i2].lng,m_pValues[i2].lat,m_pValues[i2].v5hz);
-      pntC->Move(m_pValues[i3].lng,m_pValues[i3].lat,m_pValues[i3].v5hz);
-   }
-   else
-   {
-      pntA->Move(m_pValues[i2].lng,m_pValues[i2].lat,m_pValues[i2].v5hz);
-      pntB->Move(m_pValues[i3].lng,m_pValues[i3].lat,m_pValues[i3].v5hz);
-      pntC->Move(m_pValues[i4].lng,m_pValues[i4].lat,m_pValues[i4].v5hz);
-   }
-   plane->ThroughPoints(pntA,pntB,pntC);
-   plane->GetZ(lng,lat,pSs);
-
-   if ( bPntInTriangle == VARIANT_TRUE )
-   {
-      pntA->Move(m_pValues[i1].lng,m_pValues[i1].lat,m_pValues[i1].vpga);
-      pntB->Move(m_pValues[i2].lng,m_pValues[i2].lat,m_pValues[i2].vpga);
-      pntC->Move(m_pValues[i3].lng,m_pValues[i3].lat,m_pValues[i3].vpga);
-   }
-   else
-   {
-      pntA->Move(m_pValues[i2].lng,m_pValues[i2].lat,m_pValues[i2].vpga);
-      pntB->Move(m_pValues[i3].lng,m_pValues[i3].lat,m_pValues[i3].vpga);
-      pntC->Move(m_pValues[i4].lng,m_pValues[i4].lat,m_pValues[i4].vpga);
-   }
-   plane->ThroughPoints(pntA,pntB,pntC);
-   plane->GetZ(lng,lat,pPGA);
+   ::GetSpectralValues(lat,lng,m_pValues,pS1,pSs,pPGA);
 }
 
 Uint32 CSpectraDoc::GetSiteFactors(Float64 S1,Float64 Ss,Float64 PGA,SiteClass siteClass,Float64* pFa,Float64* pFv,Float64* pFpga)

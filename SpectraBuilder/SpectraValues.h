@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // SpectraBuilder
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2017  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -37,19 +37,9 @@
 
 #define SPECTRAL_VALUE_COUNT 611309 //RANGE_LATITUDE*RANGE_LONGITUDE
 
-#define SPECTRUM_POINT_COUNT 29
-#define SPECTRUM_MAX_PERIOD 4.0
+#define SPECTRUM_MAX_PERIOD 4.0 // report spectrum duration
+#define SPECTRUM_STEP_SIZE  0.2 // report spectrum data step size
 
-inline void GetSpectralValueIndies(Float64 lat,Float64 lng,long* i1,long* i2,long* i3,long* i4)
-{
-   long k = (long)floor((MAX_LATITUDE - lat)/INC_LATITUDE);
-   long l = (long)floor((lng - MIN_LONGITUDE)/INC_LONGITUDE);
-
-   *i1 = k*RANGE_LONGITUDE + l;
-   *i2 = k*RANGE_LONGITUDE + l+1;
-   *i3 = (k+1)*RANGE_LONGITUDE + l;
-   *i4 = (k+1)*RANGE_LONGITUDE + l+1;
-}
 
 typedef enum SiteClass
 {
@@ -68,3 +58,20 @@ typedef struct SpectralValues
    Float64 v5hz;
    Float64 vpga;
 } SpectralValues;
+
+// returns the four indices into the spectral value vector that represent
+// the four corners of the grid that surround lat,lng
+//
+// +-----------+
+// | *(lat,lng)|
+// |           |
+// |           |
+// |           |
+// +-----------+
+//
+// Returns the incies of the four corners of the box that surround the point * defined by lat,lng
+void GetSpectralValueIndies(Float64 lat,Float64 lng,long* i1,long* i2,long* i3,long* i4);
+
+// returns the spectra values for a specified lat/lng
+void GetSpectralValues(Float64 lat,Float64 lng,SpectralValues* pValues,Float64* pS1,Float64* pSs,Float64* pPGA);
+

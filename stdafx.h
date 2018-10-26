@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2017  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -61,6 +61,8 @@
 
 #include "BEToolboxTypes.h"
 #include "BEToolboxColors.h"
+#include "BEToolboxVersion.h"
+
 #include <afxwin.h>
 
 #include <BEToolbox.hh>
@@ -75,11 +77,3 @@
 #include <Stability\Stability.h>
 
 #include "SpectraBuilder\SpectraValues.h"
-
-
-// prior to WBFL Version 3.3.0 the _WBFL_VERSION macro did not exist
-// we need it for conditional compilation so if it isn't defined
-// define it here
-#ifndef _WBFL_VERSION
-#define _WBFL_VERSION 320
-#endif

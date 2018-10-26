@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2017  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -68,14 +68,24 @@ rptChapter* CGirCompTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificati
 
    CString strVersion = verInfo.GetProductVersionAsString();
 
-#ifndef _DEBUG 
-   // remove the build number
-   int pos = strVersion.ReverseFind('.'); // find the last '.'
-   strVersion = strVersion.Left(pos);
+   bool bIncludeBuildNumber = false;
+#if defined _DEBUG || defined _BETA_VERSION
+   bIncludeBuildNumber = true;
 #endif
+
+   if ( !bIncludeBuildNumber )
+   {
+      // remove the build number
+      int pos = strVersion.ReverseFind('.'); // find the last '.'
+      strVersion = strVersion.Left(pos);
+   }
 
    CString str(_T("Version "));
    str += strVersion;
+#if defined _BETA_VERSION
+   str += CString(_T(" BETA"));
+#endif
+
    str += CString(_T(" - Built on "));
    str += CString(__DATE__);
 
