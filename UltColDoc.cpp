@@ -39,7 +39,7 @@ IMPLEMENT_DYNCREATE(CUltColDoc, CBEToolboxDoc)
 
 CUltColDoc::CUltColDoc()
 {
-   CReportBuilder* pRptBuilder = new CReportBuilder(_T("Ult Col"));
+   CReportBuilder* pRptBuilder = new CReportBuilder(_T("UltCol"));
 
    boost::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(new CUltColTitlePageBuilder());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );

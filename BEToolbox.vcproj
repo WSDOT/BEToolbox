@@ -48,6 +48,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
+				AdditionalIncludeDirectories="\ARP\WBFL\Include;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;\ARP\PGSuper\Include\Plugins"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -61,7 +62,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -150,6 +151,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
+				AdditionalIncludeDirectories="\ARP\WBFL\Include;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;\ARP\PGSuper\Include\Plugins"
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
@@ -162,7 +164,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -252,6 +254,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
+				AdditionalIncludeDirectories="\ARP\WBFL\Include;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;\ARP\PGSuper\Include\Plugins"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -264,7 +267,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -353,6 +356,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
+				AdditionalIncludeDirectories="\ARP\WBFL\Include;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;\ARP\PGSuper\Include\Plugins"
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
@@ -364,7 +368,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -452,6 +456,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
+				AdditionalIncludeDirectories="\ARP\WBFL\Include;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;\ARP\PGSuper\Include\Plugins"
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
@@ -465,7 +470,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -553,6 +558,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
+				AdditionalIncludeDirectories="\ARP\WBFL\Include;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;\ARP\PGSuper\Include\Plugins"
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
@@ -565,7 +571,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -865,6 +871,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\Curvel.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\Curvel.ico"
 				>
 			</File>
@@ -877,11 +887,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\GenComp.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\gencomp.ico"
 				>
 			</File>
 			<File
 				RelativePath=".\res\GirComp.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\PGStable.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\PGStable.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\PGStableToolbar.bmp"
 				>
 			</File>
 			<File
@@ -1047,6 +1073,10 @@
 		<Filter
 			Name="GenComp"
 			>
+			<File
+				RelativePath=".\GenCompExporter.rgs"
+				>
+			</File>
 			<Filter
 				Name="Header Files"
 				>
@@ -1072,6 +1102,10 @@
 				</File>
 				<File
 					RelativePath=".\GenCompDocTemplate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GenCompExporter.h"
 					>
 				</File>
 				<File
@@ -1108,6 +1142,10 @@
 				</File>
 				<File
 					RelativePath=".\GenCompDocTemplate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GenCompExporter.cpp"
 					>
 				</File>
 				<File
@@ -1272,6 +1310,14 @@
 			Name="Curvel"
 			>
 			<File
+				RelativePath=".\CurvelExporter.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\CurvelImporter.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\res\Superelevation.emf"
 				>
 			</File>
@@ -1296,6 +1342,14 @@
 				</File>
 				<File
 					RelativePath=".\CurvelDocTemplate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CurvelExporter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CurvelImporter.h"
 					>
 				</File>
 				<File
@@ -1363,6 +1417,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\CurvelExporter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CurvelImporter.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\CurvelIndividualStationGrid.cpp"
 					>
 				</File>
@@ -1404,6 +1466,238 @@
 				</File>
 				<File
 					RelativePath=".\CurvelTitlePageBuilder.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="PGStable"
+			>
+			<File
+				RelativePath=".\PGStableExporter.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\res\PrismaticStrandLayout.emf"
+				>
+			</File>
+			<File
+				RelativePath=".\res\StrandLayout.emf"
+				>
+			</File>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath=".\PGStableChildFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableCriteria.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableCriteriaView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableDoc.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableDocTemplate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableEffectivePrestressDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableExporter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableFpeGrid.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableGirderControl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableGirderSectionGrid.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableGirderView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableGraphControl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableHaulingDetailsChapterBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableHaulingSummaryChapterBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableHaulingView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableLiftingDetailsChapterBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableLiftingSummaryChapterBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableLiftingView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableModel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableNonprismaticGirder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStablePointLoadGrid.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStablePrismaticGirder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableReportView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableStrands.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableTabView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableTitlePageBuilder.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath=".\PGStableChildFrame.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableCriteria.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableCriteriaView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableDoc.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableDocTemplate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableEffectivePrestressDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableExporter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableFpeGrid.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableGirderControl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableGirderSectionGrid.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableGirderView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableGraphControl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableHaulingDetailsChapterBuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableHaulingSummaryChapterBuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableHaulingView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableLiftingDetailsChapterBuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableLiftingSummaryChapterBuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableLiftingView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableModel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableNonprismaticGirder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStablePointLoadGrid.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStablePrismaticGirder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableReportView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableStrands.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableTabView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableTitlePageBuilder.cpp"
 					>
 				</File>
 			</Filter>

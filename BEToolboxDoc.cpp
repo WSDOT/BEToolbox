@@ -194,6 +194,11 @@ void CBEToolboxDoc::SaveToolbarState()
    __super::SaveToolbarState();
 }
 
+UINT CBEToolboxDoc::GetToolbarID()
+{
+   return IDR_TOOLBAR;
+}
+
 void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
 {
    CEAFMainFrame* pFrame = EAFGetMainFrame();
@@ -205,8 +210,9 @@ void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
       AFX_MANAGE_STATE(AfxGetStaticModuleState());
       UINT tbID = pFrame->CreateToolBar(GetToolbarSectionName(),GetPluginCommandManager());
       m_pMyToolBar = pFrame->GetToolBar(tbID);
-      m_pMyToolBar->LoadToolBar(IDR_TOOLBAR,NULL);
+      m_pMyToolBar->LoadToolBar(GetToolbarID(),NULL);
       m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,NULL,BTNS_DROPDOWN);
+      m_pMyToolBar->HideButton(ID_PLACEHOLDER,NULL,TRUE); // hides the placeholder button that reserves a little extra space
       }
 
       // use our status bar

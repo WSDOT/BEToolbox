@@ -190,22 +190,7 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    INIT_UV_PROTOTYPE( rptForceUnitValue,  axial,  pDispUnits->GeneralForce, false);
    INIT_UV_PROTOTYPE( rptMomentUnitValue, moment, pDispUnits->Moment,       false);
 
-   rptRcTable* pTable = new rptRcTable(5,0.);
-   pTable->SetTableHeaderStyle( _T("ColumnHeading") );
-   pTable->SetOutsideBorderStyle( rptRiStyle::HAIR_THICK );
-   pTable->SetInsideBorderStyle( rptRiStyle::NOBORDER );
-   pTable->SetCellPad( 0.03125 );
-
-   pTable->EnableRowStriping(true);
-
-   ColumnIndexType numColumns = pTable->GetNumberOfColumns();
-
-   for ( ColumnIndexType i = 0; i < numColumns; i++ )
-   {
-      pTable->SetColumnStyle( i, _T("NormalRow") );
-      pTable->SetStripeRowColumnStyle( i, _T("StripedRow") );
-   }
-
+   rptRcTable* pTable = rptStyleManager::CreateDefaultTable(5);
    (*pLayoutTable)(0,0) << pTable;
 
    (*pTable)(0,0) << COLHDR(Sub2(_T("M"),_T("n")), rptMomentUnitTag, pDispUnits->Moment);

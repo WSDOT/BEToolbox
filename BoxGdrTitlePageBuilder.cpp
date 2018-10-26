@@ -46,19 +46,19 @@ rptChapter* CBoxGdrTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificatio
 
    rptChapter* pTitlePage = new rptChapter;
 
-   rptParagraph* pPara = new rptParagraph(_T("ReportTitle"));
+   rptParagraph* pPara = new rptParagraph(rptStyleManager::GetReportTitleStyle());
    (*pTitlePage) << pPara;
    (*pPara) << _T("BEToolbox") << Super(symbol(TRADEMARK)) << rptNewLine;
 
-   pPara = new rptParagraph(_T("ReportSubtitle"));
+   pPara = new rptParagraph(rptStyleManager::GetReportSubtitleStyle());
    *pTitlePage << pPara;
    (*pPara) << _T("Box Girder Section Properties") << rptNewLine;
 
-   pPara = new rptParagraph(_T("CopyrightText"));
+   pPara = new rptParagraph(rptStyleManager::GetCopyrightStyle());
    *pTitlePage << pPara;
    *pPara << _T("Copyright ") << symbol(COPYRIGHT) << _T(" ") << sysDate().Year() << _T(", WSDOT, All Rights Reserved") << rptNewLine;
 
-   pPara = new rptParagraph(_T("ReportSubtitle"));
+   pPara = new rptParagraph(rptStyleManager::GetReportSubtitleStyle());
    *pTitlePage << pPara;
 
    CVersionInfo verInfo;
@@ -83,7 +83,7 @@ rptChapter* CBoxGdrTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificatio
 
    *pPara << rptNewLine;
 
-   *pPara << rptRcImage(GetImagePath() + _T("BoxGdr.png"));
+   *pPara << rptRcImage(std::_tstring(rptStyleManager::GetImagePath()) + _T("BoxGdr.png"));
 
    return pTitlePage;
 }

@@ -22,8 +22,5 @@
 
 #pragma once
 
-rptRcTable* CreateTable(ColumnIndexType nColumns);
-const std::_tstring& GetImagePath();
-
 Float64 GetOffset(CString strOffset,const unitmgtLengthData& displayUnit);
 CString GetOffset(Float64 value,const unitmgtLengthData& displayUnit);

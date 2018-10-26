@@ -62,88 +62,12 @@ BOOL CBEToolboxApp::InitInstance()
    free((void*)m_pszProfileName);
    m_pszProfileName = _tcsdup(_T("BEToolbox"));
 
-   // Set up report styles
+   rptStyleManager::InitStyles(); // initialize the default report styles
+
+   
+   // add an addition style called "Normal"
    rptFontStyleLibrary* pStyleLib = rptFontStyleLibrary::Instance();
 
-   // Report Title
-   rptRiStyle title;
-   title.SetFontSize(16);
-   title.SetBold( true );
-   title.SetFontType(rptRiStyle::SWISS);
-   title.SetAlignment(rptRiStyle::CENTER);
-   title.SetMediaType(rptRiStyle::Print); // only shows up on the printer
-   pStyleLib->AddNamedStyle(_T("ReportTitle"), title);
-
-   // Report Title
-   rptRiStyle subtitle;
-   subtitle.SetFontSize(15);
-   subtitle.SetItalic( true );
-   subtitle.SetFontType(rptRiStyle::SWISS);
-   subtitle.SetAlignment(rptRiStyle::CENTER);
-   subtitle.SetMediaType(rptRiStyle::Print); // only shows up on the printer
-   pStyleLib->AddNamedStyle(_T("ReportSubtitle"), subtitle);
-
-   // Copyright
-   rptRiStyle copyright;
-   copyright.SetFontSize(8);
-   copyright.SetItalic( false );
-   copyright.SetFontType( rptRiStyle::SWISS );
-   copyright.SetAlignment(rptRiStyle::CENTER);
-   copyright.SetMediaType(rptRiStyle::Print); // only shows up on the printer
-   pStyleLib->AddNamedStyle(_T("CopyrightText"), copyright);
-
-   // column headings
-   rptRiStyle tableTitle;
-   tableTitle.SetFontSize(9);
-   tableTitle.SetFontType(rptRiStyle::SWISS);
-   tableTitle.SetAlignment(rptRiStyle::CENTER);
-   tableTitle.SetVerticalAlignment( rptRiStyle::TOP );
-   tableTitle.SetBold( true );
-   pStyleLib->AddNamedStyle(_T("TableTitle"), tableTitle);
-
-   rptRiStyle colheadings;
-   colheadings.SetFontSize(9);
-   colheadings.SetFontType(rptRiStyle::SWISS);
-   colheadings.SetAlignment(rptRiStyle::CENTER);
-   colheadings.SetVerticalAlignment( rptRiStyle::TOP );
-   colheadings.SetBold( true );
-   colheadings.SetBGColor( rptRiStyle::LightSteelBlue );
-   pStyleLib->AddNamedStyle(_T("ColumnHeading"), colheadings);
-
-   // cell style
-   rptRiStyle cell;
-   cell.SetFontSize(9);
-   cell.SetFontType(rptRiStyle::SWISS);
-   cell.SetAlignment(rptRiStyle::RIGHT);
-   cell.SetTopBorder(rptRiStyle::HAIR_THICK);
-   cell.SetVerticalAlignment( rptRiStyle::BASELINE );
-   cell.SetBottomBorder(rptRiStyle::HAIR_THICK);
-   cell.SetLeftBorder(rptRiStyle::HAIR_THICK);
-   cell.SetRightBorder(rptRiStyle::HAIR_THICK);
-   pStyleLib->AddNamedStyle(_T("NormalRow"),cell);
-
-   cell.SetAlignment(rptRiStyle::LEFT);
-   pStyleLib->AddNamedStyle(_T("NormalRowLJ"),cell);
-
-   cell.SetAlignment(rptRiStyle::RIGHT);
-   cell.SetBGColor( rptRiStyle::AliceBlue );
-   pStyleLib->AddNamedStyle(_T("StripedRow"),cell);
-
-   cell.SetAlignment(rptRiStyle::LEFT);
-   pStyleLib->AddNamedStyle(_T("StripedRowLJ"),cell);
-
-
-   rptRiStyle layoutcell;
-   layoutcell.SetFontType(rptRiStyle::SWISS);
-   layoutcell.SetAlignment(rptRiStyle::LEFT);
-   layoutcell.SetTopBorder(rptRiStyle::HAIR_THICK);
-   layoutcell.SetVerticalAlignment( rptRiStyle::TOP );
-   layoutcell.SetBottomBorder(rptRiStyle::HAIR_THICK);
-   layoutcell.SetLeftBorder(rptRiStyle::HAIR_THICK);
-   layoutcell.SetRightBorder(rptRiStyle::HAIR_THICK);
-   pStyleLib->AddNamedStyle(_T("LayoutCell"),layoutcell);
-
-   // normal style
    rptRiStyle normal;
    normal.SetBold( false );
    normal.SetFontSize(9);
@@ -152,11 +76,15 @@ BOOL CBEToolboxApp::InitInstance()
    normal.SetAlignment(rptRiStyle::LEFT);
    pStyleLib->AddNamedStyle(_T("Normal"), normal);
 
-   rptRiStyle headings;
-   headings.SetFontType(rptRiStyle::SWISS);
-   headings.SetFontSize(11);
-   headings.SetBold( true );
-   pStyleLib->AddNamedStyle(_T("Headings"), headings);
+   // We don't want the title pages to show up, so we will make them Print only in style
+   rptRiStyle& reportTitle = pStyleLib->GetNamedStyle(rptStyleManager::GetReportTitleStyle());
+   reportTitle.SetMediaType(rptRiStyle::Print);
+
+   rptRiStyle& reportSubtitle = pStyleLib->GetNamedStyle(rptStyleManager::GetReportSubtitleStyle());
+   reportSubtitle.SetMediaType(rptRiStyle::Print);
+
+   rptRiStyle& copyright = pStyleLib->GetNamedStyle(rptStyleManager::GetCopyrightStyle());
+   copyright.SetMediaType(rptRiStyle::Print);
 
    return CWinApp::InitInstance();
 }

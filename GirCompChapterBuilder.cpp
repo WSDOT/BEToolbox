@@ -82,7 +82,7 @@ rptChapter* CGirCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    IndexType nProblems = m_pDoc->GetProblemCount();
    for ( IndexType idx = 0; idx < nProblems; idx++ )
    {
-      pPara = new rptParagraph(_T("Headings"));
+      pPara = new rptParagraph(rptStyleManager::GetHeadingStyle());
       (*pChapter) << pPara;
 
       *pPara << _T("Problem No. ") << (idx+1) << rptNewLine;

@@ -1,13 +1,13 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
-#include <EAF\EAFResources.h>
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
+#include <EAF\EAFResources.h>
 #ifndef APSTUDIO_INVOKED
 #include <PGSuperVersion.h>
 #endif
@@ -38,6 +38,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
+    "#include <EAF\\EAFResources.h>\r\n"
     "#ifndef APSTUDIO_INVOKED\r\n"
     "#include <PGSuperVersion.h>\r\n"
     "#endif\r\n"
@@ -63,6 +64,7 @@ BOXGDR                  METAFILE                "res\\BoxGdr.emf"
 GIRCOMP                 METAFILE                "res\\GirComp.emf"
 VERTCURVE               METAFILE                "res\\VertCurve.emf"
 SUPERELEVATION          METAFILE                "res\\Superelevation.emf"
+PRISMATICSTRANDLAYOUT   METAFILE                "res\\PrismaticStrandLayout.emf"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -70,8 +72,8 @@ SUPERELEVATION          METAFILE                "res\\Superelevation.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,36
- PRODUCTVERSION 3,0,0,36
+ FILEVERSION 3,0,0,37
+ PRODUCTVERSION 3,0,0,37
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -89,12 +91,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.0.0.36"
+            VALUE "FileVersion", "3.0.0.37"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2016, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.0.0.36"
+            VALUE "ProductVersion", "3.0.0.37"
         END
     END
     BLOCK "VarFileInfo"
@@ -112,6 +114,10 @@ END
 IDR_BETOOLBOX           REGISTRY                "BEToolbox.rgs"
 IDR_BETOOLBOXPLUGIN     REGISTRY                "BEToolboxPlugin.rgs"
 IDR_BETOOLBOXCOMPONENTINFO REGISTRY                "BEToolboxComponentInfo.rgs"
+IDR_PGSTABLEEXPORTER    REGISTRY                "PGStableExporter.rgs"
+IDR_CURVELEXPORTER      REGISTRY                "CurvelExporter.rgs"
+IDR_CURVELIMPORTER      REGISTRY                "CurvelImporter.rgs"
+IDR_GENCOMPEXPORTER     REGISTRY                "GenCompExporter.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -297,6 +303,373 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,386,112,50,14,WS_GROUP
 END
 
+IDD_PGSTABLEGIRDERVIEW DIALOGEX 0, 0, 261, 126
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "Prismatic Girder",IDC_PRISMATIC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,7,7,65,10
+    CONTROL         "Non-prismatic Girder",IDC_NONPRISMATIC,"Button",BS_AUTORADIOBUTTON,77,7,81,10
+    GROUPBOX        "Static",IDC_STATIC_BOUNDS,7,18,247,101
+END
+
+IDD_PGSTABLELIFTINGVIEW DIALOGEX 0, 0, 1001, 455
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Effective Prestress Force at Lifting (Fpe)",IDC_STATIC,7,7,212,73
+    CONTROL         "Constant Fpe",IDC_CONSTANT_FPE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,14,18,59,10
+    CONTROL         "Varying Fpe",IDC_VARIABLE_FPE,"Button",BS_AUTORADIOBUTTON,76,18,54,10
+    LTEXT           "Straight Strands",IDC_STATIC,15,30,53,8
+    EDITTEXT        IDC_FPE_STRAIGHT,79,28,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FPE_STRAIGHT_UNIT,125,30,19,8
+    LTEXT           "Harp Strands",IDC_STATIC,15,46,43,8
+    EDITTEXT        IDC_FPE_HARPED,79,45,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FPE_HARPED_UNIT,125,46,19,8
+    LTEXT           "Temporary Strands",IDC_STATIC,15,63,62,8
+    EDITTEXT        IDC_FPE_TEMP,79,62,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FPE_TEMP_UNIT,125,63,19,8
+    PUSHBUTTON      "Edit Fpe",IDC_EDIT_FPE,156,43,50,14
+    GROUPBOX        "Material",IDC_STATIC,226,7,250,73
+    LTEXT           "f'ci",IDC_STATIC,243,23,10,8
+    EDITTEXT        IDC_FC,257,21,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FC_UNIT,302,23,19,8
+    CONTROL         "Eci",IDC_COMPUTE_EC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,233,39,20,10
+    EDITTEXT        IDC_EC,257,38,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_EC_UNIT,302,39,19,8
+    LTEXT           "fr = ",IDC_STATIC,240,56,13,8
+    EDITTEXT        IDC_FR_COEFFICIENT,257,55,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FR_COEFFICIENT_UNIT,302,56,81,8
+    LTEXT           "Averaging Factor, K1",IDC_STATIC,336,22,69,8
+    EDITTEXT        IDC_K1,408,19,40,14,ES_AUTOHSCROLL
+    LTEXT           "Bounding Factor, K2",IDC_STATIC,336,38,66,8
+    EDITTEXT        IDC_K2,408,36,40,14,ES_AUTOHSCROLL
+    GROUPBOX        "Controls",IDC_STATIC,7,83,468,124
+    LTEXT           "Lift Point",IDC_STATIC,16,97,29,8
+    EDITTEXT        IDC_LIFT,46,94,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_LIFT_UNIT,91,95,19,8
+    LTEXT           "Impact Up",IDC_STATIC,15,114,34,8
+    EDITTEXT        IDC_IMPACT_UP,50,111,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "%",IDC_IMPACT_UP_UNIT,94,114,8,8
+    LTEXT           "Impact Down",IDC_STATIC,107,113,43,8
+    EDITTEXT        IDC_IMPACT_DOWN,153,109,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "%",IDC_IMPACT_DOWN_UNIT,195,113,8,8
+    LTEXT           "Lift Angle from Horizontal",IDC_STATIC,16,138,82,8
+    EDITTEXT        IDC_LIFT_ANGLE,104,134,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_LIFT_ANGLE_UNIT,146,137,19,8
+    LTEXT           "Wind Pressure",IDC_STATIC,16,156,47,8
+    EDITTEXT        IDC_WIND_PRESSURE,64,153,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_WIND_PRESSURE_UNIT,110,156,19,8
+    CONTROL         "Offset center of gravity by",IDC_CAMBER1,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,17,170,98,10
+    CONTROL         "Camber",IDC_CAMBER2,"Button",BS_AUTORADIOBUTTON,17,183,37,10
+    EDITTEXT        IDC_CAMBER_OFFSET,115,168,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "% to allow for camber",IDC_CAMBER_OFFSET_UNIT,157,170,72,8
+    EDITTEXT        IDC_CAMBER,57,181,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_CAMBER_UNIT,101,184,19,8
+    LTEXT           "Distance to roll axis above Top of Girder",IDC_STATIC,267,100,129,8
+    EDITTEXT        IDC_YRA,399,96,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YRA_UNIT,441,98,19,8
+    RTEXT           "Sweep Tolerance",IDC_SWEEP_TOLERANCE_LABEL,267,119,130,8
+    EDITTEXT        IDC_SWEEP_TOLERANCE,399,117,40,14,ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_SWEEP_TOLERANCE_UNIT,441,120,31,8
+    LTEXT           "Support Placement Tolerance",IDC_STATIC,303,139,94,8
+    EDITTEXT        IDC_SUPPORT_PLACEMENT_TOLERANCE,399,136,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_SUPPORT_PLACEMENT_TOLERANCE_UNIT,441,139,19,8
+    GROUPBOX        "Results",IDC_STATIC,7,212,474,236
+    LTEXT           "Results",IDC_RESULTS,12,224,463,147
+    CONTROL         "",IDC_STRESS_GRAPH,"Static",SS_BLACKFRAME,487,7,507,220
+    CONTROL         "",IDC_FS_GRAPH,"Static",SS_BLACKFRAME,487,228,507,220
+END
+
+IDD_PGSTABLEHAULINGVIEW DIALOGEX 0, 0, 1071, 491
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Effective Prestress Force at Hauling (Fpe)",IDC_STATIC,7,7,212,73
+    CONTROL         "Constant Fpe",IDC_CONSTANT_FPE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,14,18,54,10
+    CONTROL         "Varying Fpe",IDC_VARIABLE_FPE,"Button",BS_AUTORADIOBUTTON,76,18,54,10
+    LTEXT           "Straight Strands",IDC_STATIC,15,31,53,8
+    EDITTEXT        IDC_FPE_STRAIGHT,79,29,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FPE_STRAIGHT_UNIT,125,31,19,8
+    LTEXT           "Harp Strands",IDC_STATIC,15,47,43,8
+    EDITTEXT        IDC_FPE_HARPED,79,46,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FPE_HARPED_UNIT,125,47,19,8
+    LTEXT           "Temporary Strands",IDC_STATIC,15,64,62,8
+    EDITTEXT        IDC_FPE_TEMP,79,63,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FPE_TEMP_UNIT,125,64,19,8
+    PUSHBUTTON      "Edit Fpe",IDC_EDIT_FPE,156,43,50,14
+    GROUPBOX        "Material",IDC_STATIC,226,7,250,73
+    LTEXT           "f'c",IDC_STATIC,243,23,8,8
+    EDITTEXT        IDC_FC,257,21,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FC_UNIT,302,23,19,8
+    CONTROL         "Ec",IDC_COMPUTE_EC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,233,39,20,10
+    EDITTEXT        IDC_EC,257,38,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_EC_UNIT,302,39,19,8
+    LTEXT           "fr = ",IDC_STATIC,240,56,13,8
+    EDITTEXT        IDC_FR_COEFFICIENT,257,55,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_FR_COEFFICIENT_UNIT,302,56,81,8
+    LTEXT           "Averaging Factor, K1",IDC_STATIC,336,23,69,8
+    EDITTEXT        IDC_K1,408,20,40,14,ES_AUTOHSCROLL
+    LTEXT           "Bounding Factor, K2",IDC_STATIC,336,39,66,8
+    EDITTEXT        IDC_K2,408,37,40,14,ES_AUTOHSCROLL
+    GROUPBOX        "Controls",IDC_STATIC,7,86,513,174
+    LTEXT           "Left Bunk",IDC_STATIC,17,103,31,8
+    EDITTEXT        IDC_LEFT_BUNK,51,100,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_LEFT_BUNK_UNIT,96,104,19,8
+    LTEXT           "Right Bunk",IDC_STATIC,126,103,35,8
+    EDITTEXT        IDC_RIGHT_BUNK,163,100,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_RIGHT_BUNK_UNIT,208,104,19,8
+    LTEXT           "Impact Up",IDC_STATIC,17,124,34,8
+    EDITTEXT        IDC_IMPACT_UP,51,121,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "%",IDC_IMPACT_UP_UNIT,96,124,8,8
+    LTEXT           "Impact Down",IDC_STATIC,117,123,43,8
+    EDITTEXT        IDC_IMPACT_DOWN,163,120,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "%",IDC_IMPACT_DOWN_UNIT,205,123,8,8
+    LTEXT           "Superelevation",IDC_STATIC,17,155,49,8
+    EDITTEXT        IDC_SUPERELEVATION,72,152,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Wind Pressure",IDC_STATIC,17,172,47,8
+    EDITTEXT        IDC_WIND_PRESSURE,65,169,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_WIND_PRESSURE_UNIT,111,172,19,8
+    LTEXT           "Speed",IDC_STATIC,17,190,21,8
+    EDITTEXT        IDC_VELOCITY,41,187,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_VELOCITY_UNIT,84,190,19,8
+    LTEXT           "Turning Radius",IDC_STATIC,108,190,48,8
+    EDITTEXT        IDC_RADIUS,162,187,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_RADIUS_UNIT,208,190,19,8
+    CONTROL         "Offset center of gravity by",IDC_CAMBER1,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,17,218,98,10
+    CONTROL         "Camber",IDC_CAMBER2,"Button",BS_AUTORADIOBUTTON,17,232,37,10
+    EDITTEXT        IDC_CAMBER_OFFSET,117,216,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "% to allow for camber",IDC_CAMBER_OFFSET_UNIT,159,219,72,8
+    EDITTEXT        IDC_CAMBER,59,230,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_CAMBER_UNIT,103,233,19,8
+    LTEXT           "Height of girder bottom above roadway",IDC_STATIC,289,105,128,8
+    EDITTEXT        IDC_HGB,421,100,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_HGB_UNIT,464,103,19,8
+    LTEXT           "Height of roll axis above roadway",IDC_STATIC,309,121,108,8
+    EDITTEXT        IDC_HRC,421,119,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_HRC_UNIT,464,121,19,8
+    LTEXT           "Truck Roll Stiffness",IDC_STATIC,355,141,62,8
+    EDITTEXT        IDC_KTHETA,421,138,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_KTHETA_UNIT,464,141,46,8
+    RTEXT           "Truck Width\n(C-C distance between dual tires)",IDC_STATIC,306,155,111,20
+    EDITTEXT        IDC_WCC,421,156,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_WCC_UNIT,464,160,19,8
+    RTEXT           "Sweep Tolerance",IDC_SWEEP_TOLERANCE_LABEL,269,190,148,8
+    EDITTEXT        IDC_SWEEP_TOLERANCE,421,188,40,14,ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_SWEEP_TOLERANCE_UNIT,464,191,24,8
+    LTEXT           "Support Placement Tolerance",IDC_STATIC,323,208,94,8
+    EDITTEXT        IDC_SUPPORT_PLACEMENT_TOLERANCE,421,205,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_SUPPORT_PLACEMENT_TOLERANCE_UNIT,464,208,19,8
+    GROUPBOX        "Results",IDC_STATIC,7,261,516,223
+    LTEXT           "Results",IDC_RESULTS,15,272,501,202
+    CONTROL         "",IDC_STRESS_GRAPH,"Static",SS_BLACKFRAME,536,7,507,220
+    CONTROL         "",IDC_FS_GRAPH,"Static",SS_BLACKFRAME,535,233,507,220
+    CONTROL         "Apply Impact to Plumb Girder Only",IDC_RESTRICT_IMPACT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,139,125,10
+END
+
+IDD_PRISMATIC_GIRDER DIALOGEX 0, 0, 732, 354
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Girder Properties",IDC_STATIC,7,7,123,153
+    LTEXT           "Height",IDC_STATIC,19,26,22,8
+    EDITTEXT        IDC_HG,47,23,51,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_HG_UNIT,102,26,19,8
+    LTEXT           "Wtf",IDC_STATIC,19,42,13,8
+    EDITTEXT        IDC_WTF,47,39,51,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_WTF_UNIT,102,42,19,8
+    LTEXT           "Wbf",IDC_STATIC,19,58,14,8
+    EDITTEXT        IDC_WBF,47,55,51,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_WBF_UNIT,102,58,19,8
+    LTEXT           "Area",IDC_STATIC,19,74,16,8
+    EDITTEXT        IDC_AREA,47,71,51,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_AREA_UNIT,102,74,19,8
+    LTEXT           "Ix",IDC_STATIC,19,90,8,8
+    EDITTEXT        IDC_IX,47,87,51,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_IX_UNIT,102,90,19,8
+    LTEXT           "Iy",IDC_STATIC,19,106,8,8
+    EDITTEXT        IDC_IY,47,103,51,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_IY_UNIT,102,106,19,8
+    LTEXT           "Yt",IDC_STATIC,19,122,8,8
+    EDITTEXT        IDC_YT,47,119,51,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YT_UNIT,102,122,19,8
+    LTEXT           "L",IDC_STATIC,19,138,8,8
+    EDITTEXT        IDC_L,47,135,51,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_L_UNIT,102,138,19,8
+    GROUPBOX        "Prestress Arrangement",IDC_STATIC,7,167,718,180
+    LTEXT           "Prestress Transfer Length\n(used only with Constant Fpe)",IDC_STATIC,15,177,100,17
+    EDITTEXT        IDC_XFER_LENGTH,118,178,40,14,ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_XFER_LENGTH_UNIT,166,180,19,8
+    LTEXT           "Straight Strands",IDC_STATIC,13,204,53,8
+    LTEXT           "Ys",IDC_STATIC,25,216,8,8
+    EDITTEXT        IDC_YS,39,213,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YS_UNIT,83,216,19,8
+    LTEXT           "Harped Strands",IDC_STATIC,13,230,51,8
+    LTEXT           "Yh1",IDC_STATIC,27,247,13,8
+    EDITTEXT        IDC_YH1,41,243,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YH1_UNIT,85,247,19,8
+    LTEXT           "Yh2",IDC_STATIC,27,264,13,8
+    EDITTEXT        IDC_YH2,41,260,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YH2_UNIT,85,264,19,8
+    LTEXT           "Temporary Strands",IDC_STATIC,13,308,62,8
+    LTEXT           "Yts",IDC_STATIC,25,322,11,8
+    EDITTEXT        IDC_YTEMP,39,320,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YTEMP_UNIT,83,322,19,8
+    LTEXT           "NOTE: Effective Prestress Force (Fpe) is entered on the Lifting and Hauling tabs",IDC_STATIC,242,179,257,8
+    CONTROL         "",IDC_STRAND_LAYOUT,"Static",SS_ENHMETAFILE,117,200,596,124
+    GROUPBOX        "Dead Loads",IDC_STATIC,136,7,589,153
+    CONTROL         "Unit Weight\n(used to compute modulus of elasticity)",IDC_STATIC,
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,144,23,128,18
+    EDITTEXT        IDC_DENSITY,275,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_UNIT,320,26,36,8
+    CONTROL         "Unit Weight with Reinforcement\n(used to compute dead load)",IDC_STATIC,
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,144,47,108,19
+    EDITTEXT        IDC_DENSITY_WITH_REBAR,275,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,320,50,36,8
+    LTEXT           "Harp Point",IDC_STATIC,21,287,34,8
+    EDITTEXT        IDC_HP,59,285,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "L",IDC_STATIC,101,288,8,8
+    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,144,86,170,63
+    PUSHBUTTON      "+",IDC_ADD,317,86,18,14
+    PUSHBUTTON      "-",IDC_REMOVE,317,103,18,14
+    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,145,74,170,8
+END
+
+IDD_NONPRISMATIC_GIRDER DIALOGEX 0, 0, 732, 350
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Girder Properties",IDC_STATIC,7,7,469,153
+    CONTROL         "Custom1",IDC_GIRDER_SECTION_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,15,23,432,115
+    PUSHBUTTON      "+",IDC_ADD_SECTION,453,22,18,14
+    PUSHBUTTON      "-",IDC_REMOVE_SECTION,453,39,18,14
+    LTEXT           "Girder Length = ",IDC_L,16,144,189,8
+    GROUPBOX        "Prestress Arrangement",IDC_STATIC,7,162,718,181
+    LTEXT           "Prestress Transfer Length\n(used only with Constant Fpe)",IDC_STATIC,15,177,100,18
+    EDITTEXT        IDC_XFER_LENGTH,118,178,40,14,ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_XFER_LENGTH_UNIT,166,180,19,8
+    LTEXT           "Straight Strands",IDC_STATIC,13,201,53,8
+    LTEXT           "Ys",IDC_STATIC,25,213,8,8
+    EDITTEXT        IDC_YS,39,210,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YS_UNIT,83,213,12,8
+    LTEXT           "Face",IDC_STATIC,98,214,16,8
+    COMBOBOX        IDC_YS_MEASURE,121,210,48,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Harped Strands",IDC_STATIC,13,226,51,8
+    LTEXT           "Xh1",IDC_STATIC,21,242,13,8
+    EDITTEXT        IDC_XH1,39,239,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    COMBOBOX        IDC_XH1_UNIT,81,239,37,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Yh1",IDC_STATIC,123,244,13,8
+    EDITTEXT        IDC_YH1,137,240,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YH1_UNIT,181,244,12,8
+    COMBOBOX        IDC_YH1_MEASURE,199,242,48,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Face",IDC_STATIC,211,231,16,8
+    LTEXT           "Xh2",IDC_STATIC,21,260,13,8
+    EDITTEXT        IDC_XH2,39,257,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    COMBOBOX        IDC_XH2_UNIT,81,258,37,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Yh2",IDC_STATIC,123,260,13,8
+    EDITTEXT        IDC_YH2,137,256,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YH2_UNIT,181,260,12,8
+    COMBOBOX        IDC_YH2_MEASURE,199,259,48,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Xh3",IDC_STATIC,21,277,13,8
+    EDITTEXT        IDC_XH3,39,274,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    COMBOBOX        IDC_XH3_UNIT,81,274,37,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Yh3",IDC_STATIC,123,276,13,8
+    EDITTEXT        IDC_YH3,137,271,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YH3_UNIT,181,276,12,8
+    COMBOBOX        IDC_YH3_MEASURE,199,274,48,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Xh4",IDC_STATIC,22,293,13,8
+    EDITTEXT        IDC_XH4,40,290,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    COMBOBOX        IDC_XH4_UNIT,81,292,37,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Yh4",IDC_STATIC,124,292,13,8
+    EDITTEXT        IDC_YH4,138,287,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YH4_UNIT,182,292,12,8
+    COMBOBOX        IDC_YH4_MEASURE,199,290,48,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Temporary Strands",IDC_STATIC,13,307,62,8
+    LTEXT           "Yts",IDC_STATIC,25,322,11,8
+    EDITTEXT        IDC_YTEMP,39,319,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_YTEMP_UNIT,83,322,12,8
+    LTEXT           "Face",IDC_STATIC,102,321,16,8
+    COMBOBOX        IDC_YT_MEASURE,125,318,48,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "NOTE: Effective Prestress Force (Fpe) is entered on the Lifting and Hauling tabs",IDC_STATIC,256,172,257,8
+    GROUPBOX        "Dead Loads",IDC_STATIC,486,7,239,153
+    CONTROL         "Unit Weight\n(used to compute modulus of elasticity)",IDC_STATIC,
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,502,23,128,18
+    EDITTEXT        IDC_DENSITY,633,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_UNIT,678,26,36,8
+    CONTROL         "Unit Weight with Reinforcement\n(used to compute dead load)",IDC_STATIC,
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,502,47,108,19
+    EDITTEXT        IDC_DENSITY_WITH_REBAR,633,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,678,50,36,8
+    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,502,86,170,63
+    PUSHBUTTON      "+",IDC_ADD_LOAD,675,86,18,14
+    PUSHBUTTON      "-",IDC_REMOVE_LOAD,675,103,18,14
+    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,503,74,170,8
+    CONTROL         "",IDC_GIRDER,"Static",SS_BLACKFRAME,267,195,449,129
+END
+
+IDD_PGSTABLECRITERIAVIEW DIALOGEX 0, 0, 700, 305
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Cracking",IDC_STATIC,25,36,28,8
+    EDITTEXT        IDC_LIFTING_FS_CRACKING,61,34,40,14,ES_AUTOHSCROLL
+    LTEXT           "Failure",IDC_STATIC,25,57,22,8
+    EDITTEXT        IDC_LIFTING_FS_FAILURE,61,54,40,14,ES_AUTOHSCROLL
+    GROUPBOX        "Factors of Safety",IDC_STATIC,17,20,116,56
+    GROUPBOX        "Lifting",IDC_STATIC,7,7,323,181
+    GROUPBOX        "Allowable Concrete Stress",IDC_STATIC,17,77,303,100
+    LTEXT           "Compression",IDC_STATIC_ACSCS,23,92,41,8
+    EDITTEXT        IDC_LIFTING_COMPRESSION,87,89,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "f'ci",IDC_LIFTING_COMPRESSION_UNIT,129,91,10,8
+    LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS,25,120,159,8
+    EDITTEXT        IDC_LIFTING_TENSION,185,117,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "sqrt(f'ci (MPa))",IDC_LIFTING_TENSION_UNIT,229,120,90,8
+    CONTROL         "But not greater than ",IDC_CHECK_LIFTING_TENSION_MAX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,106,136,77,10
+    EDITTEXT        IDC_LIFTING_TENSION_MAX,186,134,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "MPa",IDC_LIFTING_TENSION_MAX_UNIT,230,139,24,8
+    LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB,25,152,159,8
+    EDITTEXT        IDC_LIFTING_TENSION_WITH_REBAR,186,150,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "sqrt(f'ci (MPa))",IDC_LIFTING_TENSION_WITH_REBAR_UNIT,230,152,90,8
+    LTEXT           "Tension",IDC_STATIC,23,105,26,8
+    LTEXT           "Cracking",IDC_STATIC,358,36,28,8
+    EDITTEXT        IDC_HAULING_FS_CRACKING,413,34,40,14,ES_AUTOHSCROLL
+    LTEXT           "Failure/Rollover",IDC_STATIC,358,57,51,8
+    EDITTEXT        IDC_HAULING_FS_FAILURE,413,54,40,14,ES_AUTOHSCROLL
+    GROUPBOX        "Factors of Safety",IDC_STATIC,350,20,116,56
+    GROUPBOX        "Hauling",IDC_STATIC,340,7,323,181
+    GROUPBOX        "Allowable Concrete Stress",IDC_STATIC,350,77,303,100
+    LTEXT           "Compression",IDC_STATIC_ACSCS2,356,92,41,8
+    EDITTEXT        IDC_HAULING_COMPRESSION,420,89,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "f'ci",IDC_HAULING_COMPRESSION_UNIT,462,91,10,8
+    LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS2,358,120,159,8
+    EDITTEXT        IDC_HAULING_TENSION,518,117,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_UNIT,562,120,90,8
+    CONTROL         "But not greater than ",IDC_CHECK_HAULING_TENSION_MAX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,438,136,77,10
+    EDITTEXT        IDC_HAULING_TENSION_MAX,518,134,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "MPa",IDC_HAULING_TENSION_MAX_UNIT,562,139,24,8
+    LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB2,358,152,159,8
+    EDITTEXT        IDC_HAULING_TENSION_WITH_REBAR,518,150,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_UNIT,562,152,90,8
+    LTEXT           "Tension",IDC_STATIC,356,105,26,8
+END
+
+IDD_PGSTABLEEFFECTIVEPRESTRESSDLG DIALOGEX 0, 0, 320, 248
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Varying Effective Prestress Force (Fpe)"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Enter the effective prestress force at known points along the girder. Linear interpolation will be used to estimate Fpe between points.",IDC_STATIC,7,7,306,17
+    LTEXT           "Fpe at analysis sections before the first point will be taken as Fpe at the first point. Similarly, Fpe at the last point will be used for analysis sections after the last point.",IDC_STATIC,7,27,306,16
+    CONTROL         "Custom1",IDC_FPE_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,56,282,159
+    PUSHBUTTON      "+",IDC_ADD,295,56,18,14
+    PUSHBUTTON      "-",IDC_REMOVE,295,72,18,14
+    DEFPUSHBUTTON   "OK",IDOK,155,227,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,209,227,50,14
+    PUSHBUTTON      "Help",IDC_HELP,263,227,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -443,6 +816,34 @@ BEGIN
     END
 END
 
+IDR_PGSTABLE MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM "Help Source",                 EAFID_HELP_SOURCE
+        MENUITEM SEPARATOR
+        MENUITEM "&About BridgeLink...",        ID_APP_ABOUT
+        MENUITEM "About &BEToolbox...",         ID_HELP_ABOUTBETOOLBOX
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -519,6 +920,62 @@ BEGIN
         RIGHTMARGIN, 436
         BOTTOMMARGIN, 126
     END
+
+    IDD_PGSTABLEGIRDERVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 254
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 119
+    END
+
+    IDD_PGSTABLELIFTINGVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 994
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 448
+    END
+
+    IDD_PGSTABLEHAULINGVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 1064
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 484
+    END
+
+    IDD_PRISMATIC_GIRDER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 725
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 347
+    END
+
+    IDD_NONPRISMATIC_GIRDER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 725
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 343
+    END
+
+    IDD_PGSTABLECRITERIAVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 693
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 298
+    END
+
+    IDD_PGSTABLEEFFECTIVEPRESTRESSDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 241
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -536,6 +993,7 @@ IDR_GENCOMP             ICON                    "res\\GenComp.ico"
 IDR_GIRCOMP             ICON                    "res\\GirComp.ico"
 IDR_ULTCOL              ICON                    "res\\UltCol.ico"
 IDR_CURVEL              ICON                    "res\\Curvel.ico"
+IDR_PGSTABLE            ICON                    "res\\PGStable.ico"
 IDI_WSDOT               ICON                    "res\\WSDOT.ico"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -544,8 +1002,12 @@ IDI_WSDOT               ICON                    "res\\WSDOT.ico"
 //
 
 IDR_TOOLBAR             BITMAP                  "res\\toolbar.bmp"
+IDR_PGSTOOLBAR          BITMAP                  "res\\PGStableToolbar.bmp"
 IDB_CURVEL_HEADER       BITMAP                  "res\\CurvelHeader.bmp"
 IDB_CURVEL_WATERMARK    BITMAP                  "res\\CurvelWatermark.bmp"
+IDB_PGSTABLE            BITMAP                  "res\\PGStable.bmp"
+IDB_CURVEL              BITMAP                  "res\\Curvel.bmp"
+IDB_GENCOMP             BITMAP                  "res\\GenComp.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -558,6 +1020,21 @@ BEGIN
     BUTTON      ID_FILE_OPEN
     BUTTON      ID_FILE_SAVE
     BUTTON      ID_FILE_PRINT_DIRECT
+    SEPARATOR
+    BUTTON      ID_PLACEHOLDER
+END
+
+IDR_PGSTOOLBAR TOOLBAR  16, 16
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    BUTTON      ID_FILE_PRINT_DIRECT
+    SEPARATOR
+    BUTTON      EAFID_UNITS_SI
+    BUTTON      EAFID_UNITS_US
+    SEPARATOR
+    BUTTON      ID_PLACEHOLDER
 END
 
 
@@ -578,6 +1055,11 @@ END
 STRINGTABLE 
 BEGIN
     IDR_CURVEL              "Curvel\nCurvel\nBEToolbox\nCurvel (*.Curvel)\n.Curvel\nCurvel.Document\nCurvel Document"
+END
+
+STRINGTABLE 
+BEGIN
+    IDR_PGSTABLE            "PGStable\nPGStable\nBEToolbox\nPGStable (*.PGStable)\n.PGStable\nPGStable.Document\nPGStable Document"
 END
 
 STRINGTABLE 

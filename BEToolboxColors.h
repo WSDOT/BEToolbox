@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <Colors.h>
 #define GRAPH_BACKGROUND ALICEBLUE
 #define GRAPH_GRID_PEN_STYLE PS_DOT
 #define GRAPH_GRID_PEN_WEIGHT 1
