@@ -27,7 +27,7 @@
 #include "BEToolboxColors.h"
 #include <GraphicsLib\GraphicsLib.h>
 
-class arvPhysicalConverter: public sysINumericFormatToolBase
+class arvPhysicalConverter: public sysNumericFormatTool
 {
 public:
    virtual Float64 Convert(Float64 value) const=0;
@@ -45,8 +45,8 @@ public:
       m_FormatTool(umd.Format, umd.Width-1, umd.Precision-1),
       m_rT(umd)
       {
-         CHECK(umd.Width>0);     // Make sure these are positive. Otherwise subtraction
-         CHECK(umd.Precision>0); // above will cause UINT's to roll over
+         ATLASSERT(umd.Width>0);     // Make sure these are positive. Otherwise subtraction
+         ATLASSERT(umd.Precision>0); // above will cause UINT's to roll over
       }
 
    std::_tstring AsString(Float64 val) const
