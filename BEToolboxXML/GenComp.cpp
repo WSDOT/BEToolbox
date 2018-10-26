@@ -24,7 +24,7 @@
 #include "resource.h"
 #include "GenComp.h"
 #include "Helpers.h"
-#include <WBFLUnitServer\UnitServerUtils.h>
+#include <WBFLUnitServer\OpenBridgeML.h>
 
 #include <fstream>
 

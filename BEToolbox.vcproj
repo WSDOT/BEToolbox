@@ -423,6 +423,207 @@
 				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Profile|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="2"
+			UseOfATL="2"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Copying BEToolbox Tip of the Day file to BridgeLink"
+				CommandLine="xcopy /y/d BEToolbox.tip \ARP\BridgeLink\&#x0D;&#x0A;"
+				AdditionalDependencies="\ARP\BridgeLink\BEToolbox.tip"
+				Outputs="\ARP\BridgeLink\BEToolbox.tip"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/BEToolbox.tlb"
+				HeaderFileName="BEToolbox_i.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="BEToolbox_i.c"
+				ProxyFileName="BEToolbox_p.c"
+				ValidateParameters="true"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\vc.pdb"
+				WarningLevel="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="&quot;$(IntDir)&quot;;\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				RegisterOutput="true"
+				IgnoreImportLibrary="true"
+				AdditionalDependencies="htmlhelp.lib OpenBridgeML.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				ModuleDefinitionFile=".\BEToolbox.def"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				AdditionalManifestFiles="\ARP\WBFL\RegFreeCOM\WBFL.$(PlatformName).$(ConfigurationName).manifest"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Copying Images to BridgeLink\Image folder"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Profile|x64"
+			OutputDirectory="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="2"
+			UseOfATL="2"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Copying BEToolbox Tip of the Day file to BridgeLink"
+				CommandLine="xcopy /y/d BEToolbox.tip \ARP\BridgeLink\&#x0D;&#x0A;"
+				AdditionalDependencies="\ARP\BridgeLink\BEToolbox.tip"
+				Outputs="\ARP\BridgeLink\BEToolbox.tip"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="false"
+				TargetEnvironment="3"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/BEToolbox.tlb"
+				HeaderFileName="BEToolbox_i.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="BEToolbox_i.c"
+				ProxyFileName="BEToolbox_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\vc.pdb"
+				WarningLevel="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="&quot;$(IntDir)&quot;;\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				RegisterOutput="true"
+				IgnoreImportLibrary="true"
+				AdditionalDependencies="htmlhelp.lib OpenBridgeML.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				ModuleDefinitionFile=".\BEToolbox.def"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				AdditionalManifestFiles="\ARP\WBFL\RegFreeCOM\WBFL.$(PlatformName).$(ConfigurationName).manifest"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="Copying Images to BridgeLink\Image folder"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -507,6 +708,24 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Profile|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Profile|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp"
@@ -537,6 +756,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Profile|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Profile|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -697,6 +932,24 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Profile|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Profile|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
