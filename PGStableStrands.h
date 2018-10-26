@@ -33,21 +33,24 @@ class BETCLASS CPGStableFpe
 {
 public:
    CPGStableFpe();
-   CPGStableFpe(Float64 X,Float64 FpeStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 YpsTemp,int YpsTempMeasure);
+   CPGStableFpe(Float64 X,Float64 FpeStraight,Float64 XpsStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 XpsHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 XpsTemp,Float64 YpsTemp,int YpsTempMeasure);
 
    bool operator<(const CPGStableFpe& other) const;
    bool operator==(const CPGStableFpe& other) const;
 
    Float64 X;
    Float64 FpeStraight;
+   Float64 XpsStraight;
    Float64 YpsStraight;
    int     YpsStraightMeasure;
 
    Float64 FpeHarped;
+   Float64 XpsHarped;
    Float64 YpsHarped;
    int     YpsHarpedMeasure;
 
    Float64 FpeTemp;
+   Float64 XpsTemp;
    Float64 YpsTemp;
    int     YpsTempMeasure;
 };
@@ -70,13 +73,13 @@ public:
 
    StrandMethod strandMethod;
 
-   Float64 ex; // lateral eccentricity of the prestressing with respect to the vertical centriodal axis (< 0 is the left of the CG)
-
    std::set<CPGStableFpe> m_vFpe; // used if strandMethod == Exact, otherwise all the parameters below are used
 
    // Parameters for simplified strand definition
 
    Float64 XferLength; // prestress transfer length... used only with constant Fpe
+
+   Float64 ex; // lateral eccentricity of the prestressing with respect to the vertical centriodal axis (< 0 is the left of the CG in girder section coordinates)
 
    Float64 Ys;
    int YsMeasure;

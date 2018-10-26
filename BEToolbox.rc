@@ -8,8 +8,7 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include <EAF\EAFResources.h>
-#include "BETResources.h"
-
+#include <BETResources.h>
 #ifndef APSTUDIO_INVOKED
 #include <PGSuperVersion.h>
 #endif
@@ -39,6 +38,7 @@ END
 2 TEXTINCLUDE 
 BEGIN
     "#include <EAF\\EAFResources.h>\r\n"
+    "#include <BETResources.h>\r\n"
     "#ifndef APSTUDIO_INVOKED\r\n"
     "#include <PGSuperVersion.h>\r\n"
     "#endif\r\n"
@@ -77,8 +77,8 @@ PRISMATICSTRANDLAYOUT   METAFILE                "res\\PrismaticStrandLayout.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,2,3,0
- PRODUCTVERSION 3,2,3,0
+ FILEVERSION 3,2,4,0
+ PRODUCTVERSION 3,2,4,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -96,12 +96,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.2.3.0"
+            VALUE "FileVersion", "3.2.4.0"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2018, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.2.3.0"
+            VALUE "ProductVersion", "3.2.4.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -130,13 +130,19 @@ IDR_CURVELIMPORTER      REGISTRY                "CurvelImporter.rgs"
 
 IDR_GENCOMPEXPORTER     REGISTRY                "GenCompExporter.rgs"
 
-IDR_ULTCOLTOOL REGISTRY DISCARDABLE    "UltColTool.rgs"
-IDR_BOXGDRTOOL REGISTRY DISCARDABLE    "BoxGdrTool.rgs"
-IDR_GENCOMPTOOL REGISTRY DISCARDABLE "GenCompTool.rgs"
-IDR_GIRCOMPTOOL REGISTRY DISCARDABLE "GirCompTool.rgs"
-IDR_CURVELTOOL REGISTRY DISCARDABLE "CurvelTool.rgs"
-IDR_PGSTABLETOOL REGISTRY DISCARDABLE "PGStableTool.rgs"
-IDR_SPECTRATOOL REGISTRY DISCARDABLE "SpectraTool.rgs"
+IDR_ULTCOLTOOL          REGISTRY                "UltColTool.rgs"
+
+IDR_BOXGDRTOOL          REGISTRY                "BoxGdrTool.rgs"
+
+IDR_GENCOMPTOOL         REGISTRY                "GenCompTool.rgs"
+
+IDR_GIRCOMPTOOL         REGISTRY                "GirCompTool.rgs"
+
+IDR_CURVELTOOL          REGISTRY                "CurvelTool.rgs"
+
+IDR_PGSTABLETOOL        REGISTRY                "PGStableTool.rgs"
+
+IDR_SPECTRATOOL         REGISTRY                "SpectraTool.rgs"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -833,21 +839,18 @@ BEGIN
     LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_UNIT,562,152,90,8
 END
 
-IDD_PGSTABLEEFFECTIVEPRESTRESSDLG DIALOGEX 0, 0, 583, 248
+IDD_PGSTABLEEFFECTIVEPRESTRESSDLG DIALOGEX 0, 0, 785, 248
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Varying Effective Prestress Force (Fpe)"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    LTEXT           "Enter the effective prestress force at known points along the girder. Linear interpolation will be used to estimate Fpe between points.",IDC_STATIC,7,8,569,17
-    LTEXT           "Fpe at analysis sections before the first point will be taken as Fpe at the first point. Similarly, Fpe at the last point will be used for analysis sections after the last point.",IDC_STATIC,7,27,569,16
-    CONTROL         "Custom1",IDC_FPE_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,56,543,165
-    PUSHBUTTON      "+",IDC_ADD,558,56,18,14
-    PUSHBUTTON      "-",IDC_REMOVE,558,72,18,14
-    DEFPUSHBUTTON   "OK",IDOK,472,227,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,526,227,50,14
-    LTEXT           "ex",IDC_EX_LABEL,7,43,9,8
-    EDITTEXT        IDC_EX,19,38,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_EX_UNIT,62,43,19,8
+    LTEXT           "Enter the effective prestress force at known points along the girder. Linear interpolation will be used to estimate Fpe between points.",IDC_STATIC,7,8,771,17
+    LTEXT           "Fpe at analysis sections before the first point will be taken as Fpe at the first point. Similarly, Fpe at the last point will be used for analysis sections after the last point.",IDC_STATIC,7,27,771,16
+    CONTROL         "Custom1",IDC_FPE_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,7,43,749,178
+    PUSHBUTTON      "+",IDC_ADD,760,42,18,14
+    PUSHBUTTON      "-",IDC_REMOVE,760,58,18,14
+    DEFPUSHBUTTON   "OK",IDOK,675,227,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,728,227,50,14
 END
 
 
@@ -1188,7 +1191,7 @@ BEGIN
     IDD_PGSTABLEEFFECTIVEPRESTRESSDLG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 576
+        RIGHTMARGIN, 778
         TOPMARGIN, 7
         BOTTOMMARGIN, 241
     END
