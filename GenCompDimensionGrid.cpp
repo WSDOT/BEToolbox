@@ -144,12 +144,12 @@ void CGenCompDimensionGrid::AddPoint()
 
    UpdateData(TRUE);
    CGenCompDoc* pDoc = (CGenCompDoc*)EAFGetDocument();
-   pDoc->UpdateAllViews(NULL,0,NULL);
+   pDoc->UpdateAllViews(nullptr,0,nullptr);
 }
 
 BOOL CGenCompDimensionGrid::ArePointsSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}
@@ -170,7 +170,7 @@ void CGenCompDimensionGrid::RemoveSelectedPoints()
 
    UpdateData(TRUE);
    CGenCompDoc* pDoc = (CGenCompDoc*)EAFGetDocument();
-   pDoc->UpdateAllViews(NULL,0,NULL);
+   pDoc->UpdateAllViews(nullptr,0,nullptr);
 }
 
 void CGenCompDimensionGrid::GetPoint(ROWCOL row,Float64& x,Float64 &y)
@@ -262,7 +262,7 @@ void CGenCompDimensionGrid::OnModifyCell(ROWCOL nRow,ROWCOL nCol)
  //  if ( sysTokenizer::ParseDouble(s,&d) )
  //  {
  //     CGenCompDoc* pDoc = (CGenCompDoc*)EAFGetDocument();
- //     pDoc->UpdateAllViews(NULL,0,NULL);
+ //     pDoc->UpdateAllViews(nullptr,0,nullptr);
  //  }
 
  //  SetCurrentCell(nRow, nCol, GX_SCROLLINVIEW|GX_DISPLAYEDITWND);

@@ -123,11 +123,11 @@ void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
 
 IMPLEMENT_DYNAMIC(CPGStableNonprismaticGirder, CDialog)
 
-CPGStableNonprismaticGirder::CPGStableNonprismaticGirder(CWnd* pParent /*=NULL*/)
+CPGStableNonprismaticGirder::CPGStableNonprismaticGirder(CWnd* pParent /*=nullptr*/)
 	: CDialog(CPGStableNonprismaticGirder::IDD, pParent)
 {
-   m_pPointLoadGrid = NULL;
-   m_pGirderSectionGrid = NULL;
+   m_pPointLoadGrid = nullptr;
+   m_pGirderSectionGrid = nullptr;
 }
 
 CPGStableNonprismaticGirder::~CPGStableNonprismaticGirder()

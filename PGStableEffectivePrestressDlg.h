@@ -31,7 +31,7 @@ class CPGStableEffectivePrestressDlg : public CDialog
 	DECLARE_DYNAMIC(CPGStableEffectivePrestressDlg)
 
 public:
-	CPGStableEffectivePrestressDlg(CWnd* pParent = NULL);   // standard constructor
+	CPGStableEffectivePrestressDlg(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CPGStableEffectivePrestressDlg();
 
    CPGStableStrands m_Strands;
@@ -40,13 +40,13 @@ public:
 	enum { IDD = IDD_PGSTABLEEFFECTIVEPRESTRESSDLG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
    CPGStableFpeGrid m_Grid;
 
 	DECLARE_MESSAGE_MAP()
 public:
-   virtual BOOL OnInitDialog();
+   virtual BOOL OnInitDialog() override;
    afx_msg void OnAdd();
    afx_msg void OnRemove();
 };

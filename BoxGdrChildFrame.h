@@ -57,13 +57,13 @@ protected:
 
 public:
 #if defined _DEBUG
-   virtual void AssertValid() const;
+   virtual void AssertValid() const override;
 #endif // _DEBUG
 protected:
-   virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+   virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
 public:
 
    // Must over-ride this method and call AFX_MANAGE_STATE(AfxGetStaticModuleState()) before
    // calling base class method
-   virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
+   virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
 };

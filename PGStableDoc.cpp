@@ -30,6 +30,8 @@
 #include <MFCTools\AutoRegistry.h>
 #include <System\System.h>
 
+#include <memory>
+
 #include "PGStableTitlePageBuilder.h"
 #include "PGStableLiftingSummaryChapterBuilder.h"
 #include "PGStableLiftingDetailsChapterBuilder.h"
@@ -42,23 +44,23 @@ IMPLEMENT_DYNCREATE(CPGStableDoc, CBEToolboxDoc)
 
 CPGStableDoc::CPGStableDoc()
 {
-   boost::shared_ptr<CTitlePageBuilder> pLiftingTitlePageBuilder(new CPGStableTitlePageBuilder());
+   std::shared_ptr<CTitlePageBuilder> pLiftingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   CReportBuilder* pLiftingReportBuilder = new CReportBuilder(_T("Lifting"));
+   std::unique_ptr<CReportBuilder> pLiftingReportBuilder(std::make_unique<CReportBuilder>(_T("Lifting")));
    pLiftingReportBuilder->AddTitlePageBuilder(pLiftingTitlePageBuilder);
-   pLiftingReportBuilder->AddChapterBuilder(boost::shared_ptr<CChapterBuilder>(new CPGStableLiftingSummaryChapterBuilder(this)));
-   pLiftingReportBuilder->AddChapterBuilder(boost::shared_ptr<CChapterBuilder>(new CPGStableLiftingDetailsChapterBuilder(this)));
+   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableLiftingSummaryChapterBuilder>(this)));
+   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableLiftingDetailsChapterBuilder>(this)));
 
-   m_RptMgr.AddReportBuilder(pLiftingReportBuilder);
+   m_RptMgr.AddReportBuilder(pLiftingReportBuilder.release());
 
-   boost::shared_ptr<CTitlePageBuilder> pHaulingTitlePageBuilder(new CPGStableTitlePageBuilder());
+   std::shared_ptr<CTitlePageBuilder> pHaulingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   CReportBuilder* pHaulingReportBuilder = new CReportBuilder(_T("Hauling"));
+   std::unique_ptr<CReportBuilder> pHaulingReportBuilder(std::make_unique<CReportBuilder>(_T("Hauling")));
    pHaulingReportBuilder->AddTitlePageBuilder(pHaulingTitlePageBuilder);
-   pHaulingReportBuilder->AddChapterBuilder(boost::shared_ptr<CChapterBuilder>(new CPGStableHaulingSummaryChapterBuilder(this)));
-   pHaulingReportBuilder->AddChapterBuilder(boost::shared_ptr<CChapterBuilder>(new CPGStableHaulingDetailsChapterBuilder(this)));
+   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableHaulingSummaryChapterBuilder>(this)));
+   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableHaulingDetailsChapterBuilder>(this)));
 
-   m_RptMgr.AddReportBuilder(pHaulingReportBuilder);
+   m_RptMgr.AddReportBuilder(pHaulingReportBuilder.release());
 
    m_strProjectCriteria = gs_strCriteria;
    m_strHaulTruck = gs_strHaulTruck;
@@ -280,7 +282,7 @@ HRESULT CPGStableDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
       {
          m_strProjectCriteria = var.bstrVal;
          const SpecLibraryEntry* pSpec = GetSpecLibraryEntry();
-         if ( pSpec == NULL )
+         if ( pSpec == nullptr )
          {
             m_strProjectCriteria = gs_strCriteria;
          }
@@ -295,7 +297,7 @@ HRESULT CPGStableDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
       {
          m_strGirder = var.bstrVal;
          const GirderLibraryEntry* pGirder = GetGirderLibraryEntry();
-         if ( pGirder == NULL )
+         if ( pGirder == nullptr )
          {
             m_strGirder = gs_strGirder;
          }
@@ -310,7 +312,7 @@ HRESULT CPGStableDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
       {
          m_strHaulTruck = var.bstrVal;
          const HaulTruckLibraryEntry* pTruck = GetHaulTruckLibraryEntry();
-         if ( pTruck == NULL )
+         if ( pTruck == nullptr )
          {
             m_strHaulTruck = gs_strHaulTruck;
          }
@@ -774,7 +776,7 @@ const SpecLibraryEntry* CPGStableDoc::GetSpecLibraryEntry() const
 {
    if ( m_strProjectCriteria == gs_strCriteria )
    {
-      return NULL;
+      return nullptr;
    }
    else
    {
@@ -792,7 +794,7 @@ const HaulTruckLibraryEntry* CPGStableDoc::GetHaulTruckLibraryEntry() const
 {
    if ( m_strHaulTruck == gs_strHaulTruck )
    {
-      return NULL;
+      return nullptr;
    }
    else
    {
@@ -810,7 +812,7 @@ const GirderLibraryEntry* CPGStableDoc::GetGirderLibraryEntry() const
 {
    if ( m_strGirder == gs_strGirder )
    {
-      return NULL;
+      return nullptr;
    }
    else
    {

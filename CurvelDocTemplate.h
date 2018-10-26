@@ -32,12 +32,12 @@ public:
                       CRuntimeClass* pDocClass,
                       CRuntimeClass* pFrameClass,
                       CRuntimeClass* pViewClass,
-                      HMENU hSharedMenu = NULL,
+                      HMENU hSharedMenu = nullptr,
                       int maxViewCount = -1);
 
-   virtual CString GetTemplateGroupItemDescription(const CEAFTemplateItem* pItem) const;
+   virtual CString GetTemplateGroupItemDescription(const CEAFTemplateItem* pItem) const override;
 
-   virtual CDocument* OpenDocumentFile(LPCTSTR lpszPathName,BOOL bMakeVisible);
+   virtual CDocument* OpenDocumentFile(LPCTSTR lpszPathName, BOOL bAddToMRU, BOOL bMakeVisible) override;
 
    DECLARE_DYNAMIC(CCurvelDocTemplate)
 };

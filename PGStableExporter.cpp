@@ -152,7 +152,7 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
          return S_FALSE;
       }
 
-      HRESULT hr = ::CoCreateInstance( CLSID_StructuredSave, NULL,  CLSCTX_INPROC_SERVER, IID_IStructuredSave, (void**)&pStrSave );
+      HRESULT hr = ::CoCreateInstance( CLSID_StructuredSave, nullptr,  CLSCTX_INPROC_SERVER, IID_IStructuredSave, (void**)&pStrSave );
       ATLASSERT(SUCCEEDED(hr));
       CString strFile = fileDlg.GetPathName();
       hr = pStrSave->Open( strFile );
@@ -179,8 +179,8 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
       CComPtr<IBeamFactory> factory;
       pGirderEntry->GetBeamFactory(&factory);
 
-      CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be NULL
-      if ( splicedFactory == NULL && factory->IsPrismatic(dimensions) )
+      CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be nullptr
+      if ( splicedFactory == nullptr && factory->IsPrismatic(dimensions) )
       {
          strGirder = pBridgeDesc->GetGirder(segmentKey)->GetGirderName();
       }
@@ -236,7 +236,7 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    haulingStrands.strandMethod = CPGStableStrands::Detailed;
    liftingStrands.m_vFpe.clear();
    haulingStrands.m_vFpe.clear();
-   BOOST_FOREACH(pgsPointOfInterest& poi,vPoi)
+   for (const auto& poi : vPoi)
    {
       Float64 X = poi.GetDistFromStart();
       if ( X < 0 || Lg < X )

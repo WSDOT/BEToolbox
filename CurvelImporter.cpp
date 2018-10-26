@@ -77,8 +77,8 @@ STDMETHODIMP CCurvelImporter::Import(IBroker* pBroker)
                                CComBSTR(unitSysUnitsMgr::GetTimeUnit().UnitTag().c_str()),
                                CComBSTR(unitSysUnitsMgr::GetTemperatureUnit().UnitTag().c_str()),
                                CComBSTR(unitSysUnitsMgr::GetAngleUnit().UnitTag().c_str()));
-      std::auto_ptr<Curvel> curvelXML(CreateCurvelModel(strFileName,unitServer));
-      if ( curvelXML.get() == NULL )
+      std::unique_ptr<Curvel> curvelXML(CreateCurvelModel(strFileName,unitServer));
+      if ( curvelXML.get() == nullptr )
       {
          return E_FAIL;
       }

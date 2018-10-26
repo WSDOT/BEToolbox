@@ -41,7 +41,7 @@ CPGStableTitlePageBuilder::~CPGStableTitlePageBuilder(void)
 {
 }
 
-rptChapter* CPGStableTitlePageBuilder::Build(boost::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CPGStableTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 

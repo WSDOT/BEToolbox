@@ -60,8 +60,8 @@ protected:
    void InsertStation(const IndividualStation& station);
 
    // virtual overrides for grid
-   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
-   virtual BOOL OnEndEditing(ROWCOL nRow,ROWCOL nCol);
+   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
+   virtual BOOL OnEndEditing(ROWCOL nRow,ROWCOL nCol) override;
 
    void UpdateColumnHeaders();
 

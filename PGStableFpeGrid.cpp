@@ -101,7 +101,7 @@ void CPGStableFpeGrid::RemoveSelected()
 
 BOOL CPGStableFpeGrid::AreSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}
@@ -483,7 +483,7 @@ void CPGStableFpeGrid::FillGrid(const std::set<CPGStableFpe>& vFpe)
       RemoveRows(2, nRows);
    }
 
-   BOOST_FOREACH(const CPGStableFpe& fpe,vFpe)
+   for (const auto& fpe : vFpe)
    {
       InsertFpe(fpe.X,fpe.FpeStraight,fpe.YpsStraight,fpe.YpsStraightMeasure,fpe.FpeHarped,fpe.YpsHarped,fpe.YpsHarpedMeasure,fpe.FpeTemp,fpe.YpsTemp,fpe.YpsTempMeasure);
    }

@@ -101,7 +101,7 @@ void CPGStablePointLoadGrid::RemoveSelectedLoads()
 
 BOOL CPGStablePointLoadGrid::AreLoadsSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}

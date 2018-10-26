@@ -99,12 +99,12 @@ void CBoxGdrDimensionGrid::RemoveSelectedProblems()
 
    UpdateData(TRUE);
    CBoxGdrDoc* pDoc = (CBoxGdrDoc*)EAFGetDocument();
-   pDoc->UpdateAllViews(NULL,0,NULL);
+   pDoc->UpdateAllViews(nullptr,0,nullptr);
 }
 
 BOOL CBoxGdrDimensionGrid::AreProblemsSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}
@@ -161,7 +161,7 @@ void CBoxGdrDimensionGrid::AddProblem()
 
    UpdateData(TRUE);
    CBoxGdrDoc* pDoc = (CBoxGdrDoc*)EAFGetDocument();
-   pDoc->UpdateAllViews(NULL,0,NULL);
+   pDoc->UpdateAllViews(nullptr,0,nullptr);
 }
 
 void CBoxGdrDimensionGrid::GetProblemData(ROWCOL row,BOXGDRDIMENSIONS& dimensions)
@@ -373,7 +373,7 @@ void CBoxGdrDimensionGrid::OnModifyCell(ROWCOL nRow,ROWCOL nCol)
    CGXGridWnd::OnModifyCell(nRow,nCol);
 
    CBoxGdrDoc* pDoc = (CBoxGdrDoc*)EAFGetDocument();
-   pDoc->UpdateAllViews(NULL,0,NULL);
+   pDoc->UpdateAllViews(nullptr,0,nullptr);
 }
 
 void CBoxGdrDimensionGrid::OnUnitsModeChanged()

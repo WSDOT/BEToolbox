@@ -121,27 +121,27 @@ public:
    CReportBuilderManager m_RptMgr;
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
 protected:
    /// called when a document is created (New or Open)
-   virtual BOOL Init(); 
+   virtual BOOL Init() override;
 
    void LoadPGSLibrary();
 
    // Called by the framework when the document is to be loaded and saved
-   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
-   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
+   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave) override;
+   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad) override;
 
-   virtual void LoadDocumentSettings();
-   virtual void SaveDocumentSettings();
+   virtual void LoadDocumentSettings() override;
+   virtual void SaveDocumentSettings() override;
 
-   virtual CString GetDocumentationRootLocation();
-   virtual UINT GetToolbarID();
+   virtual CString GetDocumentationRootLocation() override;
+   virtual UINT GetToolbarID() override;
 
    CString m_strProjectCriteria;
    CString m_strHaulTruck;

@@ -72,7 +72,7 @@ void CCurvelStationRangeGrid::RemoveSelectedStations()
 
 BOOL CCurvelStationRangeGrid::AreStationsSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}

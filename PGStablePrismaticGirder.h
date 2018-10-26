@@ -33,19 +33,19 @@ class CPGStablePrismaticGirder : public CDialog, public CPGStableGirderControlPa
 	DECLARE_DYNAMIC(CPGStablePrismaticGirder)
 
 public:
-	CPGStablePrismaticGirder(CWnd* pParent = NULL);   // standard constructor
+	CPGStablePrismaticGirder(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CPGStablePrismaticGirder();
 
 // Dialog Data
 	enum { IDD = IDD_PRISMATIC_GIRDER };
 
    // CPGStableGirderControlParent
-   virtual std::vector<std::pair<Float64,Float64>> GetGirderProfile();
-   virtual void GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
+   virtual std::vector<std::pair<Float64,Float64>> GetGirderProfile() override;
+   virtual void GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) override;
 
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
    CMetaFileStatic m_StrandLayout;
    CPGStableGirderControl m_ctrlGirder;
@@ -59,7 +59,7 @@ public:
    afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
 
    BOOL AreLoadsSelected();
-   virtual BOOL OnInitDialog();
+   virtual BOOL OnInitDialog() override;
    afx_msg void OnPSMethodChanged();
    afx_msg void OnGirderChanged();
 };

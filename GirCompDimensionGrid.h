@@ -68,8 +68,8 @@ protected:
    void InsertRow(const GIRCOMPDIMENSIONS& dimensions);
 
    // virtual overrides for grid
-   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
-   virtual void OnModifyCell(ROWCOL nRow,ROWCOL nCol);
+   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
+   virtual void OnModifyCell(ROWCOL nRow,ROWCOL nCol) override;
 
    void UpdateColumnHeaders();
    void OnUpdateCells(ROWCOL row);

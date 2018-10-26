@@ -31,15 +31,15 @@ class CAboutDlg : public CDialog
 	DECLARE_DYNAMIC(CAboutDlg)
 
 public:
-	CAboutDlg(CWnd* pParent = NULL);   // standard constructor
+	CAboutDlg(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CAboutDlg();
 
 // Dialog Data
 	enum { IDD = IDD_ABOUTBOX };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	virtual BOOL OnInitDialog();
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
+	virtual BOOL OnInitDialog() override;
 
    CMFCLinkCtrl m_WSDOT;
 

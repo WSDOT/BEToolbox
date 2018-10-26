@@ -47,35 +47,34 @@ BEGIN_MESSAGE_MAP(CGenCompRptView, CEAFReportView)
    ON_COMMAND(ID_FILE_PRINT_DIRECT,&CGenCompRptView::OnFilePrint)
 END_MESSAGE_MAP()
 
-boost::shared_ptr<CReportSpecification> CGenCompRptView::CreateReportSpecification()
+std::shared_ptr<CReportSpecification> CGenCompRptView::CreateReportSpecification()
 {
    CGenCompDoc* pDoc = (CGenCompDoc*)GetDocument();
 
-   boost::shared_ptr<CReportSpecification> pRptSpec;
+   std::shared_ptr<CReportSpecification> pRptSpec;
    std::vector<std::_tstring> rptNames = pDoc->m_RptMgr.GetReportNames();
 
-   boost::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(rptNames.front());
+   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(rptNames.front());
    CReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
-   boost::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
    pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
 
    return pRptSpec;
 }
 
-boost::shared_ptr<CReportBrowser> CGenCompRptView::CreateReportBrowser()
+std::shared_ptr<CReportBrowser> CGenCompRptView::CreateReportBrowser()
 {
-   if ( m_pReportSpec == NULL )
-      return boost::shared_ptr<CReportBrowser>();
+   if (m_pReportSpec == nullptr)
+      return nullptr;
 
    CGenCompDoc* pDoc = (CGenCompDoc*)GetDocument();
-   boost::shared_ptr<CReportSpecificationBuilder> nullSpecBuilder;
-   return pDoc->m_RptMgr.CreateReportBrowser(GetSafeHwnd(),m_pReportSpec,nullSpecBuilder);
+   return pDoc->m_RptMgr.CreateReportBrowser(GetSafeHwnd(),m_pReportSpec,std::shared_ptr<CReportSpecificationBuilder>());
 }
 
 void CGenCompRptView::RefreshReport()
 {
-   if ( m_pReportSpec == NULL )
+   if ( m_pReportSpec == nullptr )
       return;
 
    CGenCompDoc* pDoc = (CGenCompDoc*)GetDocument();
@@ -88,8 +87,8 @@ void CGenCompRptView::RefreshReport()
    pDocTemplate->SetViewCreationData((void*)&data);
 
    // refresh the report
-   boost::shared_ptr<CReportBuilder> pBuilder = pDoc->m_RptMgr.GetReportBuilder( m_pReportSpec->GetReportName() );
-   boost::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pReportSpec );
+   std::shared_ptr<CReportBuilder> pBuilder = pDoc->m_RptMgr.GetReportBuilder( m_pReportSpec->GetReportName() );
+   std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pReportSpec );
    m_pReportBrowser->UpdateReport( pReport, true );
 }
 

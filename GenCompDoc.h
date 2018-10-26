@@ -35,7 +35,7 @@ public:
 	CGenCompDoc();
 	virtual ~CGenCompDoc();
 
-   virtual CString GetToolbarSectionName();
+   virtual CString GetToolbarSectionName() override;
 
    void Clear();
 
@@ -57,26 +57,26 @@ public:
 
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
-	virtual BOOL OnNewDocument();
+	virtual BOOL OnNewDocument() override;
 
 protected:
-   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
-   virtual BOOL SaveTheDocument(LPCTSTR lpszPathName);
+   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName) override;
+   virtual BOOL SaveTheDocument(LPCTSTR lpszPathName) override;
 
-   virtual void LoadDocumentSettings();
-   virtual void SaveDocumentSettings();
+   virtual void LoadDocumentSettings() override;
+   virtual void SaveDocumentSettings() override;
 
-   virtual CString GetDocumentationRootLocation();
+   virtual CString GetDocumentationRootLocation() override;
 
-   virtual void OnOldFormat(LPCTSTR lpszPathName);
+   virtual void OnOldFormat(LPCTSTR lpszPathName) override;
 
-   std::auto_ptr<GenComp> m_GenCompXML;
+   std::unique_ptr<GenComp> m_GenCompXML;
    CComPtr<IUnitServer> m_DocUnitServer;
    CComPtr<IUnitConvert> m_DocConvert;
 

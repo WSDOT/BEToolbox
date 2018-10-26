@@ -45,7 +45,7 @@ CPGStableDocTemplate::CPGStableDocTemplate(UINT nIDResource,
    GetDocString(strDocName,CDocTemplate::docName);
  
    HICON hIcon = AfxGetApp()->LoadIcon(IDR_PGSTABLE);
-   m_TemplateGroup.AddItem( new CEAFTemplateItem(this,strDocName,NULL,hIcon) );
+   m_TemplateGroup.AddItem( new CEAFTemplateItem(this,strDocName,nullptr,hIcon) );
 
    hIcon = AfxGetApp()->LoadIcon(IDR_BETOOLBOX);
    m_TemplateGroup.SetIcon(hIcon);

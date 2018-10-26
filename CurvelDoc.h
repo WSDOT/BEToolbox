@@ -35,35 +35,35 @@ public:
 	CCurvelDoc();
 	virtual ~CCurvelDoc();
 
-   virtual CString GetToolbarSectionName();
+   virtual CString GetToolbarSectionName() override;
 
    CReportBuilderManager* GetReportBuilderManager();
-   boost::shared_ptr<CReportSpecificationBuilder> GetReportSpecificationBuilder();
-   boost::shared_ptr<CReportSpecification> GetDefaultReportSpecification();
+   std::shared_ptr<CReportSpecificationBuilder> GetReportSpecificationBuilder();
+   std::shared_ptr<CReportSpecification> GetDefaultReportSpecification();
 
    Curvel* GetCurvelXML();
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
-	virtual BOOL OnNewDocument();
+	virtual BOOL OnNewDocument() override;
 
 protected:
-   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
-   virtual BOOL SaveTheDocument(LPCTSTR lpszPathName);
+   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName) override;
+   virtual BOOL SaveTheDocument(LPCTSTR lpszPathName) override;
 
-   virtual void LoadDocumentSettings();
-   virtual void SaveDocumentSettings();
+   virtual void LoadDocumentSettings() override;
+   virtual void SaveDocumentSettings() override;
 
-   virtual CString GetDocumentationRootLocation();
+   virtual CString GetDocumentationRootLocation() override;
 
-   virtual void OnOldFormat(LPCTSTR lpszPathName);
+   virtual void OnOldFormat(LPCTSTR lpszPathName) override;
 
-   std::auto_ptr<Curvel> m_CurvelXML;
+   std::unique_ptr<Curvel> m_CurvelXML;
    CComPtr<IUnitServer> m_DocUnitServer;
    CComPtr<IUnitConvert> m_DocConvert;
 
@@ -73,7 +73,7 @@ protected:
 private:
    CReportBuilderManager m_RptMgr;
 
-   boost::shared_ptr<CReportSpecificationBuilder> m_pRptSpecBuilder;
-   boost::shared_ptr<CCurvelReportSpecification> m_pDefaultRptSpec; // this is the default spec that is
+   std::shared_ptr<CReportSpecificationBuilder> m_pRptSpecBuilder;
+   std::shared_ptr<CCurvelReportSpecification> m_pDefaultRptSpec; // this is the default spec that is
    // used to get things started... after the report is displayed, the view holds the real repost spec
 };

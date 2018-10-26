@@ -27,6 +27,6 @@
 #define BETOOLBOXXML_AUTOLIBNAME "BEToolboxXML.lib"
 
 #pragma comment(lib,BETOOLBOXXML_AUTOLIBNAME)
-//#pragma message("Automatic linking with " BETOOLBOXXML_AUTOLIBNAME )
+#pragma message("Linking with " BETOOLBOXXML_AUTOLIBNAME )
 
 #endif // BUILDBETOOLBOXXMLLIB

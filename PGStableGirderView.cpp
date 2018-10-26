@@ -177,7 +177,7 @@ void CPGStableGirderView::OnInitialUpdate()
    pSpecLib->KeyList(keyList);
    CComboBox* pcbSpec = (CComboBox*)GetDlgItem(IDC_SPEC);
    pcbSpec->AddString(gs_strCriteria);
-   BOOST_FOREACH(const std::_tstring& key,keyList)
+   for (const auto& key : keyList)
    {
       pcbSpec->AddString(key.c_str());
    }

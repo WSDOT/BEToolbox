@@ -41,7 +41,7 @@ static const Float64 FILE_VERSION = 1.0;
 
 CBEToolboxDoc::CBEToolboxDoc()
 {
-   m_pMyToolBar = NULL;
+   m_pMyToolBar = nullptr;
 
    // Reserve command IDs for document plug ins
    UINT nCommands = GetPluginCommandManager()->ReserveCommandIDRange(PLUGIN_COMMAND_COUNT);
@@ -210,9 +210,9 @@ void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
       AFX_MANAGE_STATE(AfxGetStaticModuleState());
       UINT tbID = pFrame->CreateToolBar(GetToolbarSectionName(),GetPluginCommandManager());
       m_pMyToolBar = pFrame->GetToolBar(tbID);
-      m_pMyToolBar->LoadToolBar(GetToolbarID(),NULL);
-      m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,NULL,BTNS_DROPDOWN);
-      m_pMyToolBar->HideButton(ID_PLACEHOLDER,NULL,TRUE); // hides the placeholder button that reserves a little extra space
+      m_pMyToolBar->LoadToolBar(GetToolbarID(),nullptr);
+      m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,nullptr,BTNS_DROPDOWN);
+      m_pMyToolBar->HideButton(ID_PLACEHOLDER,nullptr,TRUE); // hides the placeholder button that reserves a little extra space
       }
 
       // use our status bar
@@ -224,10 +224,10 @@ void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
    {
       // remove toolbar here
       pFrame->DestroyToolBar(m_pMyToolBar);
-      m_pMyToolBar = NULL;
+      m_pMyToolBar = nullptr;
 
       // reset the status bar
-      pFrame->SetStatusBar(NULL);
+      pFrame->SetStatusBar(nullptr);
    }
 }
 

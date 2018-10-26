@@ -55,15 +55,15 @@ CGenCompDoc::CGenCompDoc()
    m_DocUnitServer->QueryInterface(&m_DocConvert);
 
 
-   CReportBuilder* pRptBuilder = new CReportBuilder(_T("GenComp"));
+   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("GenComp")));
 
-   boost::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(new CGenCompTitlePageBuilder());
+   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CGenCompTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   boost::shared_ptr<CChapterBuilder> pChBuilder( new CGenCompChapterBuilder(this) );
+   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CGenCompChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
-   m_RptMgr.AddReportBuilder(pRptBuilder);
+   m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
    UIHints(FALSE); // not using UIHints feature
 }
@@ -110,7 +110,7 @@ BOOL CGenCompDoc::OnNewDocument()
       return FALSE;
 
    m_GenCompXML = CreateGenCompModel();
-   if ( m_GenCompXML.get() == NULL )
+   if ( m_GenCompXML.get() == nullptr )
       return FALSE;
 
    return TRUE;
@@ -119,7 +119,7 @@ BOOL CGenCompDoc::OnNewDocument()
 BOOL CGenCompDoc::OpenTheDocument(LPCTSTR lpszPathName)
 {
    m_GenCompXML = CreateGenCompModel(lpszPathName,m_DocUnitServer);
-   return m_GenCompXML.get() == NULL ? FALSE : TRUE;
+   return m_GenCompXML.get() == nullptr ? FALSE : TRUE;
 }
 
 BOOL CGenCompDoc::SaveTheDocument(LPCTSTR lpszPathName)
@@ -207,7 +207,7 @@ const std::vector<std::pair<Float64,Float64>>& CGenCompDoc::GetPrimaryPoints()
    ShapeType::Point_sequence::iterator end(points.end());
    for ( ; iter != end; iter++ )
    {
-      m_PrimaryPoints.push_back(std::make_pair<Float64,Float64>(iter->X(),iter->Y()));
+      m_PrimaryPoints.push_back(std::make_pair(iter->X(),iter->Y()));
    }
    return m_PrimaryPoints;
 }
@@ -241,7 +241,7 @@ const std::vector<std::pair<Float64,Float64>>& CGenCompDoc::GetSecondaryPoints()
    ShapeType::Point_sequence::iterator end(points.end());
    for ( ; iter != end; iter++ )
    {
-      m_SecondaryPoints.push_back(std::make_pair<Float64,Float64>(iter->X(),iter->Y()));
+      m_SecondaryPoints.push_back(std::make_pair(iter->X(),iter->Y()));
    }
    return m_SecondaryPoints;
 }

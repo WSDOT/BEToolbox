@@ -34,7 +34,7 @@ CSpectraChapterBuilder::CSpectraChapterBuilder(CSpectraDoc* pDoc)
 
 CSpectraChapterBuilder::~CSpectraChapterBuilder(void)
 {
-   BOOST_FOREACH(std::_tstring& file,m_TemporaryFiles)
+   for (const auto& file : m_TemporaryFiles)
    {
       ::DeleteFile( file.c_str() );
    }

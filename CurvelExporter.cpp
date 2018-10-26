@@ -35,8 +35,8 @@
 class CSuperelevationValidator : public CMultiChoiceValidator
 {
 public:
-   virtual BOOL IsValid(const std::vector<int>& options);
-   virtual void DisplayValidationErrorMessage();
+   virtual BOOL IsValid(const std::vector<int>& options) override;
+   virtual void DisplayValidationErrorMessage() override;
 
 private:
    CString m_strMessage;
@@ -119,7 +119,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
 	CFileDialog fileDlg(FALSE,_T("curvel"),_T("Example1a.curvel"),OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Curvel File (*.curvel)|*.curvel||"));
 	if (fileDlg.DoModal() == IDOK)
 	{
-      std::auto_ptr<Curvel> curvelXML( CreateCurvelModel() ); // create an empty/default model
+      std::unique_ptr<Curvel> curvelXML( CreateCurvelModel() ); // create an empty/default model
 
       // Provide a <UnitsDeclaration>
       OpenBridgeML::Units::UnitsDeclarationType unitsDeclaration;
@@ -288,7 +288,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
 	if (fileDlg.DoModal() == IDOK)
 	{
       GET_IFACE2(pBroker,IRoadwayData,pRoadway);
-      std::auto_ptr<Curvel> curvelXML( CreateCurvelModel() ); // create a default curvel model
+      std::unique_ptr<Curvel> curvelXML( CreateCurvelModel() ); // create a default curvel model
 
       ///////////////////////////////////////////////////////////////
       // Export vertical profile

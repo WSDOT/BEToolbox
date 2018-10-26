@@ -63,9 +63,9 @@ BOOL CGenCompChildFrame::PreCreateWindow(CREATESTRUCT& cs)
    
    // I have no idea why, but creating this window fail the second time a BEToolbox document
    // is created in a single BridgeLink run. For some reason, MFC determines the wrong
-   // class name. lpszClass is NULL the first time this window is created successfully, so
-   // we'll force it to NULL here so it works on subsequent creation attempts
-   cs.lpszClass = NULL;
+   // class name. lpszClass is nullptr the first time this window is created successfully, so
+   // we'll force it to nullptr here so it works on subsequent creation attempts
+   cs.lpszClass = nullptr;
 
    return CEAFChildFrame::PreCreateWindow(cs);
 }
@@ -100,7 +100,7 @@ void CGenCompChildFrame::OnUpdate()
    if ( pDoc )
    {
       pDoc->SetModifiedFlag();
-      pDoc->UpdateAllViews(NULL);
+      pDoc->UpdateAllViews(nullptr);
    }
 }
 

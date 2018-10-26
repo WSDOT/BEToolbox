@@ -141,7 +141,7 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
 
       Float64 EcDeck = pMaterials->GetDeckEc(intervalIdx);
 
-      std::auto_ptr<GenComp> genCompXML( CreateGenCompModel() );
+      std::unique_ptr<GenComp> genCompXML( CreateGenCompModel() );
       ShapeType& primaryShapeXML(genCompXML->PrimaryShape());
       ShapeType::Point_sequence& primaryShapePointsXML(primaryShapeXML.Point());
       ShapeType& secondaryShapeXML(genCompXML->SecondaryShape());

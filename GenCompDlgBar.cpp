@@ -35,8 +35,8 @@ IMPLEMENT_DYNAMIC(CGenCompDialogBar, CDialogBar)
 
 CGenCompDialogBar::CGenCompDialogBar()
 {
-   m_pPrimaryGrid = NULL;
-   m_pSecondaryGrid = NULL;
+   m_pPrimaryGrid = nullptr;
+   m_pSecondaryGrid = nullptr;
 }
 
 CGenCompDialogBar::~CGenCompDialogBar()

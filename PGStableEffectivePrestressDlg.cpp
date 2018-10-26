@@ -34,7 +34,7 @@
 
 IMPLEMENT_DYNAMIC(CPGStableEffectivePrestressDlg, CDialog)
 
-CPGStableEffectivePrestressDlg::CPGStableEffectivePrestressDlg(CWnd* pParent /*=NULL*/)
+CPGStableEffectivePrestressDlg::CPGStableEffectivePrestressDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(CPGStableEffectivePrestressDlg::IDD, pParent)
 {
 

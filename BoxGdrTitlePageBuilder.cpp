@@ -40,7 +40,7 @@ CBoxGdrTitlePageBuilder::~CBoxGdrTitlePageBuilder(void)
 {
 }
 
-rptChapter* CBoxGdrTitlePageBuilder::Build(boost::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CBoxGdrTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 

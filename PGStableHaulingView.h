@@ -55,24 +55,24 @@ protected:
 public:
 	enum { IDD = IDD_PGSTABLEHAULINGVIEW };
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
-   virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext);
+   virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext) override;
 
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
-   virtual void OnActivateView();
-   virtual void OnDeactivateView();
+   virtual void OnActivateView() override;
+   virtual void OnDeactivateView() override;
 
-   boost::shared_ptr<CReportSpecification> m_pRptSpec;
-   boost::shared_ptr<CReportBrowser> m_pBrowser; // this is the actual browser window that displays the report
+   std::shared_ptr<CReportSpecification> m_pRptSpec;
+   std::shared_ptr<CReportBrowser> m_pBrowser; // this is the actual browser window that displays the report
    void RefreshReport();
 
    void UpdateFpeControls();
@@ -89,10 +89,10 @@ public:
    afx_msg void OnClickedHaulingTensionMaxSuper();
    afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
    afx_msg void OnCmenuSelected(UINT id);
-   virtual void OnInitialUpdate();
+   virtual void OnInitialUpdate() override;
 
 protected:
-   virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+   virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/) override;
 public:
    afx_msg void OnSize(UINT nType, int cx, int cy);
    afx_msg void OnWindTypeChanged();

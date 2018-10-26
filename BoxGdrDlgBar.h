@@ -34,7 +34,7 @@ public:
 	CBoxGdrDialogBar();
 	virtual ~CBoxGdrDialogBar();
 
-   virtual BOOL Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UINT nID);
+   virtual BOOL Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UINT nID) override;
 
    void AddProblem();
    void RemoveSelectedProblems();
@@ -49,7 +49,7 @@ protected:
    void AssertValid() const;
 #endif
 
-   virtual void DoDataExchange(CDataExchange* pDX);
+   virtual void DoDataExchange(CDataExchange* pDX) override;
    void InitGrid();
 
    CBoxGdrDimensionGrid* m_pGrid;

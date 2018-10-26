@@ -87,11 +87,11 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
    CBoxGdrDocTemplate* pBoxGdrDocTemplate;
 	pBoxGdrDocTemplate = new CBoxGdrDocTemplate(
       IDR_BOXGDR,
-      NULL,
+      nullptr,
 		RUNTIME_CLASS(CBoxGdrDoc),
 		RUNTIME_CLASS(CBoxGdrChildFrame),
 		RUNTIME_CLASS(CBoxGdrRptView),
-      NULL,1);
+      nullptr,1);
 
    vDocTemplates.push_back(pBoxGdrDocTemplate);
 
@@ -99,11 +99,11 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
    CGenCompDocTemplate* pGenCompDocTemplate;
 	pGenCompDocTemplate = new CGenCompDocTemplate(
       IDR_GENCOMP,
-      NULL,
+      nullptr,
 		RUNTIME_CLASS(CGenCompDoc),
 		RUNTIME_CLASS(CGenCompChildFrame),
 		RUNTIME_CLASS(CGenCompRptView),
-      NULL,1);
+      nullptr,1);
 
    vDocTemplates.push_back(pGenCompDocTemplate);
 
@@ -111,11 +111,11 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
    CGirCompDocTemplate* pGirCompDocTemplate;
 	pGirCompDocTemplate = new CGirCompDocTemplate(
       IDR_GIRCOMP,
-      NULL,
+      nullptr,
 		RUNTIME_CLASS(CGirCompDoc),
 		RUNTIME_CLASS(CGirCompChildFrame),
 		RUNTIME_CLASS(CGirCompRptView),
-      NULL,1);
+      nullptr,1);
 
    vDocTemplates.push_back(pGirCompDocTemplate);
 
@@ -123,11 +123,11 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
    CUltColDocTemplate* pUltColDocTemplate;
 	pUltColDocTemplate = new CUltColDocTemplate(
       IDR_ULTCOL,
-      NULL,
+      nullptr,
 		RUNTIME_CLASS(CUltColDoc),
 		RUNTIME_CLASS(CUltColChildFrame),
 		RUNTIME_CLASS(CUltColView),
-      NULL,1);
+      nullptr,1);
 
    vDocTemplates.push_back(pUltColDocTemplate);
 
@@ -135,11 +135,11 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
    CCurvelDocTemplate* pCurvelDocTemplate;
 	pCurvelDocTemplate = new CCurvelDocTemplate(
       IDR_CURVEL,
-      NULL,
+      nullptr,
 		RUNTIME_CLASS(CCurvelDoc),
 		RUNTIME_CLASS(CCurvelChildFrame),
 		RUNTIME_CLASS(CCurvelRptView),
-      NULL,1);
+      nullptr,1);
 
    vDocTemplates.push_back(pCurvelDocTemplate);
 
@@ -148,11 +148,11 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
    CPGStableDocTemplate* pPGStableDocTemplate;
 	pPGStableDocTemplate = new CPGStableDocTemplate(
       IDR_PGSTABLE,
-      NULL,
+      nullptr,
 		RUNTIME_CLASS(CPGStableDoc),
 		RUNTIME_CLASS(CPGStableChildFrame),
 		RUNTIME_CLASS(CPGStableTabView),
-      NULL,1);
+      nullptr,1);
 
    vDocTemplates.push_back(pPGStableDocTemplate);
 
@@ -160,11 +160,11 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
    CSpectraDocTemplate* pSpectraDocTemplate;
    pSpectraDocTemplate = new CSpectraDocTemplate(
       IDR_SPECTRA,
-      NULL,
+      nullptr,
       RUNTIME_CLASS(CSpectraDoc),
       RUNTIME_CLASS(CSpectraChildFrame),
       RUNTIME_CLASS(CSpectraRptView),
-      NULL,1);
+      nullptr,1);
 
    vDocTemplates.push_back(pSpectraDocTemplate);
 
@@ -173,7 +173,7 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
 
 HMENU CBEToolboxPlugin::GetSharedMenuHandle()
 {
-   return NULL;
+   return nullptr;
 }
 
 CString CBEToolboxPlugin::GetName()

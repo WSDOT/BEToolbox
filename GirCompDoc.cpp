@@ -62,15 +62,15 @@ IMPLEMENT_DYNCREATE(CGirCompDoc, CBEToolboxDoc)
 
 CGirCompDoc::CGirCompDoc()
 {
-   CReportBuilder* pRptBuilder = new CReportBuilder(_T("GirComp"));
+   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("GirComp")));
 
-   boost::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(new CGirCompTitlePageBuilder());
+   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CGirCompTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   boost::shared_ptr<CChapterBuilder> pChBuilder( new CGirCompChapterBuilder(this) );
+   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CGirCompChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
-   m_RptMgr.AddReportBuilder(pRptBuilder);
+   m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
    UIHints(FALSE); // not using UIHints feature
 }

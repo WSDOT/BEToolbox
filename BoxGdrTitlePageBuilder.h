@@ -31,9 +31,9 @@ public:
    CBoxGdrTitlePageBuilder(const CBoxGdrTitlePageBuilder& other);
    ~CBoxGdrTitlePageBuilder(void);
 
-   virtual rptChapter* Build(boost::shared_ptr<CReportSpecification>& pRptSpec);
+   virtual rptChapter* Build(std::shared_ptr<CReportSpecification>& pRptSpec) override;
 
-   virtual CTitlePageBuilder* Clone() const;
+   virtual CTitlePageBuilder* Clone() const override;
 
 private:
    std::_tstring m_strImagePath;

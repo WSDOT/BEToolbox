@@ -209,7 +209,7 @@ HRESULT CPGStableStrands::Save(IStructuredSave* pStrSave)
    }
    else
    {
-      BOOST_FOREACH(CPGStableFpe& fpe,m_vFpe)
+      for (const auto& fpe : m_vFpe)
       {
          pStrSave->BeginUnit(_T("Fpe"),1.0);
          pStrSave->put_Property(_T("X"),CComVariant(fpe.X));

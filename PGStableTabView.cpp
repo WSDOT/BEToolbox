@@ -36,7 +36,7 @@ IMPLEMENT_DYNCREATE(CPGStableTabView, CTabView)
 
 CPGStableTabView::CPGStableTabView()
 {
-   m_pLastView = NULL;
+   m_pLastView = nullptr;
 }
 
 CPGStableTabView::~CPGStableTabView()
