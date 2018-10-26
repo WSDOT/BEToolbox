@@ -191,10 +191,10 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->TemplateSegmentSlope(CComVariant(bvcStation),1,&slope);
+      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(bvcStation),1,&slope);
       (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->TemplateSegmentSlope(CComVariant(bvcStation),2,&slope);
+      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(bvcStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -230,10 +230,10 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->TemplateSegmentSlope(CComVariant(evcStation),1,&slope);
+      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(evcStation),1,&slope);
       (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->TemplateSegmentSlope(CComVariant(evcStation),2,&slope);
+      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(evcStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -269,10 +269,10 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->TemplateSegmentSlope(CComVariant(lpStation),1,&slope);
+      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(lpStation),1,&slope);
       (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->TemplateSegmentSlope(CComVariant(lpStation),2,&slope);
+      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(lpStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -307,10 +307,10 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->TemplateSegmentSlope(CComVariant(hpStation),1,&slope);
+      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(hpStation),1,&slope);
       (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->TemplateSegmentSlope(CComVariant(hpStation),2,&slope);
+      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(hpStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -368,10 +368,10 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
             (*pTable)(row,col++) << alignment.SetValue(elevation);
 
             Float64 slope;
-            m_Profile->TemplateSegmentSlope(CComVariant(station.Station),1,&slope);
+            m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(station.Station),1,&slope);
             (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-            m_Profile->TemplateSegmentSlope(CComVariant(station.Station),2,&slope);
+            m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(station.Station),2,&slope);
             (*pTable)(row,col++) << scalar.SetValue(slope);
          }
       }
@@ -404,10 +404,10 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
                (*pTable)(row,col++) << alignment.SetValue(elevation);
 
                Float64 slope;
-               m_Profile->TemplateSegmentSlope(CComVariant(station),1,&slope);
+               m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(station),1,&slope);
                (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-               m_Profile->TemplateSegmentSlope(CComVariant(station),2,&slope);
+               m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(station),2,&slope);
                (*pTable)(row,col++) << scalar.SetValue(slope);
            }
          }
@@ -531,10 +531,10 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
          (*pTable)(row,col++) << alignment.SetValue(elevation);
 
          Float64 slope;
-         m_Profile->TemplateSegmentSlope(CComVariant(offsetStation),1,&slope);
+         m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(offsetStation),1,&slope);
          (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-         m_Profile->TemplateSegmentSlope(CComVariant(offsetStation),2,&slope);
+         m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(offsetStation),2,&slope);
          (*pTable)(row,col++) << scalar.SetValue(slope);
       }
    }
@@ -600,17 +600,24 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
    CComPtr<ISurface> surface;
    surface.CoCreateInstance(CLSID_Surface);
    surfaces->Add(surface);
+   surface->put_ID(COGO_FINISHED_SURFACE_ID);
 
    CComPtr<ISurfaceTemplateCollection> templates;
    surface->get_SurfaceTemplates(&templates);
 
    surface->put_AlignmentPoint(2);
    if ( 0 < profileGradeOffset )
+   {
       surface->put_ProfileGradePoint(3);
+   }
    else if ( profileGradeOffset < 0 )
+   {
       surface->put_ProfileGradePoint(1);
+   }
    else
+   {
       surface->put_ProfileGradePoint(2);
+   }
 
    // determine the size of the surface
    Float64 minStation = DBL_MAX;
