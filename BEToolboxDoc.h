@@ -65,6 +65,7 @@ protected:
 
    virtual void OnOldFormat(LPCTSTR lpszPathName);
 
+   virtual UINT GetToolbarID();
    virtual HINSTANCE GetResourceInstance();
    virtual void UpdateApplicationIcon();
    virtual void ResetApplicationIcon();

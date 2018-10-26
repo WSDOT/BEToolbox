@@ -49,6 +49,11 @@
 #include "CurvelRptView.h"
 #include "CurvelChildFrame.h"
 
+#include "PGStableDocTemplate.h"
+#include "PGStableDoc.h"
+#include "PGStableTabView.h"
+#include "PGStableChildFrame.h"
+
 #include <MFCTools\VersionInfo.h>
 
 
@@ -132,6 +137,19 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
       NULL,1);
 
    vDocTemplates.push_back(pCurvelDocTemplate);
+
+
+
+ //  CPGStableDocTemplate* pPGStableDocTemplate;
+	//pPGStableDocTemplate = new CPGStableDocTemplate(
+ //     IDR_PGSTABLE,
+ //     NULL,
+	//	RUNTIME_CLASS(CPGStableDoc),
+	//	RUNTIME_CLASS(CPGStableChildFrame),
+	//	RUNTIME_CLASS(CPGStableTabView),
+ //     NULL,1);
+
+ //  vDocTemplates.push_back(pPGStableDocTemplate);
 
    return vDocTemplates;
 }

@@ -107,18 +107,7 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    pPara = new rptParagraph;
    (*pChapter) << pPara;
 
-   rptRcTable* pLayoutTable = new rptRcTable(4,0.0);
-   pLayoutTable->SetStyleName(_T("NormalRow"));
-   pLayoutTable->SetOutsideBorderStyle(rptRiStyle::NOBORDER);
-   pLayoutTable->SetInsideBorderStyle(rptRiStyle::NOBORDER);
-   pLayoutTable->SetTableHeaderStyle(_T("NormalRow"));
-   pLayoutTable->SetNumberOfHeaderRows(0);
-   pLayoutTable->SetCellPad(0.125);
-
-   pLayoutTable->SetColumnStyle(0,_T("LayoutCell"));
-   pLayoutTable->SetColumnStyle(1,_T("LayoutCell"));
-   pLayoutTable->SetColumnStyle(2,_T("LayoutCell"));
-   pLayoutTable->SetColumnStyle(3,_T("LayoutCell"));
+   rptRcTable* pLayoutTable = rptStyleManager::CreateLayoutTable(4);
 
    (*pPara) << pLayoutTable;
 
@@ -127,46 +116,14 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  length, pDispUnits->ComponentDim, false);
 
-   rptRcTable* pPrimaryPointsTable = new rptRcTable(2,1.5);
-   pPrimaryPointsTable->TableCaption().SetStyleName(_T("TableTitle"));
-   pPrimaryPointsTable->TableCaption() << _T("Basic Section");
-   pPrimaryPointsTable->SetTableHeaderStyle( _T("ColumnHeading") );
-   pPrimaryPointsTable->SetOutsideBorderStyle( rptRiStyle::HAIR_THICK );
-   pPrimaryPointsTable->SetInsideBorderStyle( rptRiStyle::NOBORDER );
-   pPrimaryPointsTable->SetCellPad( 0.03125 );
-
-   pPrimaryPointsTable->EnableRowStriping(true);
-
-   ColumnIndexType numColumns = pPrimaryPointsTable->GetNumberOfColumns();
-
-   for ( ColumnIndexType i = 0; i < numColumns; i++ )
-   {
-      pPrimaryPointsTable->SetColumnStyle( i, _T("NormalRow") );
-      pPrimaryPointsTable->SetStripeRowColumnStyle( i, _T("StripedRow") );
-   }
+   rptRcTable* pPrimaryPointsTable = rptStyleManager::CreateDefaultTable(2,_T("Basic Section"));
 
    (*pLayoutTable)(0,0) << pPrimaryPointsTable;
    (*pPrimaryPointsTable)(0,0) << COLHDR(_T("X"),rptLengthUnitTag, pDispUnits->ComponentDim);
    (*pPrimaryPointsTable)(0,1) << COLHDR(_T("Y"),rptLengthUnitTag, pDispUnits->ComponentDim);
 
 
-   rptRcTable* pSecondaryPointsTable = new rptRcTable(2,1.5);
-   pSecondaryPointsTable->TableCaption().SetStyleName(_T("TableTitle"));
-   pSecondaryPointsTable->TableCaption() << _T("Composite Piece");
-   pSecondaryPointsTable->SetTableHeaderStyle( _T("ColumnHeading") );
-   pSecondaryPointsTable->SetOutsideBorderStyle( rptRiStyle::HAIR_THICK );
-   pSecondaryPointsTable->SetInsideBorderStyle( rptRiStyle::NOBORDER );
-   pSecondaryPointsTable->SetCellPad( 0.03125 );
-
-   pSecondaryPointsTable->EnableRowStriping(true);
-
-   numColumns = pSecondaryPointsTable->GetNumberOfColumns();
-
-   for ( ColumnIndexType i = 0; i < numColumns; i++ )
-   {
-      pSecondaryPointsTable->SetColumnStyle( i, _T("NormalRow") );
-      pSecondaryPointsTable->SetStripeRowColumnStyle( i, _T("StripedRow") );
-   }
+   rptRcTable* pSecondaryPointsTable = rptStyleManager::CreateDefaultTable(2,_T("Composite Piece"));
 
    (*pLayoutTable)(0,1) << pSecondaryPointsTable;
    (*pSecondaryPointsTable)(0,0) << COLHDR(_T("X"),rptLengthUnitTag, pDispUnits->ComponentDim);

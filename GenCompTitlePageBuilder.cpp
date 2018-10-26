@@ -47,19 +47,19 @@ rptChapter* CGenCompTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificati
 
    rptChapter* pTitlePage = new rptChapter;
 
-   rptParagraph* pPara = new rptParagraph(_T("ReportTitle"));
+   rptParagraph* pPara = new rptParagraph(rptStyleManager::GetReportTitleStyle());
    (*pTitlePage) << pPara;
    (*pPara) << _T("BEToolbox") << Super(symbol(TRADEMARK)) << rptNewLine;
 
-   pPara = new rptParagraph(_T("ReportSubtitle"));
+   pPara = new rptParagraph(rptStyleManager::GetReportSubtitleStyle());
    *pTitlePage << pPara;
    (*pPara) << _T("General Composite Section Properties") << rptNewLine;
 
-   pPara = new rptParagraph(_T("CopyrightText"));
+   pPara = new rptParagraph(rptStyleManager::GetCopyrightStyle());
    *pTitlePage << pPara;
    *pPara << _T("Copyright ") << symbol(COPYRIGHT) << _T(" ") << sysDate().Year() << _T(", WSDOT, All Rights Reserved") << rptNewLine;
 
-   pPara = new rptParagraph(_T("ReportSubtitle"));
+   pPara = new rptParagraph(rptStyleManager::GetReportSubtitleStyle());
    *pTitlePage << pPara;
 
    CVersionInfo verInfo;

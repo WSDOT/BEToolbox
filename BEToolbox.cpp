@@ -25,14 +25,30 @@
 
 #include "stdafx.h"
 #include "resource.h"
+#include <initguid.h>
 #include "BEToolbox_i.h"
 #include "dllmain.h"
 
-#include <initguid.h>
 #include <EAF\EAFAppPlugin.h>
 #include <System\ComCatMgr.h>
 
 #include <BridgeLinkCATID.h>
+#include "PGSuperCatCom.h"
+#include "PGSpliceCatCom.h"
+#include <WBFLCore_i.c>
+#include <PGSuperIEPlugin_i.c>
+
+#include <EAF\EAFDocument.h>
+#include <EAF\EAFDisplayUnits.h>
+
+#include <IFace\Intervals.h>
+#include <IFace\Bridge.h>
+#include <IFace\Project.h>
+#include <IFace\GirderHandlingSpecCriteria.h>
+#include <IFace\PrestressForce.h>
+#include <IFace\AnalysisResults.h>
+#include <IFace\DocumentType.h>
+#include <IFace\Selection.h>
 
 // Used to determine whether the DLL can be unloaded by OLE
 STDAPI DllCanUnloadNow(void)
@@ -58,6 +74,55 @@ HRESULT Register(bool bRegister)
    hr = sysComCatMgr::RegWithCategory(CLSID_BEToolboxPlugin, CATID_BridgeLinkAppPlugin, bRegister);
    if ( FAILED(hr) )
       return hr;
+
+
+   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelImporter,  CATID_PGSuperDataImporter,    bRegister);
+   if ( FAILED(hr) )
+   {
+      return hr;
+   }
+
+   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelImporter,  CATID_PGSpliceDataImporter,    bRegister);
+   if ( FAILED(hr) )
+   {
+      return hr;
+   }
+
+   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelExporter,  CATID_PGSuperDataExporter,    bRegister);
+   if ( FAILED(hr) )
+   {
+      return hr;
+   }
+
+   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelExporter,  CATID_PGSpliceDataExporter,    bRegister);
+   if ( FAILED(hr) )
+   {
+      return hr;
+   }
+
+   hr = sysComCatMgr::RegWithCategory(CLSID_GenCompExporter,  CATID_PGSuperDataExporter,    bRegister);
+   if ( FAILED(hr) )
+   {
+      return hr;
+   }
+
+   hr = sysComCatMgr::RegWithCategory(CLSID_GenCompExporter,  CATID_PGSpliceDataExporter,    bRegister);
+   if ( FAILED(hr) )
+   {
+      return hr;
+   }
+
+   hr = sysComCatMgr::RegWithCategory(CLSID_PGStableExporter,  CATID_PGSuperDataExporter,    bRegister);
+   if ( FAILED(hr) )
+   {
+      return hr;
+   }
+
+   hr = sysComCatMgr::RegWithCategory(CLSID_PGStableExporter,  CATID_PGSpliceDataExporter,    bRegister);
+   if ( FAILED(hr) )
+   {
+      return hr;
+   }
 
    return S_OK;
 }

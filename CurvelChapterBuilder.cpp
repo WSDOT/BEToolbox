@@ -73,7 +73,7 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
 
-   pPara = new rptParagraph(_T("Headings"));
+   pPara = new rptParagraph(rptStyleManager::GetHeadingStyle());
    (*pChapter) << pPara;
    *pPara << _T("Vertical Curve Data");
 
@@ -99,14 +99,14 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    if ( pTheRptSpec->CorrectForSuperelevation() )
    {
-      pPara = new rptParagraph(_T("Headings"));
+      pPara = new rptParagraph(rptStyleManager::GetHeadingStyle());
       (*pChapter) << pPara;
       *pPara << _T("Superelevation Data");
 
       pPara = new rptParagraph;
       (*pChapter) << pPara;
 
-      rptRcTable* pTable = CreateTable(3);
+      rptRcTable* pTable = rptStyleManager::CreateDefaultTable(3);
       *pPara << pTable << rptNewLine;
 
       *pPara << _T("The profile grade point is ") << RPT_OFFSET(pTheRptSpec->GetProfileGradeOffset(),alignment) << _T(" of crown point");
@@ -127,16 +127,14 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    alignment.ShowUnitTag(false);
 
-   pPara = new rptParagraph(_T("Headings"));
+   pPara = new rptParagraph(rptStyleManager::GetHeadingStyle());
    (*pChapter) << pPara;
    *pPara << _T("Vertical Curve Elevations");
 
    pPara = new rptParagraph;
    (*pChapter) << pPara;
 
-   rptRcTable* pTable = CreateTable(bCorrectForSuperelevation ? 8 : 4);
-   pTable->SetColumnStyle(0,_T("NormalRowLJ"));
-   pTable->SetStripeRowColumnStyle(0,_T("StripedRowLJ"));
+   rptRcTable* pTable = rptStyleManager::CreateDefaultTable(bCorrectForSuperelevation ? 8 : 4);
    *pPara << pTable << rptNewLine;
 
 
@@ -319,14 +317,14 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    if ( 0 < stations.size() + ranges.size() ) 
    {
       // report input stations
-      pPara = new rptParagraph(_T("Headings"));
+      pPara = new rptParagraph(rptStyleManager::GetHeadingStyle());
       (*pChapter) << pPara;
       *pPara << _T("Elevations");
 
       pPara = new rptParagraph;
       (*pChapter) << pPara;
 
-      pTable = CreateTable(bCorrectForSuperelevation ? 7 : 3);
+      pTable = rptStyleManager::CreateDefaultTable(bCorrectForSuperelevation ? 7 : 3);
       *pPara << pTable << rptNewLine;
 
       col = 0;
@@ -417,14 +415,14 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    const std::vector<SkewLine>& skewLines(pTheRptSpec->GetSkewLines());
    if ( 0 < skewLines.size() )
    {
-      pPara = new rptParagraph(_T("Headings"));
+      pPara = new rptParagraph(rptStyleManager::GetHeadingStyle());
       (*pChapter) << pPara;
       *pPara << _T("Skew Line Elevations");
 
       pPara = new rptParagraph;
       (*pChapter) << pPara;
 
-      pTable = CreateTable(12);
+      pTable = rptStyleManager::CreateDefaultTable(12);
       *pPara << pTable << rptNewLine;
 
 

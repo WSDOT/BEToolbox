@@ -1,0 +1,26 @@
+HKCR
+{
+	BEToolbox.PGStableExporter.1 = s 'PGStable Exporter'
+	{
+		CLSID = s '{FF96408C-27B3-4288-8A44-6F80652BE187}'
+	}
+	BEToolbox.PGStableExporter = s 'PGStable Exporter'
+	{
+		CLSID = s '{FF96408C-27B3-4288-8A44-6F80652BE187}'
+		CurVer = s 'BEToolbox.PGStableExporter.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {FF96408C-27B3-4288-8A44-6F80652BE187} = s 'PGStable Exporter'
+		{
+			ProgID = s 'BEToolbox.PGStableExporter.1'
+			VersionIndependentProgID = s 'BEToolbox.PGStableExporter'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{3B6BF48B-C530-486E-918F-7705E13D6330}'
+		}
+	}
+}

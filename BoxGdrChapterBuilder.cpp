@@ -71,23 +71,8 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    pPara = new rptParagraph;
    (*pChapter) << pPara;
 
-   rptRcTable* pTable = new rptRcTable(22,0.);
-   (*pPara) << pTable << rptNewLine;
-
-   pTable->SetTableHeaderStyle( _T("ColumnHeading") );
-   pTable->SetOutsideBorderStyle( rptRiStyle::HAIR_THICK );
-   pTable->SetInsideBorderStyle( rptRiStyle::NOBORDER );
-   pTable->SetCellPad( 0.03125 );
-
-   pTable->EnableRowStriping(true);
-
-   ColumnIndexType numColumns = pTable->GetNumberOfColumns();
-
-   for ( ColumnIndexType i = 0; i < numColumns; i++ )
-   {
-      pTable->SetColumnStyle( i, _T("NormalRow") );
-      pTable->SetStripeRowColumnStyle( i, _T("StripedRow") );
-   }
+   rptRcTable* pTable = rptStyleManager::CreateDefaultTable(22);
+   *pPara << pTable << rptNewLine;
 
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
