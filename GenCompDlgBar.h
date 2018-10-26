@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -64,6 +64,6 @@ protected:
    virtual void DoDataExchange(CDataExchange* pDX);
    void InitGrids();
 
-   CGenCompDimensionGrid m_PrimaryGrid;
-   CGenCompDimensionGrid m_SecondaryGrid;
+   CGenCompDimensionGrid* m_pPrimaryGrid;
+   CGenCompDimensionGrid* m_pSecondaryGrid;
 };

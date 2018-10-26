@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -47,7 +47,14 @@ BEGIN_MESSAGE_MAP(CGenCompChildFrame, CEAFChildFrame)
    ON_BN_CLICKED(IDC_ADD_SECONDARY,OnAddSecondary)
    ON_BN_CLICKED(IDC_REMOVE_SECONDARY,OnRemoveSecondary)
    ON_UPDATE_COMMAND_UI(IDC_REMOVE_SECONDARY,OnUpdateRemoveSecondary)
+	ON_MESSAGE(WM_HELP, OnCommandHelp)
 END_MESSAGE_MAP()
+
+LRESULT CGenCompChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
+{
+   EAFHelp( EAFGetDocument()->GetDocumentationSetName(),IDH_GENCOMP );
+   return TRUE;
+}
 
 BOOL CGenCompChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {

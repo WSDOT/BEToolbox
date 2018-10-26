@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,14 @@ BEGIN_MESSAGE_MAP(CBoxGdrChildFrame, CEAFChildFrame)
    ON_BN_CLICKED(IDC_ADD,OnAdd)
    ON_BN_CLICKED(IDC_REMOVE,OnRemove)
    ON_UPDATE_COMMAND_UI(IDC_REMOVE,OnUpdateRemove)
+	ON_MESSAGE(WM_HELP, OnCommandHelp)
 END_MESSAGE_MAP()
+
+LRESULT CBoxGdrChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
+{
+   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_BOXGDR );
+   return TRUE;
+}
 
 BOOL CBoxGdrChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {

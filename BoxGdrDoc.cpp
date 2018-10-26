@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -59,7 +59,13 @@ CBoxGdrDoc::~CBoxGdrDoc()
 
 
 BEGIN_MESSAGE_MAP(CBoxGdrDoc, CBEToolboxDoc)
+   ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
 END_MESSAGE_MAP()
+
+void CBoxGdrDoc::OnHelpFinder()
+{
+   EAFHelp(EAFGetDocument()->GetDocumentationSetName(),IDH_BOXGDR);
+}
 
 
 // CBoxGdrDoc diagnostics
@@ -368,6 +374,12 @@ void CBoxGdrDoc::SaveDocumentSettings()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    __super::SaveDocumentSettings();
+}
+
+CString CBoxGdrDoc::GetDocumentationRootLocation()
+{
+   CEAFApp* pApp = EAFGetApp();
+   return pApp->GetDocumentationRootLocation();
 }
 
 CString CBoxGdrDoc::GetToolbarSectionName()

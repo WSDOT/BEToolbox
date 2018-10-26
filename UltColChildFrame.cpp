@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -41,7 +41,14 @@ BEGIN_MESSAGE_MAP(CUltColChildFrame, CEAFChildFrame)
    ON_BN_CLICKED(IDC_US,OnUSUnits)
    ON_BN_CLICKED(IDC_SI,OnSIUnits)
    ON_NOTIFY_EX(TTN_NEEDTEXT,0,OnToolTipNotify)
+	ON_MESSAGE(WM_HELP, OnCommandHelp)
 END_MESSAGE_MAP()
+
+LRESULT CUltColChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
+{
+   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_ULTCOL );
+   return TRUE;
+}
 
 void CUltColChildFrame::SetColumnParameters(Float64 diameter, Float64 fc, Float64 cover, Float64 As, Float64 Es, Float64 fy,Float64 ecl,Float64 etl)
 {

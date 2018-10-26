@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -35,10 +35,12 @@ IMPLEMENT_DYNAMIC(CGirCompDialogTopBar, CDialogBar)
 
 CGirCompDialogTopBar::CGirCompDialogTopBar()
 {
+   m_pGrid = NULL;
 }
 
 CGirCompDialogTopBar::~CGirCompDialogTopBar()
 {
+   delete m_pGrid;
 }
 
 
@@ -61,7 +63,7 @@ void CGirCompDialogTopBar::DoDataExchange(CDataExchange* pDX)
    int i = (pApp->GetUnitsMode() == eafTypes::umUS ? 0 : 1);
    DDX_Radio(pDX,IDC_US,i);
 
-   m_Grid.DoDataExchange(pDX);
+   m_pGrid->DoDataExchange(pDX);
 }
 
 BOOL CGirCompDialogTopBar::Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UINT nID)
@@ -74,28 +76,30 @@ BOOL CGirCompDialogTopBar::Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,
 
 void CGirCompDialogTopBar::InitGrid()
 {
-	m_Grid.SubclassDlgItem(IDC_DIMENSIONS, this);
-   m_Grid.CustomInit();
+   m_pGrid = new CGirCompDimensionGrid;
+
+	m_pGrid->SubclassDlgItem(IDC_DIMENSIONS, this);
+   m_pGrid->CustomInit();
 }
 
 void CGirCompDialogTopBar::AddProblem()
 {
-   m_Grid.AddProblem();
+   m_pGrid->AddProblem();
 }
 
 void CGirCompDialogTopBar::RemoveSelectedProblems()
 {
-   m_Grid.RemoveSelectedProblems();
+   m_pGrid->RemoveSelectedProblems();
 }
 
 BOOL CGirCompDialogTopBar::AreProblemsSelected()
 {
-   return m_Grid.AreProblemsSelected();
+   return m_pGrid->AreProblemsSelected();
 }
 
 void CGirCompDialogTopBar::OnUnitsModeChanged()
 {
-   m_Grid.OnUnitsModeChanged();
+   m_pGrid->OnUnitsModeChanged();
 }
 
 #if defined _DEBUG

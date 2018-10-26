@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -84,10 +84,13 @@ protected:
    virtual void LoadDocumentSettings();
    virtual void SaveDocumentSettings();
 
+   virtual CString GetDocumentationRootLocation();
+
    virtual void OnOldFormat(LPCTSTR lpszPathName);
 
    std::vector<BOXGDRDIMENSIONS> m_Problems;
 
+   afx_msg void OnHelpFinder();
 	DECLARE_MESSAGE_MAP()
 public:
 

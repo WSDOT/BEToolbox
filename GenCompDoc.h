@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -72,6 +72,8 @@ protected:
    virtual void LoadDocumentSettings();
    virtual void SaveDocumentSettings();
 
+   virtual CString GetDocumentationRootLocation();
+
    virtual void OnOldFormat(LPCTSTR lpszPathName);
 
    std::auto_ptr<GenComp> m_GenCompXML;
@@ -81,6 +83,7 @@ protected:
    std::vector<std::pair<Float64,Float64>> m_PrimaryPoints;
    std::vector<std::pair<Float64,Float64>> m_SecondaryPoints;
 
+   afx_msg void OnHelpFinder();
    DECLARE_MESSAGE_MAP()
 
 public:

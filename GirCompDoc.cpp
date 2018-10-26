@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -81,7 +81,13 @@ CGirCompDoc::~CGirCompDoc()
 
 
 BEGIN_MESSAGE_MAP(CGirCompDoc, CBEToolboxDoc)
+   ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
 END_MESSAGE_MAP()
+
+void CGirCompDoc::OnHelpFinder()
+{
+   EAFHelp(EAFGetDocument()->GetDocumentationSetName(),IDH_GIRCOMP);
+}
 
 
 // CGirCompDoc diagnostics
@@ -145,6 +151,12 @@ void CGirCompDoc::SaveDocumentSettings()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    __super::SaveDocumentSettings();
+}
+
+CString CGirCompDoc::GetDocumentationRootLocation()
+{
+   CEAFApp* pApp = EAFGetApp();
+   return pApp->GetDocumentationRootLocation();
 }
 
 HRESULT CGirCompDoc::WriteTheDocument(IStructuredSave* pStrSave)

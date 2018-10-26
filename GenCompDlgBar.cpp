@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -35,10 +35,14 @@ IMPLEMENT_DYNAMIC(CGenCompDialogBar, CEAFPaneDialog)
 
 CGenCompDialogBar::CGenCompDialogBar()
 {
+   m_pPrimaryGrid = NULL;
+   m_pSecondaryGrid = NULL;
 }
 
 CGenCompDialogBar::~CGenCompDialogBar()
 {
+   delete m_pPrimaryGrid;
+   delete m_pSecondaryGrid;
 }
 
 
@@ -68,8 +72,8 @@ void CGenCompDialogBar::DoDataExchange(CDataExchange* pDX)
 
    pDoc->SetModularRatio(modularRatio);
 
-   m_PrimaryGrid.DoDataExchange(pDX);
-   m_SecondaryGrid.DoDataExchange(pDX);
+   m_pPrimaryGrid->DoDataExchange(pDX);
+   m_pSecondaryGrid->DoDataExchange(pDX);
 }
 
 BOOL CGenCompDialogBar::Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UINT nID)
@@ -82,47 +86,50 @@ BOOL CGenCompDialogBar::Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UIN
 
 void CGenCompDialogBar::InitGrids()
 {
-	m_PrimaryGrid.SubclassDlgItem(IDC_PRIMARY_SHAPE_GRID, this);
-   m_PrimaryGrid.CustomInit(true);
+   m_pPrimaryGrid = new CGenCompDimensionGrid;
+   m_pSecondaryGrid = new CGenCompDimensionGrid;
 
-	m_SecondaryGrid.SubclassDlgItem(IDC_SECONDARY_SHAPE_GRID, this);
-   m_SecondaryGrid.CustomInit(false);
+	m_pPrimaryGrid->SubclassDlgItem(IDC_PRIMARY_SHAPE_GRID, this);
+   m_pPrimaryGrid->CustomInit(true);
+
+	m_pSecondaryGrid->SubclassDlgItem(IDC_SECONDARY_SHAPE_GRID, this);
+   m_pSecondaryGrid->CustomInit(false);
 }
 
 void CGenCompDialogBar::AddPrimaryPoint()
 {
-   m_PrimaryGrid.AddPoint();
+   m_pPrimaryGrid->AddPoint();
 }
 
 void CGenCompDialogBar::RemoveSelectedPrimaryPoints()
 {
-   m_PrimaryGrid.RemoveSelectedPoints();
+   m_pPrimaryGrid->RemoveSelectedPoints();
 }
 
 BOOL CGenCompDialogBar::ArePrimaryPointsSelected()
 {
-   return m_PrimaryGrid.ArePointsSelected();
+   return m_pPrimaryGrid->ArePointsSelected();
 }
 
 void CGenCompDialogBar::AddSecondaryPoint()
 {
-   m_SecondaryGrid.AddPoint();
+   m_pSecondaryGrid->AddPoint();
 }
 
 void CGenCompDialogBar::RemoveSelectedSecondaryPoints()
 {
-   m_SecondaryGrid.RemoveSelectedPoints();
+   m_pSecondaryGrid->RemoveSelectedPoints();
 }
 
 BOOL CGenCompDialogBar::AreSecondaryPointsSelected()
 {
-   return m_SecondaryGrid.ArePointsSelected();
+   return m_pSecondaryGrid->ArePointsSelected();
 }
 
 void CGenCompDialogBar::OnUnitsModeChanged()
 {
-   m_PrimaryGrid.OnUnitsModeChanged();
-   m_SecondaryGrid.OnUnitsModeChanged();
+   m_pPrimaryGrid->OnUnitsModeChanged();
+   m_pSecondaryGrid->OnUnitsModeChanged();
 }
 
 #if defined _DEBUG
