@@ -242,7 +242,7 @@ const std::vector<StationRange>& CCurvelReportSpecification::GetStationRanges() 
          StationRange sr;
          sr.StartStation = stationRange.StartStation();
          sr.EndStation   = stationRange.EndStation();
-         sr.nSpaces      = stationRange.NumSpaces();
+         sr.nSpaces      = (IndexType)stationRange.NumSpaces();
          sr.Offset       = stationRange.Offset();
          m_StationRanges.push_back(sr);
       }
@@ -283,8 +283,6 @@ void CCurvelReportSpecification::SetStationRanges(const std::vector<StationRange
 
 const std::vector<SkewLine>& CCurvelReportSpecification::GetSkewLines() const
 {
-   USES_CONVERSION;
-
    CCurvelDoc* pDoc = (CCurvelDoc*)EAFGetDocument();
    Curvel* pCurvel = pDoc->GetCurvelXML();
 
@@ -304,7 +302,7 @@ const std::vector<SkewLine>& CCurvelReportSpecification::GetSkewLines() const
          sl.Station = skewLine.Station();
          sl.OffsetType = (SkewLine::Type)(OffsetType::value)skewLine.OffsetType();
          sl.Offset = skewLine.Offset();
-         sl.strSkewAngle = A2T(skewLine.SkewAngle().c_str());
+         sl.strSkewAngle = skewLine.SkewAngle().c_str();
          sl.Radius = skewLine.Radius();
          sl.CrownOffset = skewLine.CrownOffset();
          m_SkewLines.push_back(sl);
@@ -316,8 +314,6 @@ const std::vector<SkewLine>& CCurvelReportSpecification::GetSkewLines() const
 
 void CCurvelReportSpecification::SetSkewLines(const std::vector<SkewLine>& skewLines)
 {
-   USES_CONVERSION;
-
    CCurvelDoc* pDoc = (CCurvelDoc*)EAFGetDocument();
    Curvel* pCurvel = pDoc->GetCurvelXML();
 
@@ -341,7 +337,7 @@ void CCurvelReportSpecification::SetSkewLines(const std::vector<SkewLine>& skewL
       for ( ; iter != end; iter++ )
       {
          const SkewLine& sl(*iter);
-         skewLinesContainer.push_back(SkewLineType(sl.Station,(OffsetType::value)sl.OffsetType,sl.Offset,T2A(sl.strSkewAngle.c_str()),sl.Radius,sl.CrownOffset));
+         skewLinesContainer.push_back(SkewLineType(sl.Station,(OffsetType::value)sl.OffsetType,sl.Offset,sl.strSkewAngle.c_str(),sl.Radius,sl.CrownOffset));
       }
    }
 }

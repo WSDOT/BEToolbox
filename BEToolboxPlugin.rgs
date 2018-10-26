@@ -2,16 +2,16 @@ HKCR
 {
 	BEToolbox.BEToolboxPlugin.1 = s 'BEToolbox'
 	{
-		CLSID = s '{EA33DB99-86FB-4678-9442-AB1D334456E4}'
+		CLSID = s '{B5E128D4-78F3-48e0-970E-812C2281EE4E}'
 	}
 	BEToolbox.BEToolboxPlugin = s 'BEToolbox'
 	{
-		CLSID = s '{EA33DB99-86FB-4678-9442-AB1D334456E4}'
+		CLSID = s '{B5E128D4-78F3-48e0-970E-812C2281EE4E}'
 		CurVer = s 'BEToolbox.BEToolboxPlugin.1'
 	}
 	NoRemove CLSID
 	{
-		ForceRemove {EA33DB99-86FB-4678-9442-AB1D334456E4} = s 'BEToolbox'
+		ForceRemove {B5E128D4-78F3-48e0-970E-812C2281EE4E} = s 'BEToolbox'
 		{
 			ProgID = s 'BEToolbox.BEToolboxPlugin.1'
 			VersionIndependentProgID = s 'BEToolbox.BEToolboxPlugin'

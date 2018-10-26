@@ -24,7 +24,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="\ARP\$(SolutionName)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
@@ -43,6 +43,7 @@
 			<Tool
 				Name="C++/Tree Mapping Rule"
 				AdditionalOptions="--hxx-prologue &quot;#include \&quot;BEToolboxXML.h\&quot;&quot; --cxx-prologue &quot;#include \&quot;stdafx.h\&quot;&quot;"
+				CharType="1"
 				GenSerialization="true"
 				ExportSymbol="BETOOLBOXXMLCLASS"
 			/>
@@ -80,7 +81,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies=" Xalan-C_1D.lib xerces-c_3D.lib OpenBridgeMLD.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -109,7 +110,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="\ARP\$(SolutionName)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
@@ -128,6 +129,7 @@
 			<Tool
 				Name="C++/Tree Mapping Rule"
 				AdditionalOptions="--hxx-prologue &quot;#include \&quot;BEToolboxXML.h\&quot;&quot; --cxx-prologue &quot;#include \&quot;stdafx.h\&quot;&quot;"
+				CharType="1"
 				GenSerialization="true"
 				ExportSymbol="BETOOLBOXXMLCLASS"
 			/>
@@ -166,7 +168,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies=" Xalan-C_1D.lib xerces-c_3D.lib OpenBridgeMLD.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="17"
@@ -195,7 +197,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="\ARP\$(SolutionName)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
@@ -215,6 +217,7 @@
 			<Tool
 				Name="C++/Tree Mapping Rule"
 				AdditionalOptions="--hxx-prologue &quot;#include \&quot;BEToolboxXML.h\&quot;&quot; --cxx-prologue &quot;#include \&quot;stdafx.h\&quot;&quot;"
+				CharType="1"
 				GenSerialization="true"
 				ExportSymbol="BETOOLBOXXMLCLASS"
 			/>
@@ -252,7 +255,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies=" Xalan-C_1.lib xerces-c_3.lib OpenBridgeML.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -283,7 +286,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="\ARP\$(SolutionName)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
@@ -303,6 +306,7 @@
 			<Tool
 				Name="C++/Tree Mapping Rule"
 				AdditionalOptions="--hxx-prologue &quot;#include \&quot;BEToolboxXML.h\&quot;&quot; --cxx-prologue &quot;#include \&quot;stdafx.h\&quot;&quot;"
+				CharType="1"
 				GenSerialization="true"
 				ExportSymbol="BETOOLBOXXMLCLASS"
 			/>
@@ -341,7 +345,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies=" Xalan-C_1.lib xerces-c_3.lib OpenBridgeML.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

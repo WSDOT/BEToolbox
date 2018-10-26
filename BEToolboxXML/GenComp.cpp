@@ -97,7 +97,7 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitConvert* pDocUnitConvert)
 
          // Convert the value from the specified unit of measure to the
          // consistent unit of measure defined in <UnitsDeclaration>
-         hr = convert->ConvertToBaseUnits(point.X(),A2BSTR(unit.c_str()),&value);
+         hr = convert->ConvertToBaseUnits(point.X(),T2BSTR(unit.c_str()),&value);
          ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
 
          // Put the value back into the data model and stop using the locally
@@ -114,7 +114,7 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitConvert* pDocUnitConvert)
 
          // Convert the value from the specified unit of measure to the
          // consistent unit of measure defined in <UnitsDeclaration>
-         hr = convert->ConvertToBaseUnits(point.Y(),A2BSTR(unit.c_str()),&value);
+         hr = convert->ConvertToBaseUnits(point.Y(),T2BSTR(unit.c_str()),&value);
          ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
 
          // Put the value back into the data model and stop using the locally
@@ -139,7 +139,7 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitConvert* pDocUnitConvert)
 
          // Convert the value from the specified unit of measure to the
          // consistent unit of measure defined in <UnitsDeclaration>
-         hr = convert->ConvertToBaseUnits(point.X(),A2BSTR(unit.c_str()),&value);
+         hr = convert->ConvertToBaseUnits(point.X(),T2BSTR(unit.c_str()),&value);
          ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
 
          // Put the value back into the data model and stop using the locally
@@ -156,7 +156,7 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitConvert* pDocUnitConvert)
 
          // Convert the value from the specified unit of measure to the
          // consistent unit of measure defined in <UnitsDeclaration>
-         hr = convert->ConvertToBaseUnits(point.Y(),A2BSTR(unit.c_str()),&value);
+         hr = convert->ConvertToBaseUnits(point.Y(),T2BSTR(unit.c_str()),&value);
          ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
 
          // Put the value back into the data model and stop using the locally
@@ -265,7 +265,7 @@ std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitConvert* pDo
                    // create the C++ binding
                #pragma Reminder("UPDATE: try to make the schema be a resource that is compiled into this dll")
                      xml_schema::properties props;
-                     props.no_namespace_schema_location("GenComp_Version_2.0.xsd");
+                     props.no_namespace_schema_location(_T("GenComp_Version_2.0.xsd"));
                      genCompXML = GenComp_(*theDocument.get()/*lpszPathName*/,0,props);
                 }
            }
