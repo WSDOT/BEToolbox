@@ -535,7 +535,7 @@ void CPGStablePrismaticGirder::OnGirderChanged()
       Float64 Wtf, Wbf, Hg;
       section->get_TopWidth(&Wtf);
       section->get_BottomWidth(&Wbf);
-      section->get_GirderHeight(&Hg);
+      section->get_OverallHeight(&Hg);
 
       Float64 Xleft,Ytop, Ag, Ixx, Iyy, Ixy;
       shapeProperties->get_Area(&Ag);
