@@ -121,7 +121,7 @@ BOOL CGenCompDoc::SaveTheDocument(LPCTSTR lpszPathName)
       std::ofstream file(lpszPathName);
       GenComp_(file,*m_GenCompXML);
    }
-   catch(const xml_schema::exception& e)
+   catch(const xml_schema::exception& /*e*/)
    {
 #pragma Reminder("UPDATE: provide better error handling")
       AfxMessageBox(_T("An error occured while saving the file"));
