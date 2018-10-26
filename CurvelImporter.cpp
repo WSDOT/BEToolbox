@@ -45,19 +45,19 @@ STDMETHODIMP CCurvelImporter::Init(UINT nCmdID)
    return S_OK;
 }
 
-STDMETHODIMP CCurvelImporter::GetMenuText(BSTR*  bstrText)
+STDMETHODIMP CCurvelImporter::GetMenuText(BSTR*  bstrText) const
 {
    *bstrText = CComBSTR("BEToolbox:Curve vertical profile model");
    return S_OK;
 }
 
-STDMETHODIMP CCurvelImporter::GetBitmapHandle(HBITMAP* phBmp)
+STDMETHODIMP CCurvelImporter::GetBitmapHandle(HBITMAP* phBmp) const
 {
    *phBmp = m_Bitmap;
    return S_OK;
 }
 
-STDMETHODIMP CCurvelImporter::GetCommandHintText(BSTR*  bstrText)
+STDMETHODIMP CCurvelImporter::GetCommandHintText(BSTR*  bstrText) const
 {
    *bstrText = CComBSTR("Import BEToolbox:Curvel model\nTool tip text");
    return S_OK;   

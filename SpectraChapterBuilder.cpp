@@ -514,7 +514,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
       ::DeleteFile( temp_file );
    }
 
-   std::transform(strFilename.begin(),strFilename.end(),strFilename.begin(),(int(*)(int))std::toupper);
+   std::transform(strFilename.cbegin(),strFilename.cend(),strFilename.begin(),(int(*)(int))std::toupper);
 
    // this is a const function so we have to cast away const-ness to save
    // the file name

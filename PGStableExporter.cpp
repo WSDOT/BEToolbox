@@ -62,19 +62,19 @@ STDMETHODIMP CPGStableExporter::Init(UINT nCmdID)
    return S_OK;
 }
 
-STDMETHODIMP CPGStableExporter::GetMenuText(BSTR*  bstrText)
+STDMETHODIMP CPGStableExporter::GetMenuText(BSTR*  bstrText) const
 {
    *bstrText = CComBSTR("BEToolbox:PGStable model");
    return S_OK;
 }
 
-STDMETHODIMP CPGStableExporter::GetBitmapHandle(HBITMAP* phBmp)
+STDMETHODIMP CPGStableExporter::GetBitmapHandle(HBITMAP* phBmp) const
 {
    *phBmp = m_Bitmap;
    return S_OK;
 }
 
-STDMETHODIMP CPGStableExporter::GetCommandHintText(BSTR*  bstrText)
+STDMETHODIMP CPGStableExporter::GetCommandHintText(BSTR*  bstrText) const
 {
    *bstrText = CComBSTR("Export BEToolbox:PGStable model\nTool tip text");
    return S_OK;   
@@ -175,12 +175,12 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
       CString strGirder = gs_strGirder;
 
       const GirderLibraryEntry* pGirderEntry = pBridgeDesc->GetGirder(segmentKey)->GetGirderLibraryEntry();
-      const GirderLibraryEntry::Dimensions& dimensions = pGirderEntry->GetDimensions();
+
       CComPtr<IBeamFactory> factory;
       pGirderEntry->GetBeamFactory(&factory);
 
       CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be nullptr
-      if ( splicedFactory == nullptr && factory->IsPrismatic(dimensions) )
+      if ( splicedFactory == nullptr && factory->IsPrismatic(segmentKey) )
       {
          strGirder = pBridgeDesc->GetGirder(segmentKey)->GetGirderName();
       }
@@ -221,7 +221,7 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    bool bHasDebonding = pStrandGeom->HasDebonding(segmentKey);
 
    model.SetGirderType((bIsPrismatic ? PRISMATIC : NONPRISMATIC));
-   model.SetGirder(model.GetGirderType(),*pGirder->GetSegmentStabilityModel(segmentKey));
+   model.SetGirder(model.GetGirderType(),*pGirder->GetSegmentLiftingStabilityModel(segmentKey));
 
    GET_IFACE2(pBroker,IBridge,pBridge);
    Float64 Lg = pBridge->GetSegmentLength(segmentKey);
@@ -229,14 +229,16 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    GET_IFACE2(pBroker,ISectionProperties,pSectProps);
    GET_IFACE2(pBroker,IPointOfInterest,pPoi);
    GET_IFACE2(pBroker,IPretensionForce,pPSForce);
-   std::vector<pgsPointOfInterest> vPoi(pPoi->GetPointsOfInterest(segmentKey));
+   PoiList vPoi;
+   pPoi->GetPointsOfInterest(segmentKey, &vPoi);
    CPGStableStrands liftingStrands = model.GetStrands(model.GetGirderType(),LIFTING);
    CPGStableStrands haulingStrands = model.GetStrands(model.GetGirderType(),HAULING);
    liftingStrands.strandMethod = CPGStableStrands::Detailed;
    haulingStrands.strandMethod = CPGStableStrands::Detailed;
    liftingStrands.m_vFpe.clear();
    haulingStrands.m_vFpe.clear();
-   for (const auto& poi : vPoi)
+   bool bex = false;
+   for (const pgsPointOfInterest& poi : vPoi)
    {
       Float64 X = poi.GetDistFromStart();
       if ( X < 0 || Lg < X )
@@ -245,9 +247,17 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       }
 
       Float64 Ns;
-      Float64 es = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Straight, &Ns);
+      Float64 es, esx;
+      pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight, &Ns,&esx, &es);
       Float64 eh = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped,   &Ns);
       Float64 et = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary,&Ns);
+
+      if (!bex)
+      {
+         liftingStrands.ex = esx;
+         haulingStrands.ex = esx;
+         bex = true;
+      }
 
       Float64 Ytop = pSectProps->GetY(releaseIntervalIdx,poi,pgsTypes::TopGirder);
 

@@ -30,6 +30,8 @@
 #include <MFCTools\AutoRegistry.h>
 #include <System\System.h>
 
+#include <IFace\BeamFactory.h>
+
 #include <memory>
 
 #include "PGStableTitlePageBuilder.h"
@@ -209,6 +211,8 @@ void CPGStableDoc::LoadPGSLibrary()
 
 HRESULT CPGStableDoc::WriteTheDocument(IStructuredSave* pStrSave)
 {
+   UpdateAllViews(NULL, HINT_UPDATE_DATA);
+
    pStrSave->BeginUnit(_T("ProjectProperties"),1.0);
    pStrSave->put_Property(_T("Engineer"),CComVariant(m_strEngineer));
    pStrSave->put_Property(_T("Company"),CComVariant(m_strCompany));
@@ -296,8 +300,8 @@ HRESULT CPGStableDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
       else
       {
          m_strGirder = var.bstrVal;
-         const GirderLibraryEntry* pGirder = GetGirderLibraryEntry();
-         if ( pGirder == nullptr )
+         const GirderLibraryEntry* pGirderEntry = GetGirderLibraryEntry();
+         if (pGirderEntry == nullptr || !IsPermittedGirderEntry(pGirderEntry))
          {
             m_strGirder = gs_strGirder;
          }
@@ -544,6 +548,19 @@ int CPGStableDoc::GetGirderType() const
 const stbGirder& CPGStableDoc::GetGirder(int girderType) const
 {
    return m_Model.GetGirder(girderType);
+}
+
+void CPGStableDoc::SetStressPointType(int stressPointType)
+{
+   if (m_Model.SetStressPointType(stressPointType))
+   {
+      SetModifiedFlag();
+   }
+}
+
+int CPGStableDoc::GetStressPointType() const
+{
+   return m_Model.GetStressPointType();
 }
 
 void CPGStableDoc::SetGirder(int girderType,const stbGirder& girder)
@@ -821,4 +838,14 @@ const GirderLibraryEntry* CPGStableDoc::GetGirderLibraryEntry() const
       const GirderLibrary* pLib = GetGirderLibrary();
       return (const GirderLibraryEntry*)(pLib->GetEntry(m_strGirder));
    }
+}
+
+bool CPGStableDoc::IsPermittedGirderEntry(const GirderLibraryEntry* pGirderEntry) const
+{
+   const GirderLibraryEntry::Dimensions& dimensions = pGirderEntry->GetDimensions();
+   CComPtr<IBeamFactory> factory;
+   pGirderEntry->GetBeamFactory(&factory);
+
+   CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be nullptr
+   return (splicedFactory == nullptr && factory->IsPrismatic(dimensions) ? true : false);
 }

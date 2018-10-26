@@ -27,6 +27,7 @@
 
 #include <EAF\EAFAppPlugin.h>
 #include <EAF\EAFAppPluginDocumentationImpl.h>
+#include <EAF\EAFUIIntegration.h>
 #include "BEToolbox_i.h"
 
 #if defined(_WIN32_WCE) && !defined(_CE_DCOM) && !defined(_CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA)
@@ -37,30 +38,45 @@
 
 // CBEToolboxPlugin
 
+class CBEToolboxPlugin;
+
+class CMyCmdTarget : public CCmdTarget
+{
+public:
+   CMyCmdTarget() {};
+
+   afx_msg void OnManagePlugins();
+
+   CBEToolboxPlugin* m_pMyAppPlugin;
+
+   DECLARE_MESSAGE_MAP()
+};
+
 class ATL_NO_VTABLE CBEToolboxPlugin :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CBEToolboxPlugin, &CLSID_BEToolboxPlugin>,
-	public IEAFAppPlugin
+	public IEAFAppPlugin,
+   public IEAFCommandCallback
 {
 public:
 	CBEToolboxPlugin()
 	{
-	}
+      m_MyCmdTarget.m_pMyAppPlugin = this;
+   }
 
 DECLARE_REGISTRY_RESOURCEID(IDR_BETOOLBOXPLUGIN)
 
 
 BEGIN_COM_MAP(CBEToolboxPlugin)
 	COM_INTERFACE_ENTRY(IEAFAppPlugin)
+   COM_INTERFACE_ENTRY(IEAFCommandCallback)
 END_COM_MAP()
-
-
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	HRESULT FinalConstruct()
 	{
-		return S_OK;
+      return S_OK;
 	}
 
 	void FinalRelease()
@@ -68,6 +84,9 @@ END_COM_MAP()
 	}
 
 public:
+   CMyCmdTarget m_MyCmdTarget;
+
+   void ManagePlugins();
 
 
 // IEAFAppPlugin
@@ -83,6 +102,12 @@ public:
    virtual CString GetDocumentationMapFile() override;
    virtual void LoadDocumentationMap() override;
    virtual eafTypes::HelpResult GetDocumentLocation(LPCTSTR lpszDocSetName,UINT nID,CString& strURL) override;
+
+   // IEAFCommandCallback
+public:
+   virtual BOOL OnCommandMessage(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
+   virtual BOOL GetStatusBarMessageString(UINT nID, CString& rMessage) const;
+   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
 
 private:
 

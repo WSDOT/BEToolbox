@@ -20,44 +20,8 @@
 // Bridge_Support@wsdot.wa.gov
 ///////////////////////////////////////////////////////////////////////
 
-// CurvelImporter.h : Declaration of the CCurvelImporter
-
 #pragma once
 
-#include <PGSuperIEPlugin.h>
-#include "resource.h"       // main symbols
-
-
-/////////////////////////////////////////////////////////////////////////////
-// CCurvelImporter
-class ATL_NO_VTABLE CCurvelImporter : 
-	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CCurvelImporter, &CLSID_CurvelImporter>,
-   public IPGSDataImporter
-{
-public:
-	CCurvelImporter()
-	{
-	}
-
-   HRESULT FinalConstruct();
-   CBitmap m_Bitmap;
-
-DECLARE_REGISTRY_RESOURCEID(IDR_CURVELIMPORTER)
-
-DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-BEGIN_COM_MAP(CCurvelImporter)
-	COM_INTERFACE_ENTRY(IPGSDataImporter)
-END_COM_MAP()
-
-// IPGSDataImporter
-public:
-   STDMETHOD(Init)(UINT nCmdID);
-   STDMETHOD(GetMenuText)(/*[out,retval]*/BSTR*  bstrText) const;
-   STDMETHOD(GetBitmapHandle)(/*[out]*/HBITMAP* phBmp) const;
-   STDMETHOD(GetCommandHintText)(BSTR*  bstrText) const;
-   STDMETHOD(Import)(/*[in]*/IBroker* pBroker);
-};
-
-OBJECT_ENTRY_AUTO(__uuidof(CurvelImporter), CCurvelImporter)
+// {92FD40C7-8D7A-4078-896F-E04F970C7B8B}
+DEFINE_GUID(CATID_PGStablePlugin ,
+   0x92fd40c7, 0x8d7a, 0x4078, 0x89, 0x6f, 0xe0, 0x4f, 0x97, 0xc, 0x7b, 0x8b);

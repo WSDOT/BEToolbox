@@ -81,45 +81,21 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\WBFL\WBFL.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
-    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\WBFL\WBFL.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
-    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\WBFL\WBFL.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
-    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\WBFL\WBFL.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
-    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\WBFL\WBFL.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
-    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\WBFL\WBFL.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
-    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -258,7 +234,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -366,7 +342,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -475,7 +451,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -620,6 +596,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClCompile Include="PGStablePointLoadGrid.cpp" />
     <ClCompile Include="PGStablePrismaticGirder.cpp" />
     <ClCompile Include="PGStableStrands.cpp" />
+    <ClCompile Include="PGStableStressPointGrid.cpp" />
     <ClCompile Include="PGStableTabView.cpp" />
     <ClCompile Include="PGStableTitlePageBuilder.cpp" />
     <ClCompile Include="ResponseSpectra.cpp" />
@@ -669,10 +646,12 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
+    <ClInclude Include="AutoLib.h" />
     <ClInclude Include="BEToolboxApp.h" />
     <ClInclude Include="BEToolboxColors.h" />
     <ClInclude Include="BEToolboxComponentInfo.h" />
     <ClInclude Include="BEToolboxDoc.h" />
+    <ClInclude Include="BEToolboxLib.h" />
     <ClInclude Include="BEToolboxPlugin.h" />
     <ClInclude Include="BEToolboxStatusBar.h" />
     <ClInclude Include="BEToolboxTypes.h" />
@@ -743,9 +722,11 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include="PGStableLiftingView.h" />
     <ClInclude Include="PGStableModel.h" />
     <ClInclude Include="PGStableNonprismaticGirder.h" />
+    <ClInclude Include="PGStablePluginCATID.h" />
     <ClInclude Include="PGStablePointLoadGrid.h" />
     <ClInclude Include="PGStablePrismaticGirder.h" />
     <ClInclude Include="PGStableStrands.h" />
+    <ClInclude Include="PGStableStressPointGrid.h" />
     <ClInclude Include="PGStableTabView.h" />
     <ClInclude Include="PGStableTitlePageBuilder.h" />
     <ClInclude Include="Resource.h" />

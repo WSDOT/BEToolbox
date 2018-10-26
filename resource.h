@@ -120,11 +120,16 @@
 #define IDC_IY_UNIT                     275
 #define IDC_L                           276
 #define IDC_L_UNIT                      277
-#define IDC_YT                          278
-#define IDC_YT_UNIT                     279
+#define IDC_YTOP                        278
+#define IDC_YTOP_UNIT                   279
 #define IDC_FPE_PERM                    280
+#define IDC_IXY                         280
 #define IDC_FPE_PERM_UNIT               281
+#define IDC_XLEFT_UNIT                  281
+#define IDC_XLEFT                       282
 #define IDC_E1                          282
+#define IDC_YTOP2                       282
+#define IDC_IXY_UNIT                    283
 #define IDC_E1_UNIT                     283
 #define IDC_E2                          284
 #define IDC_E2_UNIT                     285
@@ -224,6 +229,7 @@
 #define IDC_HAULING_FS_CRACKING         365
 #define IDC_ADD_LOAD                    366
 #define IDC_K1                          366
+#define IDC_STRESS_POINT_GRID           366
 #define IDC_REMOVE_LOAD                 367
 #define IDC_GIRDER_SECTION_GRID         368
 #define IDC_ADD_SECTION                 369
@@ -314,6 +320,15 @@
 #define IDC_LNG_RANGE                   449
 #define IDC_DESCRIPTION                 450
 #define IDC_CAMBER_MULTIPLIER           452
+#define IDC_PRECAMBER                   453
+#define IDC_PRECAMBER_UNIT              454
+#define IDC_COMPUTE_STRESS_POINTS       457
+#define IDC_DEFINE_STRESS_POINTS        458
+#define IDC_EX                          459
+#define IDC_EX_UNIT                     460
+#define IDC_LATERAL_CAMBER              461
+#define IDC_LATERAL_CAMBER_UNIT         462
+#define IDC_EX_LABEL                    463
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -370,9 +385,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        220
+#define _APS_NEXT_RESOURCE_VALUE        224
 #define _APS_NEXT_COMMAND_VALUE         36871
-#define _APS_NEXT_CONTROL_VALUE         453
+#define _APS_NEXT_CONTROL_VALUE         465
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

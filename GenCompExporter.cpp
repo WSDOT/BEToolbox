@@ -26,12 +26,17 @@
 #include "GenCompExporter.h"
 #include <GenComp.h>
 
+#include <IFace\Project.h>
 #include <IFace\Bridge.h>
 #include <IFace\Intervals.h>
 #include <EAF\EAFDisplayUnits.h>
 #include <IFace\Selection.h>
+#include <EAF\EAFDocument.h>
+#include <IFace\DocumentType.h>
 
+#include <PgsExt\GirderLabel.h>
 #include <PgsExt\Prompts.h>
+#include <PgsExt\BridgeDescription2.h>
 
 HRESULT CGenCompExporter::FinalConstruct()
 {
@@ -48,19 +53,19 @@ STDMETHODIMP CGenCompExporter::Init(UINT nCmdID)
    return S_OK;
 }
 
-STDMETHODIMP CGenCompExporter::GetMenuText(BSTR*  bstrText)
+STDMETHODIMP CGenCompExporter::GetMenuText(BSTR*  bstrText) const
 {
    *bstrText = CComBSTR("BEToolbox:GenComp composite girder section model");
    return S_OK;
 }
 
-STDMETHODIMP CGenCompExporter::GetBitmapHandle(HBITMAP* phBmp)
+STDMETHODIMP CGenCompExporter::GetBitmapHandle(HBITMAP* phBmp) const
 {
    *phBmp = m_Bitmap;
    return S_OK;
 }
 
-STDMETHODIMP CGenCompExporter::GetCommandHintText(BSTR*  bstrText)
+STDMETHODIMP CGenCompExporter::GetCommandHintText(BSTR*  bstrText) const
 {
    *bstrText = CComBSTR("BEToolbox:GenComp model\nTool tip text");
    return S_OK;   
@@ -90,33 +95,59 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
       return S_FALSE;
    }
 
+   const CSegmentKey& segmentKey(poi.GetSegmentKey());
+   GET_IFACE2(pBroker, IDocumentType, pDocType);
+   GET_IFACE2(pBroker, IEAFDocument, pDoc);
+   CString strExtension(_T("GenComp"));
+   CString strDefaultFileName;
+   if (pDocType->IsPGSuperDocument())
+   {
+      strDefaultFileName.Format(_T("%s%s_Span_%d_Girder_%s.%s"),
+         pDoc->GetFileRoot(), // path to file
+         pDoc->GetFileTitle(), // the file name without path or extension
+         LABEL_SPAN(segmentKey.groupIndex),
+         LABEL_GIRDER(segmentKey.girderIndex),
+         strExtension);
+   }
+   else
+   {
+      strDefaultFileName.Format(_T("%s%s_Group_%d_Girder_%s_Segment_%d.%s"),
+         pDoc->GetFileRoot(), // path to file
+         pDoc->GetFileTitle(), // the file name without path or extension
+         LABEL_SPAN(segmentKey.groupIndex),
+         LABEL_GIRDER(segmentKey.girderIndex),
+         LABEL_SEGMENT(segmentKey.segmentIndex),
+         strExtension);
+   }
+
+
    // write some bridge data to a text file
-	CFileDialog fileDlg(FALSE,_T("GenComp"),_T("PGSuperExport.GenComp"),OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("GenComp File (*.GenComp)|*.GenComp||"));
-	if (fileDlg.DoModal() == IDOK)
-	{
-      GET_IFACE2(pBroker,IShapes,pShapes);
+	CFileDialog fileDlg(FALSE, strExtension, strDefaultFileName,OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("GenComp File (*.GenComp)|*.GenComp||"));
+   if (fileDlg.DoModal() == IDOK)
+   {
+      GET_IFACE2(pBroker, IShapes, pShapes);
       CComPtr<IShape> shape;
-      pShapes->GetSegmentShape(intervalIdx,poi,false,pgsTypes::scGirder,&shape);
+      pShapes->GetSegmentShape(intervalIdx, poi, false, pgsTypes::scGirder, &shape);
 
       CComPtr<IPoint2dCollection> primaryShapePoints;
       CComPtr<IPoint2dCollection> secondaryShapePoints;
       CComQIPtr<ICompositeShape> compShape(shape);
-      if ( compShape )
+      if (compShape)
       {
          IndexType nShapes;
          compShape->get_Count(&nShapes);
 
          CComPtr<IShape> primaryShape;
          CComPtr<ICompositeShapeItem> item;
-         compShape->get_Item(0,&item);
+         compShape->get_Item(0, &item);
          item->get_Shape(&primaryShape);
          primaryShape->get_PolyPoints(&primaryShapePoints);
 
-         if ( 1 < nShapes )
+         if (1 < nShapes)
          {
             CComPtr<IShape> secondaryShape;
             item.Release();
-            compShape->get_Item(1,&item);
+            compShape->get_Item(1, &item);
             item->get_Shape(&secondaryShape);
             secondaryShape->get_PolyPoints(&secondaryShapePoints);
          }
@@ -126,20 +157,78 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
          shape->get_PolyPoints(&primaryShapePoints);
       }
 
-
-
-      GET_IFACE2(pBroker,IMaterials,pMaterials);
-      Float64 EcGdr;
-      if ( poi.HasAttribute(POI_CLOSURE) )
+      CComPtr<IShape> leftJointShape, rightJointShape;
+      pShapes->GetJointShapes(intervalIdx, poi, false, pgsTypes::scGirder, &leftJointShape, &rightJointShape);
+      if (leftJointShape)
       {
-         EcGdr = pMaterials->GetClosureJointEc(poi.GetSegmentKey(),intervalIdx);
+         if (secondaryShapePoints == nullptr)
+         {
+            secondaryShapePoints.CoCreateInstance(CLSID_Point2dCollection);
+         }
+
+         CComPtr<IPoint2dCollection> points;
+         leftJointShape->get_PolyPoints(&points);
+
+         CComPtr<IEnumPoint2d> enumPoints;
+         points->get__Enum(&enumPoints);
+         CComPtr<IPoint2d> point;
+         while (enumPoints->Next(1, &point, nullptr) != S_FALSE)
+         {
+            secondaryShapePoints->Add(point);
+            point.Release();
+         }
+      }
+
+      if (rightJointShape)
+      {
+         if (secondaryShapePoints == nullptr)
+         {
+            secondaryShapePoints.CoCreateInstance(CLSID_Point2dCollection);
+         }
+
+         CComPtr<IPoint2dCollection> points;
+         rightJointShape->get_PolyPoints(&points);
+
+         CComPtr<IEnumPoint2d> enumPoints;
+         points->get__Enum(&enumPoints);
+         CComPtr<IPoint2d> point;
+         while (enumPoints->Next(1, &point, nullptr) != S_FALSE)
+         {
+            secondaryShapePoints->Add(point);
+            point.Release();
+         }
+      }
+
+
+      GET_IFACE2(pBroker, IMaterials, pMaterials);
+      Float64 EcGdr;
+      if (poi.HasAttribute(POI_CLOSURE))
+      {
+         EcGdr = pMaterials->GetClosureJointEc(poi.GetSegmentKey(), intervalIdx);
       }
       else
       {
-         EcGdr = pMaterials->GetSegmentEc(poi.GetSegmentKey(),intervalIdx);
+         EcGdr = pMaterials->GetSegmentEc(poi.GetSegmentKey(), intervalIdx);
       }
 
-      Float64 EcDeck = pMaterials->GetDeckEc(intervalIdx);
+      GET_IFACE2(pBroker, IBridgeDescription, pIBridgeDesc);
+      const CBridgeDescription2* pBridgeDesc = pIBridgeDesc->GetBridgeDescription();
+      Float64 EcDeck;
+      if (IsNonstructuralDeck(pBridgeDesc->GetDeckDescription()->GetDeckType()))
+      {
+         if (pBridgeDesc->HasStructuralLongitudinalJoints())
+         {
+            EcDeck = pMaterials->GetLongitudinalJointEc(intervalIdx);
+         }
+         else
+         {
+            EcDeck = 0.0;
+         }
+      }
+      else
+      {
+         EcDeck = pMaterials->GetDeckEc(intervalIdx);
+      }
 
       std::unique_ptr<GenComp> genCompXML( CreateGenCompModel() );
       ShapeType& primaryShapeXML(genCompXML->PrimaryShape());

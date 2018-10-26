@@ -134,6 +134,9 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_CAMBER,IDC_CAMBER_UNIT,camber,pDispUnits->ComponentDim);
    DDX_Text(pDX, IDC_CAMBER_MULTIPLIER, camberMultiplier);
 
+   Float64 lateralCamber = problem.GetLateralCamber();
+   DDX_UnitValueAndTag(pDX, IDC_LATERAL_CAMBER, IDC_LATERAL_CAMBER_UNIT, lateralCamber, pDispUnits->ComponentDim);
+
    DDX_UnitValueAndTag(pDX,IDC_FR_COEFFICIENT,IDC_FR_COEFFICIENT_UNIT,frCoefficient,pDispUnits->SqrtPressure);
    CString tag;
    if ( lrfdVersionMgr::GetVersion() < lrfdVersionMgr::SeventhEditionWith2016Interims )
@@ -277,6 +280,9 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
       problem.SetCamber(bDirectCamber,camber);
       problem.SetCamberMultiplier(camberMultiplier);
 
+      problem.SetLateralCamber(lateralCamber);
+      problem.IncludeLateralRollAxisOffset(IsZero(lateralCamber) ? false : true);
+
       problem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope,bEvaluateStressesAtEquilibriumAngle);
 
       pDoc->SetHaulingStabilityProblem(problem);
@@ -343,8 +349,9 @@ BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_CROWN,&CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_HAULING_TENSION_SUPER,&CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_SUPER,&CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_SUPER,&CPGStableHaulingView::OnChange)
-	ON_MESSAGE(WM_HELP, OnCommandHelp)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_SUPER, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_LATERAL_CAMBER, &CPGStableHaulingView::OnChange)
+   ON_MESSAGE(WM_HELP, OnCommandHelp)
    ON_CBN_SELCHANGE(IDC_HAUL_TRUCK, &CPGStableHaulingView::OnHaulTruckChanged)
    ON_CBN_SELCHANGE(IDC_STRESSES, &CPGStableHaulingView::OnChange)
    ON_COMMAND_RANGE(CCS_CMENU_BASE, CCS_CMENU_MAX, OnCmenuSelected)
@@ -679,9 +686,9 @@ void CPGStableHaulingView::RefreshReport()
 
 void CPGStableHaulingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)
 {
-   if ( EAFGetActiveView() == this )
+   if ( EAFGetActiveView() == this || lHint == HINT_UPDATE_DATA)
    {
-      if ( lHint == EAF_HINT_UNITS_CHANGING )
+      if ( lHint == EAF_HINT_UNITS_CHANGING || lHint == HINT_UPDATE_DATA)
       {
          UpdateData(TRUE);
       }

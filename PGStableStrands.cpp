@@ -65,6 +65,8 @@ CPGStableStrands::CPGStableStrands()
 {
    strandMethod = Simplified;
 
+   ex = 0;
+
    XferLength = ::ConvertToSysUnits(36.0,unitMeasure::Inch);
 
    Ys = ::ConvertToSysUnits(3.0,unitMeasure::Inch);
@@ -106,6 +108,11 @@ bool CPGStableStrands::operator==(const CPGStableStrands& other) const
 {
    if ( strandMethod != other.strandMethod )
       return false;
+
+   if (!IsEqual(ex, other.ex))
+   {
+      return false;
+   }
 
    if ( strandMethod == CPGStableStrands::Simplified )
    {
@@ -153,8 +160,10 @@ bool CPGStableStrands::operator==(const CPGStableStrands& other) const
    }
    else
    {
-      if ( m_vFpe != other.m_vFpe )
+      if (m_vFpe != other.m_vFpe)
+      {
          return false;
+      }
    }
 
    return true;
@@ -167,13 +176,14 @@ bool CPGStableStrands::operator!=(const CPGStableStrands& other) const
 
 HRESULT CPGStableStrands::Save(IStructuredSave* pStrSave)
 {
-   pStrSave->BeginUnit(_T("Strands"),1.0);
+   pStrSave->BeginUnit(_T("Strands"),2.0);
 
    pStrSave->put_Property(_T("DefinitionMethod"),CComVariant(strandMethod));
+   pStrSave->put_Property(_T("ex"), CComVariant(ex)); // added in version 2
 
    if ( strandMethod == CPGStableStrands::Simplified )
    {
-      pStrSave->put_Property(_T("XferLength"),CComVariant(XferLength));
+      pStrSave->put_Property(_T("XferLength"), CComVariant(XferLength));
 
       // Straight Strands
       pStrSave->put_Property(_T("FpeStraight"),CComVariant(FpeStraight));
@@ -239,12 +249,23 @@ HRESULT CPGStableStrands::Load(IStructuredLoad* pStrLoad)
    try
    {
       hr = pStrLoad->BeginUnit(_T("Strands"));
+      Float64 version;
+      pStrLoad->get_Version(&version);
 
       CComVariant var;
 
       var.vt = VT_I4;
       hr = pStrLoad->get_Property(_T("DefinitionMethod"),&var);
       strandMethod = (CPGStableStrands::StrandMethod)var.lVal;
+
+      if (1 < version)
+      {
+         // added in vesrion 2
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("ex"), &var);
+         ex = var.dblVal;
+      }
+
       
       if ( strandMethod == CPGStableStrands::Simplified )
       {

@@ -52,6 +52,9 @@ protected:
    CPGStablePointLoadGrid* m_pPointLoadGrid;
    CPGStableGirderControl m_ctrlGirder;
 
+   std::vector<StressPoints> m_StressPointCache;
+   void InitStressPointCache(const stbGirder& girder);
+
 	DECLARE_MESSAGE_MAP()
 
 public:
@@ -72,6 +75,11 @@ public:
 
    virtual BOOL OnInitDialog() override;
    afx_msg void OnChange();
+   afx_msg void OnBnClickedComputeStressPoints();
+   afx_msg void OnBnClickedDefineStressPoints();
+   afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
    virtual void OnCancel();
    virtual void OnOK();
+
+   void OnUnitsChanged();
 };

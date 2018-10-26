@@ -25,6 +25,14 @@
 // PGStableGirderSectionGrid.h : header file
 //
 
+struct StressPoints
+{
+   gpPoint2d pntTL[2];
+   gpPoint2d pntTR[2];
+   gpPoint2d pntBL[2];
+   gpPoint2d pntBR[2];
+};
+
 /////////////////////////////////////////////////////////////////////////////
 // CPGStableGirderSectionGrid window
 
@@ -61,7 +69,8 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-   void InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ix,Float64 Iy,Float64 Yt,Float64 Hg,Float64 Wtf,Float64 Wbf);
+   void InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf,const gpPoint2d& pntTL,const gpPoint2d& pntTR,const gpPoint2d& pntBL,const gpPoint2d& pntBR);
+   void SetStressPoints(ROWCOL row, const gpPoint2d& pntTL, const gpPoint2d& pntTR, const gpPoint2d& pntBL, const gpPoint2d& pntBR);
 
    // virtual overrides for grid
    virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
@@ -80,7 +89,7 @@ public:
    void CustomInit();
    void AddGirderSection();
 
-   void GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIx,Float64* pIy,Float64* pYt,Float64* pHg,Float64* pWtop,Float64* pWbot);
+   void GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot,gpPoint2d* pntTL,gpPoint2d* pntTR,gpPoint2d* pntBL,gpPoint2d* pntBR);
    void RemoveSelectedGirderSections();
    BOOL AreGirderSectionsSelected();
 
@@ -89,7 +98,13 @@ public:
 
    Float64 GetGirderLength();
 
+   std::vector<StressPoints> GetStressPoints();
+   void SetStressPoints(const std::vector<StressPoints>& vStressPoints);
 
+   void EnableStressPoints(BOOL bEnable);
+   void ComputeStressPoints();
+
+   void OnUnitsChanged();
 
 #if defined _DEBUG
    void AssertValid() const;

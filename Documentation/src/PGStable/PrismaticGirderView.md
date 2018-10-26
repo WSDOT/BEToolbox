@@ -13,7 +13,7 @@ Wbf | Bottom width
 Area | Cross sectional area
 Ix | Moment of inertia about the horizontal centroidal axis
 Iy | Moment of inertia about the vertical centroidal axis
-Yt | Location of the centroid measured down from the top of the girder
+Ytop | Location of the centroid measured down from the top of the girder
 L | Girder length
 
 ## Dead Loads

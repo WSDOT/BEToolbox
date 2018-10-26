@@ -36,7 +36,7 @@
 #include "PGSuperCatCom.h"
 #include "PGSpliceCatCom.h"
 #include <WBFLCore_i.c>
-#include <PGSuperIEPlugin_i.c>
+#include <PGSuperIEPlugin.h>
 
 #include <EAF\EAFDocument.h>
 #include <EAF\EAFDisplayUnits.h>

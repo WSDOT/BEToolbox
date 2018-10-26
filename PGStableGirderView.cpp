@@ -148,16 +148,16 @@ void CPGStableGirderView::OnSwapUI()
          m_Nonprismatic.UpdateData(TRUE);
          m_Nonprismatic.ShowWindow(SW_HIDE);
 
-         m_Prismatic.ShowWindow(SW_SHOW);
          m_Prismatic.UpdateData(FALSE);
+         m_Prismatic.ShowWindow(SW_SHOW);
       }
       else
       {
          m_Prismatic.UpdateData(TRUE);
          m_Prismatic.ShowWindow(SW_HIDE);
 
-         m_Nonprismatic.ShowWindow(SW_SHOW);
          m_Nonprismatic.UpdateData(FALSE);
+         m_Nonprismatic.ShowWindow(SW_SHOW);
       }
    }
 }
@@ -210,9 +210,9 @@ void CPGStableGirderView::OnInitialUpdate()
 
 void CPGStableGirderView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)
 {
-   if ( EAFGetActiveView() == this && m_bViewInitialized )
+   if ( (EAFGetActiveView() == this && m_bViewInitialized) || lHint == HINT_UPDATE_DATA )
    {
-      if ( lHint == EAF_HINT_UNITS_CHANGING )
+      if ( lHint == EAF_HINT_UNITS_CHANGING || lHint == HINT_UPDATE_DATA)
       {
          if ( GetCheckedRadioButton(IDC_PRISMATIC,IDC_NONPRISMATIC) == IDC_PRISMATIC )
          {
@@ -227,11 +227,11 @@ void CPGStableGirderView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*
       {
          if ( GetCheckedRadioButton(IDC_PRISMATIC,IDC_NONPRISMATIC) == IDC_PRISMATIC )
          {
-            m_Prismatic.UpdateData(FALSE);
+            m_Prismatic.OnUnitsChanged();
          }
          else
          {
-            m_Nonprismatic.UpdateData(FALSE);
+            m_Nonprismatic.OnUnitsChanged();
          }
       }
    }

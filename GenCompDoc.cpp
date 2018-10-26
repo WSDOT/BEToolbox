@@ -203,11 +203,9 @@ const std::vector<std::pair<Float64,Float64>>& CGenCompDoc::GetPrimaryPoints()
 {
    m_PrimaryPoints.clear();
    ShapeType::Point_sequence& points(m_GenCompXML->PrimaryShape().Point());
-   ShapeType::Point_sequence::iterator iter(points.begin());
-   ShapeType::Point_sequence::iterator end(points.end());
-   for ( ; iter != end; iter++ )
+   for ( const auto& point : points)
    {
-      m_PrimaryPoints.push_back(std::make_pair(iter->X(),iter->Y()));
+      m_PrimaryPoints.emplace_back(point.X(),point.Y());
    }
    return m_PrimaryPoints;
 }
@@ -237,11 +235,9 @@ const std::vector<std::pair<Float64,Float64>>& CGenCompDoc::GetSecondaryPoints()
 {
    m_SecondaryPoints.clear();
    ShapeType::Point_sequence& points(m_GenCompXML->SecondaryShape().Point());
-   ShapeType::Point_sequence::iterator iter(points.begin());
-   ShapeType::Point_sequence::iterator end(points.end());
-   for ( ; iter != end; iter++ )
+   for ( const auto& point : points)
    {
-      m_SecondaryPoints.push_back(std::make_pair(iter->X(),iter->Y()));
+      m_SecondaryPoints.emplace_back(point.X(),point.Y());
    }
    return m_SecondaryPoints;
 }
