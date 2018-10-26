@@ -31,7 +31,7 @@
 
 // CBoxGdrDialogBar
 
-IMPLEMENT_DYNAMIC(CBoxGdrDialogBar, CEAFPaneDialog)
+IMPLEMENT_DYNAMIC(CBoxGdrDialogBar, CDialogBar)
 
 CBoxGdrDialogBar::CBoxGdrDialogBar()
 {
@@ -44,7 +44,7 @@ CBoxGdrDialogBar::~CBoxGdrDialogBar()
 }
 
 
-BEGIN_MESSAGE_MAP(CBoxGdrDialogBar, CEAFPaneDialog)
+BEGIN_MESSAGE_MAP(CBoxGdrDialogBar, CDialogBar)
 END_MESSAGE_MAP()
 
 
@@ -55,7 +55,7 @@ END_MESSAGE_MAP()
 
 void CBoxGdrDialogBar::DoDataExchange(CDataExchange* pDX)
 {
-   CEAFPaneDialog::DoDataExchange(pDX);
+   CDialogBar::DoDataExchange(pDX);
 
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -71,7 +71,7 @@ void CBoxGdrDialogBar::DoDataExchange(CDataExchange* pDX)
 
 BOOL CBoxGdrDialogBar::Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UINT nID)
 {
-   if ( CEAFPaneDialog::Create(pParentWnd,nIDTemplate,nStyle,nID) )
+   if ( CDialogBar::Create(pParentWnd,nIDTemplate,nStyle,nID) )
       InitGrid();
 
    return TRUE;
@@ -109,6 +109,6 @@ void CBoxGdrDialogBar::OnUnitsModeChanged()
 void CBoxGdrDialogBar::AssertValid() const
 {
    AFX_MANAGE_STATE(AfxGetAppModuleState());
-   CEAFPaneDialog::AssertValid();
+   CDialogBar::AssertValid();
 }
 #endif

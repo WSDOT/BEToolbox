@@ -22,17 +22,11 @@
 
 #pragma once
 
-#if defined _EAF_USING_MFC_FEATURE_PACK
-#include <EAF\EAFPaneDialog.h>
-#else
-#define CEAFPaneDialog CDialogBar
-#endif
-
 #include <MfcTools\MetaFileStatic.h>
 #include "GenCompDimensionGrid.h"
 
 // CGenCompDialogBar
-class CGenCompDialogBar : public CEAFPaneDialog
+class CGenCompDialogBar : public CDialogBar
 {
 	DECLARE_DYNAMIC(CGenCompDialogBar)
 

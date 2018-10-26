@@ -22,17 +22,11 @@
 
 #pragma once
 
-#if defined _EAF_USING_MFC_FEATURE_PACK
-#include <EAF\EAFPaneDialog.h>
-#else
-#define CEAFPaneDialog CDialogBar
-#endif
-
 #include <MfcTools\MetaFileStatic.h>
 #include "BoxGdrDimensionGrid.h"
 
 // CBoxGdrDialogBar
-class CBoxGdrDialogBar : public CEAFPaneDialog
+class CBoxGdrDialogBar : public CDialogBar
 {
 	DECLARE_DYNAMIC(CBoxGdrDialogBar)
 
