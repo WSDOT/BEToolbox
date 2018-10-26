@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -55,6 +55,8 @@
 // CBEToolboxPlugin
 BOOL CBEToolboxPlugin::Init(CEAFApp* pParent)
 {
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   m_DocumentationImpl.Init(this);
    return TRUE;
 }
 
@@ -141,16 +143,34 @@ HMENU CBEToolboxPlugin::GetSharedMenuHandle()
 
 CString CBEToolboxPlugin::GetName()
 {
+   return CString("BEToolbox");
+}
+
+CString CBEToolboxPlugin::GetDocumentationSetName()
+{
+   return GetName();
+}
+
+CString CBEToolboxPlugin::GetDocumentationURL()
+{
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   return m_DocumentationImpl.GetDocumentationURL();
+}
 
-   CVersionInfo verInfo;
-   CString strAppName = AfxGetAppName();
-   strAppName += _T(".dll");
-   verInfo.Load(strAppName);
+CString CBEToolboxPlugin::GetDocumentationMapFile()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   return m_DocumentationImpl.GetDocumentationMapFile();
+}
 
-   CString strVersion = verInfo.GetProductVersionAsString();
+void CBEToolboxPlugin::LoadDocumentationMap()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   return m_DocumentationImpl.LoadDocumentationMap();
+}
 
-   CString str;
-   str.Format(_T("BEToolbox Version %s"),strVersion);
-   return str;
+eafTypes::HelpResult CBEToolboxPlugin::GetDocumentLocation(LPCTSTR lpszDocSetName,UINT nID,CString& strURL)
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   return m_DocumentationImpl.GetDocumentLocation(lpszDocSetName,nID,strURL);
 }

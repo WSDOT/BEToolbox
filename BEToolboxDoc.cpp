@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -84,12 +84,9 @@ void CBEToolboxDoc::Dump(CDumpContext& dc) const
 BOOL CBEToolboxDoc::Init()
 {
    if ( !CEAFDocument::Init() )
+   {
       return FALSE;
-
-
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   LPCTSTR lpszHelpFile = AfxGetApp()->m_pszHelpFilePath;
-   EAFGetApp()->SetHelpFileName(lpszHelpFile);
+   }
 
    return TRUE;
 }
@@ -182,8 +179,6 @@ void CBEToolboxDoc::ResetApplicationIcon()
 
 void CBEToolboxDoc::OnCloseDocument()
 {
-   EAFGetApp()->SetHelpFileName(NULL);
-
    CEAFDocument::OnCloseDocument();
 }
 

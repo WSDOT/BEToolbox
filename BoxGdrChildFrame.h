@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -47,7 +47,8 @@ protected:
    afx_msg void OnAdd();
    afx_msg void OnRemove();
    afx_msg void OnUpdateRemove(CCmdUI* pCmdUI);
-   
+   afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
+
    DECLARE_MESSAGE_MAP()
    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 

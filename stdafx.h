@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -44,6 +44,7 @@
 #include <MFCTools\MFCTools.h>
 #include <UnitMgt\UnitMgt.h>
 #include <EAF\EAFUtilities.h>
+#include <EAF\EAFHelp.h>
 
 #include <WBFLRCCapacity.h>
 #include <WBFLTools.h>
@@ -53,6 +54,8 @@
 
 #include "BEToolboxTypes.h"
 #include <afxwin.h>
+
+#include <BEToolbox.hh>
 
 // prior to WBFL Version 3.3.0 the _WBFL_VERSION macro did not exist
 // we need it for conditional compilation so if it isn't defined

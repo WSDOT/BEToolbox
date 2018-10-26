@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -59,7 +59,13 @@ CUltColDoc::~CUltColDoc()
 
 BEGIN_MESSAGE_MAP(CUltColDoc, CBEToolboxDoc)
    ON_COMMAND(ID_REFRESH_REPORT, &CUltColDoc::OnRefreshReport)
+   ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
 END_MESSAGE_MAP()
+
+void CUltColDoc::OnHelpFinder()
+{
+   EAFHelp(EAFGetDocument()->GetDocumentationSetName(),IDH_ULTCOL);
+}
 
 
 // CUltColDoc diagnostics
@@ -268,4 +274,10 @@ void CUltColDoc::SaveDocumentSettings()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    __super::SaveDocumentSettings();
+}
+
+CString CUltColDoc::GetDocumentationRootLocation()
+{
+   CEAFApp* pApp = EAFGetApp();
+   return pApp->GetDocumentationRootLocation();
 }

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -35,10 +35,12 @@ IMPLEMENT_DYNAMIC(CBoxGdrDialogBar, CEAFPaneDialog)
 
 CBoxGdrDialogBar::CBoxGdrDialogBar()
 {
+   m_pGrid = NULL;
 }
 
 CBoxGdrDialogBar::~CBoxGdrDialogBar()
 {
+   delete m_pGrid;
 }
 
 
@@ -64,7 +66,7 @@ void CBoxGdrDialogBar::DoDataExchange(CDataExchange* pDX)
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    DDX_MetaFileStatic(pDX, IDC_SCHEMATIC, m_Schematic, AfxGetResourceHandle(), _T("BoxGdr"), _T("Metafile") );
 
-   m_Grid.DoDataExchange(pDX);
+   m_pGrid->DoDataExchange(pDX);
 }
 
 BOOL CBoxGdrDialogBar::Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UINT nID)
@@ -77,28 +79,30 @@ BOOL CBoxGdrDialogBar::Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UINT
 
 void CBoxGdrDialogBar::InitGrid()
 {
-	m_Grid.SubclassDlgItem(IDC_DIMENSIONS, this);
-   m_Grid.CustomInit();
+   m_pGrid = new CBoxGdrDimensionGrid;
+
+	m_pGrid->SubclassDlgItem(IDC_DIMENSIONS, this);
+   m_pGrid->CustomInit();
 }
 
 void CBoxGdrDialogBar::AddProblem()
 {
-   m_Grid.AddProblem();
+   m_pGrid->AddProblem();
 }
 
 void CBoxGdrDialogBar::RemoveSelectedProblems()
 {
-   m_Grid.RemoveSelectedProblems();
+   m_pGrid->RemoveSelectedProblems();
 }
 
 BOOL CBoxGdrDialogBar::AreProblemsSelected()
 {
-   return m_Grid.AreProblemsSelected();
+   return m_pGrid->AreProblemsSelected();
 }
 
 void CBoxGdrDialogBar::OnUnitsModeChanged()
 {
-   m_Grid.OnUnitsModeChanged();
+   m_pGrid->OnUnitsModeChanged();
 }
 
 #if defined _DEBUG

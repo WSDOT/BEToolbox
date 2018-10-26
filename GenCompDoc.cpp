@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -74,7 +74,13 @@ CGenCompDoc::~CGenCompDoc()
 
 
 BEGIN_MESSAGE_MAP(CGenCompDoc, CBEToolboxDoc)
+   ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
 END_MESSAGE_MAP()
+
+void CGenCompDoc::OnHelpFinder()
+{
+   EAFHelp(EAFGetDocument()->GetDocumentationSetName(),IDH_GENCOMP);
+}
 
 
 // CGenCompDoc diagnostics
@@ -142,6 +148,12 @@ void CGenCompDoc::SaveDocumentSettings()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    __super::SaveDocumentSettings();
+}
+
+CString CGenCompDoc::GetDocumentationRootLocation()
+{
+   CEAFApp* pApp = EAFGetApp();
+   return pApp->GetDocumentationRootLocation();
 }
 
 void CGenCompDoc::OnOldFormat(LPCTSTR lpszPathName)

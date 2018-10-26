@@ -61,8 +61,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -162,8 +162,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -264,8 +264,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
@@ -364,8 +364,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
@@ -465,8 +465,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
@@ -565,8 +565,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
+				AdditionalIncludeDirectories=".\BEToolboxXML;\ARP\BridgeLink\Include;&quot;\ARP\BridgeLink\Include\$(PlatformName)&quot;;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
@@ -598,6 +598,7 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="17"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"

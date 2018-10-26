@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -28,8 +28,7 @@
 #include "CurvelReportWizardStep2.h"
 #include "CurvelReportWizard.h"
 #include <EAF\EAFApp.h>
-
-#include "HtmlHelp\HelpTopics.h"
+#include <EAF\EAFDocument.h>
 
 
 // CCurvelReportWizardStep2 dialog
@@ -178,7 +177,7 @@ void CCurvelReportWizardStep2::UpdateReportSpecification(CCurvelReportSpecificat
 
 void CCurvelReportWizardStep2::OnHelp()
 {
-   ::HtmlHelp( *this, AfxGetApp()->m_pszHelpFilePath, HH_HELP_CONTEXT, IDH_CURVEL_STEP2);
+   EAFHelp(EAFGetDocument()->GetDocumentationSetName(), IDH_CURVEL_STEP2);
 }
 
 void CCurvelReportWizardStep2::OnBnClickedCrownOption()

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2015  Washington State Department of Transportation
+// Copyright © 1999-2016  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,14 @@ CCurvelChildFrame::~CCurvelChildFrame(void)
 
 BEGIN_MESSAGE_MAP(CCurvelChildFrame, CEAFChildFrame)
    ON_WM_CREATE()
+	ON_MESSAGE(WM_HELP, OnCommandHelp)
 END_MESSAGE_MAP()
+
+LRESULT CCurvelChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
+{
+   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_CURVEL );
+   return TRUE;
+}
 
 BOOL CCurvelChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
