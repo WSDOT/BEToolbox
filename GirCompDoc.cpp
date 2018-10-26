@@ -411,11 +411,10 @@ CString CGirCompDoc::GetToolbarSectionName()
    return _T("GirComp");
 }
 
-BOOL CGirCompDoc::OpenOldFormat(LPCTSTR lpszPathName)
+void CGirCompDoc::OnOldFormat(LPCTSTR lpszPathName)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    AfxMessageBox(_T("Error: Invalid file format.\n\nThis is not a GirComp file or it is in a legacy format that is not supported"),MB_OK | MB_ICONEXCLAMATION);
-   return FALSE;
 }
 
 IndexType CGirCompDoc::GetProblemCount() const

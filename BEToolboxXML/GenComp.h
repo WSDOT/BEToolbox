@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////
-// BEToolbox
+// BEToolboxXML
 // Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
@@ -22,50 +22,15 @@
 
 #pragma once
 
-// CBEToolboxDoc document
-#include <EAF\EAFDocument.h>
+#include <BEToolboxXML.h>
+#include <GenComp_Version_2.0.hxx>
+#include <WBFLUnitServer.h>
 
-class CBEToolboxDoc : public CEAFDocument
-{
-	DECLARE_DYNAMIC(CBEToolboxDoc)
+// Creates a GenComp data model. If lpszFileName is NULL, a default
+// model is created, otherwise the model is created from the
+// GenComp dataset supplied in the specified file.
+std::auto_ptr<GenComp> BETOOLBOXXMLFUNC CreateGenCompModel();
+std::auto_ptr<GenComp> BETOOLBOXXMLFUNC CreateGenCompModel(LPCTSTR lpszFilePath,IUnitConvert* pDocUnitConvert);
 
-public:
-	CBEToolboxDoc();
-	virtual ~CBEToolboxDoc();
-
-   virtual void DoIntegrateWithUI(BOOL bIntegrate);
-   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const;
-   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
-
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-#ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-#endif
-
-protected:
-   /// called when a document is created (New or Open)
-   virtual BOOL Init(); 
-
-   virtual void LoadToolbarState();
-   virtual void SaveToolbarState();
-
-   afx_msg void OnAbout();
-
-	DECLARE_MESSAGE_MAP()
-public:
-   virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
-   virtual void OnCloseDocument();
-   virtual CString GetRootNodeName();
-   virtual Float64 GetRootNodeVersion();
-
-protected:
-   CEAFToolBar* m_pMyToolBar;
-
-   virtual void OnOldFormat(LPCTSTR lpszPathName);
-
-   HICON m_hMainFrameBigIcon;
-   HICON m_hMainFrameSmallIcon;
-
-};
+// Saves a GenComp model to the specified file.
+BOOL BETOOLBOXXMLFUNC SaveGenCompModel(LPCTSTR lpszFilePath,GenComp* pGenCompXML);

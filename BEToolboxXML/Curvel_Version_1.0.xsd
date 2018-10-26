@@ -1,0 +1,217 @@
+﻿<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+<xs:annotation>
+<xs:documentation>
+This schema defines the data format for the BEToolbox:Curvel program.
+All values are in fundamental units (KMS)
+</xs:documentation>
+</xs:annotation>
+
+<xs:simpleType name="vbBoolean">
+   <xs:restriction base="xs:integer">
+      <xs:enumeration value="-1" />
+      <xs:enumeration value="0" />
+   </xs:restriction>
+</xs:simpleType>
+
+
+<xs:element name="BEToolbox">
+<xs:annotation>
+<xs:documentation>
+This is the root of the XML tree
+</xs:documentation>
+</xs:annotation>
+   <xs:complexType>
+      <xs:sequence>
+         <xs:element ref="Curvel" />
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+   </xs:complexType>
+</xs:element>
+
+
+<xs:element name="Curvel">
+<xs:complexType>
+<xs:annotation>
+<xs:documentation>
+Within this node is all the Curvel data
+</xs:documentation>
+</xs:annotation>
+   <xs:sequence>
+      <xs:element ref="VerticalCurveData" />
+      <xs:element ref="SuperelevationData" />
+      <xs:element ref="IndividualStations" />
+      <xs:element ref="StationRanges" />
+      <xs:element ref="SkewLines" />
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+
+<xs:element name="VerticalCurveData">
+<xs:annotation>
+<xs:documentation>
+Describes a symmetric vertical curve. g1 and g2 are the entry and exit grades of the curve in length/length. PVIStation is the station at the point of vertical intersection for the entry and exit grades. PVIElevation is the elevation of the PVI point. Length is the length of the vertical curve.
+</xs:documentation>
+</xs:annotation>
+<xs:complexType>
+   <xs:sequence>
+      <xs:element name="g1" type="xs:double" />
+      <xs:element name="g2" type="xs:double" />
+      <xs:element name="PVIStation" type="xs:double" />
+      <xs:element name="PVIElevation" type="xs:double" />
+      <xs:element name="Length">
+         <xs:simpleType>
+            <xs:restriction base="xs:double">
+               <xs:minInclusive value="0.0" />
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:element>
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+
+<xs:element name="SuperelevationData">
+<xs:complexType>
+<xs:annotation>
+<xs:documentation>
+
+</xs:documentation>
+</xs:annotation>
+   <xs:sequence>
+      <xs:element name="CorrectForSuperelevation" type="vbBoolean" />
+      <xs:element name="ProfileGradeOffset" type="xs:double" />
+      <xs:element name="SuperelevationProfilePoint">
+         <xs:complexType>
+            <xs:sequence>
+               <xs:element name="Station" type="xs:double" />
+               <xs:element name="LeftSlope" type="xs:double" />
+               <xs:element name="RightSlope" type="xs:double" />
+               <xs:element name="Station" type="xs:double" />
+               <xs:element name="LeftSlope" type="xs:double" />
+               <xs:element name="RightSlope" type="xs:double" />
+               <xs:element name="Station" type="xs:double" />
+               <xs:element name="LeftSlope" type="xs:double" />
+               <xs:element name="RightSlope" type="xs:double" />
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+         </xs:complexType>
+      </xs:element>
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+
+<xs:element name="IndividualStations">
+<xs:complexType>
+<xs:annotation>
+<xs:documentation>
+
+</xs:documentation>
+</xs:annotation>
+   <xs:sequence>
+      <xs:element name="NumPoints" type="xs:nonNegativeInteger" />
+      <xs:element ref="IndividualStation" maxOccurs="unbounded" />
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+
+<xs:element name="IndividualStation">
+<xs:complexType>
+<xs:annotation>
+<xs:documentation>
+
+</xs:documentation>
+</xs:annotation>
+   <xs:sequence>
+      <xs:element name="Station" type="xs:double" />
+      <xs:element name="Offset" type="xs:double" />
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+
+<xs:element name="StationRanges">
+<xs:complexType>
+<xs:annotation>
+<xs:documentation>
+
+</xs:documentation>
+</xs:annotation>
+   <xs:sequence>
+      <xs:element name="NumPoints" type="xs:nonNegativeInteger" />
+      <xs:element ref="StationRange" maxOccurs="unbounded" />
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+
+<xs:element name="StationRange">
+<xs:complexType>
+<xs:annotation>
+<xs:documentation>
+
+</xs:documentation>
+</xs:annotation>
+   <xs:sequence>
+      <xs:element name="StartStation" type="xs:double" />
+      <xs:element name="EndStation" type="xs:double" />
+      <xs:element name="NumSpaces" type="xs:nonNegativeInteger" />
+      <xs:element name="Offset" type="xs:double" />
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+
+<xs:element name="SkewLines">
+<xs:complexType>
+<xs:annotation>
+<xs:documentation>
+
+</xs:documentation>
+</xs:annotation>
+   <xs:sequence>
+      <xs:element name="NumPoints" type="xs:nonNegativeInteger" />
+      <xs:element ref="SkewLine" maxOccurs="unbounded" /> 
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+<xs:simpleType name="SkewLineType">
+<xs:restriction base="xs:nonNegativeInteger">
+<xs:enumeration value="0" /> <!-- RadialFromCrownLine -->
+<xs:enumeration value="1" /> <!-- AlongSkewFromLLine -->
+</xs:restriction>
+</xs:simpleType>
+
+<xs:element name="SkewLine">
+<xs:complexType>
+<xs:annotation>
+<xs:documentation>
+
+</xs:documentation>
+</xs:annotation>
+
+   <xs:sequence>
+      <xs:element name="Station" type="xs:double" /> 
+      <xs:element name="OffsetType" type="SkewLineType" /> 
+      <xs:element name="Offset" type="xs:double" /> 
+      <xs:element name="SkewAngle" type="xs:string" /> 
+      <xs:element name="Radius" type="xs:double" /> 
+      <xs:element name="CrownOffset" type="xs:double" /> 
+   </xs:sequence>
+   <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+</xs:complexType>
+</xs:element>
+
+</xs:schema>

@@ -25,6 +25,8 @@
 
 #include "stdafx.h"
 #include "resource.h"
+
+
 #include "CurvelDoc.h"
 #include "CurvelTitlePageBuilder.h"
 #include "CurvelChapterBuilder.h"
@@ -34,12 +36,27 @@
 #include "CurvelRptView.h"
 #include "BEToolboxStatusBar.h"
 
+
 // CCurvelDoc
 
 IMPLEMENT_DYNCREATE(CCurvelDoc, CBEToolboxDoc)
 
 CCurvelDoc::CCurvelDoc()
 {
+   // The reporting sub-system doesn't use the WBFLUnitServer implementation. It uses the old regular C++
+   // units sytem. That system is in kms units, so we will create a unit server here also in the kms system
+   // so that the curvel data, after loading is in set of consistent base units we want.
+   // If the report system could handle the WBFLUnitServer, the <ConsistentUnits> declaration in the
+   // CurvelXML instance document would work throughout this program because Curvel works exclusively in
+   // consistent units.
+   m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
+   m_DocUnitServer->SetBaseUnits(CComBSTR(unitSysUnitsMgr::GetMassUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetLengthUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetTimeUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetTemperatureUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetAngleUnit().UnitTag().c_str()));  
+   m_DocUnitServer->QueryInterface(&m_DocConvert);
+
    // Setup the reporting mechanism
    boost::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder( new CCurvelReportSpecificationBuilder() );
    m_pRptSpecBuilder = pRptSpecBuilder;
@@ -89,47 +106,43 @@ void CCurvelDoc::Dump(CDumpContext& dc) const
 #endif
 #endif //_DEBUG
 
-BOOL CCurvelDoc::Init()
-{
-   if ( !CBEToolboxDoc::Init() )
-      return FALSE;
-
-   return TRUE;
-}
-
-void CCurvelDoc::OnCloseDocument()
-{
-   CBEToolboxDoc::OnCloseDocument();
-}
-
-HRESULT CCurvelDoc::WriteTheDocument(IStructuredSave* pStrSave)
-{
-   // The real data is in the report spec owned by the report view
-   CView* pActiveView = EAFGetActiveView();
-   CEAFReportView* pRptView = (CEAFReportView*)pActiveView;
-   boost::shared_ptr<CReportSpecification> pRptSpec = pRptView->GetReportSpecification();
-
-   boost::shared_ptr<CCurvelReportSpecification> pCurvelRptSpec = boost::dynamic_pointer_cast<CCurvelReportSpecification,CReportSpecification>(pRptSpec);
-
-   return pCurvelRptSpec->Save(pStrSave);
-}
-
-HRESULT CCurvelDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
-{
-   // Load data from input stream into the default report spec
-   return m_pDefaultRptSpec->Load(pStrLoad);
-}
-
 CString CCurvelDoc::GetToolbarSectionName()
 {
    return _T("Curvel");
 }
 
-BOOL CCurvelDoc::OpenOldFormat(LPCTSTR lpszPathName)
+BOOL CCurvelDoc::OnNewDocument()
+{
+   if ( !CBEToolboxDoc::OnNewDocument() )
+      return FALSE;
+
+   m_CurvelXML = CreateCurvelModel();
+   if ( m_CurvelXML.get() == NULL )
+      return FALSE;
+
+   return TRUE;
+}
+
+BOOL CCurvelDoc::OpenTheDocument(LPCTSTR lpszPathName)
+{
+   USES_CONVERSION;
+
+   m_CurvelXML = CreateCurvelModel(lpszPathName,m_DocConvert);
+   if ( m_CurvelXML.get() == NULL )
+      return FALSE;
+
+   return TRUE;
+}
+
+BOOL CCurvelDoc::SaveTheDocument(LPCTSTR lpszPathName)
+{
+   return SaveCurvelModel(lpszPathName,m_CurvelXML.get());
+}
+
+void CCurvelDoc::OnOldFormat(LPCTSTR lpszPathName)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    AfxMessageBox(_T("Error: Invalid file format.\n\nThis is not a Curvel file or it is in a legacy format that is not supported"),MB_OK | MB_ICONEXCLAMATION);
-   return FALSE;
 }
 
 CReportBuilderManager* CCurvelDoc::GetReportBuilderManager()
@@ -145,4 +158,9 @@ boost::shared_ptr<CReportSpecificationBuilder> CCurvelDoc::GetReportSpecificatio
 boost::shared_ptr<CReportSpecification> CCurvelDoc::GetDefaultReportSpecification()
 {
    return m_pDefaultRptSpec;
+}
+
+Curvel* CCurvelDoc::GetCurvelXML()
+{
+   return m_CurvelXML.get();
 }

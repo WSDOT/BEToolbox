@@ -25,6 +25,7 @@
 // CCurvelDoc document
 #include "BEToolboxDoc.h"
 #include "CurvelReportSpecification.h"
+#include <Curvel.h>
 
 class CCurvelDoc : public CBEToolboxDoc
 {
@@ -40,6 +41,8 @@ public:
    boost::shared_ptr<CReportSpecificationBuilder> GetReportSpecificationBuilder();
    boost::shared_ptr<CReportSpecification> GetDefaultReportSpecification();
 
+   Curvel* GetCurvelXML();
+
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 #ifndef _WIN32_WCE
@@ -47,21 +50,19 @@ public:
 #endif
 #endif
 
+	virtual BOOL OnNewDocument();
+
 protected:
-   /// called when a document is created (New or Open)
-   virtual BOOL Init(); 
+   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
+   virtual BOOL SaveTheDocument(LPCTSTR lpszPathName);
 
-   // Called by the framework when the document is to be loaded and saved
-   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
-   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
+   virtual void OnOldFormat(LPCTSTR lpszPathName);
 
-   BOOL OpenOldFormat(LPCTSTR lpszPathName);
+   std::auto_ptr<Curvel> m_CurvelXML;
+   CComPtr<IUnitServer> m_DocUnitServer;
+   CComPtr<IUnitConvert> m_DocConvert;
 
    DECLARE_MESSAGE_MAP()
-public:
-
-   // over-ride default behavior by destroying column
-   virtual void OnCloseDocument();
 
 private:
    CReportBuilderManager m_RptMgr;

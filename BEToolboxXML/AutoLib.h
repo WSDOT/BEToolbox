@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////
-// BEToolbox
+// BEToolboxXML
 // Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
@@ -22,50 +22,11 @@
 
 #pragma once
 
-// CBEToolboxDoc document
-#include <EAF\EAFDocument.h>
+#if !defined (BUILDBETOOLBOXXMLLIB)
 
-class CBEToolboxDoc : public CEAFDocument
-{
-	DECLARE_DYNAMIC(CBEToolboxDoc)
+#define BETOOLBOXXML_AUTOLIBNAME "BEToolboxXML.lib"
 
-public:
-	CBEToolboxDoc();
-	virtual ~CBEToolboxDoc();
+#pragma comment(lib,BETOOLBOXXML_AUTOLIBNAME)
+//#pragma message("Automatic linking with " BETOOLBOXXML_AUTOLIBNAME )
 
-   virtual void DoIntegrateWithUI(BOOL bIntegrate);
-   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const;
-   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
-
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-#ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-#endif
-
-protected:
-   /// called when a document is created (New or Open)
-   virtual BOOL Init(); 
-
-   virtual void LoadToolbarState();
-   virtual void SaveToolbarState();
-
-   afx_msg void OnAbout();
-
-	DECLARE_MESSAGE_MAP()
-public:
-   virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
-   virtual void OnCloseDocument();
-   virtual CString GetRootNodeName();
-   virtual Float64 GetRootNodeVersion();
-
-protected:
-   CEAFToolBar* m_pMyToolBar;
-
-   virtual void OnOldFormat(LPCTSTR lpszPathName);
-
-   HICON m_hMainFrameBigIcon;
-   HICON m_hMainFrameSmallIcon;
-
-};
+#endif // BUILDBETOOLBOXXMLLIB

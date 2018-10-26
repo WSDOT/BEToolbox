@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////
-// BEToolbox
+// BEToolboxXML
 // Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
@@ -20,52 +20,26 @@
 // Bridge_Support@wsdot.wa.gov
 ///////////////////////////////////////////////////////////////////////
 
+// The following ifdef block is the standard way of creating macros which make exporting 
+// from a DLL simpler. All files within this DLL are compiled with the BETOOLBOXXML_EXPORTS
+// symbol defined on the command line. this symbol should not be defined on any project
+// that uses this DLL. This way any other project whose source files include this file see 
+// BETOOLBOXXML_API functions as being imported from a DLL, whereas this DLL sees symbols
+// defined with this macro as being exported.
 #pragma once
 
-// CBEToolboxDoc document
-#include <EAF\EAFDocument.h>
-
-class CBEToolboxDoc : public CEAFDocument
-{
-	DECLARE_DYNAMIC(CBEToolboxDoc)
-
-public:
-	CBEToolboxDoc();
-	virtual ~CBEToolboxDoc();
-
-   virtual void DoIntegrateWithUI(BOOL bIntegrate);
-   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const;
-   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
-
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-#ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
-#endif
+#if defined (BUILDBETOOLBOXXMLLIB) && !defined(BETOOLBOXXMLLIB)
+#define BETOOLBOXXMLCLASS __declspec(dllexport)
+#define BETOOLBOXXMLFUNC  __declspec(dllexport)
+#define BETOOLBOXXMLTPL   template class BETOOLBOXXMLCLASS
+#elif defined(BETOOLBOXXMLLIB)
+#define BETOOLBOXXMLCLASS
+#define BETOOLBOXXMLFUNC
+#define BETOOLBOXXMLTPL
+#else
+#define BETOOLBOXXMLCLASS __declspec(dllimport)
+#define BETOOLBOXXMLFUNC
+#define BETOOLBOXXMLTPL   extern template class BETOOLBOXXMLCLASS
 #endif
 
-protected:
-   /// called when a document is created (New or Open)
-   virtual BOOL Init(); 
-
-   virtual void LoadToolbarState();
-   virtual void SaveToolbarState();
-
-   afx_msg void OnAbout();
-
-	DECLARE_MESSAGE_MAP()
-public:
-   virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
-   virtual void OnCloseDocument();
-   virtual CString GetRootNodeName();
-   virtual Float64 GetRootNodeVersion();
-
-protected:
-   CEAFToolBar* m_pMyToolBar;
-
-   virtual void OnOldFormat(LPCTSTR lpszPathName);
-
-   HICON m_hMainFrameBigIcon;
-   HICON m_hMainFrameSmallIcon;
-
-};
+#include "AutoLib.h"

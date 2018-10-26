@@ -1,0 +1,210 @@
+﻿<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:bxu="http://www.wsdot.wa.gov/OpenBridgeML/Units"
+           version="2.0">
+  <xs:annotation>
+    <xs:documentation>
+      This schema defines the data format for the BEToolbox:Curvel program.
+      All values are in fundamental units (kms)
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:import namespace="http://www.wsdot.wa.gov/OpenBridgeML/Units" schemaLocation="..\..\..\OpenBridgeML\Schema\OpenBridgeML_Units.xsd" />
+
+  <xs:element name="Curvel">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+          This is the root element.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element ref="bxu:UnitsDeclaration" minOccurs="0" maxOccurs="1" />
+        <xs:element name="VerticalCurveData" type="VerticalCurveDataType"/>
+        <xs:element name="SuperelevationData" type="SuperelevationDataType" minOccurs="0" maxOccurs="1" />
+        <xs:element name="IndividualStations" type="IndividualStationsType" minOccurs="0" maxOccurs="1" />
+        <xs:element name="StationRanges" type="StationRangesType" minOccurs="0" maxOccurs="1" />
+        <xs:element name="SkewLines" type="SkewLinesType" minOccurs="0" maxOccurs="1" />
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:decimal" use="required" fixed="2"/>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:complexType name="VerticalCurveDataType">
+    <xs:annotation>
+      <xs:documentation>
+        Describes a symmetric vertical curve. g1 and g2 are the entry and exit grades of the curve in length/length. PVIStation is the station at the point of vertical intersection for the entry and exit grades. PVIElevation is the elevation of the PVI point. Length is the length of the vertical curve.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="g1" type="xs:double" />
+      <xs:element name="g2" type="xs:double" />
+      <xs:element name="PVIStation" type="bxu:LengthValueType" />
+      <xs:element name="PVIElevation" type="bxu:LengthValueType" />
+      <xs:element name="Length" type="bxu:PositiveLengthValueType" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="SuperelevationDataType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ProfileGradeOffset" type="bxu:LengthValueType" />
+      <xs:element name="CrownSlope" type="CrownSlopeType"/>
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="2"/>
+  </xs:complexType>
+
+  <xs:complexType name="CrownSlopeType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="SuperelevationProfilePoint" type="SuperelevationProfilePointType" minOccurs="3" maxOccurs="3" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="SuperelevationProfilePointType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Station" type="bxu:LengthValueType" />
+      <!-- attempting to restrict the value of Station to be greater than
+           the value in the previous SuperelevationProfilePoint element, however,
+           it isn't working. Trying to use XPath to get the value of the previous Station
+       -->
+      <!--
+      <xs:element name="Station">
+         <xs:simpleType>
+            <xs:restriction base="xs:double">
+               <xs:minExclusive value="xs:parent/preceding-sibling/Station" />
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:element>
+      -->
+      <xs:element name="LeftSlope" type="xs:double" />
+      <xs:element name="RightSlope" type="xs:double" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="2"/>
+  </xs:complexType>
+
+  <xs:complexType name="IndividualStationsType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IndividualStation" type="IndividualStationType" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="2"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="IndividualStationType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Station" type="bxu:LengthValueType" />
+      <xs:element name="Offset" type="bxu:LengthValueType" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="StationRangesType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="StationRange" type="StationRangeType" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="2"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="StationRangeType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="StartStation" type="bxu:LengthValueType" />
+      <xs:element name="EndStation" type="bxu:LengthValueType" />
+      <xs:element name="NumSpaces" type="xs:nonNegativeInteger" />
+      <xs:element name="Offset" type="bxu:LengthValueType" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="1"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="SkewLinesType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="SkewLine" type="SkewLineType" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="2"/>
+  </xs:complexType>
+
+  <xs:simpleType name="OffsetType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RadialFromCrownLine" />
+      <xs:enumeration value="AlongSkewFromLLine" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SkewAngleType">
+    <xs:restriction base="xs:string">
+      <!-- +34.45, -43.45, 34.45 -->
+      <xs:pattern value="[+-]?\d*\.\d*" />
+      <!-- 34.45 L, 34.45 l, 34.45 R, 34.45 r -->
+      <xs:pattern value="\d*\.\d* [LlRr]" />
+      <!-- (+/-DD MM SS.SS format) +34, +34 15, +34 15 12.34 -->
+      <xs:pattern value="[+-]?\d?\d( \d?\d(\d?\d.\d*)?)?" />
+      <!-- (DD MM SS.SS L/R format) 34 L, 34 15 L, 34 15 12.34 L -->
+      <xs:pattern value="\d?\d( \d?\d(\d?\d.\d*)?)? [LlRr]" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="SkewLineType">
+    <xs:annotation>
+      <xs:documentation>
+
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:sequence>
+      <xs:element name="Station" type="bxu:LengthValueType" />
+      <xs:element name="OffsetType" type="OffsetType" />
+      <xs:element name="Offset" type="bxu:LengthValueType" />
+      <xs:element name="SkewAngle" type="SkewAngleType" />
+      <xs:element name="Radius" type="bxu:LengthValueType" />
+      <xs:element name="CrownOffset" type="bxu:LengthValueType" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="2"/>
+  </xs:complexType>
+
+</xs:schema>

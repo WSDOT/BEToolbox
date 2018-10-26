@@ -40,6 +40,21 @@ IMPLEMENT_DYNCREATE(CGenCompDoc, CBEToolboxDoc)
 
 CGenCompDoc::CGenCompDoc()
 {
+   // The reporting sub-system doesn't use the WBFLUnitServer implementation. It uses the old regular C++
+   // units sytem. That system is in kms units, so we will create a unit server here also in the kms system
+   // so that the curvel data, after loading is in set of consistent base units we want.
+   // If the report system could handle the WBFLUnitServer, the <ConsistentUnits> declaration in the
+   // CurvelXML instance document would work throughout this program because Curvel works exclusively in
+   // consistent units.
+   m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
+   m_DocUnitServer->SetBaseUnits(CComBSTR(unitSysUnitsMgr::GetMassUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetLengthUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetTimeUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetTemperatureUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetAngleUnit().UnitTag().c_str()));  
+   m_DocUnitServer->QueryInterface(&m_DocConvert);
+
+
    CReportBuilder* pRptBuilder = new CReportBuilder(_T("GenComp"));
 
    boost::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(new CGenCompTitlePageBuilder());
@@ -49,8 +64,6 @@ CGenCompDoc::CGenCompDoc()
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
-
-   m_ModularRatio = 1.0;
 }
 
 CGenCompDoc::~CGenCompDoc()
@@ -78,237 +91,37 @@ void CGenCompDoc::Dump(CDumpContext& dc) const
 #endif
 #endif //_DEBUG
 
-BOOL CGenCompDoc::Init()
-{
-   if ( !CBEToolboxDoc::Init() )
-      return FALSE;
-
-   return TRUE;
-}
-
-void CGenCompDoc::OnCloseDocument()
-{
-   CEAFDocument::OnCloseDocument();
-}
-
-HRESULT CGenCompDoc::WriteTheDocument(IStructuredSave* pStrSave)
-{
-   UpdateAllViews(NULL,0,NULL);
-
-   HRESULT hr = pStrSave->BeginUnit(_T("GenComp"),1.0);
-   if ( FAILED(hr) )
-      return hr;
-
-   CEAFApp* pApp = EAFGetApp();
-
-   hr = pStrSave->put_Property(_T("Units"),CComVariant(pApp->GetUnitsMode()));
-   if ( FAILED(hr) )
-      return hr;
-
-   hr = pStrSave->put_Property(_T("ModularRatio"),CComVariant(m_ModularRatio));
-   if ( FAILED(hr) )
-      return hr;
-
-   hr = pStrSave->BeginUnit(_T("PrimaryShape"),1.0);
-   if ( FAILED(hr) )
-      return hr;
-
-   hr = pStrSave->put_Property(_T("PointCount"),CComVariant(m_PrimaryPoints.size()));
-   if ( FAILED(hr) )
-      return hr;
-
-   std::vector<std::pair<Float64,Float64>>::iterator iter(m_PrimaryPoints.begin());
-   std::vector<std::pair<Float64,Float64>>::iterator end(m_PrimaryPoints.end());
-   for ( ; iter != end; iter++ )
-   {
-      hr = pStrSave->BeginUnit(_T("Point"),1.0);
-      if ( FAILED(hr) )
-         return hr;
-
-      hr = pStrSave->put_Property(_T("X"),CComVariant(iter->first));
-      if ( FAILED(hr) )
-         return hr;
-
-      hr = pStrSave->put_Property(_T("Y"),CComVariant(iter->second));
-      if ( FAILED(hr) )
-         return hr;
-
-      hr = pStrSave->EndUnit(); // Point
-      if ( FAILED(hr) )
-         return hr;
-   }
-
-   hr = pStrSave->EndUnit(); // PrimaryShape
-   if ( FAILED(hr) )
-      return hr;
-
-
-   hr = pStrSave->BeginUnit(_T("SecondaryShape"),1.0);
-   if ( FAILED(hr) )
-      return hr;
-
-   hr = pStrSave->put_Property(_T("PointCount"),CComVariant(m_SecondaryPoints.size()));
-   if ( FAILED(hr) )
-      return hr;
-
-   iter = m_SecondaryPoints.begin();
-   end = m_SecondaryPoints.end();
-   for ( ; iter != end; iter++ )
-   {
-      hr = pStrSave->BeginUnit(_T("Point"),1.0);
-      if ( FAILED(hr) )
-         return hr;
-
-      hr = pStrSave->put_Property(_T("X"),CComVariant(iter->first));
-      if ( FAILED(hr) )
-         return hr;
-
-      hr = pStrSave->put_Property(_T("Y"),CComVariant(iter->second));
-      if ( FAILED(hr) )
-         return hr;
-
-      hr = pStrSave->EndUnit(); // Point
-      if ( FAILED(hr) )
-         return hr;
-   }
-
-   hr = pStrSave->EndUnit(); // SecondaryShape
-   if ( FAILED(hr) )
-      return hr;
-
-
-   hr = pStrSave->EndUnit(); // GenComp
-   if ( FAILED(hr) )
-      return hr;
-
-   return S_OK;
-}
-
-HRESULT CGenCompDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
-{
-   Clear();
-
-   HRESULT hr = pStrLoad->BeginUnit(_T("GenComp"));
-   if ( FAILED(hr) )
-      return hr;
-
-   CComVariant var;
-
-   CEAFApp* pApp = EAFGetApp();
-
-   var.vt = VT_I4;
-   hr = pStrLoad->get_Property(_T("Units"),&var);
-   if ( FAILED(hr) )
-      return hr;
-
-   pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
-
-   var.vt = VT_R8;
-   hr = pStrLoad->get_Property(_T("ModularRatio"),&var);
-   if ( FAILED(hr) )
-      return hr;
-
-   m_ModularRatio = var.dblVal;
-
-   hr = pStrLoad->BeginUnit(_T("PrimaryShape"));
-   if ( FAILED(hr) )
-      return hr;
-
-   var.vt = VT_INDEX;
-   hr = pStrLoad->get_Property(_T("PointCount"),&var);
-   if ( FAILED(hr) )
-      return hr;
-
-   IndexType nPoints = VARIANT2INDEX(var);
-   for ( IndexType idx = 0; idx < nPoints; idx++ )
-   {
-      hr = pStrLoad->BeginUnit(_T("Point"));
-      if ( FAILED(hr) )
-         return hr;
-
-      var.vt = VT_R8;
-      hr = pStrLoad->get_Property(_T("X"),&var);
-      if ( FAILED(hr) )
-         return hr;
-
-      Float64 x = var.dblVal;
-
-      hr = pStrLoad->get_Property(_T("Y"),&var);
-      if ( FAILED(hr) )
-         return hr;
-
-      Float64 y = var.dblVal;
-
-      m_PrimaryPoints.push_back(std::make_pair(x,y));
-
-      hr = pStrLoad->EndUnit(); // Point
-      if ( FAILED(hr) )
-         return hr;
-   }
-
-   hr = pStrLoad->EndUnit(); // PrimaryShape
-   if ( FAILED(hr) )
-      return hr;
-
-
-   hr = pStrLoad->BeginUnit(_T("SecondaryShape"));
-   if ( FAILED(hr) )
-      return hr;
-
-   var.vt = VT_INDEX;
-   hr = pStrLoad->get_Property(_T("PointCount"),&var);
-   if ( FAILED(hr) )
-      return hr;
-
-   nPoints = VARIANT2INDEX(var);
-   for ( IndexType idx = 0; idx < nPoints; idx++ )
-   {
-      hr = pStrLoad->BeginUnit(_T("Point"));
-      if ( FAILED(hr) )
-         return hr;
-
-      var.vt = VT_R8;
-      hr = pStrLoad->get_Property(_T("X"),&var);
-      if ( FAILED(hr) )
-         return hr;
-
-      Float64 x = var.dblVal;
-
-      hr = pStrLoad->get_Property(_T("Y"),&var);
-      if ( FAILED(hr) )
-         return hr;
-
-      Float64 y = var.dblVal;
-
-      m_SecondaryPoints.push_back(std::make_pair(x,y));
-
-      hr = pStrLoad->EndUnit(); // Point
-      if ( FAILED(hr) )
-         return hr;
-   }
-
-   hr = pStrLoad->EndUnit(); // SecondaryShape
-   if ( FAILED(hr) )
-      return hr;
-
-
-   hr = pStrLoad->EndUnit(); // GenComp
-   if ( FAILED(hr) )
-      return hr;
-
-   return S_OK;
-}
-
 CString CGenCompDoc::GetToolbarSectionName()
 {
    return _T("GenComp");
 }
 
-BOOL CGenCompDoc::OpenOldFormat(LPCTSTR lpszPathName)
+BOOL CGenCompDoc::OpenTheDocument(LPCTSTR lpszPathName)
+{
+   m_GenCompXML = CreateGenCompModel(lpszPathName,m_DocConvert);
+   return m_GenCompXML.get() == NULL ? FALSE : TRUE;
+}
+
+BOOL CGenCompDoc::SaveTheDocument(LPCTSTR lpszPathName)
+{
+   try
+   {
+      std::ofstream file(lpszPathName);
+      GenComp_(file,*m_GenCompXML);
+   }
+   catch(const xml_schema::exception& e)
+   {
+#pragma Reminder("UPDATE: provide better error handling")
+      AfxMessageBox(_T("An error occured while saving the file"));
+      return FALSE;
+   }
+   return TRUE;
+}
+
+void CGenCompDoc::OnOldFormat(LPCTSTR lpszPathName)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    AfxMessageBox(_T("Error: Invalid file format.\n\nThis is not a GenComp file or it is in a legacy format that is not supported"),MB_OK | MB_ICONEXCLAMATION);
-   return FALSE;
 }
 
 void CGenCompDoc::Clear()
@@ -319,51 +132,79 @@ void CGenCompDoc::Clear()
 
 void CGenCompDoc::SetModularRatio(Float64 n)
 {
-   m_ModularRatio = n;
+   m_GenCompXML->ModularRatio(n);
 }
 
 Float64 CGenCompDoc::GetModularRatio() const
 {
-   return m_ModularRatio;
+   return m_GenCompXML->ModularRatio();
 }
 
 void CGenCompDoc::ClearPrimaryPoints()
 {
-   m_PrimaryPoints.clear();
+   m_GenCompXML->PrimaryShape().Point().clear();
 }
 
 void CGenCompDoc::AddPrimaryPoint(Float64 x,Float64 y)
 {
-   m_PrimaryPoints.push_back(std::make_pair(x,y));
+   m_GenCompXML->PrimaryShape().Point().push_back(PointType(x,y));
 }
 
-void CGenCompDoc::AddPrimaryPoints(const std::vector<std::pair<Float64,Float64>>& points)
+void CGenCompDoc::AddPrimaryPoints(const std::vector<std::pair<Float64,Float64>>& newPoints)
 {
-   m_PrimaryPoints.insert(m_PrimaryPoints.end(),points.begin(),points.end());
+   ShapeType::Point_sequence& points(m_GenCompXML->PrimaryShape().Point());
+   std::vector<std::pair<Float64,Float64>>::const_iterator iter(newPoints.begin());
+   std::vector<std::pair<Float64,Float64>>::const_iterator end(newPoints.end());
+   for ( ; iter != end; iter++ )
+   {
+      points.push_back(PointType(iter->first,iter->second));
+   }
 }
 
 const std::vector<std::pair<Float64,Float64>>& CGenCompDoc::GetPrimaryPoints()
 {
+   m_PrimaryPoints.clear();
+   ShapeType::Point_sequence& points(m_GenCompXML->PrimaryShape().Point());
+   ShapeType::Point_sequence::iterator iter(points.begin());
+   ShapeType::Point_sequence::iterator end(points.end());
+   for ( ; iter != end; iter++ )
+   {
+      m_PrimaryPoints.push_back(std::make_pair<Float64,Float64>(iter->X(),iter->Y()));
+   }
    return m_PrimaryPoints;
 }
 
 void CGenCompDoc::ClearSecondaryPoints()
 {
-   m_SecondaryPoints.clear();
+   m_GenCompXML->SecondaryShape().Point().clear();
 }
 
 void CGenCompDoc::AddSecondaryPoint(Float64 x,Float64 y)
 {
-   m_SecondaryPoints.push_back(std::make_pair(x,y));
+   m_GenCompXML->SecondaryShape().Point().push_back(PointType(x,y));
 }
 
-void CGenCompDoc::AddSecondaryPoints(const std::vector<std::pair<Float64,Float64>>& points)
+void CGenCompDoc::AddSecondaryPoints(const std::vector<std::pair<Float64,Float64>>& newPoints)
 {
-   m_SecondaryPoints.insert(m_SecondaryPoints.end(),points.begin(),points.end());
+   ShapeType::Point_sequence& points(m_GenCompXML->SecondaryShape().Point());
+   std::vector<std::pair<Float64,Float64>>::const_iterator iter(newPoints.begin());
+   std::vector<std::pair<Float64,Float64>>::const_iterator end(newPoints.end());
+   for ( ; iter != end; iter++ )
+   {
+      points.push_back(PointType(iter->first,iter->second));
+   }
 }
 
 const std::vector<std::pair<Float64,Float64>>& CGenCompDoc::GetSecondaryPoints()
 {
+   m_SecondaryPoints.clear();
+   ShapeType::Point_sequence& points(m_GenCompXML->SecondaryShape().Point());
+   ShapeType::Point_sequence::iterator iter(points.begin());
+   ShapeType::Point_sequence::iterator end(points.end());
+   for ( ; iter != end; iter++ )
+   {
+      m_SecondaryPoints.push_back(std::make_pair<Float64,Float64>(iter->X(),iter->Y()));
+   }
    return m_SecondaryPoints;
 }
 
@@ -371,14 +212,13 @@ CComPtr<IPolyShape> CGenCompDoc::GetPrimaryShape()
 {
    CComPtr<IPolyShape> polyShape;
    polyShape.CoCreateInstance(CLSID_PolyShape);
-   std::vector<std::pair<Float64,Float64>>::iterator iter(m_PrimaryPoints.begin());
-   std::vector<std::pair<Float64,Float64>>::iterator end(m_PrimaryPoints.end());
+
+   ShapeType::Point_sequence& points(m_GenCompXML->PrimaryShape().Point());
+   ShapeType::Point_sequence::iterator iter(points.begin());
+   ShapeType::Point_sequence::iterator end(points.end());
    for ( ; iter != end; iter++ )
    {
-      Float64 x = iter->first;
-      Float64 y = iter->second;
-
-      polyShape->AddPoint(x,y);
+      polyShape->AddPoint(iter->X(),iter->Y());
    }
 
    return polyShape;
@@ -389,14 +229,13 @@ CComPtr<ICompositeSection> CGenCompDoc::GetCompositeSection()
    CComPtr<IPolyShape> primaryShape(GetPrimaryShape());
    CComPtr<IPolyShape> secondaryShape;
    secondaryShape.CoCreateInstance(CLSID_PolyShape);
-   std::vector<std::pair<Float64,Float64>>::iterator iter(m_SecondaryPoints.begin());
-   std::vector<std::pair<Float64,Float64>>::iterator end(m_SecondaryPoints.end());
+
+   ShapeType::Point_sequence& points(m_GenCompXML->SecondaryShape().Point());
+   ShapeType::Point_sequence::iterator iter(points.begin());
+   ShapeType::Point_sequence::iterator end(points.end());
    for ( ; iter != end; iter++ )
    {
-      Float64 x = iter->first;
-      Float64 y = iter->second;
-
-      secondaryShape->AddPoint(x,y);
+      secondaryShape->AddPoint(iter->X(),iter->Y());
    }
 
    CComPtr<ICompositeSection> section;
@@ -406,7 +245,7 @@ CComPtr<ICompositeSection> CGenCompDoc::GetCompositeSection()
    section->AddSection(shape1,1.0,1.0,VARIANT_FALSE,VARIANT_TRUE);
 
    CComQIPtr<IShape> shape2(secondaryShape);
-   section->AddSection(shape2,m_ModularRatio,1.0,VARIANT_FALSE,VARIANT_TRUE);
+   section->AddSection(shape2,m_GenCompXML->ModularRatio(),1.0,VARIANT_FALSE,VARIANT_TRUE);
 
    return section;
 }

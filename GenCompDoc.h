@@ -24,10 +24,8 @@
 
 // CGenCompDoc document
 #include "BEToolboxDoc.h"
-#include <WBFLTools.h>
-#include <WBFLUnitServer.h>
 #include <ReportManager\ReportManager.h>
-#include <WBFLSections.h>
+#include <GenComp.h>
 
 class CGenCompDoc : public CBEToolboxDoc
 {
@@ -66,24 +64,21 @@ public:
 #endif
 
 protected:
-   /// called when a document is created (New or Open)
-   virtual BOOL Init(); 
+   virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
+   virtual BOOL SaveTheDocument(LPCTSTR lpszPathName);
 
-   // Called by the framework when the document is to be loaded and saved
-   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
-   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
+   virtual void OnOldFormat(LPCTSTR lpszPathName);
 
-   BOOL OpenOldFormat(LPCTSTR lpszPathName);
+   std::auto_ptr<GenComp> m_GenCompXML;
+   CComPtr<IUnitServer> m_DocUnitServer;
+   CComPtr<IUnitConvert> m_DocConvert;
 
    std::vector<std::pair<Float64,Float64>> m_PrimaryPoints;
    std::vector<std::pair<Float64,Float64>> m_SecondaryPoints;
-   Float64 m_ModularRatio;
 
    DECLARE_MESSAGE_MAP()
-public:
 
-   // over-ride default behavior by destroying column
-   virtual void OnCloseDocument();
+public:
 
    CReportBuilderManager m_RptMgr;
 };

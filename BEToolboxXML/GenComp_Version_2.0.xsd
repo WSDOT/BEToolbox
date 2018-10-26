@@ -1,0 +1,61 @@
+﻿<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:bxu="http://www.wsdot.wa.gov/OpenBridgeML/Units"
+           version="2.0">
+  <xs:annotation>
+    <xs:documentation>
+      This schema defines the data format for the BEToolbox:GenComp program.
+      All values are in fundamental units (kms)
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:import namespace="http://www.wsdot.wa.gov/OpenBridgeML/Units" schemaLocation="..\..\..\OpenBridgeML\Schema\OpenBridgeML_Units.xsd" />
+
+  <xs:element name="GenComp">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element ref="bxu:UnitsDeclaration" minOccurs="0" maxOccurs="1" />
+        <xs:element name="Units" type="UnitMode" />
+        <xs:element name="ModularRatio" type="xs:double" />
+        <xs:element name="PrimaryShape" type="ShapeType" />
+        <xs:element name="SecondaryShape" type="ShapeType" />
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:decimal" use="required" fixed="2"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="UnitMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SI" />
+      <xs:enumeration value="US" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ShapeType">
+    <xs:annotation>
+      <xs:documentation>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Point" type="PointType" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="2" />
+  </xs:complexType>
+
+  <xs:complexType name="PointType">
+    <xs:annotation>
+      <xs:documentation>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="X" type="bxu:LengthValueType" />
+      <xs:element name="Y" type="bxu:LengthValueType" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:decimal" use="required" fixed="1" />
+  </xs:complexType>
+
+</xs:schema>
