@@ -151,6 +151,34 @@ void CBEToolboxDoc::OnOldFormat(LPCTSTR lpszPathName)
    // Do nothing by default
 }
 
+HINSTANCE CBEToolboxDoc::GetResourceInstance()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   return AfxGetInstanceHandle();
+}
+
+void CBEToolboxDoc::UpdateApplicationIcon()
+{
+   // overside the default 
+   CEAFMainFrame* pFrame = EAFGetMainFrame();
+
+   // Put our icon on the main frame window
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   m_hMainFrameBigIcon = pFrame->GetIcon(TRUE);
+   m_hMainFrameSmallIcon = pFrame->GetIcon(FALSE);
+   HICON hIcon = AfxGetApp()->LoadIcon(IDR_BETOOLBOX);
+   pFrame->SetIcon(hIcon,TRUE);
+   pFrame->SetIcon(hIcon,FALSE);
+}
+
+void CBEToolboxDoc::ResetApplicationIcon()
+{
+   CEAFMainFrame* pFrame = EAFGetMainFrame();
+   // Put the main frame icon back the way it was
+   pFrame->SetIcon(m_hMainFrameBigIcon,TRUE);
+   pFrame->SetIcon(m_hMainFrameSmallIcon,FALSE);
+}
+
 void CBEToolboxDoc::OnCloseDocument()
 {
    EAFGetApp()->SetHelpFileName(NULL);
@@ -183,13 +211,6 @@ void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
       m_pMyToolBar = pFrame->GetToolBar(tbID);
       m_pMyToolBar->LoadToolBar(IDR_TOOLBAR,NULL);
       m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,NULL,BTNS_DROPDOWN);
-
-      // Put our icon on the main frame window
-      m_hMainFrameBigIcon = pFrame->GetIcon(TRUE);
-      m_hMainFrameSmallIcon = pFrame->GetIcon(FALSE);
-      HICON hIcon = AfxGetApp()->LoadIcon(IDR_BETOOLBOX);
-      pFrame->SetIcon(hIcon,TRUE);
-      pFrame->SetIcon(hIcon,FALSE);
       }
 
       // use our status bar
@@ -202,10 +223,6 @@ void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
       // remove toolbar here
       pFrame->DestroyToolBar(m_pMyToolBar);
       m_pMyToolBar = NULL;
-
-      // Put the main frame icon back the way it was
-      pFrame->SetIcon(m_hMainFrameBigIcon,TRUE);
-      pFrame->SetIcon(m_hMainFrameSmallIcon,FALSE);
 
       // reset the status bar
       pFrame->SetStatusBar(NULL);

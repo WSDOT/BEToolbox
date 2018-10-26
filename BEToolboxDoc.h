@@ -65,7 +65,10 @@ protected:
 
    virtual void OnOldFormat(LPCTSTR lpszPathName);
 
+   virtual HINSTANCE GetResourceInstance();
+   virtual void UpdateApplicationIcon();
+   virtual void ResetApplicationIcon();
+
    HICON m_hMainFrameBigIcon;
    HICON m_hMainFrameSmallIcon;
-
 };
