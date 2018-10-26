@@ -125,17 +125,10 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << pTable << rptNewLine;
    pTable->SetNumberOfHeaderRows(2);
    pTable->SetRowSpan(0,0,2);
-   pTable->SetRowSpan(1,0,SKIP_CELL);
    (*pTable)(0,0) << _T("Site Class");
 
    pTable->SetColumnSpan(0,1,6);
-   pTable->SetColumnSpan(0,2,SKIP_CELL);
-   pTable->SetColumnSpan(0,3,SKIP_CELL);
-   pTable->SetColumnSpan(0,4,SKIP_CELL);
-   pTable->SetColumnSpan(0,5,SKIP_CELL);
-   pTable->SetColumnSpan(0,6,SKIP_CELL);
    (*pTable)(0,1) << _T("Mapped Peak Ground Acceleration Coefficient (PGA)");
-
    (*pTable)(1,1) << _T("PGA") << symbol(LTE) << _T(" 0.10");
    (*pTable)(1,2) << _T("PGA") << _T("=")     << _T(" 0.20");
    (*pTable)(1,3) << _T("PGA") << _T("=")     << _T(" 0.30");
@@ -197,15 +190,9 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << pTable << rptNewLine;
    pTable->SetNumberOfHeaderRows(2);
    pTable->SetRowSpan(0,0,2);
-   pTable->SetRowSpan(1,0,SKIP_CELL);
    (*pTable)(0,0) << _T("Site Class");
 
    pTable->SetColumnSpan(0,1,6);
-   pTable->SetColumnSpan(0,2,SKIP_CELL);
-   pTable->SetColumnSpan(0,3,SKIP_CELL);
-   pTable->SetColumnSpan(0,4,SKIP_CELL);
-   pTable->SetColumnSpan(0,5,SKIP_CELL);
-   pTable->SetColumnSpan(0,6,SKIP_CELL);
    (*pTable)(0,1) << _T("Mapped Spectral Acceleration Coefficient at Period 0.2 sec (") << Sub2(_T("S"),_T("s")) << _T(")");
 
    (*pTable)(1,1) << Sub2(_T("S"),_T("s")) << symbol(LTE) << _T(" 0.25");
@@ -269,15 +256,9 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << pTable << rptNewLine;
    pTable->SetNumberOfHeaderRows(2);
    pTable->SetRowSpan(0,0,2);
-   pTable->SetRowSpan(1,0,SKIP_CELL);
    (*pTable)(0,0) << _T("Site Class");
 
    pTable->SetColumnSpan(0,1,6);
-   pTable->SetColumnSpan(0,2,SKIP_CELL);
-   pTable->SetColumnSpan(0,3,SKIP_CELL);
-   pTable->SetColumnSpan(0,4,SKIP_CELL);
-   pTable->SetColumnSpan(0,5,SKIP_CELL);
-   pTable->SetColumnSpan(0,6,SKIP_CELL);
    (*pTable)(0,1) << _T("Mapped Spectral Acceleration Coefficient at Period 1.0 sec (") << Sub2(_T("S"),_T("1")) << _T(")");
 
    (*pTable)(1,1) << Sub2(_T("S"),_T("1")) << symbol(LTE) << _T(" 0.1");

@@ -163,28 +163,6 @@ HINSTANCE CBEToolboxDoc::GetResourceInstance()
    return AfxGetInstanceHandle();
 }
 
-void CBEToolboxDoc::UpdateApplicationIcon()
-{
-   // overside the default 
-   CEAFMainFrame* pFrame = EAFGetMainFrame();
-
-   // Put our icon on the main frame window
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   m_hMainFrameBigIcon = pFrame->GetIcon(TRUE);
-   m_hMainFrameSmallIcon = pFrame->GetIcon(FALSE);
-   HICON hIcon = AfxGetApp()->LoadIcon(IDR_BETOOLBOX);
-   pFrame->SetIcon(hIcon,TRUE);
-   pFrame->SetIcon(hIcon,FALSE);
-}
-
-void CBEToolboxDoc::ResetApplicationIcon()
-{
-   CEAFMainFrame* pFrame = EAFGetMainFrame();
-   // Put the main frame icon back the way it was
-   pFrame->SetIcon(m_hMainFrameBigIcon,TRUE);
-   pFrame->SetIcon(m_hMainFrameSmallIcon,FALSE);
-}
-
 void CBEToolboxDoc::OnCloseDocument()
 {
    CEAFDocument::OnCloseDocument();

@@ -24,9 +24,10 @@ Lift Point | Distance from the ends of the girder to the lift point
 Impact Up/Down | Dynamic load allowance (impact)
 Lift Angle from Horizontal | Inclination of lifting cables measured from horizontal.
 Wind Loading | Select the wind loading type and enter the loading parameters. For Wind Speed, enter the wind velocity and wind pressure will be comptued according to LRFD 3.8.1.2. For Wind Pressure, enter a pressure loading applied to the vertical surface of the girder.
-Camber | Select the method for accounting for camber. For the offset method, the center of gravity of the girder is adusted by a percentage to allow for camber. For the direct method, an actual camber is input
+Camber | Select the method for accounting for camber. For the offset method, the center of gravity of the girder is adusted by a percentage to allow for camber. For the direct method, an actual camber is input and a camber multiplier can be specified
+Lateral Camber | Asymmetric girders can have lateral deflections due to the geometry of the section. Prestressing that is not symmetric with respect to the vertical axis of the girder can also have lateral deflection. Enter the lateral camber if applicable.
 Distance to roll axis above Top of Girder | Location of the roll axis above the top of the girder. The lifting device must be sufficiently rigid to raise the roll axis.
-Sweep Tolerance | Enter the girder lateral sweep tolerance
+Sweep Tolerance | Enter the girder lateral sweep tolerance. Lateral sweep is added to lateral camber.
 Support Placement Tolerance | Enter the lateral tolerance for placement of the lifting devices.
 
 ## Criteria

@@ -69,8 +69,6 @@ protected:
    virtual UINT GetToolbarID();
    virtual void LoadToolbarResource();
    virtual HINSTANCE GetResourceInstance() override;
-   virtual void UpdateApplicationIcon() override;
-   virtual void ResetApplicationIcon() override;
 
    HICON m_hMainFrameBigIcon;
    HICON m_hMainFrameSmallIcon;
