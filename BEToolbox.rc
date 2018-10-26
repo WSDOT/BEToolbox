@@ -69,8 +69,8 @@ SUPERELEVATION          METAFILE                "res\\Superelevation.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,10
- PRODUCTVERSION 3,0,0,10
+ FILEVERSION 3,0,0,12
+ PRODUCTVERSION 3,0,0,12
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -88,12 +88,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.0.0.10"
+            VALUE "FileVersion", "3.0.0.12"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2014, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.0.0.10"
+            VALUE "ProductVersion", "3.0.0.12"
         END
     END
     BLOCK "VarFileInfo"
@@ -187,6 +187,7 @@ BEGIN
     EDITTEXT        IDC_AS,301,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_AS_UNIT,344,25,14,8
     LTEXT           "Es",IDC_STATIC,363,25,8,8
+    EDITTEXT        IDC_ES,373,23,50,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_ES_UNIT,425,25,14,8
     LTEXT           "fy",IDC_STATIC,445,25,8,8
     EDITTEXT        IDC_FY,456,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
@@ -198,7 +199,6 @@ BEGIN
     CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,643,11,25,10
     CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,669,11,23,10
     DEFPUSHBUTTON   "Update",IDC_UPDATE,645,30,50,14
-    EDITTEXT        IDC_ES,373,23,50,14,ES_RIGHT | ES_AUTOHSCROLL
 END
 
 IDD_CURVEL_WIZ_1 DIALOGEX 0, 0, 316, 182

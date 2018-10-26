@@ -35,10 +35,10 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Copying OpenBridgeML SDK to BridgeLink environment"
-				CommandLine="xcopy /y/d \OpenBridgeML\$(PlatformName)\$(ConfigurationName)\OpenBridgeMLD.dll \ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&#x0D;&#x0A;"
-				AdditionalDependencies="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\OpenBridgeMLD.dll"
-				Outputs="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\OpenBridgeMLD.dll"
+				Description=""
+				CommandLine=""
+				AdditionalDependencies=""
+				Outputs=""
 			/>
 			<Tool
 				Name="C++/Tree Mapping Rule"
@@ -58,7 +58,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\OpenBridgeML\Include;\OpenBridgeML\Schema"
+				AdditionalIncludeDirectories=".;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -80,7 +80,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies=" Xalan-C_1D.lib xerces-c_3D.lib OpenBridgeMLD.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;\OpenBridgeML\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -120,10 +120,10 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Copying OpenBridgeML SDK to BridgeLink environment"
-				CommandLine="xcopy /y/d \OpenBridgeML\$(PlatformName)\$(ConfigurationName)\OpenBridgeMLD.dll \ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&#x0D;&#x0A;"
-				AdditionalDependencies="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\OpenBridgeMLD.dll"
-				Outputs="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\OpenBridgeMLD.dll"
+				Description=""
+				CommandLine=""
+				AdditionalDependencies=""
+				Outputs=""
 			/>
 			<Tool
 				Name="C++/Tree Mapping Rule"
@@ -144,7 +144,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\OpenBridgeML\Include;\OpenBridgeML\Schema"
+				AdditionalIncludeDirectories=".;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -166,7 +166,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies=" Xalan-C_1D.lib xerces-c_3D.lib OpenBridgeMLD.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;\OpenBridgeML\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="17"
@@ -207,10 +207,10 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Copying OpenBridgeML SDK to BridgeLink environment"
-				CommandLine="xcopy /y/d \OpenBridgeML\$(PlatformName)\$(ConfigurationName)\OpenBridgeML.dll \ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&#x0D;&#x0A;"
-				AdditionalDependencies="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\OpenBridgeML.dll"
-				Outputs="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\OpenBridgeML.dll"
+				Description=""
+				CommandLine=""
+				AdditionalDependencies=""
+				Outputs=""
 			/>
 			<Tool
 				Name="C++/Tree Mapping Rule"
@@ -231,7 +231,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\OpenBridgeML\Include;\OpenBridgeML\Schema"
+				AdditionalIncludeDirectories=".;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -252,7 +252,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies=" Xalan-C_1.lib xerces-c_3.lib OpenBridgeML.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;\OpenBridgeML\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -295,10 +295,10 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Copying OpenBridgeML SDK to BridgeLink environment"
-				CommandLine="xcopy /y/d \OpenBridgeML\$(PlatformName)\$(ConfigurationName)\OpenBridgeML.dll \ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&#x0D;&#x0A;"
-				AdditionalDependencies="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\OpenBridgeML.dll"
-				Outputs="\ARP\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\OpenBridgeML.dll"
+				Description=""
+				CommandLine=""
+				AdditionalDependencies=""
+				Outputs=""
 			/>
 			<Tool
 				Name="C++/Tree Mapping Rule"
@@ -320,7 +320,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\OpenBridgeML\Include;\OpenBridgeML\Schema"
+				AdditionalIncludeDirectories=".;\ARP\WBFL\Include;&quot;\ARP\WBFL\Include\$(PlatformName)&quot;;\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -341,7 +341,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies=" Xalan-C_1.lib xerces-c_3.lib OpenBridgeML.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;\OpenBridgeML\$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)$(PlatformName)\$(ConfigurationName)&quot;;&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
