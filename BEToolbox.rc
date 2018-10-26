@@ -75,8 +75,8 @@ PRISMATICSTRANDLAYOUT   METAFILE                "res\\PrismaticStrandLayout.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,0
- PRODUCTVERSION 3,1,0,0
+ FILEVERSION 3,1,1,0
+ PRODUCTVERSION 3,1,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -94,12 +94,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.1.0.0"
+            VALUE "FileVersion", "3.1.1.0"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2017, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.1.0.0"
+            VALUE "ProductVersion", "3.1.1.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -435,19 +435,18 @@ BEGIN
     LTEXT           "sqrt(f'ci (MPa))",IDC_LIFTING_TENSION_WITH_REBAR_UNIT,59,523,60,8
     GROUPBOX        "Browser Placeholder",IDC_BROWSER,268,7,509,546,NOT WS_VISIBLE
     LTEXT           "Sweep Tolerance",IDC_STATIC,20,310,56,8
-    LTEXT           "Evaluate stresses for",IDC_STATIC,19,416,69,8
-    COMBOBOX        IDC_STRESSES,91,414,127,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_STRESSES,23,414,221,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Wind Loading",IDC_STATIC,17,233,44,8
     EDITTEXT        IDC_CAMBER_MULTIPLIER,150,268,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "with a",IDC_STATIC,128,271,20,8
     LTEXT           "multiplier",IDC_STATIC,194,271,29,8
 END
 
-IDD_PGSTABLEHAULINGVIEW DIALOGEX 0, 0, 769, 818
+IDD_PGSTABLEHAULINGVIEW DIALOGEX 0, 0, 769, 859
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VSCROLL
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB2,27,625,159,8
+    LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB2,28,645,159,8
     GROUPBOX        "Effective Prestress Force at Hauling (Fpe)",IDC_STATIC,7,7,249,73
     LTEXT           "Straight Strands",IDC_STATIC,15,31,53,8
     EDITTEXT        IDC_FPE_STRAIGHT,79,29,40,14,ES_RIGHT | ES_AUTOHSCROLL
@@ -524,37 +523,38 @@ BEGIN
     LTEXT           "Support Placement Tolerance",IDC_STATIC,18,456,94,8
     EDITTEXT        IDC_SUPPORT_PLACEMENT_TOLERANCE,150,453,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SUPPORT_PLACEMENT_TOLERANCE_UNIT,193,456,19,8
-    GROUPBOX        "Criteria",IDC_STATIC,7,490,249,321
+    GROUPBOX        "Criteria",IDC_STATIC,7,487,249,345
     GROUPBOX        "Factors of Safety",IDC_STATIC,17,500,233,36
     LTEXT           "Cracking",IDC_STATIC,25,516,28,8
     EDITTEXT        IDC_HAULING_FS_CRACKING,57,514,40,14,ES_AUTOHSCROLL
     LTEXT           "Failure/Rollover",IDC_STATIC,110,518,51,8
     EDITTEXT        IDC_HAULING_FS_FAILURE,166,515,40,14,ES_AUTOHSCROLL
-    GROUPBOX        "Allowable Concrete Stress",IDC_STATIC,18,540,233,196
-    LTEXT           "Compression",IDC_STATIC_ACSCS2,24,553,41,8
-    EDITTEXT        IDC_HAULING_COMPRESSION,88,550,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "f'ci",IDC_HAULING_COMPRESSION_UNIT,130,552,10,8
-    LTEXT           "Tension for Normal Crown Slope Case",IDC_STATIC,24,571,121,8
-    LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS2,27,581,159,8
-    EDITTEXT        IDC_HAULING_TENSION_CROWN,24,592,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_CROWN_UNIT,68,595,90,8
+    GROUPBOX        "Allowable Concrete Stress",IDC_STATIC,18,540,233,220
+    COMBOBOX        IDC_STRESSES, 23, 553, 221, 30, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Compression",IDC_STATIC_ACSCS2,24,573,41,8
+    EDITTEXT        IDC_HAULING_COMPRESSION,88,570,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "f'ci",IDC_HAULING_COMPRESSION_UNIT,130,572,10,8
+    LTEXT           "Tension for Normal Crown Slope Case",IDC_STATIC,24,591,121,8
+    LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS2,28,601,159,8
+    EDITTEXT        IDC_HAULING_TENSION_CROWN,24,612,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_CROWN_UNIT,68,615,90,8
     CONTROL         "But not greater than ",IDC_CHECK_HAULING_TENSION_MAX_CROWN,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,612,77,10
-    EDITTEXT        IDC_HAULING_TENSION_MAX_CROWN,106,610,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "MPa",IDC_HAULING_TENSION_MAX_CROWN_UNIT,150,613,24,8
-    GROUPBOX        "Limitations",IDC_STATIC,17,741,233,57
-    LTEXT           "Maximum distance between bunk points",IDC_STATIC,25,754,128,8
-    EDITTEXT        IDC_MAX_BUNK,173,751,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_MAX_BUNK_UNIT,217,754,19,8
-    LTEXT           "Maximum leading overhang (closest to cab)",IDC_STATIC,25,767,139,8
-    EDITTEXT        IDC_LEADING_OVERHANG,173,766,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_LEADING_OVERHANG_UNIT,217,769,19,8
-    LTEXT           "Maximum girder weight",IDC_STATIC,27,781,74,8
-    EDITTEXT        IDC_MAX_GIRDER_WEIGHT,173,781,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_MAX_GIRDER_WEIGHT_UNIT,217,781,19,8
-    EDITTEXT        IDC_HAULING_TENSION_WITH_REBAR_CROWN,24,636,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,68,638,90,8
-    GROUPBOX        "Browser Placeholder",IDC_BROWSER,263,7,487,804,NOT WS_VISIBLE
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,632,77,10
+    EDITTEXT        IDC_HAULING_TENSION_MAX_CROWN,106,630,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "MPa",IDC_HAULING_TENSION_MAX_CROWN_UNIT,150,633,24,8
+    GROUPBOX        "Limitations",IDC_STATIC,17,767,233,57
+    LTEXT           "Maximum distance between bunk points",IDC_STATIC,25,780,128,8
+    EDITTEXT        IDC_MAX_BUNK,173,777,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_MAX_BUNK_UNIT,217,780,19,8
+    LTEXT           "Maximum leading overhang (closest to cab)",IDC_STATIC,25,793,139,8
+    EDITTEXT        IDC_LEADING_OVERHANG,173,792,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_LEADING_OVERHANG_UNIT,217,795,19,8
+    LTEXT           "Maximum girder weight",IDC_STATIC,27,807,74,8
+    EDITTEXT        IDC_MAX_GIRDER_WEIGHT,173,807,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_MAX_GIRDER_WEIGHT_UNIT,217,807,19,8
+    EDITTEXT        IDC_HAULING_TENSION_WITH_REBAR_CROWN,24,656,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,68,658,90,8
+    GROUPBOX        "Browser Placeholder",IDC_BROWSER,263,7,487,845,NOT WS_VISIBLE
     LTEXT           "Normal Crown Slope",IDC_STATIC,18,230,65,8
     EDITTEXT        IDC_CROWN_SLOPE,87,227,40,14,ES_RIGHT | ES_AUTOHSCROLL
     COMBOBOX        IDC_IMPACT_USAGE,71,211,180,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
@@ -562,17 +562,17 @@ BEGIN
     LTEXT           "Static",IDC_CROWN_SLOPE_UNIT,133,230,19,8
     LTEXT           "Static",IDC_SUPERELEVATION_UNIT,133,248,19,8
     LTEXT           "Wind Loading",IDC_STATIC,20,266,44,8
-    LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB3,27,706,159,8
-    LTEXT           "Tension for the Max. Superelevation Case",IDC_STATIC,24,654,136,8
-    LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS3,27,664,159,8
-    EDITTEXT        IDC_HAULING_TENSION_SUPER,24,675,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_SUPER_UNIT,68,678,90,8
+    LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB3,28,726,159,8
+    LTEXT           "Tension for the Max. Superelevation Case",IDC_STATIC,24,674,136,8
+    LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS3,28,684,159,8
+    EDITTEXT        IDC_HAULING_TENSION_SUPER,24,695,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_SUPER_UNIT,68,698,90,8
     CONTROL         "But not greater than ",IDC_CHECK_HAULING_TENSION_MAX_SUPER,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,693,77,10
-    EDITTEXT        IDC_HAULING_TENSION_MAX_SUPER,106,691,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "MPa",IDC_HAULING_TENSION_MAX_SUPER_UNIT,150,693,24,8
-    EDITTEXT        IDC_HAULING_TENSION_WITH_REBAR_SUPER,24,717,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,68,718,90,8
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,713,77,10
+    EDITTEXT        IDC_HAULING_TENSION_MAX_SUPER,106,711,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "MPa",IDC_HAULING_TENSION_MAX_SUPER_UNIT,150,713,24,8
+    EDITTEXT        IDC_HAULING_TENSION_WITH_REBAR_SUPER,24,737,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,68,738,90,8
     LTEXT           "Haul Truck",IDC_STATIC,16,358,34,8
     COMBOBOX        IDC_HAUL_TRUCK,59,355,112,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_CAMBER_MULTIPLIER,150,336,40,14,ES_RIGHT | ES_AUTOHSCROLL
@@ -1112,7 +1112,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 750
         TOPMARGIN, 7
-        BOTTOMMARGIN, 811
+        BOTTOMMARGIN, 852
     END
 
     IDD_PRISMATIC_GIRDER, DIALOG

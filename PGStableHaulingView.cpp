@@ -234,6 +234,9 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER,m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,strHaulingTag);
 
+   bool bEvaluateStressesAtEquilibriumAngle = problem.EvaluateStressesAtEquilibriumAngle();
+   DDX_CBItemData(pDX, IDC_STRESSES, bEvaluateStressesAtEquilibriumAngle);
+
    if ( pDX->m_bSaveAndValidate )
    {
       problem.GetConcrete().SetE(Ec);
@@ -274,6 +277,8 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
       problem.SetCamber(bDirectCamber,camber);
       problem.SetCamberMultiplier(camberMultiplier);
 
+      problem.EvaluateStressesAtEquilibriumAngle(bEvaluateStressesAtEquilibriumAngle);
+
       pDoc->SetHaulingStabilityProblem(problem);
       pDoc->SetHaulingMaterials(fc,!bComputeEc,frCoefficient);
 
@@ -288,6 +293,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
       pDoc->SetStrands(pDoc->GetGirderType(),HAULING,m_Strands);
 
       pDoc->SetHaulTruck(strHaulTruck);
+
    }
 }
 
@@ -340,6 +346,7 @@ BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_SUPER,&CPGStableHaulingView::OnChange)
 	ON_MESSAGE(WM_HELP, OnCommandHelp)
    ON_CBN_SELCHANGE(IDC_HAUL_TRUCK, &CPGStableHaulingView::OnHaulTruckChanged)
+   ON_CBN_SELCHANGE(IDC_STRESSES, &CPGStableHaulingView::OnChange)
    ON_COMMAND_RANGE(CCS_CMENU_BASE, CCS_CMENU_MAX, OnCmenuSelected)
 END_MESSAGE_MAP()
 
@@ -550,6 +557,7 @@ void CPGStableHaulingView::UpdateCriteriaControls()
    GetDlgItem(IDC_CHECK_HAULING_TENSION_MAX_SUPER)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_TENSION_MAX_SUPER)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_TENSION_WITH_REBAR_SUPER)->EnableWindow(bEnable);
+   GetDlgItem(IDC_STRESSES)->EnableWindow(bEnable);
 }
 
 void CPGStableHaulingView::OnEditFpe()
@@ -614,6 +622,10 @@ void CPGStableHaulingView::OnInitialUpdate()
    CComboBox* pcbCFType = (CComboBox*)GetDlgItem(IDC_CF_TYPE);
    pcbCFType->SetItemData(pcbCFType->AddString(_T("Adverse")),(DWORD_PTR)stbTypes::Adverse);
    pcbCFType->SetItemData(pcbCFType->AddString(_T("Favorable")),(DWORD_PTR)stbTypes::Favorable);
+
+   CComboBox* pcbStresses = (CComboBox*)GetDlgItem(IDC_STRESSES);
+   pcbStresses->SetItemData(pcbStresses->AddString(_T("Include girder stability equilibrium angle in stress calculations")), (DWORD_PTR)true);
+   pcbStresses->SetItemData(pcbStresses->AddString(_T("Ignore girder stability equilibrium angle in stress calculations")), (DWORD_PTR)false);
 
    CPGStableFormView::OnInitialUpdate();
 
