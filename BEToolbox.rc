@@ -72,8 +72,8 @@ PRISMATICSTRANDLAYOUT   METAFILE                "res\\PrismaticStrandLayout.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,39
- PRODUCTVERSION 3,0,0,39
+ FILEVERSION 3,0,0,40
+ PRODUCTVERSION 3,0,0,40
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -91,12 +91,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.0.0.39"
+            VALUE "FileVersion", "3.0.0.40"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2016, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.0.0.39"
+            VALUE "ProductVersion", "3.0.0.40"
         END
     END
     BLOCK "VarFileInfo"
@@ -206,6 +206,26 @@ BEGIN
     CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,643,11,25,10
     CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,669,11,23,10
     DEFPUSHBUTTON   "Update",IDC_UPDATE,645,30,50,14
+END
+
+IDD_SPECTRA DIALOGEX 0, 0, 705, 54
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    GROUPBOX        "Site Coordinates",IDC_STATIC,6,7,236,40,BS_NOTIFY
+    LTEXT           "Latitude",IDC_STATIC,15,22,27,8
+    EDITTEXT        IDC_LATITUDE,45,19,55,14,ES_AUTOHSCROLL
+    LTEXT           "° N",IDC_STATIC,103,22,11,8
+    LTEXT           "Static",IDC_LAT_RANGE,15,36,100,8
+    LTEXT           "Longitude",IDC_STATIC,130,22,32,8
+    EDITTEXT        IDC_LONGITUDE,163,19,55,14,ES_AUTOHSCROLL
+    LTEXT           "° W",IDC_STATIC,220,22,13,8
+    LTEXT           "Static",IDC_LNG_RANGE,130,36,100,8
+    GROUPBOX        "Site Soil Classification",IDC_STATIC,248,7,386,40
+    COMBOBOX        IDC_SITE_CLASS,256,22,89,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Static",IDC_DESCRIPTION,351,24,259,8
+    DEFPUSHBUTTON   "Update",IDC_UPDATE,645,7,50,14
+    PUSHBUTTON      "Export",IDC_EXPORT,645,25,50,14
 END
 
 IDD_CURVEL_WIZ_1 DIALOGEX 0, 0, 316, 182
@@ -802,6 +822,34 @@ BEGIN
     END
 END
 
+IDR_SPECTRA MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM "Help Source",                 EAFID_HELP_SOURCE
+        MENUITEM SEPARATOR
+        MENUITEM "&About BridgeLink...",        ID_APP_ABOUT
+        MENUITEM "About &BEToolbox...",         ID_HELP_ABOUTBETOOLBOX
+    END
+END
+
 IDR_GENCOMP MENU 
 BEGIN
     POPUP "&File"
@@ -988,6 +1036,14 @@ BEGIN
         RIGHTMARGIN, 695
     END
 
+    IDD_SPECTRA, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 695
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 47
+    END
+
     IDD_CURVEL_WIZ_1, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1093,6 +1149,7 @@ IDR_ULTCOL              ICON                    "res\\UltCol.ico"
 IDR_CURVEL              ICON                    "res\\Curvel.ico"
 IDR_PGSTABLE            ICON                    "res\\PGStable.ico"
 IDI_WSDOT               ICON                    "res\\WSDOT.ico"
+IDR_SPECTRA             ICON                    "res\\Spectra.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1106,6 +1163,7 @@ IDB_CURVEL_WATERMARK    BITMAP                  "res\\CurvelWatermark.bmp"
 IDB_PGSTABLE            BITMAP                  "res\\PGStable.bmp"
 IDB_CURVEL              BITMAP                  "res\\Curvel.bmp"
 IDB_GENCOMP             BITMAP                  "res\\GenComp.bmp"
+IDB_SPECTRA             BITMAP                  "res\\Spectra.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1148,6 +1206,11 @@ BEGIN
     IDR_BOXGDR              "BoxGdr\nBoxGdr\nBEToolbox\nBoxGdr (*.BoxGdr)\n.BoxGdr\nBoxGdr.Document\nBoxGdr Document"
     IDR_GIRCOMP             "GirComp\nGirComp\nBEToolbox\nGirComp (*.GirComp)\n.GirComp\nGirComp.Document\nGirComp Document"
     IDR_ULTCOL              "UltCol\nUltCol\nBEToolbox\nUltCol (*.UltCol)\n.UltCol\nUltCol.Document\nUltCol Document"
+END
+
+STRINGTABLE 
+BEGIN
+    IDR_SPECTRA             "Spectra\nSpectra\nBEToolbox\nSpectra (*.Spectra)\n.Spectra\nSpectra.Document\nSpectra Document"
 END
 
 STRINGTABLE 

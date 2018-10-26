@@ -39,3 +39,5 @@
 #define IDH_PGSTABLE_LIFTING_VIEW               603
 #define IDH_PGSTABLE_HAULING_VIEW               604
 
+#define IDH_SPECTRA                             700
+

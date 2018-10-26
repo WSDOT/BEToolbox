@@ -25,8 +25,11 @@
 #define IDD_PGSTABLECRITERIAVIEW        112
 #define IDD_PGSTABLEEFFECTIVEPRESTRESSDLG 113
 #define IDR_PGSTABLEEXPORTER            114
+#define IDD_SPECTRA                     115
+#define IDR_SPECTRA                     116
+#define IDB_SPECTRA                     117
 #define IDI_WSDOT                       200
-#define IDC_UPDATE                      202
+#define IDC_UPDATE                      201
 #define IDR_TOOLBAR                     207
 #define IDR_PGSTOOLBAR                  208
 #define IDR_CURVEL                      209
@@ -303,6 +306,13 @@
 #define IDC_HAUL_TRUCK                  444
 #define IDC_COMBO1                      445
 #define IDC_GIRDER_LIST                 445
+#define IDC_SITE_CLASS                  445
+#define IDC_LATITUDE                    446
+#define IDC_LONGITUDE                   447
+#define IDC_LAT_RANGE                   448
+#define IDC_LNG_RANGE                   449
+#define IDC_DESCRIPTION                 450
+#define IDC_EXPORT                      202
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -361,7 +371,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        218
 #define _APS_NEXT_COMMAND_VALUE         36871
-#define _APS_NEXT_CONTROL_VALUE         446
+#define _APS_NEXT_CONTROL_VALUE         452
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif
