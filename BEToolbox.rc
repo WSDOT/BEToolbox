@@ -69,8 +69,8 @@ SUPERELEVATION          METAFILE                "res\\Superelevation.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,2,1,0
- PRODUCTVERSION 2,2,1,0
+ FILEVERSION 2,2,1,1
+ PRODUCTVERSION 2,2,1,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -88,12 +88,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "2.2.1.0"
+            VALUE "FileVersion", "2.2.1.1"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2015, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "2.2.1.0"
+            VALUE "ProductVersion", "2.2.1.1"
         END
     END
     BLOCK "VarFileInfo"
