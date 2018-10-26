@@ -22,20 +22,4 @@
 
 #pragma once
 
-#include "M3CProblemParameters.h"
-
-// CM3CDlgBar
-class CM3CDlgBar : public CDialogBar
-{
-	DECLARE_DYNAMIC(CM3CDlgBar)
-
-public:
-	CM3CDlgBar();
-	virtual ~CM3CDlgBar();
-
-   CM3CProblemParameters m_ProblemParams;
-
-protected:
-	DECLARE_MESSAGE_MAP()
-   virtual void DoDataExchange(CDataExchange* pDX) override;
-};
+#define IDH_EXAMPLE 1000

@@ -21,36 +21,17 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <ReportManager\ChapterBuilder.h>
-#include "M3CDoc.h"
 
-#include <GraphicsLib\PointMapper.h>
+#include <ReportManager\ReportSpecificationBuilder.h>
 
-class CM3CDetailsChapterBuilder :
-   public CChapterBuilder
+class CM3CDoc;
+
+class CM3CAnalysisDetailsReportSpecificationBuilder :
+   public CReportSpecificationBuilder
 {
 public:
-   CM3CDetailsChapterBuilder(CM3CDoc* pDoc);
-   ~CM3CDetailsChapterBuilder(void);
-
-   virtual LPCTSTR GetName() const override;
-   virtual Uint16 GetMaxLevel() const override;
-   virtual rptChapter* Build(CReportSpecification* pRptSpec,Uint16 level) const override;
-   virtual bool Select() const override { return true; }
-   virtual CChapterBuilder* Clone() const override;
-
-private:
-   CM3CDoc* m_pDoc;
-
-   void BuildConcreteModel(rptChapter* pChapter) const;
-   void BuildRebarModel(rptChapter* pChapter) const;
-   void BuildAnalysisModel(rptChapter* pChapter, IndexType idx) const;
-
-   // This is a list of temporary files that were created on the fly
-   // Delete them in the destructor
-   std::vector<std::_tstring> m_TemporaryFiles;
-
-   rptRcImage* CreateImage(IMomentCapacitySolution* pSolution) const;
-   void DrawSection(CImage& image, IMomentCapacitySolution* pSolution) const;
-   void DrawSlice(IShape* pShape, CDC* pDC, grlibPointMapper& mapper) const;
+   CM3CAnalysisDetailsReportSpecificationBuilder();
+   ~CM3CAnalysisDetailsReportSpecificationBuilder(void);
+   virtual std::shared_ptr<CReportSpecification> CreateReportSpec(const CReportDescription& rptDesc, std::shared_ptr<CReportSpecification>& pRptSpec) override;
+   virtual std::shared_ptr<CReportSpecification> CreateDefaultReportSpec(const CReportDescription& rptDesc) override;
 };

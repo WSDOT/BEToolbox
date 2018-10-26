@@ -22,40 +22,20 @@
 
 #pragma once
 
-class CM3CProblemParameters
+#include "resource.h"
+#include <ToolImpl.h>
+
+#include "M3CDocTemplate.h"
+#include "M3CDoc.h"
+#include "M3CChildFrame.h"
+#include "M3CTabView.h"
+
+// {DACA33E6-D45C-4FBA-B04F-50F0A7A8E132}
+DEFINE_GUID(CLSID_M3CTool,
+   0xdaca33e6, 0xd45c, 0x4fba, 0xb0, 0x4f, 0x50, 0xf0, 0xa7, 0xa8, 0xe1, 0x32);
+class CM3CTool : public CToolImpl<CM3CTool, &CLSID_M3CTool, IDR_M3CTOOL, CM3CDoc, CM3CChildFrame, CM3CTabView, CM3CDocTemplate, IDR_M3C>
 {
 public:
-   CM3CProblemParameters();
-
-   bool operator==(const CM3CProblemParameters& other) const;
-   bool operator!=(const CM3CProblemParameters& other) const;
-
-   HRESULT Save(IStructuredSave* pStrSave);
-   HRESULT Load(IStructuredLoad* pStrLoad);
-
-   Float64 D;
-
-   Float64 fco;
-   Float64 eco;
-   Float64 R;
-
-   Float64 Cover;
-   Float64 As_per_bar;
-   long nBars;
-   Float64 fy;
-   Float64 fu;
-   Float64 Es;
-   Float64 esh;
-   Float64 efr;
-
-   Float64 AsSpiral;
-   Float64 db;
-   Float64 S;
-   Float64 FySpiral;
-   Float64 esu;
-
-   long nSlices;
-   Float64 initialStep;
-   Float64 P;
-   Float64 NASlope;
+   virtual CString GetName() const override { return _T("M3C"); }
 };
+OBJECT_ENTRY_AUTO(CLSID_M3CTool, CM3CTool)
