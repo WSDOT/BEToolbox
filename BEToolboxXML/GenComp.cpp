@@ -54,7 +54,7 @@ std::auto_ptr<GenComp> CreateGenCompModel()
    return genCompXML;
 }
 
-BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitConvert* pDocUnitConvert)
+BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitServer* pDocUnitServer)
 {
    // Walk the XML data structure and make sure all units of measure are in base units
 
@@ -65,23 +65,18 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitConvert* pDocUnitConvert)
    // 2) Walk document and convert all units to Consistent Base Units
    // 3) Do all work in consistent base units
    // 4) Save document with consistent base units
-   CComPtr<IUnitServer> unitServer;
-   HRESULT hr = unitServer.CoCreateInstance(CLSID_UnitServer);
+   CComPtr<IUnitServer> xmlDocUnitServer;
+   HRESULT hr = xmlDocUnitServer.CoCreateInstance(CLSID_UnitServer);
    ATLASSERT(SUCCEEDED(hr));
-   CComQIPtr<IUnitConvert> convert(unitServer);
 
    GenComp::UnitsDeclaration_optional& unitsDeclaration(pGenComp->UnitsDeclaration());
    if ( unitsDeclaration.present())
    {
-      if ( !InitializeWBFLUnitServer(&unitsDeclaration.get(),unitServer) )
+      if ( !InitializeWBFLUnitServer(&unitsDeclaration.get(),xmlDocUnitServer) )
       {
          return FALSE;
       }
    }
-
-   CComBSTR bstrLengthUnit;
-   unitServer->get_Length(&bstrLengthUnit);
-   Float64 value;
 
    // Primary Shape
    ShapeType& primaryShape(pGenComp->PrimaryShape());
@@ -90,39 +85,8 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitConvert* pDocUnitConvert)
    for ( ; iter != end; iter++ )
    {
       PointType& point(*iter);
-      if ( point.X().unit().present() )
-      {
-         // Get the unit of measure
-         OpenBridgeML::Units::LengthValueType::unit_type unit = point.X().unit().get();
-
-         // Convert the value from the specified unit of measure to the
-         // consistent unit of measure defined in <UnitsDeclaration>
-         hr = convert->ConvertToBaseUnits(point.X(),T2BSTR(unit.c_str()),&value);
-         ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-
-         // Put the value back into the data model and stop using the locally
-         // defined unit of measure
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         point.X(value);
-         point.X().unit().reset(); // no longer using the specified unit of measure
-      }
-
-      if ( point.Y().unit().present() )
-      {
-         // Get the unit of measure
-         OpenBridgeML::Units::LengthValueType::unit_type unit = point.Y().unit().get();
-
-         // Convert the value from the specified unit of measure to the
-         // consistent unit of measure defined in <UnitsDeclaration>
-         hr = convert->ConvertToBaseUnits(point.Y(),T2BSTR(unit.c_str()),&value);
-         ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-
-         // Put the value back into the data model and stop using the locally
-         // defined unit of measure
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         point.Y(value);
-         point.Y().unit().reset(); // no longer using the specified unit of measure
-      }
+      ConvertBetweenBaseUnits(point.X(), xmlDocUnitServer, pDocUnitServer);
+      ConvertBetweenBaseUnits(point.Y(), xmlDocUnitServer, pDocUnitServer);
    }
 
    // Secondary Shape
@@ -132,48 +96,17 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitConvert* pDocUnitConvert)
    for ( ; iter != end; iter++ )
    {
       PointType& point(*iter);
-      if ( point.X().unit().present() )
-      {
-         // Get the unit of measure
-         OpenBridgeML::Units::LengthValueType::unit_type unit = point.X().unit().get();
-
-         // Convert the value from the specified unit of measure to the
-         // consistent unit of measure defined in <UnitsDeclaration>
-         hr = convert->ConvertToBaseUnits(point.X(),T2BSTR(unit.c_str()),&value);
-         ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-
-         // Put the value back into the data model and stop using the locally
-         // defined unit of measure
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         point.X(value);
-         point.X().unit().reset(); // no longer using the specified unit of measure
-      }
-
-      if ( point.Y().unit().present() )
-      {
-         // Get the unit of measure
-         OpenBridgeML::Units::LengthValueType::unit_type unit = point.Y().unit().get();
-
-         // Convert the value from the specified unit of measure to the
-         // consistent unit of measure defined in <UnitsDeclaration>
-         hr = convert->ConvertToBaseUnits(point.Y(),T2BSTR(unit.c_str()),&value);
-         ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-
-         // Put the value back into the data model and stop using the locally
-         // defined unit of measure
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         point.Y(value);
-         point.Y().unit().reset(); // no longer using the specified unit of measure
-      }
+      ConvertBetweenBaseUnits(point.X(), xmlDocUnitServer, pDocUnitServer);
+      ConvertBetweenBaseUnits(point.Y(), xmlDocUnitServer, pDocUnitServer);
    }
 
    return TRUE;
 }
 
-std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitConvert* pDocUnitConvert)
+std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer)
 {
    ATLASSERT(lpszFilePath != NULL);
-   ATLASSERT(pDocUnitConvert != NULL);
+   ATLASSERT(pDocUnitServer != NULL);
 
    // Creating is a two phase process.
    // Step 1 is to run the document through the Xalan XSLT engine,
@@ -287,7 +220,7 @@ std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitConvert* pDo
       return std::auto_ptr<GenComp>();
    }
 
-   if ( !ConvertToBaseUnits(genCompXML.get(),pDocUnitConvert) )
+   if ( !ConvertToBaseUnits(genCompXML.get(),pDocUnitServer) )
    {
       // something went wrong in the unit conversion
 #pragma Reminder("UPDATE: provide better error handling")

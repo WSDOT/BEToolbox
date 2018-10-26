@@ -30,7 +30,7 @@
 // model is created, otherwise the model is created from the
 // curvel dataset supplied in the specified file.
 std::auto_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel();
-std::auto_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel(LPCTSTR lpszFilePath,IUnitConvert* pDocUnitConvert);
+std::auto_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer);
 
 // Saves a curvel model to the specified file.
 BOOL BETOOLBOXXMLFUNC SaveCurvelModel(LPCTSTR lpszFilePath,Curvel* pCurvelXML);

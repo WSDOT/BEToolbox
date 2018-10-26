@@ -127,7 +127,7 @@ BOOL CCurvelDoc::OpenTheDocument(LPCTSTR lpszPathName)
 {
    USES_CONVERSION;
 
-   m_CurvelXML = CreateCurvelModel(lpszPathName,m_DocConvert);
+   m_CurvelXML = CreateCurvelModel(lpszPathName,m_DocUnitServer);
    if ( m_CurvelXML.get() == NULL )
       return FALSE;
 
