@@ -562,11 +562,11 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
    Float64 g1,g2,pviStation,pviElevation,length;
    pRptSpec->GetVerticalCurveParameters(&g1,&g2,&pviStation,&pviElevation,&length);
 
-   Float64 pbgStation   = pviStation   - max(100,length);
-   Float64 pbgElevation = pviElevation - g1*max(100,length);
+   Float64 pbgStation   = pviStation   - Max(100.0,length);
+   Float64 pbgElevation = pviElevation - g1*Max(100.0,length);
 
-   Float64 pfgStation   = pviStation   + max(100,length);
-   Float64 pfgElevation = pviElevation + g2*max(100,length);
+   Float64 pfgStation   = pviStation   + Max(100.0,length);
+   Float64 pfgElevation = pviElevation + g2*Max(100.0,length);
 
    CComPtr<IProfilePoint> PBG;
    PBG.CoCreateInstance(CLSID_ProfilePoint);
@@ -622,9 +622,9 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
    for ( ; isIter != isIterEnd; isIter++ )
    {
       const IndividualStation& station(*isIter);
-      minStation = min(minStation,station.Station);
-      maxStation = max(maxStation,station.Station);
-      width = max(width,fabs(station.Offset));
+      minStation = Min(minStation,station.Station);
+      maxStation = Max(maxStation,station.Station);
+      width = Max(width,fabs(station.Offset));
    }
 
    const std::vector<StationRange>& ranges(pRptSpec->GetStationRanges());
@@ -633,9 +633,9 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
    for ( ; rangeIter != rangeIterEnd; rangeIter++ )
    {
       const StationRange& range(*rangeIter);
-      minStation = min(minStation,range.StartStation);
-      maxStation = max(maxStation,range.EndStation);
-      width = max(width,fabs(range.Offset));
+      minStation = Min(minStation,range.StartStation);
+      maxStation = Max(maxStation,range.EndStation);
+      width = Max(width,fabs(range.Offset));
    }
    
    const std::vector<SkewLine>& skewLines(pRptSpec->GetSkewLines());
@@ -644,14 +644,14 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
    for ( ; skewIter != skewIterEnd; skewIter++ )
    {
       const SkewLine& skew(*skewIter);
-      minStation = min(minStation,skew.Station);
-      maxStation = max(maxStation,skew.Station);
-      width = max(width,fabs(skew.Offset));
+      minStation = Min(minStation,skew.Station);
+      maxStation = Max(maxStation,skew.Station);
+      width = Max(width,fabs(skew.Offset));
    }
 
    // vertical curve stations
-   minStation = min(minStation,pbgStation);
-   maxStation = max(maxStation,pfgStation);
+   minStation = Min(minStation,pbgStation);
+   maxStation = Max(maxStation,pfgStation);
 
    // expand the surface so it will fit without question
    minStation /= 2;

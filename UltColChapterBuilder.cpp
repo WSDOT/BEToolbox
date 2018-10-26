@@ -158,13 +158,15 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    INIT_UV_PROTOTYPE( rptStressUnitValue,  stress, pDispUnits->Stress,       true);
    INIT_UV_PROTOTYPE( rptStressUnitValue,  modE,   pDispUnits->ModE,         true);
 
-   Float64 diameter, cover, As, fc, fy, Es;
+   Float64 diameter, cover, As, fc, fy, Es, ecl, etl;
    m_pDoc->m_Column->get_Diameter(&diameter);
    m_pDoc->m_Column->get_Cover(&cover);
    m_pDoc->m_Column->get_As(&As);
    m_pDoc->m_Column->get_fc(&fc);
    m_pDoc->m_Column->get_fy(&fy);
    m_pDoc->m_Column->get_Es(&Es);
+   ecl = m_pDoc->m_ecl;
+   etl = m_pDoc->m_etl;
 
    (*pLayoutTable)(0,1) << _T("Diameter = ") << length.SetValue(diameter) << rptNewLine;
    (*pLayoutTable)(0,1) << Sub2(_T("f'"),_T("c")) << _T(" = ") << stress.SetValue(fc) << rptNewLine;
@@ -172,16 +174,19 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    (*pLayoutTable)(0,1) << Sub2(_T("A"),_T("s")) << _T(" = ") << area.SetValue(As) << rptNewLine;
    (*pLayoutTable)(0,1) << Sub2(_T("E"),_T("s")) << _T(" = ") << modE.SetValue(Es) << rptNewLine;
    (*pLayoutTable)(0,1) << Sub2(_T("f"),_T("y")) << _T(" = ") << stress.SetValue(fy) << rptNewLine;
+   (*pLayoutTable)(0,1) << Sub2(symbol(epsilon),_T("cl")) << _T(" = ") << ecl << rptNewLine;
+   (*pLayoutTable)(0,1) << Sub2(symbol(epsilon),_T("tl")) << _T(" = ") << etl << rptNewLine;
+   (*pLayoutTable)(0,1) << _T("0.75 ") << symbol(LTE) << _T(" ") << symbol(phi) << _T(" = 0.75 + 0.15(") << Sub2(symbol(epsilon),_T("t")) << _T(" - ") << Sub2(symbol(epsilon),_T("cl")) << _T(")/(") << Sub2(symbol(epsilon),_T("tl")) << _T(" - ") << Sub2(symbol(epsilon),_T("cl"))<< _T(") ") << symbol(LTE) << _T(" 0.9") << rptNewLine;
 
    (*pLayoutTable)(0,1) << rptNewLine;
 
    //
    // DO THE COLUMN ANALYSIS
    //
-   CComPtr<IPoint2dCollection> points;
-   m_pDoc->m_Column->ComputeInteraction(35,&points);
+   CComPtr<IPoint2dCollection> unfactored, factored;
+   m_pDoc->m_Column->ComputeInteractionEx(35,ecl,etl,&unfactored,&factored);
 
-   (*pLayoutTable)(0,1) << CreateImage(points);
+   (*pLayoutTable)(0,1) << CreateImage(unfactored,factored);
 
    //
    // Create the table
@@ -189,7 +194,7 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    INIT_UV_PROTOTYPE( rptForceUnitValue,  axial,  pDispUnits->GeneralForce, false);
    INIT_UV_PROTOTYPE( rptMomentUnitValue, moment, pDispUnits->Moment,       false);
 
-   rptRcTable* pTable = new rptRcTable(2,0.);
+   rptRcTable* pTable = new rptRcTable(5,0.);
    pTable->SetTableHeaderStyle( _T("ColumnHeading") );
    pTable->SetOutsideBorderStyle( rptRiStyle::HAIR_THICK );
    pTable->SetInsideBorderStyle( rptRiStyle::NOBORDER );
@@ -207,25 +212,41 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    (*pLayoutTable)(0,0) << pTable;
 
-   (*pTable)(0,0) << COLHDR(_T("Moment"),rptMomentUnitTag, pDispUnits->Moment);
-   (*pTable)(0,1) << COLHDR(_T("Axial"), rptForceUnitTag, pDispUnits->GeneralForce);
+   (*pTable)(0,0) << COLHDR(Sub2(_T("M"),_T("n")), rptMomentUnitTag, pDispUnits->Moment);
+   (*pTable)(0,1) << COLHDR(Sub2(_T("P"),_T("n")), rptForceUnitTag,  pDispUnits->GeneralForce);
+   (*pTable)(0,2) << symbol(phi);
+   (*pTable)(0,3) << COLHDR(symbol(phi) << Sub2(_T("M"),_T("n")), rptMomentUnitTag, pDispUnits->Moment);
+   (*pTable)(0,4) << COLHDR(symbol(phi) << Sub2(_T("P"),_T("n")), rptForceUnitTag,  pDispUnits->GeneralForce);
 
 
    RowIndexType row = pTable->GetNumberOfHeaderRows();
 
    CollectionIndexType nPoints;
-   points->get_Count(&nPoints);
+   unfactored->get_Count(&nPoints);
    for ( CollectionIndexType i = 0; i < nPoints; i++ )
    {
-      CComPtr<IPoint2d> p;
-      points->get_Item(i,&p);
+      CComPtr<IPoint2d> pn;
+      unfactored->get_Item(i,&pn);
 
-      Float64 M,P;
-      p->get_X(&M);
-      p->get_Y(&P);
+      CComPtr<IPoint2d> pr;
+      factored->get_Item(i,&pr);
 
-      (*pTable)(row,0) << moment.SetValue(M);
-      (*pTable)(row,1) << axial.SetValue(-P); // minus because we want tension to be < 0
+      Float64 Mn,Pn;
+      pn->get_X(&Mn);
+      pn->get_Y(&Pn);
+
+      Float64 Mr,Pr;
+      pr->get_X(&Mr);
+      pr->get_Y(&Pr);
+
+      Float64 phi = Pr/Pn;
+      ATLASSERT( IsEqual(phi,Mr/Mn) );
+
+      (*pTable)(row,0) << moment.SetValue(Mn);
+      (*pTable)(row,1) << axial.SetValue(-Pn); // minus because we want tension to be < 0
+      (*pTable)(row,2) << phi;
+      (*pTable)(row,3) << moment.SetValue(Mr);
+      (*pTable)(row,4) << axial.SetValue(-Pr); // minus because we want tension to be < 0
 
       row++;
    }
@@ -239,7 +260,7 @@ CChapterBuilder* CUltColChapterBuilder::Clone() const
    return new CUltColChapterBuilder(m_pDoc);
 }
 
-rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* points) const
+rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IPoint2dCollection* factored) const
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -285,23 +306,35 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* points) const
    graph.SetYAxisNumberOfMinorTics(5);
    graph.SetYAxisNumberOfMajorTics(21);
 
-   IndexType series = graph.CreateDataSeries(_T(""),PS_SOLID,1,BLUE);
+   IndexType series1 = graph.CreateDataSeries(_T(""),PS_SOLID,1,BLUE);
+   IndexType series2 = graph.CreateDataSeries(_T(""),PS_SOLID,1,GREEN);
 
    CollectionIndexType nPoints;
-   points->get_Count(&nPoints);
+   unfactored->get_Count(&nPoints);
    for ( CollectionIndexType i = 0; i < nPoints; i++ )
    {
-      CComPtr<IPoint2d> p;
-      points->get_Item(i,&p);
+      CComPtr<IPoint2d> pn;
+      unfactored->get_Item(i,&pn);
 
-      Float64 M,P;
-      p->get_X(&M);
-      p->get_Y(&P);
+      Float64 Mn,Pn;
+      pn->get_X(&Mn);
+      pn->get_Y(&Pn);
 
-      M = ::ConvertFromSysUnits(M,pDispUnits->Moment.UnitOfMeasure);
-      P = ::ConvertFromSysUnits(P,pDispUnits->GeneralForce.UnitOfMeasure);
+      Mn = ::ConvertFromSysUnits(Mn,pDispUnits->Moment.UnitOfMeasure);
+      Pn = ::ConvertFromSysUnits(Pn,pDispUnits->GeneralForce.UnitOfMeasure);
 
-      graph.AddPoint(series,gpPoint2d(M,-P));      
+      CComPtr<IPoint2d> pr;
+      factored->get_Item(i,&pr);
+
+      Float64 Mr,Pr;
+      pr->get_X(&Mr);
+      pr->get_Y(&Pr);
+
+      Mr = ::ConvertFromSysUnits(Mr,pDispUnits->Moment.UnitOfMeasure);
+      Pr = ::ConvertFromSysUnits(Pr,pDispUnits->GeneralForce.UnitOfMeasure);
+
+      graph.AddPoint(series1,gpPoint2d(Mn,-Pn));      
+      graph.AddPoint(series2,gpPoint2d(Mr,-Pr));      
    }
 
    graph.UpdateGraphMetrics(pDC->GetSafeHdc());

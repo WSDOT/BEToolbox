@@ -44,5 +44,5 @@ private:
    // Delete them in the destructor
    std::vector<std::_tstring> m_TemporaryFiles;
 
-   rptRcImage* CreateImage(IPoint2dCollection* points) const;
+   rptRcImage* CreateImage(IPoint2dCollection* unfactored,IPoint2dCollection* factored) const;
 };

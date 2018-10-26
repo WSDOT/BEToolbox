@@ -67,4 +67,6 @@ void CUltColDlgBar::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_AS,      IDC_AS_UNIT,      m_As,      pDispUnits->Area);
    DDX_UnitValueAndTag(pDX,IDC_ES,      IDC_ES_UNIT,      m_Es,      pDispUnits->Stress);
    DDX_UnitValueAndTag(pDX,IDC_FY,      IDC_FY_UNIT,      m_Fy,      pDispUnits->Stress);
+   DDX_Text(pDX, IDC_ECL, m_ecl);
+   DDX_Text(pDX, IDC_ETL, m_etl);
 }

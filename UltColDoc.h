@@ -64,6 +64,8 @@ public:
    virtual void OnCloseDocument();
 
    CComPtr<IRoundColumn> m_Column;
+   Float64 m_ecl;
+   Float64 m_etl;
    CReportBuilderManager m_RptMgr;
    afx_msg void OnRefreshReport();
 };
