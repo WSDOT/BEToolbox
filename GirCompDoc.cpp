@@ -71,6 +71,8 @@ CGirCompDoc::CGirCompDoc()
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
+
+   UIHints(FALSE); // not using UIHints feature
 }
 
 CGirCompDoc::~CGirCompDoc()
@@ -131,6 +133,18 @@ void CGirCompDoc::OnCloseDocument()
    EAFGetApp()->SetUnitsMode(eafTypes::umUS);
 
    CEAFDocument::OnCloseDocument();
+}
+
+void CGirCompDoc::LoadDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::LoadDocumentSettings();
+}
+
+void CGirCompDoc::SaveDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::SaveDocumentSettings();
 }
 
 HRESULT CGirCompDoc::WriteTheDocument(IStructuredSave* pStrSave)

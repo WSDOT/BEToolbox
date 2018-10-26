@@ -79,6 +79,8 @@ CCurvelDoc::CCurvelDoc()
    rptDesc.ConfigureReportSpecification(pRptSpec);
 
    m_pDefaultRptSpec = pCurvelRptSpec;
+
+   UIHints(FALSE); // not using UIHints feature
 }
 
 CCurvelDoc::~CCurvelDoc()
@@ -137,6 +139,18 @@ BOOL CCurvelDoc::OpenTheDocument(LPCTSTR lpszPathName)
 BOOL CCurvelDoc::SaveTheDocument(LPCTSTR lpszPathName)
 {
    return SaveCurvelModel(lpszPathName,m_CurvelXML.get());
+}
+
+void CCurvelDoc::LoadDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::LoadDocumentSettings();
+}
+
+void CCurvelDoc::SaveDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::SaveDocumentSettings();
 }
 
 void CCurvelDoc::OnOldFormat(LPCTSTR lpszPathName)

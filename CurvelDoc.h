@@ -56,6 +56,9 @@ protected:
    virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
    virtual BOOL SaveTheDocument(LPCTSTR lpszPathName);
 
+   virtual void LoadDocumentSettings();
+   virtual void SaveDocumentSettings();
+
    virtual void OnOldFormat(LPCTSTR lpszPathName);
 
    std::auto_ptr<Curvel> m_CurvelXML;

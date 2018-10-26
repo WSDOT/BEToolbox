@@ -64,6 +64,8 @@ CGenCompDoc::CGenCompDoc()
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
+
+   UIHints(FALSE); // not using UIHints feature
 }
 
 CGenCompDoc::~CGenCompDoc()
@@ -128,6 +130,18 @@ BOOL CGenCompDoc::SaveTheDocument(LPCTSTR lpszPathName)
       return FALSE;
    }
    return TRUE;
+}
+
+void CGenCompDoc::LoadDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::LoadDocumentSettings();
+}
+
+void CGenCompDoc::SaveDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::SaveDocumentSettings();
 }
 
 void CGenCompDoc::OnOldFormat(LPCTSTR lpszPathName)

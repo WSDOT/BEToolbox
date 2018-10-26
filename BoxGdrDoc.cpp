@@ -49,6 +49,8 @@ CBoxGdrDoc::CBoxGdrDoc()
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
+
+   UIHints(FALSE); // not using UIHints feature
 }
 
 CBoxGdrDoc::~CBoxGdrDoc()
@@ -354,6 +356,18 @@ HRESULT CBoxGdrDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
       return hr;
 
    return S_OK;
+}
+
+void CBoxGdrDoc::LoadDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::LoadDocumentSettings();
+}
+
+void CBoxGdrDoc::SaveDocumentSettings()
+{
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   __super::SaveDocumentSettings();
 }
 
 CString CBoxGdrDoc::GetToolbarSectionName()
