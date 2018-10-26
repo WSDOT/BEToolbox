@@ -52,8 +52,11 @@ BOOL CPGStableChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
    // force this window to be maximized (not sure why WS_VISIBLE is required)
    cs.style |= WS_MAXIMIZE | WS_VISIBLE;
-   
-   // I have no idea why, but creating this window fail the second time a BEToolbox document
+   cs.style &= ~WS_MAXIMIZEBOX; // we don't want a maximize box
+   cs.style &= ~WS_MINIMIZEBOX; // we don't want a minimize box
+   cs.style &= ~WS_SYSMENU; // we don't want a system menu
+
+   // I have no idea why, but creating this window fails the second time a BEToolbox document
    // is created in a single BridgeLink run. For some reason, MFC determines the wrong
    // class name. lpszClass is nullptr the first time this window is created successfully, so
    // we'll force it to nullptr here so it works on subsequent creation attempts

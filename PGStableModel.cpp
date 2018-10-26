@@ -170,10 +170,27 @@ stbLiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
       m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(X));
    }
 
+   // when the lifting cables are inclined, the moment diagram due to the horizontal component of the lift force
+   // jumps from zero to some value at the lift point. We need to add analysis points just outside of the lift
+   // point to capture the effect of the jump.
+   bool bAddExtraLiftPointAnalysisPoints(IsEqual(m_LiftingStabilityProblem.GetLiftAngle(), PI_OVER_2) ? false : true);
+
    Float64 Ll, Lr;
    m_LiftingStabilityProblem.GetSupportLocations(&Ll,&Lr);
+   Float64 offset = ::ConvertToSysUnits(0.001, unitMeasure::Feet);
+
+   if (bAddExtraLiftPointAnalysisPoints)
+   {
+      m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(Ll - offset));
+   }
+
    m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(Ll));
-   m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(L-Lr));
+   m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(L - Lr));
+
+   if (bAddExtraLiftPointAnalysisPoints)
+   {
+      m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(L - Lr + offset));
+   }
 
    ResolveLiftingStrandLocations();
 

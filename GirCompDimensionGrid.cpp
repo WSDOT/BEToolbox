@@ -515,6 +515,7 @@ void CGirCompDimensionGrid::OnUpdateCells(ROWCOL row)
    //EnableCell(row,col++,true); // N2
    //EnableCell(row,col++,true); // N3
 
+   AFX_MANAGE_STATE(AfxGetStaticModuleState()); // not sure why, but need this or there will be font handle errors deep in the next function call
    ResizeColWidthsToFit(CGXRange(0,0,GetRowCount(),GetColCount()));
 
    GetParam()->EnableUndo(TRUE);

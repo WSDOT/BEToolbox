@@ -62,4 +62,6 @@ public:
    virtual BOOL OnInitDialog() override;
    afx_msg void OnPSMethodChanged();
    afx_msg void OnGirderChanged();
+   virtual void OnCancel();
+   virtual void OnOK();
 };
