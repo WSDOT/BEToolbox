@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -41,9 +41,16 @@ BEGIN_MESSAGE_MAP(CUltColChildFrame, CEAFChildFrame)
    ON_BN_CLICKED(IDC_US,OnUSUnits)
    ON_BN_CLICKED(IDC_SI,OnSIUnits)
    ON_NOTIFY_EX(TTN_NEEDTEXT,0,OnToolTipNotify)
+
+   ON_EN_KILLFOCUS(IDC_DIAMETER,OnUpdate)
+   ON_EN_KILLFOCUS(IDC_FC,OnUpdate)
+   ON_EN_KILLFOCUS(IDC_COVER,OnUpdate)
+   ON_EN_KILLFOCUS(IDC_AS,OnUpdate)
+   ON_EN_KILLFOCUS(IDC_FY,OnUpdate)
+   ON_EN_KILLFOCUS(IDC_ES,OnUpdate)
 END_MESSAGE_MAP()
 
-void CUltColChildFrame::SetColumnParameters(Float64 diameter, Float64 fc, Float64 cover, Float64 As, Float64 Es, Float64 fy,Float64 ecl,Float64 etl)
+void CUltColChildFrame::SetColumnParameters(Float64 diameter, Float64 fc, Float64 cover, Float64 As, Float64 Es, Float64 fy)
 {
    m_DlgBar.m_Diameter = diameter;
    m_DlgBar.m_Fc = fc;
@@ -51,8 +58,6 @@ void CUltColChildFrame::SetColumnParameters(Float64 diameter, Float64 fc, Float6
    m_DlgBar.m_As = As;
    m_DlgBar.m_Es = Es;
    m_DlgBar.m_Fy = fy;
-   m_DlgBar.m_ecl = ecl;
-   m_DlgBar.m_etl = etl;
 
    m_DlgBar.UpdateData(FALSE);
 }
@@ -93,23 +98,19 @@ void CUltColChildFrame::OnUpdate()
    if ( pDoc )
    {
       BOOL bModified = FALSE;
-      Float64 dia, fc, cover, as, es, fy, ecl, etl;
+      Float64 dia, fc, cover, as, es, fy;
       pDoc->m_Column->get_As(&as);
       pDoc->m_Column->get_Cover(&cover);
       pDoc->m_Column->get_Diameter(&dia);
       pDoc->m_Column->get_Es(&es);
       pDoc->m_Column->get_fc(&fc);
       pDoc->m_Column->get_fy(&fy);
-      ecl = pDoc->m_ecl;
-      etl = pDoc->m_etl;
       if ( !IsEqual(dia,m_DlgBar.m_Diameter) ||
            !IsEqual(fc,m_DlgBar.m_Fc) ||
            !IsEqual(cover,m_DlgBar.m_Cover) ||
            !IsEqual(as,m_DlgBar.m_As) ||
            !IsEqual(es,m_DlgBar.m_Es) ||
-           !IsEqual(fy,m_DlgBar.m_Fy) ||
-           !IsEqual(ecl,m_DlgBar.m_ecl) ||
-           !IsEqual(etl,m_DlgBar.m_etl))
+           !IsEqual(fy,m_DlgBar.m_Fy) )
       {
          bModified = TRUE;
       }
@@ -120,8 +121,6 @@ void CUltColChildFrame::OnUpdate()
       pDoc->m_Column->put_As(       m_DlgBar.m_As );
       pDoc->m_Column->put_Es(       m_DlgBar.m_Es );
       pDoc->m_Column->put_fy(       m_DlgBar.m_Fy );
-      pDoc->m_ecl = m_DlgBar.m_ecl;
-      pDoc->m_etl = m_DlgBar.m_etl;
 
       if ( pDoc->IsModified() || bModified )
          pDoc->SetModifiedFlag();
@@ -186,14 +185,6 @@ BOOL CUltColChildFrame::OnToolTipNotify(UINT id,NMHDR* pNMHDR, LRESULT* pResult)
 
       case IDC_COVER:
          _tcscpy_s(pTTT->szText,sizeof(pTTT->szText)/sizeof(TCHAR),_T("Cover to Center of Reinforcement"));
-         break;
-
-      case IDC_ECL:
-         _tcscpy_s(pTTT->szText,sizeof(pTTT->szText)/sizeof(TCHAR),_T("Compression Strain Limit"));
-         break;
-
-      case IDC_ETL:
-         _tcscpy_s(pTTT->szText,sizeof(pTTT->szText)/sizeof(TCHAR),_T("Tension Strain Limit"));
          break;
 
       case IDC_US:

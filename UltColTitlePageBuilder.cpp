@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -26,10 +26,6 @@
 #include <MFCTools\VersionInfo.h>
 
 CUltColTitlePageBuilder::CUltColTitlePageBuilder(void)
-{
-}
-CUltColTitlePageBuilder::CUltColTitlePageBuilder(const CUltColTitlePageBuilder& other) :
-CTitlePageBuilder(other)
 {
 }
 
@@ -80,9 +76,4 @@ rptChapter* CUltColTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificatio
 
    (*pPara) << rptNewPage;
    return pTitlePage;
-}
-
-CTitlePageBuilder* CUltColTitlePageBuilder::Clone() const
-{
-   return new CUltColTitlePageBuilder(*this);
 }

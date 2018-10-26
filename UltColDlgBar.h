@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -37,8 +37,6 @@ public:
    Float64 m_Es;
    Float64 m_Fy;
    Float64 m_Fc;
-   Float64 m_ecl;
-   Float64 m_etl;
 
 protected:
 	DECLARE_MESSAGE_MAP()

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -28,11 +28,6 @@
 
 
 CCurvelTitlePageBuilder::CCurvelTitlePageBuilder(void)
-{
-}
-
-CCurvelTitlePageBuilder::CCurvelTitlePageBuilder(const CCurvelTitlePageBuilder& other) :
-CTitlePageBuilder(other)
 {
 }
 
@@ -88,9 +83,4 @@ rptChapter* CCurvelTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificatio
    (*pPara) << rptNewPage;
 
    return pTitlePage;
-}
-
-CTitlePageBuilder* CCurvelTitlePageBuilder::Clone() const
-{
-   return new CCurvelTitlePageBuilder(*this);
 }

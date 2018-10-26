@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -28,11 +28,6 @@
 
 
 CGirCompTitlePageBuilder::CGirCompTitlePageBuilder(void)
-{
-}
-
-CGirCompTitlePageBuilder::CGirCompTitlePageBuilder(const CGirCompTitlePageBuilder& other) :
-CTitlePageBuilder(other)
 {
 }
 
@@ -86,9 +81,4 @@ rptChapter* CGirCompTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificati
    *pPara << rptRcImage(GetImagePath() + _T("GirComp.png"));
 
    return pTitlePage;
-}
-
-CTitlePageBuilder* CGirCompTitlePageBuilder::Clone() const
-{
-   return new CGirCompTitlePageBuilder(*this);
 }

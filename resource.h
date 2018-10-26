@@ -81,11 +81,8 @@
 #define IDC_STATION_RANGE               262
 #define IDC_IMAGE                       262
 #define IDC_STATION_RANGE_ADD           263
-#define IDC_ECL                         263
 #define IDC_INDIVIDUAL_STATION_REMOVE2  264
 #define IDC_STATION_RANGE_REMOVE        264
-#define IDC_EDIT2                       264
-#define IDC_ETL                         264
 #define IDC_SKEW_LINE                   265
 #define IDC_SKEW_LINE_ADD               266
 #define IDC_STATION_RANGE_REMOVE2       267
@@ -119,7 +116,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        214
 #define _APS_NEXT_COMMAND_VALUE         36867
-#define _APS_NEXT_CONTROL_VALUE         265
+#define _APS_NEXT_CONTROL_VALUE         263
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif
