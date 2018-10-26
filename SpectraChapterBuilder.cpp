@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2017  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -79,7 +79,7 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
 
    (*pPara) << _T("2014 Seismic Hazard Map, 7% probability of exceedance in 75 years") << rptNewLine;
    (*pPara) << rptNewLine;
-   (*pPara) << _T("Site Coordinates: ") << lat << _T("° N, ") << -lng << _T("° W") << rptNewLine;
+   (*pPara) << _T("Site Coordinates (Latitude,Longitude): ") << lat << _T("° N, ") << -lng << _T("° W") << rptNewLine;
    (*pPara) << _T("Site Soil Classification: ") << _T("Site Class ") << strSiteClass[siteClass] << _T(" - ") << m_pDoc->GetSiteClassDescription(siteClass) << rptNewLine;
    (*pPara) << rptNewLine;
    (*pPara) << _T("Seismic hazard maps are for Site Class B. Adjustments for other Site Classes are made as needed.") << rptNewLine;
@@ -106,8 +106,15 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pTable)(row,2) << Sub2(_T("S"),_T("1")) << _T(" - Site Class B");
    row++;
 
-   (*pPara) << _T("Values of Site Factor, ") << Sub2(_T("F"),_T("pga")) << _T(", at Zero-Period on Acceleration Spectrum") << rptNewLine;
-   pTable = rptStyleManager::CreateDefaultTable(7);
+   (*pPara) << _T("Values of Site Coefficient, ") << Sub2(_T("F"),_T("pga")) << _T(", for Peak Ground Acceleration") << rptNewLine;
+   ColumnIndexType nColumns = 7;
+   pTable = rptStyleManager::CreateDefaultTable(nColumns);
+   for ( ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++ )
+   {
+      pTable->SetColumnStyle(colIdx,rptStyleManager::GetTableCellStyle(CJ_CENTER));
+      pTable->SetStripeRowColumnStyle(colIdx,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
+   }
+
    (*pPara) << pTable << rptNewLine;
    pTable->SetNumberOfHeaderRows(2);
    pTable->SetRowSpan(0,0,2);
@@ -172,8 +179,14 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and PGA = ") << scalar.SetValue(spectra.GetPGA()) << _T(", ") << Sub2(_T("F"),_T("pga")) << _T(" = ") << scalar.SetValue(spectra.GetFpga()) << rptNewLine;
    (*pPara) << rptNewLine;
 
-   (*pPara) << _T("Values for Site Factor, ") << Sub2(_T("F"),_T("a")) << _T(", for Short-Period Range of Acceleration Spectrum (PGA)") << rptNewLine;
-   pTable = rptStyleManager::CreateDefaultTable(7);
+   (*pPara) << _T("Values for Site Coefficient, ") << Sub2(_T("F"),_T("a")) << _T(", for 0.2 sec Period Spectral Acceleration") << rptNewLine;
+   nColumns = 7;
+   pTable = rptStyleManager::CreateDefaultTable(nColumns);
+   for ( ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++ )
+   {
+      pTable->SetColumnStyle(colIdx,rptStyleManager::GetTableCellStyle(CJ_CENTER));
+      pTable->SetStripeRowColumnStyle(colIdx,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
+   }
    (*pPara) << pTable << rptNewLine;
    pTable->SetNumberOfHeaderRows(2);
    pTable->SetRowSpan(0,0,2);
@@ -238,8 +251,14 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and ") << Sub2(_T("S"),_T("s")) << _T(" = ") << scalar.SetValue(spectra.GetSs()) << _T(", ") << Sub2(_T("F"),_T("a")) << _T(" = ") << scalar.SetValue(spectra.GetFa()) << rptNewLine;
    (*pPara) << rptNewLine;
 
-   (*pPara) << _T("Values of Site Factor, ") << Sub2(_T("F"),_T("v")) << _T(", for Long-Period range of Acceleration Spectrum") << rptNewLine;
-   pTable = rptStyleManager::CreateDefaultTable(7);
+   (*pPara) << _T("Values of Site Coefficient, ") << Sub2(_T("F"),_T("v")) << _T(", for 1.0 sec Period Spectral Acceleration") << rptNewLine;
+   nColumns = 7;
+   pTable = rptStyleManager::CreateDefaultTable(nColumns);
+   for ( ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++ )
+   {
+      pTable->SetColumnStyle(colIdx,rptStyleManager::GetTableCellStyle(CJ_CENTER));
+      pTable->SetStripeRowColumnStyle(colIdx,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
+   }
    (*pPara) << pTable << rptNewLine;
    pTable->SetNumberOfHeaderRows(2);
    pTable->SetRowSpan(0,0,2);
@@ -252,7 +271,7 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    pTable->SetColumnSpan(0,4,SKIP_CELL);
    pTable->SetColumnSpan(0,5,SKIP_CELL);
    pTable->SetColumnSpan(0,6,SKIP_CELL);
-   (*pTable)(0,1) << _T("Mapped Spectral Response Acceleration Coefficient at Period 1.0 sec (") << Sub2(_T("S"),_T("1")) << _T(")");
+   (*pTable)(0,1) << _T("Mapped Spectral Acceleration Coefficient at Period 1.0 sec (") << Sub2(_T("S"),_T("1")) << _T(")");
 
    (*pTable)(1,1) << Sub2(_T("S"),_T("1")) << symbol(LTE) << _T(" 0.1");
    (*pTable)(1,2) << Sub2(_T("S"),_T("1")) << _T("=")     << _T(" 0.2");
@@ -317,6 +336,9 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
 
    (*pPara) << _T("Partitions for Seismic Design Categories A, B, C, and D") << rptNewLine;
    pTable = rptStyleManager::CreateDefaultTable(2);
+   pTable->SetColumnStyle(1,rptStyleManager::GetTableCellStyle(CJ_CENTER));
+   pTable->SetStripeRowColumnStyle(1,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
+
    (*pPara) << pTable << rptNewLine;
    (*pTable)(0,0) << Sub2(_T("S"),_T("D1"));
    (*pTable)(0,1) << _T("SDC");
@@ -341,12 +363,16 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << pLayoutTable << rptNewLine;
 
    pPara = &(*pLayoutTable)(0,0);
-   pTable = rptStyleManager::CreateDefaultTable(2);
+   pTable = rptStyleManager::CreateDefaultTable(3);
    *pPara << pTable << rptNewLine;
    (*pTable)(0,0) << _T("Period, T") << rptNewLine << _T("(sec)");
    (*pTable)(0,1) << _T("Sa") << rptNewLine << _T("(g)");
+   (*pTable)(0,2) << _T("");
 
-   std::vector<std::pair<Float64,Float64>> values(spectra.GetSpectraValues(SPECTRUM_POINT_COUNT,SPECTRUM_MAX_PERIOD));
+   Float64 To = spectra.GetTo();
+   Float64 Ts = spectra.GetTs();
+
+   std::vector<std::pair<Float64,Float64>> values(spectra.GetSpectraValues(SPECTRUM_MAX_PERIOD,SPECTRUM_STEP_SIZE));
    row = pTable->GetNumberOfHeaderRows();
    std::vector<std::pair<Float64,Float64>>::iterator iter(values.begin());
    std::vector<std::pair<Float64,Float64>>::iterator end(values.end());
@@ -356,6 +382,18 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
       Float64 Sa = iter->second;
       (*pTable)(row,0) << scalar.SetValue(t);
       (*pTable)(row,1) << scalar.SetValue(Sa);
+      if ( t == To )
+      {
+         (*pTable)(row,2) << Sub2(_T("T"),_T("o"));
+      }
+      else if (t == Ts )
+      {
+         (*pTable)(row,2) << Sub2(_T("T"),_T("s"));
+      }
+      else
+      {
+         (*pTable)(row,2) << _T("");
+      }
       row++;
    }
 

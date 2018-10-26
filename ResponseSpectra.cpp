@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2017  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 #include "stdafx.h"
 #include "ResponseSpectra.h"
 #include <MathEx.h>
+#include <boost\bind.hpp>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -132,7 +133,7 @@ const TCHAR* CResponseSpectra::GetSDC() const
    }
 }
 
-Float64 CResponseSpectra::GetCsm(Float64 time) const
+Float64 CResponseSpectra::GetSa(Float64 time) const
 {
    if ( time < 0 )
       return 0;
@@ -156,29 +157,39 @@ Float64 CResponseSpectra::GetCsm(Float64 time) const
    }
 }
 
-std::vector<std::pair<Float64,Float64>> CResponseSpectra::GetSpectraValues(IndexType nPoints,Float64 Tmax)
+std::vector<std::pair<Float64,Float64>> CResponseSpectra::GetSpectraValues(Float64 Tmax,Float64 tStep)
 {
    Float64 To = GetTo();
    Float64 Ts = GetTs();
 
    std::vector<std::pair<Float64,Float64>> values;
-   values.push_back(std::make_pair(0.0,GetCsm(0.0)));
-   values.push_back(std::make_pair(To,GetCsm(To)));
-   values.push_back(std::make_pair(Ts,GetCsm(Ts)));
 
-   Float64 range = Tmax - Ts;
-   if ( range < 0 || nPoints <= 3 )
+   // store the key values
+   values.push_back(std::make_pair(0.0,GetSa(0.0)));
+   values.push_back(std::make_pair(To,GetSa(To)));
+   values.push_back(std::make_pair(Ts,GetSa(Ts)));
+
+   if ( Tmax - Ts < 0 )
    {
       return values;
    }
 
-   nPoints -= values.size();
-   Float64 step = range/nPoints;
-   for ( IndexType i = 1; i <= nPoints; i++ )
+   // fill up vector with values
+   Float64 t = tStep;
+   while ( t < Tmax )
    {
-      Float64 t = Ts + i*step;
-      values.push_back(std::make_pair(t,GetCsm(t)));
+      values.push_back(std::make_pair(t,GetSa(t)));
+      t += tStep;
    }
+
+   // add the last value
+   values.push_back(std::make_pair(Tmax,GetSa(Tmax)));
+
+   // sort
+   std::sort(values.begin(),values.end(), boost::bind(&std::pair<Float64,Float64>::first,_1)<boost::bind(&std::pair<Float64,Float64>::first,_2) );
+
+   // remove duplicates
+   values.erase(std::unique(values.begin(),values.end(),boost::bind(&std::pair<Float64,Float64>::first,_1)==boost::bind(&std::pair<Float64,Float64>::first,_2)),values.end());
 
    return values;
 }

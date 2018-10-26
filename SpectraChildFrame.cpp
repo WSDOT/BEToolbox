@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2017  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -165,7 +165,7 @@ void CSpectraChildFrame::OnExport()
       ofile << "$ Site Soil Classification: Site Class " << T2A(strSiteClass[siteClass].c_str()) << " - " << T2A(pDoc->GetSiteClassDescription(siteClass)) << std::endl;
       ofile << "$ Frequecy (Hz)   Accerlation (g)" << std::endl;
 
-      std::vector<std::pair<Float64,Float64>> values(spectra.GetSpectraValues(SPECTRUM_POINT_COUNT,SPECTRUM_MAX_PERIOD));
+      std::vector<std::pair<Float64,Float64>> values(spectra.GetSpectraValues(SPECTRUM_MAX_PERIOD,SPECTRUM_STEP_SIZE));
       std::vector<std::pair<Float64,Float64>>::reverse_iterator iter(values.rbegin());
       std::vector<std::pair<Float64,Float64>>::reverse_iterator end(values.rend());
       for ( ; iter != end; iter++ )

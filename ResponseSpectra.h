@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2017  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -47,8 +47,8 @@ public:
    Float64 GetSds() const;
    Float64 GetSd1() const;
    const TCHAR* GetSDC() const;
-   Float64 GetCsm(Float64 time) const;
-   std::vector<std::pair<Float64,Float64>> GetSpectraValues(IndexType nPoints,Float64 Tmax);
+   Float64 GetSa(Float64 time) const;
+   std::vector<std::pair<Float64,Float64>> GetSpectraValues(Float64 Tmax,Float64 tStep);
 
 protected:
    Float64 m_PGA, m_Ss, m_S1;
