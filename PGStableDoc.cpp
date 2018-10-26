@@ -431,7 +431,8 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
          haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
          haulingProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
          haulingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
-         haulingProblem.EvaluateStressesAtEquilibriumAngle(pSpec->EvaluateHaulingStressesAtEquilibriumAngle());
+         haulingProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope, pSpec->EvaluateHaulingStressesAtEquilibriumAngle());
+         haulingProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::Superelevation, true);
          haulingProblem.SetCentrifugalForceType((stbTypes::CFType)pSpec->GetCentrifugalForceType());
          haulingProblem.SetVelocity(pSpec->GetHaulingSpeed());
          haulingProblem.SetTurningRadius(pSpec->GetTurningRadius());
