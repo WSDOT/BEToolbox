@@ -60,6 +60,12 @@ BOOL CGenCompChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
    // force this window to be maximized (not sure why WS_VISIBLE is required)
    cs.style |= WS_MAXIMIZE | WS_VISIBLE;
+   
+   // I have no idea why, but creating this window fail the second time a BEToolbox document
+   // is created in a single BridgeLink run. For some reason, MFC determines the wrong
+   // class name. lpszClass is NULL the first time this window is created successfully, so
+   // we'll force it to NULL here so it works on subsequent creation attempts
+   cs.lpszClass = NULL;
 
    return CEAFChildFrame::PreCreateWindow(cs);
 }

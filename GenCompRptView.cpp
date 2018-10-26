@@ -80,8 +80,6 @@ void CGenCompRptView::RefreshReport()
 
    CGenCompDoc* pDoc = (CGenCompDoc*)GetDocument();
 
-   m_pFrame->UpdateData(TRUE);
-
    CEAFReportViewCreationData data;
    data.m_RptIdx = 0;
    data.m_bPromptForSpec = false;
