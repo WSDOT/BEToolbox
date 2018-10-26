@@ -47,6 +47,7 @@
 #include <EAF\EAFHelp.h>
 #include <EAF\EAFResources.h>
 #include <EAF\EAFHints.h>
+#include <EAF\EAFCustSiteVars.h>
 
 #include <WBFLSTL.h>
 #include <WBFLRCCapacity.h>
@@ -66,7 +67,10 @@
 #include <IFace\Tools.h>
 
 #include <PGSuperTypes.h>
+#include <PgsExt\LongitudinalRebarData.h>
 
+#include <UnitMgt\UnitMgt.h>
+#include <Stability\Stability.h>
 
 // prior to WBFL Version 3.3.0 the _WBFL_VERSION macro did not exist
 // we need it for conditional compilation so if it isn't defined

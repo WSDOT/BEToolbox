@@ -25,9 +25,10 @@
 #include <Reporter\Reporter.h>
 #include <MFCTools\VersionInfo.h>
 #include "BEToolboxUtilities.h"
+#include "PGStableDoc.h"
 
 
-CPGStableTitlePageBuilder::CPGStableTitlePageBuilder(void)
+CPGStableTitlePageBuilder::CPGStableTitlePageBuilder()
 {
 }
 
@@ -46,19 +47,19 @@ rptChapter* CPGStableTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificat
 
    rptChapter* pTitlePage = new rptChapter;
 
-   rptParagraph* pPara = new rptParagraph(rptStyleManager::GetReportTitleStyle());
+   rptParagraph* pPara = new rptParagraph(_T("BEToolboxReportTitle"));
    (*pTitlePage) << pPara;
    (*pPara) << _T("PGStable") << Super(symbol(TRADEMARK)) << rptNewLine;
 
-   pPara = new rptParagraph(rptStyleManager::GetReportSubtitleStyle());
+   pPara = new rptParagraph(_T("BEToolboxReportSubtitle"));
    *pTitlePage << pPara;
    (*pPara) << _T("Prestressed Girder Stability Analysis") << rptNewLine;
 
-   pPara = new rptParagraph(rptStyleManager::GetCopyrightStyle());
+   pPara = new rptParagraph(_T("BEToolboxCopyright"));
    *pTitlePage << pPara;
    *pPara << _T("Copyright ") << symbol(COPYRIGHT) << _T(" ") << sysDate().Year() << _T(", WSDOT, All Rights Reserved") << rptNewLine;
 
-   pPara = new rptParagraph(rptStyleManager::GetReportSubtitleStyle());
+   pPara = new rptParagraph(_T("BEToolboxReportSubtitle"));
    *pTitlePage << pPara;
 
    CVersionInfo verInfo;
@@ -83,7 +84,36 @@ rptChapter* CPGStableTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificat
 
    *pPara << rptNewLine;
 
-   //*pPara << rptRcImage(GetImagePath() + _T("PGStable.png"));
+   // Not doing a report cover image, but if we wanted to, here is the code
+   //CString strImage;
+   //strImage.Format(_T("%s%s"),rptStyleManager::GetImagePath(),m_Type == LIFTING_REPORT ? _T("PGStableLifting.png") : _T("PGStableHauling.png"));
+   //*pPara << rptRcImage(strImage.GetBuffer()) << rptNewLine;
+
+   pPara = new rptParagraph(_T("BEToolboxPrintOnly"));
+   *pTitlePage << pPara;
+
+   rptRcTable* pPropertiesTable = rptStyleManager::CreateTableNoHeading(2,_T("Project Properties"));
+   *pPara << pPropertiesTable << rptNewLine;
+
+   CPGStableDoc* pDoc = (CPGStableDoc*)EAFGetDocument();
+   CString strEngineer, strCompany, strJob, strComments;
+   pDoc->GetProjectProperties(&strEngineer,&strCompany,&strJob,&strComments);
+   RowIndexType row = 0;
+   (*pPropertiesTable)(row,0) << _T("Engineer");
+   (*pPropertiesTable)(row,1) << strEngineer;
+   row++;
+
+   (*pPropertiesTable)(row,0) << _T("Company");
+   (*pPropertiesTable)(row,1) << strCompany;
+   row++;
+
+   (*pPropertiesTable)(row,0) << _T("Job");
+   (*pPropertiesTable)(row,1) << strJob;
+   row++;
+
+   (*pPropertiesTable)(row,0) << _T("Comments");
+   (*pPropertiesTable)(row,1) << strComments;
+   row++;
 
    return pTitlePage;
 }

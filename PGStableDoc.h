@@ -27,8 +27,12 @@
 #include "PGStableModel.h"
 
 #include <ReportManager\ReportManager.h>
-#include <Stability\Stability.h>
-//#include <PsgLib\LibraryManager.h>
+#include <PsgLib\LibraryManager.h>
+
+
+static CString gs_strCriteria(_T("Define project criteria"));
+static CString gs_strHaulTruck(_T("Define haul truck"));
+static CString gs_strGirder(_T("Define girder properties"));
 
 class CPGStableDoc : public CBEToolboxDoc
 {
@@ -40,20 +44,26 @@ public:
 
    virtual CString GetToolbarSectionName();
 
+   const CString& GetCriteria() const;
+   void SetCriteria(LPCTSTR lpszCriteria);
+
+   const CString& GetHaulTruck() const;
+   void SetHaulTruck(LPCTSTR lpszHaulTruck);
+
+   const CString& GetGirder() const;
+   void SetGirder(LPCTSTR lpszGirder);
+
+   void SetProjectProperties(const CString& strEngineer,const CString& strCompany,const CString& strJob,const CString& strComments);
+   void GetProjectProperties(CString* pstrEngineer,CString* pstrCompany,CString* pstrJob,CString* pstrComments) const;
+
    void SetGirderType(int type);
    int GetGirderType() const;
-
-   void SetLiftingFpeType(int type);
-   int GetLiftingFpeType() const;
-
-   void SetHaulingFpeType(int type);
-   int GetHaulingFpeType() const;
 
    const stbGirder& GetGirder(int type) const;
    void SetGirder(int type,const stbGirder& girder);
 
-   const CPGStableStrands& GetStrands(int type) const;
-   void SetStrands(int type,const CPGStableStrands& strands);
+   const CPGStableStrands& GetStrands(int girderType,int modelType) const;
+   void SetStrands(int girderType,int modelType,const CPGStableStrands& strands);
 
    const stbLiftingStabilityProblem& GetLiftingStabilityProblem() const;
    void SetLiftingStabilityProblem(const stbLiftingStabilityProblem& stabilityProblem);
@@ -61,14 +71,17 @@ public:
    const stbHaulingStabilityProblem& GetHaulingStabilityProblem() const;
    void SetHaulingStabilityProblem(const stbHaulingStabilityProblem& stabilityProblem);
 
-   const CPGStableCriteria& GetLiftingCriteria() const;
-   void SetLiftingCriteria(const CPGStableCriteria& criteria);
+   const CPGStableLiftingCriteria& GetLiftingCriteria() const;
+   void SetLiftingCriteria(const CPGStableLiftingCriteria& criteria);
 
-   const CPGStableCriteria& GetHaulingCriteria() const;
-   void SetHaulingCriteria(const CPGStableCriteria& criteria);
+   const CPGStableHaulingCriteria& GetHaulingCriteria() const;
+   void SetHaulingCriteria(const CPGStableHaulingCriteria& criteria);
 
    Float64 GetDensity() const;
    void SetDensity(Float64 density);
+
+   Float64 GetDensityWithRebar() const;
+   void SetDensityWithRebar(Float64 density);
 
    Float64 GetK1() const;
    void SetK1(Float64 k1);
@@ -86,7 +99,9 @@ public:
    Float64 GetHeightOfGirderBottomAboveRoadway() const;
 
    CString UpdateEc(const CString& strFc,const CString& strDensity,const CString& strK1,const CString& strK2);
-   void ResolveStrandLocations(const CPGStableStrands* pStrands,stbGirder* pGirder) const;
+
+   void ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pYs,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pYt);
+   void GetStrandProfiles(const CPGStableStrands& strands,const stbGirder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
 
    stbLiftingResults GetLiftingResults() const;
    stbHaulingResults GetHaulingResults() const;
@@ -94,7 +109,14 @@ public:
    stbLiftingCheckArtifact GetLiftingCheckArtifact() const;
    stbHaulingCheckArtifact GetHaulingCheckArtifact() const;
 
-   //const SpecLibrary* GetSpecLibrary() const;
+   const SpecLibrary* GetSpecLibrary() const;
+   const SpecLibraryEntry* GetSpecLibraryEntry() const;
+
+   const HaulTruckLibrary* GetHaulTruckLibrary() const;
+   const HaulTruckLibraryEntry* GetHaulTruckLibraryEntry() const;
+
+   const GirderLibrary* GetGirderLibrary() const;
+   const GirderLibraryEntry* GetGirderLibraryEntry() const;
 
    CReportBuilderManager m_RptMgr;
 
@@ -109,7 +131,7 @@ protected:
    /// called when a document is created (New or Open)
    virtual BOOL Init(); 
 
-   //void LoadPGSLibrary();
+   void LoadPGSLibrary();
 
    // Called by the framework when the document is to be loaded and saved
    virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
@@ -121,9 +143,18 @@ protected:
    virtual CString GetDocumentationRootLocation();
    virtual UINT GetToolbarID();
 
+   CString m_strProjectCriteria;
+   CString m_strHaulTruck;
+   CString m_strGirder;
+
+   CString m_strEngineer;
+   CString m_strCompany;
+   CString m_strJob;
+   CString m_strComments;
+
    mutable CPGStableModel m_Model;
 
-   //psgLibraryManager m_LibMgr;
+   psgLibraryManager m_LibMgr;
 
    afx_msg void OnHelpFinder();
 	DECLARE_MESSAGE_MAP()

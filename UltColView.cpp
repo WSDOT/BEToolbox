@@ -135,9 +135,3 @@ void CUltColView::OnInitialUpdate()
    CUltColChildFrame* pFrame = (CUltColChildFrame*)GetParentFrame();
    pFrame->SetColumnParameters(diameter, fc, cover, As, Es, fy, ecl, etl);
 }
-
-void CUltColView::CreateEditButton()
-{
-   // we don't want an edit button in the report view, so don't create one
-   // and don't let the base class do it either.
-}

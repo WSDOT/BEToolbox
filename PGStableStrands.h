@@ -28,15 +28,50 @@
 #define DISTANCE 0
 #define FRACTION 1
 
+class CPGStableFpe
+{
+public:
+   CPGStableFpe();
+   CPGStableFpe(Float64 X,Float64 FpeStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 YpsTemp,int YpsTempMeasure);
+
+   bool operator<(const CPGStableFpe& other) const;
+   bool operator==(const CPGStableFpe& other) const;
+
+   Float64 X;
+   Float64 FpeStraight;
+   Float64 YpsStraight;
+   int     YpsStraightMeasure;
+
+   Float64 FpeHarped;
+   Float64 YpsHarped;
+   int     YpsHarpedMeasure;
+
+   Float64 FpeTemp;
+   Float64 YpsTemp;
+   int     YpsTempMeasure;
+};
+
 class CPGStableStrands
 {
 public:
+   typedef enum StrandMethod
+   {
+      Simplified, // location of strands are defined using the simplified demensions below
+      Detailed // the exact location of the prestress force is give in the Fpe definition
+   } StrandMethod;
+
    CPGStableStrands();
    bool operator==(const CPGStableStrands& other) const;
    bool operator!=(const CPGStableStrands& other) const;
 
    HRESULT Save(IStructuredSave* pStrSave);
    HRESULT Load(IStructuredLoad* pStrLoad);
+
+   StrandMethod strandMethod;
+
+   std::set<CPGStableFpe> m_vFpe; // used if strandMethod == Exact, otherwise all the parameters below are used
+
+   // Parameters for simplified strand definition
 
    Float64 XferLength; // prestress transfer length... used only with constant Fpe
 
@@ -57,4 +92,6 @@ public:
 
    Float64 Xh4,Yh4;
    int Xh4Measure,Yh4Measure;
+
+   Float64 FpeStraight, FpeHarped, FpeTemp;
 };

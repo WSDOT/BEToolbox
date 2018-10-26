@@ -25,7 +25,6 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "PGStableGirderControl.h"
-#include "PGStableNonprismaticGirder.h"
 
 #include <GeometricPrimitives\Primitives.h>
 
@@ -89,7 +88,8 @@ void CPGStableGirderControl::OnPaint()
    // Do not call CWnd::OnPaint() for painting messages
 
    AFX_MANAGE_STATE(AfxGetAppModuleState());
-   CPGStableNonprismaticGirder* pParent = (CPGStableNonprismaticGirder*)GetParent();
+   CWnd* parent = GetParent();
+   CPGStableGirderControlParent* pParent = dynamic_cast<CPGStableGirderControlParent*>(parent);
 
 
    //
@@ -127,9 +127,7 @@ void CPGStableGirderControl::OnPaint()
    CBrush* pOldBrush = dc.SelectObject(&brush);
 
    DrawProfile(&dc,mapper,vProfile);
-   DrawStrands(&dc,mapper,STRAIGHT);
-   DrawStrands(&dc,mapper,HARPED);
-   DrawStrands(&dc,mapper,TEMPORARY);
+   DrawStrands(&dc,mapper);
 
    // Clean up
    dc.SelectObject(pOldPen);
@@ -141,17 +139,27 @@ void CPGStableGirderControl::DrawProfile(CDC* pDC,grlibPointMapper& mapper,std::
    Draw(pDC,mapper,vProfile,TRUE);
 }
 
-void CPGStableGirderControl::DrawStrands(CDC* pDC,grlibPointMapper& mapper,int strandType)
+void CPGStableGirderControl::DrawStrands(CDC* pDC,grlibPointMapper& mapper)
 {
    AFX_MANAGE_STATE(AfxGetAppModuleState());
-   CPGStableNonprismaticGirder* pParent = (CPGStableNonprismaticGirder*)GetParent();
-   std::vector<std::pair<Float64,Float64>> vProfile = pParent->GetStrandProfile(strandType);
-   Draw(pDC,mapper,vProfile,FALSE);
+   CWnd* parent = GetParent();
+   CPGStableGirderControlParent* pParent = dynamic_cast<CPGStableGirderControlParent*>(parent);
+
+   std::vector<std::pair<Float64,Float64>> vStraight,vHarped,vTemp;
+   pParent->GetStrandProfiles(&vStraight,&vHarped,&vTemp);
+   Draw(pDC,mapper,vStraight,FALSE);
+   Draw(pDC,mapper,vHarped,FALSE);
+   Draw(pDC,mapper,vTemp,FALSE);
 }
 
 void CPGStableGirderControl::Draw(CDC* pDC,grlibPointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile,BOOL bPolygon)
 {
    IndexType nPoints = vProfile.size();
+   if ( nPoints == 0 )
+   {
+      return;
+   }
+
    if ( bPolygon )
    {
       nPoints += 2;

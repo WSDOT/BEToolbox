@@ -60,6 +60,7 @@ void CCurvelReportWizard::Init()
    m_Pages.push_back(CCurvelReportWizardStep1::IDD);
    m_Pages.push_back(CCurvelReportWizardStep2::IDD);
    m_Pages.push_back(CCurvelReportWizardStep3::IDD);
+   m_CurrentPage = m_Pages.begin();
 
    m_psh.dwFlags |= PSH_WIZARD97 | PSH_HEADER | PSH_WATERMARK;
    m_psh.pszbmWatermark = MAKEINTRESOURCE(IDB_CURVEL_WATERMARK);
@@ -74,9 +75,13 @@ LRESULT CCurvelReportWizard::GetNextPage()
    m_CurrentPage++;
 
    if ( IsLastPage() )
+   {
       SetWizardButtons(PSWIZB_BACK | PSWIZB_FINISH);
+   }
    else
+   {
       SetWizardButtons(PSWIZB_BACK | PSWIZB_NEXT);
+   }
 
    return *m_CurrentPage;
 }
@@ -86,9 +91,13 @@ LRESULT CCurvelReportWizard::GetBackPage()
    m_CurrentPage--;
 
    if ( IsFirstPage() )
+   {
       SetWizardButtons(PSWIZB_NEXT);
+   }
    else
+   {
       SetWizardButtons(PSWIZB_BACK | PSWIZB_NEXT);
+   }
    
    return *m_CurrentPage;
 }

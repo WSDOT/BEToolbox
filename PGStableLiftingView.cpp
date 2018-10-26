@@ -25,20 +25,19 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "PGStableLiftingView.h"
 #include "PGStableDoc.h"
+#include "PGStableLiftingView.h"
 #include "PGStableEffectivePrestressDlg.h"
 #include <MFCTools\MFCTools.h>
 
 
 // CPGStableLiftingView
 
-IMPLEMENT_DYNCREATE(CPGStableLiftingView, CFormView)
+IMPLEMENT_DYNCREATE(CPGStableLiftingView, CPGStableFormView)
 
 CPGStableLiftingView::CPGStableLiftingView()
-	: CFormView(CPGStableLiftingView::IDD)
+	: CPGStableFormView(CPGStableLiftingView::IDD)
 {
-   m_FpeType = CONSTANT_FPE;
 }
 
 CPGStableLiftingView::~CPGStableLiftingView()
@@ -47,10 +46,7 @@ CPGStableLiftingView::~CPGStableLiftingView()
 
 void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 {
-   CFormView::DoDataExchange(pDX);
-
-   DDX_Control(pDX,IDC_GRAPH,m_ctrlStressGraph);
-   DDX_Control(pDX,IDC_GRAPH,m_ctrlFSGraph);
+   CPGStableFormView::DoDataExchange(pDX);
 
    DDX_Control(pDX, IDC_EC, m_ctrlEc);
    DDX_Control(pDX, IDC_FC, m_ctrlFc);
@@ -64,11 +60,25 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
    stbLiftingStabilityProblem problem = pDoc->GetLiftingStabilityProblem();
 
+   stbTypes::WindType windLoadType;
+   Float64 windLoad;
+   problem.GetWindLoading(&windLoadType,&windLoad);
+   DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
+   if ( windLoadType == stbTypes::Speed )
+   {
+      DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
+   }
+   else
+   {
+      DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->WindPressure);
+   }
+
+   bool bPlumbGirderStresses = problem.EvaluateStressesForPlumbGirder();
+   DDX_CBItemData(pDX,IDC_STRESSES,bPlumbGirderStresses);
+
    Float64 L;
    problem.GetSupportLocations(&L,&L);
    DDX_UnitValueAndTag(pDX,IDC_LIFT,IDC_LIFT_UNIT,L,pDispUnits->SpanLength);
-
-   DDX_Radio(pDX,IDC_CONSTANT_FPE,m_FpeType);
 
    Float64 Fs,Fh,Ft;
    GetMaxFpe(&Fs,&Fh,&Ft);
@@ -89,7 +99,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
       }
       else
       {
-         GetDlgItem(IDC_SWEEP_TOLERANCE_LABEL)->SetWindowText(_T("Sweep Tolerance"));
+         GetDlgItem(IDC_SWEEP_TOLERANCE_LABEL)->SetWindowText(_T(""));
          GetDlgItem(IDC_SWEEP_TOLERANCE_UNIT)->SetWindowText(_T("mm/m"));
       }
    }
@@ -104,7 +114,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
       }
       else
       {
-         GetDlgItem(IDC_SWEEP_TOLERANCE_LABEL)->SetWindowText(_T("Sweep Tolerance 1/"));
+         GetDlgItem(IDC_SWEEP_TOLERANCE_LABEL)->SetWindowText(_T("1/"));
          GetDlgItem(IDC_SWEEP_TOLERANCE_UNIT)->SetWindowText(_T("in/10 ft"));
       }
    }
@@ -118,9 +128,6 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
    Float64 liftAngle = problem.GetLiftAngle();
    DDX_UnitValueAndTag(pDX,IDC_LIFT_ANGLE,IDC_LIFT_ANGLE_UNIT,liftAngle,pDispUnits->Angle);
-
-   Float64 windPressure = problem.GetWindPressure();
-   DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windPressure,pDispUnits->WindPressure);
 
    Float64 Yra = problem.GetYRollAxis();
    DDX_UnitValueAndTag(pDX,IDC_YRA,IDC_YRA_UNIT,Yra,pDispUnits->ComponentDim);
@@ -150,7 +157,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    bool bComputeEci;
    pDoc->GetLiftingMaterials(&fci,&bComputeEci,&frCoefficient);
    bComputeEci = !bComputeEci;
-   Float64 Eci = problem.GetEc(); // this is the computed value
+   Float64 Eci = problem.GetConcrete().GetE(); // this is the computed value
    DDX_UnitValueAndTag(pDX,IDC_FC,IDC_FC_UNIT,fci,pDispUnits->Stress);
    DDX_Check_Bool(pDX,IDC_COMPUTE_EC,bComputeEci);
    DDX_UnitValueAndTag(pDX,IDC_EC,IDC_EC_UNIT,Eci,pDispUnits->ModE);
@@ -171,24 +178,21 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    }
    DDX_Text(pDX,IDC_FR_COEFFICIENT_UNIT,tag);
 
+   CString strLiftingTag(pApp->GetUnitsMode() == eafTypes::umUS ? _T("sqrt(f'ci (KSI))") : _T("sqrt(f'ci (MPa))"));
+
+   DDX_Text(pDX,IDC_LIFTING_FS_CRACKING,m_LiftingCriteria.MinFScr);
+   DDX_Text(pDX,IDC_LIFTING_FS_FAILURE,m_LiftingCriteria.MinFSf);
+   DDX_Text(pDX,IDC_LIFTING_COMPRESSION,m_LiftingCriteria.CompressionCoefficient);
+   DDX_UnitValue(pDX,IDC_LIFTING_TENSION,m_LiftingCriteria.TensionCoefficient,pDispUnits->SqrtPressure);
+   DDX_Text(pDX,IDC_LIFTING_TENSION_UNIT,strLiftingTag);
+   DDX_Check_Bool(pDX,IDC_CHECK_LIFTING_TENSION_MAX,m_LiftingCriteria.bMaxTension);
+   DDX_UnitValueAndTag(pDX,IDC_LIFTING_TENSION_MAX,IDC_LIFTING_TENSION_MAX_UNIT,m_LiftingCriteria.MaxTension,pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_LIFTING_TENSION_WITH_REBAR,m_LiftingCriteria.TensionCoefficientWithRebar,pDispUnits->SqrtPressure);
+   DDX_Text(pDX,IDC_LIFTING_TENSION_WITH_REBAR_UNIT,strLiftingTag);
+
    if ( pDX->m_bSaveAndValidate )
    {
-      pDoc->SetLiftingFpeType(m_FpeType);
-      if ( m_FpeType == CONSTANT_FPE )
-      {
-         problem.ClearFpe();
-         problem.AddFpe(0,Fs,Fh,Ft);
-      }
-      else
-      {
-         problem.ClearFpe();
-         BOOST_FOREACH(stbFpe& fpe,m_Fpe)
-         {
-            problem.AddFpe(fpe.X,fpe.fpeStraight,fpe.fpeHarped,fpe.fpeTemporary);
-         }
-      }
-
-      problem.SetEc(Eci);
+      problem.GetConcrete().SetE(Eci);
       pDoc->SetK1(K1);
       pDoc->SetK2(K2);
 
@@ -201,7 +205,9 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
       problem.SetLiftAngle(liftAngle);
 
-      problem.SetWindPressure(windPressure);
+      problem.SetWindLoading(windLoadType,windLoad);
+
+      problem.EvaluateStressesForPlumbGirder(bPlumbGirderStresses);
 
       problem.SetYRollAxis(Yra);
 
@@ -218,10 +224,20 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetLiftingStabilityProblem(problem);
       pDoc->SetLiftingMaterials(fci,!bComputeEci,frCoefficient);
+
+      pDoc->SetLiftingCriteria(m_LiftingCriteria);
+
+      if ( m_Strands.strandMethod == CPGStableStrands::Simplified )
+      {
+         m_Strands.FpeStraight = Fs;
+         m_Strands.FpeHarped   = Fh;
+         m_Strands.FpeTemp     = Ft;
+      }
+      pDoc->SetStrands(pDoc->GetGirderType(),LIFTING,m_Strands);
    }
 }
 
-BEGIN_MESSAGE_MAP(CPGStableLiftingView, CFormView)
+BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_BN_CLICKED(IDC_COMPUTE_EC, &CPGStableLiftingView::OnUserEc)
 	ON_EN_CHANGE(IDC_FC, &CPGStableLiftingView::OnChangeFc)
    ON_EN_CHANGE(IDC_K1, &CPGStableLiftingView::OnChangeFc)
@@ -245,8 +261,14 @@ BEGIN_MESSAGE_MAP(CPGStableLiftingView, CFormView)
    ON_EN_CHANGE(IDC_LATERAL_SWEEP_INCREMENT, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_SUPPORT_PLACEMENT_TOLERANCE, &CPGStableLiftingView::OnChange)
    ON_BN_CLICKED(IDC_EDIT_FPE, &CPGStableLiftingView::OnEditFpe)
-   ON_BN_CLICKED(IDC_CONSTANT_FPE, &CPGStableLiftingView::OnFpeType)
-   ON_BN_CLICKED(IDC_VARIABLE_FPE, &CPGStableLiftingView::OnFpeType)
+   ON_COMMAND(ID_FILE_PRINT,&CPGStableLiftingView::OnPrint)
+   ON_COMMAND(ID_FILE_PRINT_DIRECT,&CPGStableLiftingView::OnPrintDirect)
+   ON_BN_CLICKED(IDC_CHECK_LIFTING_TENSION_MAX, &CPGStableLiftingView::OnClickedLiftingTensionMax)
+   ON_WM_SIZE()
+   ON_CBN_SELCHANGE(IDC_WIND_TYPE, &CPGStableLiftingView::OnWindTypeChanged)
+	ON_MESSAGE(WM_HELP, OnCommandHelp)
+   ON_CBN_SELCHANGE(IDC_STRESSES, &CPGStableLiftingView::OnChange)
+   ON_COMMAND_RANGE(CCS_CMENU_BASE, CCS_CMENU_MAX, OnCmenuSelected)
 END_MESSAGE_MAP()
 
 
@@ -256,13 +278,13 @@ END_MESSAGE_MAP()
 void CPGStableLiftingView::AssertValid() const
 {
    AFX_MANAGE_STATE(AfxGetAppModuleState());
-	CFormView::AssertValid();
+	CPGStableFormView::AssertValid();
 }
 
 #ifndef _WIN32_WCE
 void CPGStableLiftingView::Dump(CDumpContext& dc) const
 {
-	CFormView::Dump(dc);
+	CPGStableFormView::Dump(dc);
 }
 #endif
 #endif //_DEBUG
@@ -273,20 +295,31 @@ void CPGStableLiftingView::Dump(CDumpContext& dc) const
 BOOL CPGStableLiftingView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return CFormView::Create(lpszClassName,lpszWindowName,dwRequestedStyle,rect,pParentWnd,nID,pContext);
+   return CPGStableFormView::Create(lpszClassName,lpszWindowName,dwRequestedStyle,rect,pParentWnd,nID,pContext);
 }
 
-void CPGStableLiftingView::OnActivateView(BOOL bActivate,CView* pActivateView,CView* pDeactivateView)
+void CPGStableLiftingView::OnActivateView()
 {
-   CFormView::OnActivateView(bActivate,pActivateView,pDeactivateView);
-   UpdateData(!bActivate);
+   UpdateData(FALSE);
 
    if ( m_strUserEc == _T("") )
    {
       m_ctrlEc.GetWindowText(m_strUserEc);
    }
 
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   m_Strands = pDoc->GetStrands(pDoc->GetGirderType(),LIFTING);
+   UpdateFpeControls();
+   UpdateCriteriaControls();
+
    OnUserEc();
+
+   RefreshReport();
+}
+
+void CPGStableLiftingView::OnDeactivateView()
+{
+   UpdateData();
 }
 
 void CPGStableLiftingView::OnUserEc()
@@ -341,290 +374,60 @@ void CPGStableLiftingView::OnChangeFc()
 void CPGStableLiftingView::OnChange()
 {
    UpdateData();
-
-   CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-
-   const CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const stbGirder& girder = pDoc->GetGirder(pDoc->GetGirderType());
-   const stbLiftingStabilityProblem& problem = pDoc->GetLiftingStabilityProblem();
-
-   stbLiftingCheckArtifact artifact = pDoc->GetLiftingCheckArtifact();
-   const stbLiftingResults& results = artifact.GetLiftingResults();
-   const stbCriteria& criteria = artifact.GetCriteria();
-
-   CString strImpact[] = {_T("no impact"),_T("impact up"),_T("impact down")};
-   CString strCorner[] = {_T("top left"),_T("top right"),_T("bottom left"),_T("bottom right")};
-   CString strDir[] = {_T("left"),_T("right")};
-
-   CString strMinStress;
-   Float64 X = problem.GetAnalysisPoints().at(results.MinStressAnalysisPointIndex);
-   strMinStress.Format(_T("The minimum stress occurs at %s (%fL), %s flange tip with %s and wind toward the %s.\r\nAllowable Stress = %s, Stress = %s, Status: %s"),
-      ::FormatDimension(X,pDispUnits->SpanLength),
-      X/girder.GetGirderLength(),
-      strCorner[results.MinStressCorner],
-      strImpact[results.MinStressImpactDirection],
-      strDir[results.MinStressWindDirection],
-      ::FormatDimension(criteria.AllowableCompression,pDispUnits->Stress),
-      ::FormatDimension(results.MinStress,pDispUnits->Stress),
-      (artifact.PassedCompressionCheck() ? _T("Passed") : _T("Failed"))
-      );
-
-   CString strMaxStress;
-   X = problem.GetAnalysisPoints().at(results.MaxStressAnalysisPointIndex);
-   strMaxStress.Format(_T("The maximum stress occurs at %s (%fL), %s flange tip with %s and wind toward the %s.\r\nAllowable Stress = %s, Stress = %s, Status: %s"),
-      ::FormatDimension(X,pDispUnits->SpanLength),
-      X/girder.GetGirderLength(),
-      strCorner[results.MaxStressCorner],
-      strImpact[results.MaxStressImpactDirection],
-      strDir[results.MaxStressWindDirection],
-      ::FormatDimension(criteria.AllowableTension,pDispUnits->Stress),
-      ::FormatDimension(results.MaxStress,pDispUnits->Stress),
-      (artifact.PassedTensionCheck() ? _T("Passed") : _T("Failed"))
-      );
-
-   X = problem.GetAnalysisPoints().at(results.FScrAnalysisPointIndex);
-   CString strMinFScr;
-   strMinFScr.Format(_T("The minimum factor of safety against cracking occurs at %s (%fL), %s flange tip with %s and wind toward the %s.\r\nRequired FScr = %s, FScr = %s, Status: %s"),
-      ::FormatDimension(X,pDispUnits->SpanLength),
-      X/girder.GetGirderLength(),
-      strCorner[results.FScrCorner],
-      strImpact[results.FScrImpactDirection],
-      strDir[results.FScrWindDirection],
-      ::FormatScalar(criteria.MinFScr,pDispUnits->Scalar),
-      ::FormatScalar(results.MinFScr,pDispUnits->Scalar),
-      (artifact.PassedCrackingCheck() ? _T("Passed") : _T("Failed"))
-      );
-
-
-   CString strMinFSf;
-   strMinFSf.Format(_T("The minimum factor of safety against failure occurs with %s and wind toward the %s.\r\nRequired FSf = %s, FSf = %s, FSf(adj) = %s, Status: %s"),
-      strImpact[results.FSfImpactDirection],
-      strDir[results.FSfWindDirection],
-      ::FormatScalar(criteria.MinFSf,pDispUnits->Scalar),
-      ::FormatScalar(results.MinFsFailure,pDispUnits->Scalar),
-      ::FormatScalar(results.MinAdjFsFailure,pDispUnits->Scalar),
-      (artifact.PassedFailureCheck() ? _T("Passed") : _T("Failed"))
-      );
-
-   CString strResults;
-   strResults.Format(_T("%s\r\n\r\n%s\r\n\r\n%s\r\n\r\n%s"),strMinStress,strMaxStress,strMinFScr,strMinFSf);
-
-   CWnd* pWnd = GetDlgItem(IDC_RESULTS);
-   pWnd->SetWindowText(strResults);
-
-   BuildStressGraph();
-   //BuildCrackingMomentGraph();
-   BuildFSCrackingGraph();
+   RefreshReport();
 }
 
-void CPGStableLiftingView::BuildStressGraph()
+void CPGStableLiftingView::UpdateFpeControls()
 {
-   CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-
-   const CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const stbGirder& girder = pDoc->GetGirder(pDoc->GetGirderType());
-   const stbLiftingStabilityProblem& problem = pDoc->GetLiftingStabilityProblem();
-
-   stbLiftingCheckArtifact artifact = pDoc->GetLiftingCheckArtifact();
-   const stbLiftingResults& results = artifact.GetLiftingResults();
-   const stbCriteria& criteria = artifact.GetCriteria();
-
-   CString strImpact[] = {_T("no impact"),_T("impact up"),_T("impact down")};
-   CString strCorner[] = {_T("top left"),_T("top right"),_T("bottom left"),_T("bottom right")};
-   CString strDir[] = {_T("left"),_T("right")};
-
-   IndexType impact = results.MaxStressImpactDirection;
-   IndexType wind   = results.MaxStressWindDirection;
-
-   arvPhysicalConverter* pXFormat = new LengthTool(pDispUnits->SpanLength);
-   arvPhysicalConverter* pYFormat = new StressTool(pDispUnits->Stress);
-   m_ctrlStressGraph.SetAxisFormatters(pXFormat,pYFormat);
-
-   grGraphXY& graph = m_ctrlStressGraph.GetGraph();
-   graph.SetTitle(_T("Stress"));
-
-   CString strSubtitle;
-   strSubtitle.Format(_T("%s, wind %s"),strImpact[impact],strDir[wind]);
-   graph.SetSubtitle(strSubtitle);
-   graph.SetGridPenStyle(GRAPH_GRID_PEN_STYLE, GRAPH_GRID_PEN_WEIGHT, GRAPH_GRID_COLOR);
-   graph.SetClientAreaColor(GRAPH_BACKGROUND);
-   CString strXAxisTitle;
-   strXAxisTitle.Format(_T("X (%s)"),((LengthTool*)pXFormat)->UnitTag().c_str());
-   graph.SetXAxisTitle(strXAxisTitle);
-   CString strYAxisTitle;
-   strYAxisTitle.Format(_T("Stress (%s)"),((StressTool*)pYFormat)->UnitTag().c_str());
-   graph.SetYAxisTitle(strYAxisTitle);
-   //graph.SetIsotropicAxes();
-   graph.ClearData();
-   IndexType dataSeries[4] = {graph.CreateDataSeries(_T("Top Left"),    PS_SOLID,1,RED),
-                              graph.CreateDataSeries(_T("Top Right"),   PS_SOLID,1,GREEN),
-                              graph.CreateDataSeries(_T("Bottom Left"), PS_SOLID,1,BLUE),
-                              graph.CreateDataSeries(_T("Bottom Right"),PS_SOLID,1,BLACK) };
-
-
-   BOOST_FOREACH(const stbLiftingSectionResult& sectionResult,results.vSectionResults)
-   {
-      Float64 X = pXFormat->Convert(sectionResult.X);
-      for ( IndexType corner = 0; corner < 4; corner++ )
-      {
-         Float64 f = pYFormat->Convert(sectionResult.f[impact][wind][corner]);
-         gpPoint2d pnt(X,f);
-         graph.AddPoint(dataSeries[corner],pnt);
-      }
-   }
-
-   IndexType compressionLimit = graph.CreateDataSeries(_T("Allow. Compression"),PS_SOLID,2,RED);
-   graph.AddPoint(compressionLimit,gpPoint2d(0.0,pYFormat->Convert(criteria.AllowableCompression)));
-   graph.AddPoint(compressionLimit,gpPoint2d(pXFormat->Convert(girder.GetGirderLength()),pYFormat->Convert(criteria.AllowableCompression)));
-
-   IndexType tensionLimit = graph.CreateDataSeries(_T("Allow. Tension"),PS_SOLID,2,BLUE);
-   graph.AddPoint(tensionLimit,gpPoint2d(0.0,pYFormat->Convert(criteria.AllowableTension)));
-   graph.AddPoint(tensionLimit,gpPoint2d(pXFormat->Convert(girder.GetGirderLength()),pYFormat->Convert(criteria.AllowableTension)));
-
-   m_ctrlStressGraph.Invalidate();
-   m_ctrlStressGraph.UpdateWindow();
-}
-
-void CPGStableLiftingView::BuildCrackingMomentGraph()
-{
-   //CEAFApp* pApp = EAFGetApp();
-   //const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-
-   //const CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   //const stbGirder& girder = pDoc->GetGirder(pDoc->GetGirderType());
-   //const stbLiftingStabilityProblem& problem = pDoc->GetLiftingStabilityProblem();
-
-   //stbLiftingCheckArtifact artifact = pDoc->GetLiftingCheckArtifact();
-   //const stbLiftingResults& results = artifact.GetLiftingResults();
-   //const stbCriteria& criteria = artifact.GetCriteria();
-
-   //CString strImpact[] = {_T("no impact"),_T("impact up"),_T("impact down")};
-   //CString strCorner[] = {_T("top left"),_T("top right"),_T("bottom left"),_T("bottom right")};
-   //CString strDir[] = {_T("left"),_T("right")};
-
-   //IndexType impact = IMPACT_UP;
-   //IndexType wind   = LEFT;
-
-   //arvPhysicalConverter* pXFormat = new LengthTool(pDispUnits->SpanLength);
-   //arvPhysicalConverter* pYFormat = new MomentTool(pDispUnits->Moment);
-   //m_ctrlGraph.SetAxisFormatters(pXFormat,pYFormat);
-
-   //grGraphXY& graph = m_ctrlGraph.GetGraph();
-   //graph.SetTitle(_T("Cracking Moment"));
-
-   //CString strSubtitle;
-   //strSubtitle.Format(_T("%s, wind %s"),strImpact[impact],strDir[wind]);
-   //graph.SetSubtitle(strSubtitle);
-   //graph.SetGridPenStyle(GRAPH_GRID_PEN_STYLE, GRAPH_GRID_PEN_WEIGHT, GRAPH_GRID_COLOR);
-   //graph.SetClientAreaColor(GRAPH_BACKGROUND);
-   //CString strXAxisTitle;
-   //strXAxisTitle.Format(_T("X (%s)"),((LengthTool*)pXFormat)->UnitTag().c_str());
-   //graph.SetXAxisTitle(strXAxisTitle);
-   //CString strYAxisTitle;
-   //strYAxisTitle.Format(_T("Moment (%s)"),((MomentTool*)pYFormat)->UnitTag().c_str());
-   //graph.SetYAxisTitle(strYAxisTitle);
-   ////graph.SetIsotropicAxes();
-   //graph.ClearData();
-   //IndexType dataSeries[4] = {graph.CreateDataSeries(_T("Top Left"),    PS_SOLID,1,RED),
-   //                           graph.CreateDataSeries(_T("Top Right"),   PS_SOLID,1,GREEN),
-   //                           graph.CreateDataSeries(_T("Bottom Left"), PS_SOLID,1,BLUE),
-   //                           graph.CreateDataSeries(_T("Bottom Right"),PS_SOLID,1,BLACK) };
-
-
-   //BOOST_FOREACH(const stbLiftingSectionResult& sectionResult,results.vSectionResults)
-   //{
-   //   Float64 X = pXFormat->Convert(sectionResult.X);
-   //   for ( IndexType corner = 0; corner < 4; corner++ )
-   //   {
-   //      Float64 mcr = pYFormat->Convert(sectionResult.Mcr[impact][wind][corner]);
-   //      gpPoint2d pnt(X,mcr);
-   //      graph.AddPoint(dataSeries[corner],pnt);
-   //   }
-   //}
-
-   //m_ctrlGraph.Invalidate();
-   //m_ctrlGraph.UpdateWindow();
-}
-
-void CPGStableLiftingView::BuildFSCrackingGraph()
-{
-   CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-
-   const CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const stbGirder& girder = pDoc->GetGirder(pDoc->GetGirderType());
-   const stbLiftingStabilityProblem& problem = pDoc->GetLiftingStabilityProblem();
-
-   stbLiftingCheckArtifact artifact = pDoc->GetLiftingCheckArtifact();
-   const stbLiftingResults& results = artifact.GetLiftingResults();
-   const stbCriteria& criteria = artifact.GetCriteria();
-
-   CString strImpact[] = {_T("no impact"),_T("impact up"),_T("impact down")};
-   CString strCorner[] = {_T("top left"),_T("top right"),_T("bottom left"),_T("bottom right")};
-   CString strDir[] = {_T("left"),_T("right")};
-
-   IndexType impact = results.FScrImpactDirection;
-   IndexType wind   = results.FScrWindDirection;
-
-   arvPhysicalConverter* pXFormat = new LengthTool(pDispUnits->SpanLength);
-   arvPhysicalConverter* pYFormat = new ScalarTool(pDispUnits->Scalar);
-   m_ctrlFSGraph.SetAxisFormatters(pXFormat,pYFormat);
-
-   grGraphXY& graph = m_ctrlFSGraph.GetGraph();
-   graph.SetTitle(_T("Factor of Safety Against Cracking"));
-
-   CString strSubtitle;
-   strSubtitle.Format(_T("%s, wind %s"),strImpact[impact],strDir[wind]);
-   graph.SetSubtitle(strSubtitle);
-   graph.SetGridPenStyle(GRAPH_GRID_PEN_STYLE, GRAPH_GRID_PEN_WEIGHT, GRAPH_GRID_COLOR);
-   graph.SetClientAreaColor(GRAPH_BACKGROUND);
-   CString strXAxisTitle;
-   strXAxisTitle.Format(_T("X (%s)"),((LengthTool*)pXFormat)->UnitTag().c_str());
-   graph.SetXAxisTitle(strXAxisTitle);
-   CString strYAxisTitle;
-   strYAxisTitle.Format(_T("%s"),_T("FS"));
-   graph.SetYAxisTitle(strYAxisTitle);
-   //graph.SetIsotropicAxes();
-   graph.ClearData();
-   IndexType dataSeries = graph.CreateDataSeries(_T("FS"),    PS_SOLID,1,BLUE);
-
-
-   BOOST_FOREACH(const stbLiftingSectionResult& sectionResult,results.vSectionResults)
-   {
-      Float64 X = pXFormat->Convert(sectionResult.X);
-      Float64 FS = sectionResult.FScr[impact][wind];
-      gpPoint2d pnt(X,FS);
-      graph.AddPoint(dataSeries,pnt);
-   }
-
-   IndexType fsSeries = graph.CreateDataSeries(_T("Min. FS"),PS_SOLID,2,RED);
-   graph.AddPoint(fsSeries,gpPoint2d(0.0,criteria.MinFScr));
-   graph.AddPoint(fsSeries,gpPoint2d(pXFormat->Convert(girder.GetGirderLength()),criteria.MinFScr));
-
-   m_ctrlFSGraph.Invalidate();
-   m_ctrlFSGraph.UpdateWindow();
-}
-
-void CPGStableLiftingView::OnFpeType()
-{
-   m_FpeType = (GetCheckedRadioButton(IDC_CONSTANT_FPE,IDC_VARIABLE_FPE) == IDC_CONSTANT_FPE ? CONSTANT_FPE : VARYING_FPE);
-   BOOL bEnable = (m_FpeType == CONSTANT_FPE ? TRUE : FALSE);
+   BOOL bEnable = (m_Strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
    GetDlgItem(IDC_FPE_STRAIGHT)->EnableWindow(bEnable);
    GetDlgItem(IDC_FPE_HARPED)->EnableWindow(bEnable);
    GetDlgItem(IDC_FPE_TEMP)->EnableWindow(bEnable);
-   GetDlgItem(IDC_EDIT_FPE)->EnableWindow(!bEnable);
+
+   GetDlgItem(IDC_EDIT_FPE)->ShowWindow(bEnable ? SW_HIDE : SW_SHOW);
+}
+
+void CPGStableLiftingView::UpdateCriteriaControls()
+{
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   BOOL bEnable = pDoc->GetCriteria() == gs_strCriteria ? TRUE : FALSE;
+   GetDlgItem(IDC_IMPACT_UP)->EnableWindow(bEnable);
+   GetDlgItem(IDC_IMPACT_DOWN)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFT_ANGLE)->EnableWindow(bEnable);
+   GetDlgItem(IDC_WIND_TYPE)->EnableWindow(bEnable);
+   GetDlgItem(IDC_WIND_PRESSURE)->EnableWindow(bEnable);
+   GetDlgItem(IDC_CAMBER1)->EnableWindow(bEnable);
+   GetDlgItem(IDC_CAMBER2)->EnableWindow(bEnable);
+   GetDlgItem(IDC_CAMBER_OFFSET)->EnableWindow(bEnable);
+   if (GetCheckedRadioButton(IDC_CAMBER1,IDC_CAMBER2) == IDC_CAMBER1 )
+   {
+      GetDlgItem(IDC_CAMBER)->EnableWindow(bEnable == FALSE ? FALSE : TRUE); // disable if we are disabling controls and camber is by the % method
+   }
+   else
+   {
+      GetDlgItem(IDC_CAMBER)->EnableWindow(TRUE); // if camber is a direct input value, always enable
+   }
+   GetDlgItem(IDC_YRA)->EnableWindow(bEnable);
+   GetDlgItem(IDC_SWEEP_TOLERANCE)->EnableWindow(bEnable);
+   GetDlgItem(IDC_SUPPORT_PLACEMENT_TOLERANCE)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFTING_FS_CRACKING)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFTING_FS_FAILURE)->EnableWindow(bEnable);
+   GetDlgItem(IDC_STRESSES)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFTING_COMPRESSION)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFTING_TENSION)->EnableWindow(bEnable);
+   GetDlgItem(IDC_CHECK_LIFTING_TENSION_MAX)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFTING_TENSION_MAX)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFTING_TENSION_WITH_REBAR)->EnableWindow(bEnable);
 }
 
 void CPGStableLiftingView::OnEditFpe()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    CPGStableEffectivePrestressDlg dlg;
-   dlg.m_Fpe = m_Fpe;
+   dlg.m_Strands = m_Strands;
    if ( dlg.DoModal() == IDOK )
    {
-      m_Fpe = dlg.m_Fpe;
+      m_Strands = dlg.m_Strands;
 
       Float64 Fs,Fh,Ft;
       GetMaxFpe(&Fs,&Fh,&Ft);
@@ -640,47 +443,78 @@ void CPGStableLiftingView::OnEditFpe()
 void CPGStableLiftingView::OnInitialUpdate()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   m_FpeType = pDoc->GetLiftingFpeType();
 
-   {
-      AFX_MANAGE_STATE(AfxGetStaticModuleState());
-      m_ctrlStressGraph.SubclassDlgItem(IDC_STRESS_GRAPH,this);
-      m_ctrlStressGraph.CustomInit();
+   m_Strands = pDoc->GetStrands(pDoc->GetGirderType(),LIFTING);
+   m_LiftingCriteria = pDoc->GetLiftingCriteria();
 
-      m_ctrlFSGraph.SubclassDlgItem(IDC_FS_GRAPH,this);
-      m_ctrlFSGraph.CustomInit();
-   }
+   CWnd* pWnd = GetDlgItem(IDC_BROWSER);
+   pWnd->ShowWindow(SW_HIDE);
 
-   CFormView::OnInitialUpdate();
+   boost::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(_T("Lifting"));
+   CReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
-   stbLiftingStabilityProblem problem = pDoc->GetLiftingStabilityProblem();
-   IndexType nFpe = problem.GetFpeCount();;
-   for ( IndexType fpeIdx = 0; fpeIdx < nFpe; fpeIdx++ )
-   {
-      stbFpe fpe;
-      problem.GetFpe(fpeIdx,&fpe.X,&fpe.fpeStraight,&fpe.fpeHarped,&fpe.fpeTemporary);
-      m_Fpe.insert(fpe);
-   }
+   boost::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
 
+   boost::shared_ptr<CReportSpecificationBuilder> nullSpecBuilder;
+   m_pBrowser = pDoc->m_RptMgr.CreateReportBrowser(GetSafeHwnd(),m_pRptSpec,nullSpecBuilder);
 
-   OnFpeType();
+   m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
+
+   CComboBox* pcbStresses = (CComboBox*)GetDlgItem(IDC_STRESSES);
+   pcbStresses->SetItemData(pcbStresses->AddString(_T("tilted girder")),(DWORD_PTR)false);
+   pcbStresses->SetItemData(pcbStresses->AddString(_T("plumb girder")),(DWORD_PTR)true);
+
+   CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)stbTypes::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)stbTypes::Pressure);
+
+   CPGStableFormView::OnInitialUpdate();
+
+   UpdateFpeControls();
+
+   OnClickedLiftingTensionMax();
+}
+
+void CPGStableLiftingView::RefreshReport()
+{
+   if ( m_pRptSpec == NULL )
+      return;
+
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+
+   // refresh the report
+   m_pRptSpec = m_pBrowser->GetReportSpecification();
+   boost::shared_ptr<CReportBuilder> pBuilder = pDoc->m_RptMgr.GetReportBuilder( m_pRptSpec->GetReportName() );
+   boost::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
+   m_pBrowser->UpdateReport( pReport, true );
+
 }
 
 void CPGStableLiftingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
 {
-   Float64 FpeStraight = 0;
-   Float64 FpeHarped = 0;
-   Float64 FpeTemporary = 0;
-   BOOST_FOREACH(stbFpe& fpe,m_Fpe)
+   if ( m_Strands.strandMethod == CPGStableStrands::Simplified )
    {
-      FpeStraight  = Max(FpeStraight,fpe.fpeStraight);
-      FpeHarped    = Max(FpeHarped,fpe.fpeHarped);
-      FpeTemporary = Max(FpeTemporary,fpe.fpeTemporary);
+      *pFpeStraight = m_Strands.FpeStraight;
+      *pFpeHarped   = m_Strands.FpeHarped;
+      *pFpeTemp     = m_Strands.FpeTemp;
    }
+   else
+   {
+      Float64 FpeStraight = 0;
+      Float64 FpeHarped = 0;
+      Float64 FpeTemporary = 0;
+      BOOST_FOREACH(CPGStableFpe& fpe,m_Strands.m_vFpe)
+      {
+         FpeStraight  = Max(FpeStraight,fpe.FpeStraight);
+         FpeHarped    = Max(FpeHarped,fpe.FpeHarped);
+         FpeTemporary = Max(FpeTemporary,fpe.FpeTemp);
+      }
 
-   *pFpeStraight = FpeStraight;
-   *pFpeHarped   = FpeHarped;
-   *pFpeTemp     = FpeTemporary;
+      *pFpeStraight = FpeStraight;
+      *pFpeHarped   = FpeHarped;
+      *pFpeTemp     = FpeTemporary;
+   }
 }
 
 void CPGStableLiftingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)
@@ -697,4 +531,120 @@ void CPGStableLiftingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /
          OnChange();
       }
    }
+}
+
+void CPGStableLiftingView::OnClickedLiftingTensionMax()
+{
+   BOOL bEnable = IsDlgButtonChecked(IDC_CHECK_LIFTING_TENSION_MAX) == BST_CHECKED ? TRUE : FALSE;
+   GetDlgItem(IDC_LIFTING_TENSION_MAX)->EnableWindow(bEnable);
+}
+
+LRESULT CPGStableLiftingView::OnCommandHelp(WPARAM, LPARAM lParam)
+{
+   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_PGSTABLE_LIFTING_VIEW );
+   return TRUE;
+}
+
+void CPGStableLiftingView::OnCmenuSelected(UINT id)
+{
+  UINT cmd = id-CCS_CMENU_BASE ;
+
+  switch(cmd)
+  {
+  //case CCS_RB_EDIT:
+  //   EditReport();
+  //   break;
+
+  case CCS_RB_FIND:
+     m_pBrowser->Find();
+     break;
+
+  case CCS_RB_SELECT_ALL:
+     m_pBrowser->SelectAll();
+     break;
+  case CCS_RB_PRINT:
+     m_pBrowser->Print(true);
+     break;
+
+  case CCS_RB_REFRESH:
+     m_pBrowser->Refresh();
+     break;
+
+  case CCS_RB_VIEW_SOURCE:
+     m_pBrowser->ViewSource();
+     break;
+
+  case CCS_RB_VIEW_BACK:
+     m_pBrowser->Back();
+     break;
+
+  case CCS_RB_VIEW_FORWARD:
+     m_pBrowser->Forward();
+     break;
+
+  default:
+     // must be a toc anchor
+     ATLASSERT(CCS_RB_TOC <= cmd);
+     m_pBrowser->NavigateAnchor(cmd-CCS_RB_TOC);
+  }
+}
+
+void CPGStableLiftingView::OnSize(UINT nType, int cx, int cy)
+{
+   CPGStableFormView::OnSize(nType, cx, cy);
+
+   if ( m_pBrowser )
+   {
+      // Convert a 7du x 7du rect into pixels
+      CRect sizeRect(0,0,7,7);
+      MapDialogRect(GetSafeHwnd(),&sizeRect);
+
+      CRect clientRect;
+      GetClientRect(&clientRect);
+
+      CWnd* pWnd = GetDlgItem(IDC_BROWSER);
+      CRect placeholderRect;
+      pWnd->GetWindowRect(&placeholderRect);
+      ScreenToClient(&placeholderRect);
+
+      CRect browserRect;
+      browserRect.left = placeholderRect.left;
+      browserRect.top  = placeholderRect.top;
+      browserRect.right = clientRect.right - sizeRect.Width();
+      browserRect.bottom = clientRect.bottom - sizeRect.Height();
+
+      m_pBrowser->Move(browserRect.TopLeft());
+      m_pBrowser->Size(browserRect.Size() );
+
+      Invalidate();
+   }
+}
+
+void CPGStableLiftingView::OnPrint() 
+{
+   m_pBrowser->Print(true);
+}
+
+void CPGStableLiftingView::OnPrintDirect() 
+{
+   m_pBrowser->Print(false);
+}
+
+void CPGStableLiftingView::OnWindTypeChanged()
+{
+   CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
+   int curSel = pcbWindType->GetCurSel();
+   stbTypes::WindType windType = (stbTypes::WindType)pcbWindType->GetItemData(curSel);
+   CDataExchange dx(this,false);
+   CEAFApp* pApp = EAFGetApp();
+   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   if ( windType == stbTypes::Speed )
+   {
+      DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
+   }
+   else
+   {
+      DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->WindPressure);
+   }
+   OnChange();
 }

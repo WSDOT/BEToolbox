@@ -41,58 +41,13 @@ std::_tstring filename_to_URL(const std::_tstring& fname)
    std::_tstring filename(fname);
    std::_tstring::size_type pos;
    while((pos=filename.find(_T("\\"))) != std::_tstring::npos)
+   {
       filename.replace(pos,1,_T("/"));
+   }
 
    filename = _T("file://") + filename;
    return filename;
 }
-
-class arvPhysicalConverter: public sysNumericFormatTool
-{
-public:
-   virtual Float64 Convert(Float64 value) const=0;
-   virtual std::_tstring UnitTag() const =0;
-};
-
-// a template class for printing out physical values
-template <class T>
-class PhysicalFormatTool : public arvPhysicalConverter
-{
-public:
-   // built to take a unitmgtIndirectMeasureDataT
-   PhysicalFormatTool(const T& umd) :
-      // these formats are for reports, let's graphs a bit less precision
-      m_FormatTool(umd.Format, umd.Width-1, umd.Precision-1),
-      m_rT(umd)
-      {
-         ATLASSERT(umd.Width>0);     // Make sure these are positive. Otherwise subtraction
-         ATLASSERT(umd.Precision>0); // above will cause UINT's to roll over
-      }
-
-   std::_tstring AsString(Float64 val) const
-   {
-      if (fabs(val) > m_rT.Tol/10.)
-         return m_FormatTool.AsString(val);
-      else
-         return m_FormatTool.AsString(0.0);
-   }
-
-   Float64 Convert(Float64 value) const
-   {
-      return ::ConvertFromSysUnits(value, m_rT.UnitOfMeasure);
-   }
-
-   std::_tstring UnitTag() const
-   {
-      return m_rT.UnitOfMeasure.UnitTag();
-   }
-private:
-   sysNumericFormatTool m_FormatTool;
-   const T&             m_rT;
-};
-
-typedef PhysicalFormatTool<unitmgtMomentData>  MomentTool;
-typedef PhysicalFormatTool<unitmgtForceData>   AxialTool;
 
 //////////////////////////////////
 CUltColChapterBuilder::CUltColChapterBuilder(CUltColDoc* pDoc)
@@ -102,10 +57,8 @@ CUltColChapterBuilder::CUltColChapterBuilder(CUltColDoc* pDoc)
 
 CUltColChapterBuilder::~CUltColChapterBuilder(void)
 {
-   std::vector<std::_tstring>::iterator iter;
-   for ( iter = m_TemporaryFiles.begin(); iter != m_TemporaryFiles.end(); iter++ )
+   BOOST_FOREACH(std::_tstring& file,m_TemporaryFiles)
    {
-      std::_tstring file = *iter;
       ::DeleteFile( file.c_str() );
    }
 }
@@ -341,11 +294,15 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
    BOOL bExist;
    CString path(temp_path);
    if ( path[path.GetLength()-1] != '\\' )
+   {
       path += _T("\\");
+   }
    path += _T("*.*");
    bExist = finder.FindFile(path);
    if ( !bExist )
+   {
       _tcscpy_s( temp_path,_MAX_PATH, _T("C:\\") );
+   }
 
    // This creates a file called _T("temp_file").TMP
    if ( ::GetTempFileName( temp_path, _T("ultcol_"), 0, temp_file ) == 0 )
@@ -364,7 +321,9 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
 
    // We don't want the file Windows created for us
    if ( should_delete )
+   {
       ::DeleteFile( temp_file );
+   }
 
    to_upper( strFilename.begin(), strFilename.end() );
 

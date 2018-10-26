@@ -27,14 +27,11 @@ class CPGStableTitlePageBuilder :
    public CTitlePageBuilder
 {
 public:
-   CPGStableTitlePageBuilder(void);
+   CPGStableTitlePageBuilder();
    CPGStableTitlePageBuilder(const CPGStableTitlePageBuilder& other);
    ~CPGStableTitlePageBuilder(void);
 
    virtual rptChapter* Build(boost::shared_ptr<CReportSpecification>& pRptSpec);
 
    virtual CTitlePageBuilder* Clone() const;
-
-private:
-   std::_tstring m_strImagePath;
 };

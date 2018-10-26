@@ -428,10 +428,11 @@ void CPGStableGirderSectionGrid::FillGrid(const stbGirder& girder)
    {
       Float64 L = girder.GetSectionLength(sectIdx);
       Float64 Ag[2],Ix[2],Iy[2],Yt[2],Hg[2],Wtf[2],Wbf[2];
-      for ( int face = LEFT; face <= RIGHT; face++ )
+      for ( int s = 0; s < 2; s++ )
       {
-         girder.GetSectionProperties(sectIdx,face,&Ag[face],&Ix[face],&Iy[face],&Yt[face],&Hg[face],&Wtf[face],&Wbf[face]);
-         InsertGirderSection(L,Ag[face],Ix[face],Iy[face],Yt[face],Hg[face],Wtf[face],Wbf[face]);
+         stbTypes::Section section = (stbTypes::Section)s;
+         girder.GetSectionProperties(sectIdx,section,&Ag[section],&Ix[section],&Iy[section],&Yt[section],&Hg[section],&Wtf[section],&Wbf[section]);
+         InsertGirderSection(L,Ag[section],Ix[section],Iy[section],Yt[section],Hg[section],Wtf[section],Wbf[section]);
       }
    }
 
@@ -449,11 +450,39 @@ void CPGStableGirderSectionGrid::GetGirderSections(stbGirder& girder)
    for ( ROWCOL row = 0; row < nRows; row += 2 )
    {
       Float64 L[2],Ag[2],Ix[2],Iy[2],Yt[2],Hg[2],Wtf[2],Wbf[2];
-      GetGirderSection(row+1,&L[LEFT], &Ag[LEFT], &Ix[LEFT], &Iy[LEFT], &Yt[LEFT], &Hg[LEFT], &Wtf[LEFT], &Wbf[LEFT]);
-      GetGirderSection(row+2,&L[RIGHT],&Ag[RIGHT],&Ix[RIGHT],&Iy[RIGHT],&Yt[RIGHT],&Hg[RIGHT],&Wtf[RIGHT],&Wbf[RIGHT]);
-      // NOTE: L[LEFT] is the valid length... the L cell for the second row is disabled and will be out of date if the length changed
-      girder.AddSection(L[LEFT],Ag[LEFT], Ix[LEFT], Iy[LEFT], Yt[LEFT], Hg[LEFT], Wtf[LEFT], Wbf[LEFT],
-                                Ag[RIGHT],Ix[RIGHT],Iy[RIGHT],Yt[RIGHT],Hg[RIGHT],Wtf[RIGHT],Wbf[RIGHT]);
+      GetGirderSection(row+1,&L[stbTypes::Start], 
+                             &Ag[stbTypes::Start], 
+                             &Ix[stbTypes::Start], 
+                             &Iy[stbTypes::Start], 
+                             &Yt[stbTypes::Start], 
+                             &Hg[stbTypes::Start], 
+                             &Wtf[stbTypes::Start], 
+                             &Wbf[stbTypes::Start]);
+
+      GetGirderSection(row+2,&L[stbTypes::End],
+                             &Ag[stbTypes::End],
+                             &Ix[stbTypes::End],
+                             &Iy[stbTypes::End],
+                             &Yt[stbTypes::End],
+                             &Hg[stbTypes::End],
+                             &Wtf[stbTypes::End],
+                             &Wbf[stbTypes::End]);
+
+      // NOTE: L[stbTypes::Start] is the valid length... the L cell for the second row is disabled and will be out of date if the length changed
+      girder.AddSection(L[stbTypes::Start],Ag[stbTypes::Start], 
+                                                    Ix[stbTypes::Start], 
+                                                    Iy[stbTypes::Start], 
+                                                    Yt[stbTypes::Start], 
+                                                    Hg[stbTypes::Start], 
+                                                    Wtf[stbTypes::Start], 
+                                                    Wbf[stbTypes::Start],
+                                                    Ag[stbTypes::End],
+                                                    Ix[stbTypes::End],
+                                                    Iy[stbTypes::End],
+                                                    Yt[stbTypes::End],
+                                                    Hg[stbTypes::End],
+                                                    Wtf[stbTypes::End],
+                                                    Wbf[stbTypes::End]);
    }
 }
 
@@ -496,3 +525,43 @@ void CPGStableGirderSectionGrid::AssertValid() const
    CGXGridWnd::AssertValid();
 }
 #endif
+
+
+BOOL CPGStableGirderSectionGrid::OnLButtonClickedRowCol(ROWCOL nRow, ROWCOL nCol, UINT nFlags, CPoint pt)
+{
+   SelectRow(nRow);
+
+   return TRUE;
+}
+
+void CPGStableGirderSectionGrid::SelectRow(ROWCOL nRow)
+{
+   ROWCOL nCols = GetColCount();
+
+   // unselect currently selected rows
+   CRowColArray awRows;
+   GetSelectedRows(awRows);
+   INT_PTR cnt = awRows.GetSize();
+   for(INT_PTR idx = 0; idx < cnt; idx++)
+   {
+      ROWCOL row = awRows[idx];
+      SelectRange(CGXRange(row,0,row,nCols), FALSE);
+   }
+
+   if (0 < nRow)
+   {
+      ROWCOL topRow,botRow;
+      if ( ::IsEven(nRow) )
+      {
+         topRow = nRow-1;
+         botRow = nRow;
+      }
+      else
+      {
+         topRow = nRow;
+         botRow = nRow+1;
+      }
+
+      SelectRange(CGXRange(topRow,0,botRow,nCols), TRUE);
+   }
+}

@@ -47,9 +47,9 @@ protected:
 #endif
 #endif
 
-protected:
-   virtual void CreateEditButton();
+   virtual BOOL CanEditReport() { return FALSE; }
 
+protected:
    CGirCompChildFrame* m_pFrame;
 
 	DECLARE_MESSAGE_MAP()

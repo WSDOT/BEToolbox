@@ -28,7 +28,7 @@
 
 // CPGStableNonprismaticGirder dialog
 
-class CPGStableNonprismaticGirder : public CDialog
+class CPGStableNonprismaticGirder : public CDialog, public CPGStableGirderControlParent
 {
 	DECLARE_DYNAMIC(CPGStableNonprismaticGirder)
 
@@ -39,8 +39,9 @@ public:
 // Dialog Data
 	enum { IDD = IDD_NONPRISMATIC_GIRDER };
 
-   std::vector<std::pair<Float64,Float64>> GetGirderProfile();
-   std::vector<std::pair<Float64,Float64>> GetStrandProfile(int strandType);
+   // CPGStableGirderControlParent
+   virtual std::vector<std::pair<Float64,Float64>> GetGirderProfile();
+   virtual void GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -49,12 +50,12 @@ protected:
 
    CPGStableGirderSectionGrid* m_pGirderSectionGrid;
    CPGStablePointLoadGrid* m_pPointLoadGrid;
-
    CPGStableGirderControl m_ctrlGirder;
 
 	DECLARE_MESSAGE_MAP()
 
 public:
+   afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
    afx_msg void OnAddGirderSection();
    afx_msg void OnRemoveGirderSection();
    afx_msg void OnUpdateRemoveGirderSection(CCmdUI* pCmdUI);
@@ -63,6 +64,8 @@ public:
    afx_msg void OnAddPointLoad();
    afx_msg void OnRemovePointLoad();
    afx_msg void OnUpdateRemovePointLoad(CCmdUI* pCmdUI);
+   afx_msg void OnPSMethodChanged();
+
    BOOL AreLoadsSelected();
 
    void SetGirderLength(Float64 Lg);

@@ -31,7 +31,6 @@ CPGStableModel::CPGStableModel()
 {
    m_GirderType = PRISMATIC;
 
-#pragma Reminder("WORKING HERE - this is dummy code, just for getting started... move when done with it")
    Float64 Hg  = ::ConvertToSysUnits(72,unitMeasure::Inch);
    Float64 Wtf = ::ConvertToSysUnits(42,unitMeasure::Inch);
    Float64 Wbf = ::ConvertToSysUnits(26,unitMeasure::Inch);
@@ -40,70 +39,90 @@ CPGStableModel::CPGStableModel()
    Float64 Ix = ::ConvertToSysUnits(545894,unitMeasure::Inch4);
    Float64 Iy = ::ConvertToSysUnits(37634,unitMeasure::Inch4);
    Float64 Yt = ::ConvertToSysUnits(36.6-72,unitMeasure::Inch); // want neg because we are in section coordinates
-   Float64 L = ::ConvertToSysUnits(136,unitMeasure::Feet);
+   Float64 L = ::ConvertToSysUnits(100,unitMeasure::Feet);
    m_Girder[PRISMATIC].AddSection(L,Ag,Ix,Iy,Yt,Hg,Wtf,Wbf);
-
-   m_Density = ::ConvertToSysUnits(0.150,unitMeasure::KipPerFeet3); // without rebar (used to compute Ec)
-   m_Girder[PRISMATIC].SetDensity(::ConvertToSysUnits(0.155,unitMeasure::KipPerFeet3)); // including allowance for rebar (used for computing dead load)
 
    m_Girder[NONPRISMATIC] = m_Girder[PRISMATIC];
 
+   matConcreteEx liftingConcrete, haulingConcrete;
+
+   Float64 density = ::ConvertToSysUnits(0.155,unitMeasure::KipPerFeet3); // without rebar (used to compute Ec)
+   Float64 densityWithRebar = ::ConvertToSysUnits(0.160,unitMeasure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
+   liftingConcrete.SetDensity(density);
+   haulingConcrete.SetDensity(density);
+   liftingConcrete.SetDensityForWeight(densityWithRebar);
+   haulingConcrete.SetDensityForWeight(densityWithRebar);
+
+
    m_LiftingFrCoefficient = ::ConvertToSysUnits(0.24,unitMeasure::SqrtKSI);
    m_HaulingFrCoefficient = ::ConvertToSysUnits(0.24,unitMeasure::SqrtKSI);
-#pragma Reminder("WORKING HERE - set these to true... they are set to false to match the PCI document during development")
-   m_bComputeEci = false;
-   m_bComputeEc = false;
-   m_Fci = ::ConvertToSysUnits(5.5,unitMeasure::KSI);
-   m_Fc  = ::ConvertToSysUnits(7.0,unitMeasure::KSI);
+   m_bComputeEci = true;
+   m_bComputeEc = true;
+   Float64 fci = ::ConvertToSysUnits(5.5,unitMeasure::KSI);
+   Float64 fc  = ::ConvertToSysUnits(7.0,unitMeasure::KSI);
    m_K1 = 1.0;
    m_K2 = 1.0;
 
-   Float64 Eci = ::lrfdConcreteUtil::ModE(m_Fci,m_Density);
-   Float64 Ec  = ::lrfdConcreteUtil::ModE(m_Fc, m_Density);
+   liftingConcrete.SetFc(fci);
+   haulingConcrete.SetFc(fc);
 
-   // Example 6.1.1
-   m_LiftingFpeType = CONSTANT_FPE;
-   Float64 fpe = ::ConvertToSysUnits(1232.0,unitMeasure::Kip);
-   m_LiftingStabilityProblem.AddFpe(0.0,0,fpe,0);
-   m_LiftingStabilityProblem.SetCamber(true,::ConvertToSysUnits(2.92,unitMeasure::Inch));
-   m_LiftingStabilityProblem.SetSweepTolerance(0.000520833333);
+   Float64 Eci = ::lrfdConcreteUtil::ModE(fci,density,false/*ignore LRFD range checks*/);
+   Float64 Ec  = ::lrfdConcreteUtil::ModE(fc, density,false/*ignore LRFD range checks*/);
+
+   liftingConcrete.SetE(Eci);
+   haulingConcrete.SetE(Ec);
+
+   liftingConcrete.SetFlexureFr(::ConvertToSysUnits(0.24*sqrt(fci),unitMeasure::KSI));
+   haulingConcrete.SetFlexureFr(::ConvertToSysUnits(0.24*sqrt(fc),unitMeasure::KSI));
+
+   m_LiftingStabilityProblem.SetConcrete(liftingConcrete);
+   m_HaulingStabilityProblem.SetConcrete(haulingConcrete);
+
+   m_LiftingStabilityProblem.SetCamber(true,::ConvertToSysUnits(0,unitMeasure::Inch));
+   m_LiftingStabilityProblem.SetSweepTolerance(::ConvertToSysUnits(0.125,unitMeasure::Inch)/::ConvertToSysUnits(10.0,unitMeasure::Feet));
    m_LiftingStabilityProblem.SetSupportPlacementTolerance( ::ConvertToSysUnits(0.25,unitMeasure::Inch) );
-   //m_LiftingStabilityProblem.SetFr(::ConvertToSysUnits(0.24*sqrt(5.5),unitMeasure::KSI));
-   //m_LiftingStabilityProblem.SetEc( Eci );
-   m_LiftingStabilityProblem.SetEc(::ConvertToSysUnits(4765.97,unitMeasure::KSI));
-   m_LiftingStabilityProblem.SetSupportLocations(::ConvertToSysUnits(9,unitMeasure::Feet),::ConvertToSysUnits(9,unitMeasure::Feet));
+   m_LiftingStabilityProblem.SetSupportLocations(::ConvertToSysUnits(3,unitMeasure::Feet),::ConvertToSysUnits(3,unitMeasure::Feet));
    m_LiftingStabilityProblem.SetLiftAngle(PI_OVER_2);
    m_LiftingStabilityProblem.SetYRollAxis(::ConvertToSysUnits(0.0,unitMeasure::Inch));
    m_LiftingStabilityProblem.SetImpact(0,0);
-   m_LiftingStabilityProblem.ApplyImpactToTiltedGirder(true);
-   m_LiftingStabilityProblem.SetWindPressure(0.0);
+   m_LiftingStabilityProblem.EvaluateStressesForPlumbGirder(false);
 
-   m_HaulingFpeType = CONSTANT_FPE;
-   Float64 fpeHarp = ::ConvertToSysUnits(1195.47,unitMeasure::Kip);
-   Float64 fpeTemp = ::ConvertToSysUnits(56.03,unitMeasure::Kip);
-   m_HaulingStabilityProblem.AddFpe(0.0,0,fpeHarp,fpeTemp);
-   m_HaulingStabilityProblem.SetCamber(true,::ConvertToSysUnits(2.92,unitMeasure::Inch));
-   //m_HaulingStabilityProblem.SetFr(::ConvertToSysUnits(0.24*sqrt(7.0),unitMeasure::KSI));
-   //m_HaulingStabilityProblem.SetEc(Ec);
-   m_HaulingStabilityProblem.SetEc(::ConvertToSysUnits(5164.914,unitMeasure::KSI));
+   m_HaulingStabilityProblem.SetCamber(true,::ConvertToSysUnits(0,unitMeasure::Inch));
 
-   m_HaulingStabilityProblem.SetSupportLocations(::ConvertToSysUnits(10,unitMeasure::Feet),::ConvertToSysUnits(10,unitMeasure::Feet));
-   m_HaulingStabilityProblem.SetSweepTolerance(2*0.000520833333);
+   m_HaulingStabilityProblem.SetSupportLocations(::ConvertToSysUnits(5,unitMeasure::Feet),::ConvertToSysUnits(5,unitMeasure::Feet));
+   m_HaulingStabilityProblem.SetSweepTolerance(::ConvertToSysUnits(0.125,unitMeasure::Inch)/::ConvertToSysUnits(10.0,unitMeasure::Feet));
    m_HaulingStabilityProblem.SetSupportPlacementTolerance(::ConvertToSysUnits(1.0,unitMeasure::Inch));
-//   m_HaulingStabilityProblem.SetYRollAxis(::ConvertToSysUnits(-48.0,unitMeasure::Inch) - Hg); // location of roll axes below top of girder
    m_HaulingStabilityProblem.SetTruckRotationalStiffness(::ConvertToSysUnits(40500.,unitMeasure::KipInchPerRadian));
+   m_HaulingStabilityProblem.SetCrownSlope(0.02);
    m_HaulingStabilityProblem.SetSuperelevation(0.06);
    m_HaulingStabilityProblem.SetWheelLineSpacing(::ConvertToSysUnits(72.,unitMeasure::Inch));
    m_HaulingStabilityProblem.SetHeightOfRollAxisAboveRoadway(::ConvertToSysUnits(24.,unitMeasure::Inch));
    m_HaulingStabilityProblem.SetImpact(0,0);
-   m_HaulingStabilityProblem.ApplyImpactToTiltedGirder(false);
-   m_HaulingStabilityProblem.SetWindPressure(0);
+   m_HaulingStabilityProblem.SetImpactUsage(stbTypes::Both);
    m_HaulingStabilityProblem.SetVelocity(0);
-   m_HaulingStabilityProblem.SetTurningRadius(::ConvertToSysUnits(120,unitMeasure::Feet));
+   m_HaulingStabilityProblem.SetTurningRadius(::ConvertToSysUnits(100,unitMeasure::Feet));
 
    m_Hgb = ::ConvertToSysUnits(72.0,unitMeasure::Inch);
 
    m_LiftingCriteria.bMaxTension = true;
+
+
+   m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
+   m_DocUnitServer->SetBaseUnits(CComBSTR(unitSysUnitsMgr::GetMassUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetLengthUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetTimeUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetTemperatureUnit().UnitTag().c_str()),
+                            CComBSTR(unitSysUnitsMgr::GetAngleUnit().UnitTag().c_str()));  
+   m_DocUnitServer->QueryInterface(&m_DocConvert);
+
+
+   for ( int girderType = 0; girderType < 2; girderType++ )
+   {
+      for ( int modelType = 0; modelType < 2; modelType++ )
+      {
+         MapSimplifiedToExactStrandLocations(&m_Strands[girderType][modelType]);
+      }
+   }
 }
 
 CPGStableModel::~CPGStableModel()
@@ -119,25 +138,25 @@ stbLiftingResults CPGStableModel::GetLiftingResults() const
 
 stbLiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
 {
-   m_LiftingStabilityProblem.SetFc(m_Fci);
-
-   Float64 Ec;
+   matConcreteEx concrete = m_LiftingStabilityProblem.GetConcrete();
+   Float64 fci = concrete.GetFc();
    if ( m_bComputeEci )
    {
-      Ec = ::lrfdConcreteUtil::ModE(m_Fci,m_Density);
+      Float64 density = concrete.GetDensity();
+      Float64 Ec = lrfdConcreteUtil::ModE(fci,density,false/*ignore LRFD range checks*/);
       if ( lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion() )
       {
          Ec *= m_K1*m_K2;
       }
+      concrete.SetE(Ec);
    }
-   else
-   {
-      Ec = m_LiftingStabilityProblem.GetEc();
-   }
-   m_LiftingStabilityProblem.SetEc(Ec);
 
-   Float64 fr = ::lrfdConcreteUtil::ModRupture(m_Fci,m_LiftingFrCoefficient);
-   m_LiftingStabilityProblem.SetFr(fr);
+   Float64 fr = ::lrfdConcreteUtil::ModRupture(fci,m_LiftingFrCoefficient);
+   concrete.SetFlexureFr(fr);
+
+   concrete.SetLambda(lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(matConcrete::Normal,concrete.GetDensity(),false,0,0));
+
+   m_LiftingStabilityProblem.SetConcrete(concrete);
 
    stbGirder* pGirder = &m_Girder[m_GirderType];
    Float64 L = pGirder->GetGirderLength();
@@ -146,30 +165,27 @@ stbLiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
    for ( int i = 0; i <= n; i++ )
    {
       Float64 X = i*L/n;
-      m_LiftingStabilityProblem.AddAnalysisPoint(X);
+      m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(X));
    }
 
    Float64 Ll, Lr;
    m_LiftingStabilityProblem.GetSupportLocations(&Ll,&Lr);
-   m_LiftingStabilityProblem.AddAnalysisPoint(Ll);
-   m_LiftingStabilityProblem.AddAnalysisPoint(L-Lr);
+   m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(Ll));
+   m_LiftingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(L-Lr));
 
-   const CPGStableStrands* pStrands = &m_Strands[m_GirderType];
-   ResolveStrandLocations(pStrands,pGirder);
-
-   m_LiftingStabilityProblem.SetXferLength(pStrands->XferLength,L);
+   ResolveLiftingStrandLocations();
 
    // criteria
-   m_LiftingCriteria.AllowableCompression = -m_LiftingCriteria.CompressionCoefficient*m_Fci;
-   m_LiftingCriteria.AllowableTension = m_LiftingCriteria.TensionCoefficient*sqrt(m_Fci);
+   m_LiftingCriteria.AllowableCompression = -m_LiftingCriteria.CompressionCoefficient*fci;
+   m_LiftingCriteria.AllowableTension = m_LiftingCriteria.TensionCoefficient*sqrt(fci);
    if ( m_LiftingCriteria.bMaxTension )
    {
       m_LiftingCriteria.AllowableTension = Min(m_LiftingCriteria.AllowableTension,m_LiftingCriteria.MaxTension);
    }
-   m_LiftingCriteria.AllowableTensionWithRebar = m_LiftingCriteria.TensionCoefficientWithRebar*sqrt(m_Fci);
-   //m_LiftingCriteria.AllowableTensionTiltedGirder = m_LiftingCriteria.GetFr();
+   m_LiftingCriteria.AllowableTensionWithRebar = m_LiftingCriteria.TensionCoefficientWithRebar*sqrt(fci);
+   m_LiftingCriteria.Lambda = concrete.GetLambda();
 
-   stbStabilityEngineer stabilityEngineer;
+   stbStabilityEngineer stabilityEngineer(m_DocConvert);
    stbLiftingCheckArtifact artifact = stabilityEngineer.CheckLifting(pGirder,&m_LiftingStabilityProblem,m_LiftingCriteria);
    return artifact;
 }
@@ -182,25 +198,26 @@ stbHaulingResults CPGStableModel::GetHaulingResults() const
 
 stbHaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
 {
-   m_HaulingStabilityProblem.SetFc(m_Fc);
-
-   Float64 Ec;
+   matConcreteEx concrete = m_HaulingStabilityProblem.GetConcrete();
+   Float64 fc = concrete.GetFc();
    if ( m_bComputeEc )
    {
-      Ec = ::lrfdConcreteUtil::ModE(m_Fc,m_Density);
+      Float64 density = concrete.GetDensity();
+      Float64 Ec = ::lrfdConcreteUtil::ModE(fc,density,false/*ignore LRFD range checks*/);
       if ( lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion() )
       {
          Ec *= m_K1*m_K2;
       }
-   }
-   else
-   {
-      Ec = m_HaulingStabilityProblem.GetEc();
-   }
-   m_HaulingStabilityProblem.SetEc(Ec);
 
-   Float64 fr = ::lrfdConcreteUtil::ModRupture(m_Fc,m_HaulingFrCoefficient);
-   m_HaulingStabilityProblem.SetFr(fr);
+      concrete.SetE(Ec);
+   }
+
+   Float64 fr = ::lrfdConcreteUtil::ModRupture(fc,m_HaulingFrCoefficient);
+   concrete.SetFlexureFr(fr);
+
+   concrete.SetLambda(lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(matConcrete::Normal,concrete.GetDensity(),false,0,0));
+
+   m_HaulingStabilityProblem.SetConcrete(concrete);
 
    stbGirder* pGirder = &m_Girder[m_GirderType];
    Float64 L = pGirder->GetGirderLength();
@@ -209,65 +226,172 @@ stbHaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
    for ( int i = 0; i <= n; i++ )
    {
       Float64 X = i*L/n;
-      m_HaulingStabilityProblem.AddAnalysisPoint(X);
+      m_HaulingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(X));
    }
 
    Float64 Ll, Lr;
    m_HaulingStabilityProblem.GetSupportLocations(&Ll,&Lr);
-   m_HaulingStabilityProblem.AddAnalysisPoint(Ll);
-   m_HaulingStabilityProblem.AddAnalysisPoint(L-Lr);
+   m_HaulingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(Ll));
+   m_HaulingStabilityProblem.AddAnalysisPoint(new stbAnalysisPoint(L-Lr));
 
    Float64 Ag,Ix,Iy,Yt,Hg,Wtop,Wbot;
-   pGirder->GetSectionProperties(0,LEFT,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtop,&Wbot);
+   pGirder->GetSectionProperties(0,stbTypes::Start,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtop,&Wbot);
    Float64 Yra = -(Hg + m_Hgb) + m_HaulingStabilityProblem.GetHeightOfRollAxisAboveRoadway();
    ATLASSERT(Yra < 0);
    m_HaulingStabilityProblem.SetYRollAxis(Yra); // location of roll axes relative to the top of girder
 
+   ResolveHaulingStrandLocations();
 
-   const CPGStableStrands* pStrands = &m_Strands[m_GirderType];
-   ResolveStrandLocations(pStrands,pGirder);
+   m_HaulingCriteria.AllowableCompression = -m_HaulingCriteria.CompressionCoefficient*fc;
 
-   m_HaulingStabilityProblem.SetXferLength(pStrands->XferLength,L);
-
-   m_HaulingCriteria.AllowableCompression = -m_HaulingCriteria.CompressionCoefficient*m_Fc;
-   m_HaulingCriteria.AllowableTension = m_HaulingCriteria.TensionCoefficient*sqrt(m_Fc);
-   if ( m_HaulingCriteria.bMaxTension )
+   m_HaulingCriteria.AllowableTension[stbTypes::CrownSlope] = m_HaulingCriteria.TensionCoefficient[stbTypes::CrownSlope]*sqrt(fc);
+   if ( m_HaulingCriteria.bMaxTension[stbTypes::CrownSlope] )
    {
-      m_HaulingCriteria.AllowableTension = Min(m_HaulingCriteria.AllowableTension,m_HaulingCriteria.MaxTension);
+      m_HaulingCriteria.AllowableTension[stbTypes::CrownSlope] = Min(m_HaulingCriteria.AllowableTension[stbTypes::CrownSlope],m_HaulingCriteria.MaxTension[stbTypes::CrownSlope]);
    }
-   m_HaulingCriteria.AllowableTensionWithRebar = m_HaulingCriteria.TensionCoefficientWithRebar*sqrt(m_Fc);
-   m_HaulingCriteria.AllowableTensionTiltedGirder = m_HaulingStabilityProblem.GetFr();
+   m_HaulingCriteria.AllowableTensionWithRebar[stbTypes::CrownSlope] = m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::CrownSlope]*sqrt(fc);
 
-   stbStabilityEngineer stabilityEngineer;
+
+   m_HaulingCriteria.AllowableTension[stbTypes::MaxSuper] = concrete.GetFlexureFr();
+   m_HaulingCriteria.TensionCoefficient[stbTypes::MaxSuper] = m_HaulingFrCoefficient;
+   m_HaulingCriteria.bMaxTension[stbTypes::MaxSuper] = false;
+   m_HaulingCriteria.AllowableTensionWithRebar[stbTypes::MaxSuper] = concrete.GetFlexureFr();
+   m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper] = m_HaulingFrCoefficient;
+
+   m_HaulingCriteria.Lambda = concrete.GetLambda();
+
+   stbStabilityEngineer stabilityEngineer(m_DocConvert);
    stbHaulingCheckArtifact artifact = stabilityEngineer.CheckHauling(pGirder,&m_HaulingStabilityProblem,m_HaulingCriteria);
    return artifact;
 }
 
-void CPGStableModel::ResolveStrandLocations(const CPGStableStrands* pStrands,stbGirder* pGirder) const
+void CPGStableModel::ResolveLiftingStrandLocations() const
+{
+   if ( m_Strands[m_GirderType][LIFTING].strandMethod == CPGStableStrands::Simplified )
+   {
+      ResolveSimplifedLiftingStrandLocations();
+   }
+   else
+   {
+      ResolveExactLiftingStrandLocations();
+   }
+}
+
+void CPGStableModel::ResolveSimplifedLiftingStrandLocations() const
+{
+   Float64 L = m_Girder[m_GirderType].GetGirderLength();
+   m_LiftingStabilityProblem.AdjustForXferLength(true);
+   m_LiftingStabilityProblem.SetXferLength(m_Strands[m_GirderType][LIFTING].XferLength,L);
+
+   Float64 YpsStraight,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,YpsTemp;
+   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][LIFTING],&m_Girder[m_GirderType],&YpsStraight,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&YpsTemp);
+
+   m_LiftingStabilityProblem.ClearFpe();
+
+   Float64 FpeStraight = m_Strands[m_GirderType][LIFTING].FpeStraight;
+   Float64 FpeHarped   = m_Strands[m_GirderType][LIFTING].FpeHarped;
+   Float64 FpeTemp     = m_Strands[m_GirderType][LIFTING].FpeTemp;
+   m_LiftingStabilityProblem.AddFpe(0,  FpeStraight,YpsStraight,FpeHarped,Yh1,FpeTemp,YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(Xh1,FpeStraight,YpsStraight,FpeHarped,Yh1,FpeTemp,YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(Xh2,FpeStraight,YpsStraight,FpeHarped,Yh2,FpeTemp,YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(Xh3,FpeStraight,YpsStraight,FpeHarped,Yh3,FpeTemp,YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(Xh4,FpeStraight,YpsStraight,FpeHarped,Yh4,FpeTemp,YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(L,  FpeStraight,YpsStraight,FpeHarped,Yh4,FpeTemp,YpsTemp);
+}
+
+void CPGStableModel::ResolveExactLiftingStrandLocations() const
+{
+   Float64 Lg = m_Girder[m_GirderType].GetGirderLength();
+   m_LiftingStabilityProblem.ClearFpe();
+   BOOST_FOREACH(const CPGStableFpe& fpe,m_Strands[m_GirderType][LIFTING].m_vFpe)
+   {
+      if ( ::InRange(0.0,fpe.X,Lg) )
+      {
+         Float64 Ys,Yh,Yt;
+         GetStrandLocations(fpe,&m_Girder[m_GirderType],&Ys,&Yh,&Yt);
+         m_LiftingStabilityProblem.AddFpe(fpe.X,fpe.FpeStraight,Ys,fpe.FpeHarped,Yh,fpe.FpeTemp,Yt);
+      }
+   }
+}
+
+void CPGStableModel::ResolveHaulingStrandLocations() const
+{
+   if ( m_Strands[m_GirderType][HAULING].strandMethod == CPGStableStrands::Simplified )
+   {
+      ResolveSimplifedHaulingStrandLocations();
+   }
+   else
+   {
+      ResolveExactHaulingStrandLocations();
+   }
+}
+
+void CPGStableModel::ResolveSimplifedHaulingStrandLocations() const
+{
+   Float64 L = m_Girder[m_GirderType].GetGirderLength();
+   m_HaulingStabilityProblem.AdjustForXferLength(true);
+   m_HaulingStabilityProblem.SetXferLength(m_Strands[m_GirderType][HAULING].XferLength,L);
+
+   Float64 YpsStraight,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,YpsTemp;
+   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][HAULING],&m_Girder[m_GirderType],&YpsStraight,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&YpsTemp);
+
+   m_HaulingStabilityProblem.ClearFpe();
+
+   Float64 FpeStraight = m_Strands[m_GirderType][HAULING].FpeStraight;
+   Float64 FpeHarped   = m_Strands[m_GirderType][HAULING].FpeHarped;
+   Float64 FpeTemp     = m_Strands[m_GirderType][HAULING].FpeTemp;
+   m_HaulingStabilityProblem.AddFpe(0,  FpeStraight,YpsStraight,FpeHarped,Yh1,FpeTemp,YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(Xh1,FpeStraight,YpsStraight,FpeHarped,Yh1,FpeTemp,YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(Xh2,FpeStraight,YpsStraight,FpeHarped,Yh2,FpeTemp,YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(Xh3,FpeStraight,YpsStraight,FpeHarped,Yh3,FpeTemp,YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(Xh4,FpeStraight,YpsStraight,FpeHarped,Yh4,FpeTemp,YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(L,  FpeStraight,YpsStraight,FpeHarped,Yh4,FpeTemp,YpsTemp);
+}
+
+void CPGStableModel::ResolveExactHaulingStrandLocations() const
+{
+   Float64 Lg = m_Girder[m_GirderType].GetGirderLength();
+   m_HaulingStabilityProblem.ClearFpe();
+   BOOST_FOREACH(const CPGStableFpe& fpe,m_Strands[m_GirderType][HAULING].m_vFpe)
+   {
+      if ( ::InRange(0.0,fpe.X,Lg) )
+      {
+         Float64 Ys,Yh,Yt;
+         GetStrandLocations(fpe,&m_Girder[m_GirderType],&Ys,&Yh,&Yt);
+         m_HaulingStabilityProblem.AddFpe(fpe.X,fpe.FpeStraight,Ys,fpe.FpeHarped,Yh,fpe.FpeTemp,Yt);
+      }
+   }
+}
+
+void CPGStableModel::MapSimplifiedToExactStrandLocations(CPGStableStrands* pStrands)
+{
+   ATLASSERT(pStrands->strandMethod == CPGStableStrands::Simplified);
+
+   // this call gets the strand location information for the stability engine.
+   // we only want to create input parameters so we only want the X values for the harped strands
+   Float64 YpsStraight,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,YpsTemp;
+   GetSimplifiedStrandLocations(pStrands,&m_Girder[m_GirderType],&YpsStraight,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&YpsTemp);
+
+   Float64 L = m_Girder[m_GirderType].GetGirderLength();
+
+   pStrands->m_vFpe.clear();
+   pStrands->m_vFpe.insert(CPGStableFpe(0,  pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh1,pStrands->Yh1Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(Xh1,pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh1,pStrands->Yh1Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(Xh2,pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh2,pStrands->Yh2Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(Xh3,pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh3,pStrands->Yh3Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(Xh4,pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh4,pStrands->Yh4Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(L,  pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh4,pStrands->Yh4Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
+}
+
+void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStrands,const stbGirder* pGirder,Float64* pYpsStraight,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pYpsTemp) const
 {
    Float64 L = pGirder->GetGirderLength();
 
    Float64 Ag,Ix,Iy,Yt,Hg,Wtf,Wbf;
-   pGirder->GetSectionProperties(0,LEFT,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
+   pGirder->GetSectionProperties(0,stbTypes::Start,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
 
-   if ( pStrands->YsMeasure == TOP )
-   {
-      pGirder->SetStraightStrandLocation(-pStrands->Ys);
-   }
-   else
-   {
-      pGirder->SetStraightStrandLocation(pStrands->Ys - Hg);
-   }
-
-   if ( pStrands->YtMeasure == TOP )
-   {
-      pGirder->SetTemporaryStrandLocation(-pStrands->Yt);
-   }
-   else
-   {
-      pGirder->SetTemporaryStrandLocation(pStrands->Yt - Hg);
-   }
-
+   Float64 YpsStraight = (pStrands->YsMeasure == TOP ? -pStrands->Ys : pStrands->Ys - Hg);
+   Float64 YpsTemp = (pStrands->YtMeasure == TOP ? -pStrands->Yt : pStrands->Yt - Hg);
    Float64 Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4;
    if ( pStrands->Xh1Measure == FRACTION )
    {
@@ -340,8 +464,371 @@ void CPGStableModel::ResolveStrandLocations(const CPGStableStrands* pStrands,stb
    {
       Yh4 = pStrands->Yh4 - Hg;
    }
+   
+   *pYpsStraight = YpsStraight;
+   *pXh1 = Xh1;
+   *pYh1 = Yh1;
+   *pXh2 = Xh2;
+   *pYh2 = Yh2;
+   *pXh3 = Xh3;
+   *pYh3 = Yh3;
+   *pXh4 = Xh4;
+   *pYh4 = Yh4;
+   *pYpsTemp = YpsTemp;
+}
 
-   pGirder->SetHarpedStrandLocation(Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4);
+Float64 CPGStableModel::GetHarpedStrandLocation(Float64 X,Float64 X1,Float64 Y1,Float64 X2,Float64 Y2,Float64 X3,Float64 Y3,Float64 X4,Float64 Y4) const
+{
+   if ( ::InRange(0.0,X,X1) )
+   {
+      return Y1;
+   }
+   else if ( ::InRange(X1,X,X2) )
+   {
+      return ::LinInterp(X - X1,Y1,Y2,X2-X1);
+   }
+   else if ( ::InRange(X2,X,X3) )
+   {
+      return ::LinInterp(X - X2,Y2,Y3,X3-X2);
+   }
+   else if ( ::InRange(X3,X,X4) )
+   {
+      return ::LinInterp(X - X3,Y3,Y4,X4-X3);
+   }
+   else
+   {
+      return Y4;
+   }
+}
+
+bool CPGStableModel::SetDensity(Float64 density)
+{
+   if ( !::IsEqual(m_LiftingStabilityProblem.GetConcrete().GetDensity(),density) )
+   {
+      ATLASSERT(!::IsEqual(m_HaulingStabilityProblem.GetConcrete().GetDensity(),density));
+      m_LiftingStabilityProblem.GetConcrete().SetDensity(density);
+      m_HaulingStabilityProblem.GetConcrete().SetDensity(density);
+      return true;
+   }
+   return false;
+}
+
+Float64 CPGStableModel::GetDensity() const
+{
+   ATLASSERT(::IsEqual(m_LiftingStabilityProblem.GetConcrete().GetDensity(),m_HaulingStabilityProblem.GetConcrete().GetDensity()));
+   return m_LiftingStabilityProblem.GetConcrete().GetDensity();
+}
+
+bool CPGStableModel::SetDensityWithRebar(Float64 density)
+{
+   if ( !::IsEqual(m_LiftingStabilityProblem.GetConcrete().GetDensityForWeight(),density) )
+   {
+      ATLASSERT(!::IsEqual(m_HaulingStabilityProblem.GetConcrete().GetDensityForWeight(),density));
+      m_LiftingStabilityProblem.GetConcrete().SetDensityForWeight(density);
+      m_HaulingStabilityProblem.GetConcrete().SetDensityForWeight(density);
+      return true;
+   }
+   return false;
+}
+
+Float64 CPGStableModel::GetDensityWithRebar() const
+{
+   ATLASSERT(::IsEqual(m_LiftingStabilityProblem.GetConcrete().GetDensityForWeight(),m_HaulingStabilityProblem.GetConcrete().GetDensityForWeight()));
+   return m_LiftingStabilityProblem.GetConcrete().GetDensityForWeight();
+}
+
+bool CPGStableModel::SetGirderType(int girderType)
+{
+   if ( m_GirderType != girderType )
+   {
+      m_GirderType = girderType;
+      return true;
+   }
+   return false;
+}
+
+int CPGStableModel::GetGirderType() const
+{
+   return m_GirderType;
+}
+
+bool CPGStableModel::SetStrands(int girderType,int modelType,const CPGStableStrands& strands)
+{
+   if ( m_Strands[girderType][modelType] != strands )
+   {
+      m_Strands[girderType][modelType] = strands;
+      if ( m_Strands[girderType][modelType].strandMethod == CPGStableStrands::Simplified )
+      {
+         MapSimplifiedToExactStrandLocations(&m_Strands[girderType][modelType]);
+      }
+      return true;
+   }
+   return false;
+}
+
+const CPGStableStrands& CPGStableModel::GetStrands(int girderType,int modelType) const
+{
+   return m_Strands[girderType][modelType];
+}
+
+bool CPGStableModel::SetGirder(int girderType,const stbGirder& girder)
+{
+   if ( m_Girder[girderType] != girder )
+   {
+      m_Girder[girderType] = girder;
+      return true;
+   }
+   return false;
+}
+
+const stbGirder& CPGStableModel::GetGirder(int girderType) const
+{
+   return m_Girder[girderType];
+}
+
+bool CPGStableModel::SetLiftingStabilityProblem(const stbLiftingStabilityProblem& problem)
+{
+   if ( m_LiftingStabilityProblem != problem )
+   {
+      m_LiftingStabilityProblem = problem;
+      return true;
+   }
+   return false;
+}
+
+const stbLiftingStabilityProblem& CPGStableModel::GetLiftingStabilityProblem() const
+{
+   return m_LiftingStabilityProblem;
+}
+
+bool CPGStableModel::SetHaulingStabilityProblem(const stbHaulingStabilityProblem& problem)
+{
+   if ( m_HaulingStabilityProblem != problem )
+   {
+      m_HaulingStabilityProblem = problem;
+      return true;
+   }
+   return false;
+}
+
+const stbHaulingStabilityProblem& CPGStableModel::GetHaulingStabilityProblem() const
+{
+   return m_HaulingStabilityProblem;
+}
+
+bool CPGStableModel::SetLiftingCriteria(const CPGStableLiftingCriteria& criteria)
+{
+   if ( m_LiftingCriteria != criteria )
+   {
+      m_LiftingCriteria = criteria;
+      return true;
+   }
+   return false;
+}
+
+const CPGStableLiftingCriteria& CPGStableModel::GetLiftingCriteria() const
+{
+   return m_LiftingCriteria;
+}
+
+bool CPGStableModel::SetHaulingCriteria(const CPGStableHaulingCriteria& criteria)
+{
+   if ( m_HaulingCriteria != criteria )
+   {
+      m_HaulingCriteria = criteria;
+      return true;
+   }
+   return false;
+}
+
+const CPGStableHaulingCriteria& CPGStableModel::GetHaulingCriteria() const
+{
+   return m_HaulingCriteria;
+}
+
+Float64 CPGStableModel::GetK1() const
+{
+   return m_K1;
+}
+
+bool CPGStableModel::SetK1(Float64 k1)
+{
+   if ( !IsEqual(m_K1,k1) )
+   {
+      m_K1 = k1;
+      return true;
+   }
+   return false;
+}
+
+Float64 CPGStableModel::GetK2() const
+{
+   return m_K2;
+}
+
+bool CPGStableModel::SetK2(Float64 k2)
+{
+   if ( !IsEqual(m_K2,k2) )
+   {
+      m_K2 = k2;
+      return true;
+   }
+   return false;
+}
+
+
+void CPGStableModel::GetLiftingMaterials(Float64* pFci,bool* pbComputeEci,Float64* pFrCoefficient) const
+{
+   *pFci = m_LiftingStabilityProblem.GetConcrete().GetFc();
+   *pbComputeEci = m_bComputeEci;
+   *pFrCoefficient = m_LiftingFrCoefficient;
+}
+
+bool CPGStableModel::SetLiftingMaterials(Float64 fci,bool bComputeEci,Float64 frCoefficient)
+{
+   if ( !IsEqual(m_LiftingStabilityProblem.GetConcrete().GetFc(),fci) || m_bComputeEci != bComputeEci || !IsEqual(m_LiftingFrCoefficient,frCoefficient) )
+   {
+      m_LiftingStabilityProblem.GetConcrete().SetFc(fci);
+      m_bComputeEci = bComputeEci;
+      m_LiftingFrCoefficient = frCoefficient;
+      return true;
+   }
+   return false;
+}
+
+void CPGStableModel::GetHaulingMaterials(Float64* pFc,bool* pbComputeEc,Float64* pFrCoefficient) const
+{
+   *pFc = m_HaulingStabilityProblem.GetConcrete().GetFc();
+   *pbComputeEc = m_bComputeEc;
+   *pFrCoefficient = m_HaulingFrCoefficient;
+}
+
+bool CPGStableModel::SetHaulingMaterials(Float64 fc,bool bComputeEc,Float64 frCoefficient)
+{
+   if ( !IsEqual(m_HaulingStabilityProblem.GetConcrete().GetFc(),fc) || m_bComputeEc != bComputeEc || !IsEqual(m_HaulingFrCoefficient,frCoefficient) )
+   {
+      m_HaulingStabilityProblem.GetConcrete().SetFc(fc);
+      m_bComputeEc = bComputeEc;
+      m_HaulingFrCoefficient = frCoefficient;
+      return true;
+   }
+   return false;
+}
+
+Float64 CPGStableModel::GetHeightOfGirderBottomAboveRoadway() const
+{
+   return m_Hgb;
+}
+
+bool CPGStableModel::SetHeightOfGirderBottomAboveRoadway(Float64 Hgb)
+{
+   if ( !IsEqual(m_Hgb,Hgb) )
+   {
+      m_Hgb = Hgb;
+      return true;
+   }
+   return false;
+}
+
+void CPGStableModel::ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pYs,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pYt)
+{
+   GetSimplifiedStrandLocations(&strands,&girder,pYs,pXh1,pYh1,pXh2,pYh2,pXh3,pYh3,pXh4,pYh4,pYt);
+}
+
+void CPGStableModel::GetStrandProfiles(const CPGStableStrands& strands,const stbGirder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const
+{
+   if ( strands.strandMethod == CPGStableStrands::Simplified )
+   {
+      Float64 Ys,Yt,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4;
+      GetSimplifiedStrandLocations(&strands,&girder,&Ys,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&Yt);
+
+      Float64 Lg = girder.GetGirderLength();
+
+      pvStraight->clear();
+      pvStraight->push_back(std::make_pair(0, Ys));
+      pvStraight->push_back(std::make_pair(Lg,Ys));
+
+      pvHarped->clear();
+      pvHarped->push_back(std::make_pair(0,Yh1));
+      pvHarped->push_back(std::make_pair(Xh1,Yh1));
+      pvHarped->push_back(std::make_pair(Xh2,Yh2));
+      pvHarped->push_back(std::make_pair(Xh3,Yh3));
+      pvHarped->push_back(std::make_pair(Xh4,Yh4));
+      pvHarped->push_back(std::make_pair(Lg,Yh4));
+
+      pvTemp->clear();
+      pvTemp->push_back(std::make_pair(0, Yt));
+      pvTemp->push_back(std::make_pair(Lg,Yt));
+   }
+   else
+   {
+      Float64 Lg = girder.GetGirderLength();
+
+      pvStraight->clear();
+      pvHarped->clear();
+      pvTemp->clear();
+
+      Float64 Ys,Yh,Yt;
+      const CPGStableFpe& firstFpe = *strands.m_vFpe.begin();
+      GetStrandLocations(firstFpe,&girder,&Ys,&Yh,&Yt);
+      pvStraight->push_back(std::make_pair(0,Ys));
+      pvHarped->push_back(std::make_pair(0,Yh));
+      pvTemp->push_back(std::make_pair(0,Yt));
+
+      BOOST_FOREACH(const CPGStableFpe& fpe,strands.m_vFpe)
+      {
+         if ( ::InRange(0.0,fpe.X,Lg) )
+         {
+            // ignore all fpe values that aren't on the girder
+            GetStrandLocations(fpe,&girder,&Ys,&Yh,&Yt);
+            pvStraight->push_back(std::make_pair(fpe.X,Ys));
+            pvHarped->push_back(std::make_pair(fpe.X,Yh));
+            pvTemp->push_back(std::make_pair(fpe.X,Yt));
+         }
+      }
+
+      const CPGStableFpe& lastFpe = *strands.m_vFpe.rbegin();
+      if (::InRange(0.0,lastFpe.X,Lg) )
+      {
+         GetStrandLocations(lastFpe,&girder,&Ys,&Yh,&Yt);
+         pvStraight->push_back(std::make_pair(Lg,Ys));
+         pvHarped->push_back(std::make_pair(Lg,Yh));
+         pvTemp->push_back(std::make_pair(Lg,Yt));
+      }
+   }
+}
+
+void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const stbGirder* pGirder,Float64* pYs,Float64* pYh,Float64* pYt) const
+{
+   Float64 Ag,Ix,Iy,Yt,Hg,Wtf,Wbf;
+   pGirder->GetSectionProperties(fpe.X,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
+
+   if ( fpe.YpsStraightMeasure == TOP )
+   {
+      *pYs = -fpe.YpsStraight;
+   }
+   else
+   {
+      *pYs = fpe.YpsStraight - Hg;
+   }
+
+   if ( fpe.YpsHarpedMeasure == TOP )
+   {
+      *pYh = -fpe.YpsHarped;
+   }
+   else
+   {
+      *pYh = fpe.YpsHarped - Hg;
+   }
+
+   if ( fpe.YpsTempMeasure == TOP )
+   {
+      *pYt = -fpe.YpsTemp;
+   }
+   else
+   {
+      *pYt = fpe.YpsTemp - Hg;
+   }
 }
 
 HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
@@ -354,6 +841,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    hr = pStrSave->put_Property(_T("Units"),CComVariant(pApp->GetUnitsMode()));
 
    pStrSave->put_Property(_T("GirderType"),CComVariant(m_GirderType));
+   pStrSave->put_Property(_T("DragCoefficient"),CComVariant(m_Girder[m_GirderType].GetDragCoefficient()));
 
    pStrSave->BeginUnit(_T("Girder"),1.0);
    pStrSave->BeginUnit(_T("Sections"),1.0);
@@ -366,8 +854,8 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       pStrSave->put_Property(_T("L"),CComVariant(L));
 
       Float64 Ag,Ix,Iy,Yt,Hg,Wtf,Wbf;
-      m_Girder[m_GirderType].GetSectionProperties(sectIdx,LEFT,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
-      pStrSave->BeginUnit(_T("LeftFace"),1.0);
+      m_Girder[m_GirderType].GetSectionProperties(sectIdx,stbTypes::Start,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
+      pStrSave->BeginUnit(_T("StartFace"),1.0);
       pStrSave->put_Property(_T("Ag"),CComVariant(Ag));
       pStrSave->put_Property(_T("Ix"),CComVariant(Ix));
       pStrSave->put_Property(_T("Iy"),CComVariant(Iy));
@@ -377,8 +865,8 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       pStrSave->put_Property(_T("Wbf"),CComVariant(Wbf));
       pStrSave->EndUnit(); // LeftFace
 
-      m_Girder[m_GirderType].GetSectionProperties(sectIdx,RIGHT,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
-      pStrSave->BeginUnit(_T("RightFace"),1.0);
+      m_Girder[m_GirderType].GetSectionProperties(sectIdx,stbTypes::End,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
+      pStrSave->BeginUnit(_T("EndFace"),1.0);
       pStrSave->put_Property(_T("Ag"),CComVariant(Ag));
       pStrSave->put_Property(_T("Ix"),CComVariant(Ix));
       pStrSave->put_Property(_T("Iy"),CComVariant(Iy));
@@ -392,9 +880,8 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    }
    pStrSave->EndUnit(); // Sections
 
-   Float64 density = m_Girder[m_GirderType].GetDensity();
-   pStrSave->put_Property(_T("DensityWithRebar"),CComVariant(density));
-   pStrSave->put_Property(_T("Density"),CComVariant(m_Density));
+   pStrSave->put_Property(_T("DensityWithRebar"),CComVariant(GetDensityWithRebar()));
+   pStrSave->put_Property(_T("Density"),CComVariant(GetDensity()));
    pStrSave->put_Property(_T("K1"),CComVariant(m_K1));
    pStrSave->put_Property(_T("K2"),CComVariant(m_K2));
 
@@ -413,160 +900,121 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       }
       pStrSave->EndUnit(); // AdditionalLoads
    }
-
-   m_Strands[m_GirderType].Save(pStrSave);
    pStrSave->EndUnit(); // Girder
 
 
    {
    pStrSave->BeginUnit(_T("LiftingProblem"),1.0);
-   pStrSave->put_Property(_T("FpeType"),CComVariant(m_LiftingFpeType));
-   if ( m_LiftingFpeType == CONSTANT_FPE )
-   {
-      Float64 X,FpeStraight,FpeHarped,FpeTemp;
-      m_LiftingStabilityProblem.GetFpe(0,&X,&FpeStraight,&FpeHarped,&FpeTemp);
-      pStrSave->put_Property(_T("Fpe_Straight"),CComVariant(FpeStraight));
-      pStrSave->put_Property(_T("Fpe_Harped"),CComVariant(FpeHarped));
-      pStrSave->put_Property(_T("Fpe_Temporary"),CComVariant(FpeTemp));
-   }
-   else
-   {
-      pStrSave->BeginUnit(_T("EffectivePrestress"),1.0);
-      IndexType nFpe = m_LiftingStabilityProblem.GetFpeCount();
-      for ( IndexType fpeIdx = 0; fpeIdx < nFpe; fpeIdx++ )
-      {
-         pStrSave->BeginUnit(_T("Fpe"),1.0);
-         Float64 X,FpeStraight,FpeHarped,FpeTemp;
-         m_LiftingStabilityProblem.GetFpe(fpeIdx,&X,&FpeStraight,&FpeHarped,&FpeTemp);
-         pStrSave->put_Property(_T("X"),CComVariant(X));
-         pStrSave->put_Property(_T("Fpe_Straight"),CComVariant(FpeStraight));
-         pStrSave->put_Property(_T("Fpe_Harped"),CComVariant(FpeHarped));
-         pStrSave->put_Property(_T("Fpe_Temporary"),CComVariant(FpeTemp));
-         pStrSave->EndUnit(); // Fpe
-      }
-      pStrSave->EndUnit(); // EffectivePrestress
-   }
+   const stbLiftingStabilityProblem& liftingProblem = GetLiftingStabilityProblem();
+   m_Strands[m_GirderType][LIFTING].Save(pStrSave);
 
    bool bDirectCamber;
    Float64 camber;
-   m_LiftingStabilityProblem.GetCamber(&bDirectCamber,&camber);
+   liftingProblem.GetCamber(&bDirectCamber,&camber);
    pStrSave->put_Property(_T("DirectCamber"),CComVariant(bDirectCamber));
    pStrSave->put_Property(_T("Camber"),CComVariant(camber));
 
    Float64 Ll,Lr;
-   m_LiftingStabilityProblem.GetSupportLocations(&Ll,&Lr);
+   liftingProblem.GetSupportLocations(&Ll,&Lr);
    ATLASSERT(IsEqual(Ll,Lr));
    pStrSave->put_Property(_T("LiftPoint"),CComVariant(Ll));
 
-   Float64 Yra = m_LiftingStabilityProblem.GetYRollAxis();
+   Float64 Yra = liftingProblem.GetYRollAxis();
    pStrSave->put_Property(_T("Yra"),CComVariant(Yra));
 
-   Float64 SweepTolerance = m_LiftingStabilityProblem.GetSweepTolerance();
+   Float64 SweepTolerance = liftingProblem.GetSweepTolerance();
    pStrSave->put_Property(_T("SweepTolerance"),CComVariant(SweepTolerance));
 
-   Float64 SupportPlacementTolerance = m_LiftingStabilityProblem.GetSupportPlacementTolerance();
+   Float64 SupportPlacementTolerance = liftingProblem.GetSupportPlacementTolerance();
    pStrSave->put_Property(_T("SupportPlacementTolerance"),CComVariant(SupportPlacementTolerance));
 
    Float64 imup,imdn;
-   m_LiftingStabilityProblem.GetImpact(&imup,&imdn);
+   liftingProblem.GetImpact(&imup,&imdn);
    pStrSave->put_Property(_T("ImpactUp"),CComVariant(imup));
    pStrSave->put_Property(_T("ImpactDown"),CComVariant(imdn));
 
-   bool bApplyImpact = m_LiftingStabilityProblem.ApplyImpactToTiltedGirder();
-   pStrSave->put_Property(_T("ApplyImpactToTiltedGirder"),CComVariant(bApplyImpact));
+   bool bPlumbGirderStresses = liftingProblem.EvaluateStressesForPlumbGirder();
+   pStrSave->put_Property(_T("PlumbGirderStresses"),CComVariant(bPlumbGirderStresses));
 
-   Float64 WindPressure = m_LiftingStabilityProblem.GetWindPressure();
-   pStrSave->put_Property(_T("WindPressure"),CComVariant(WindPressure));
+   stbTypes::WindType windLoadType;
+   Float64 windLoad;
+   liftingProblem.GetWindLoading(&windLoadType,&windLoad);
+   pStrSave->put_Property(_T("WindLoadType"),CComVariant(windLoadType));
+   pStrSave->put_Property(_T("WindLoad"),CComVariant(windLoad));
 
-   Float64 liftAngle = m_LiftingStabilityProblem.GetLiftAngle();
+   Float64 liftAngle = liftingProblem.GetLiftAngle();
    pStrSave->put_Property(_T("LiftAngle"),CComVariant(liftAngle));
 
+   const matConcreteEx& concrete = liftingProblem.GetConcrete();
    pStrSave->put_Property(_T("FrCoefficient"),CComVariant(m_LiftingFrCoefficient));
-   pStrSave->put_Property(_T("Fci"),CComVariant(m_Fci));
+   pStrSave->put_Property(_T("Fci"),CComVariant(concrete.GetFc()));
    pStrSave->put_Property(_T("ComputeEci"),CComVariant(m_bComputeEci));
-   Float64 Eci = m_LiftingStabilityProblem.GetEc();
-   pStrSave->put_Property(_T("Eci"),CComVariant(Eci));
+   pStrSave->put_Property(_T("Eci"),CComVariant(concrete.GetE()));
    pStrSave->EndUnit(); // LiftingProblem
    }
 
    {
    pStrSave->BeginUnit(_T("HaulingProblem"),1.0);
-   pStrSave->put_Property(_T("FpeType"),CComVariant(m_HaulingFpeType));
-   if ( m_HaulingFpeType == CONSTANT_FPE )
-   {
-      Float64 X,FpeStraight,FpeHarped,FpeTemp;
-      m_HaulingStabilityProblem.GetFpe(0,&X,&FpeStraight,&FpeHarped,&FpeTemp);
-      pStrSave->put_Property(_T("Fpe_Straight"),CComVariant(FpeStraight));
-      pStrSave->put_Property(_T("Fpe_Harped"),CComVariant(FpeHarped));
-      pStrSave->put_Property(_T("Fpe_Temporary"),CComVariant(FpeTemp));
-   }
-   else
-   {
-      pStrSave->BeginUnit(_T("EffectivePrestress"),1.0);
-      IndexType nFpe = m_HaulingStabilityProblem.GetFpeCount();
-      for ( IndexType fpeIdx = 0; fpeIdx < nFpe; fpeIdx++ )
-      {
-         pStrSave->BeginUnit(_T("Fpe"),1.0);
-         Float64 X,FpeStraight,FpeHarped,FpeTemp;
-         m_HaulingStabilityProblem.GetFpe(fpeIdx,&X,&FpeStraight,&FpeHarped,&FpeTemp);
-         pStrSave->put_Property(_T("X"),CComVariant(X));
-         pStrSave->put_Property(_T("Fpe_Straight"),CComVariant(FpeStraight));
-         pStrSave->put_Property(_T("Fpe_Harped"),CComVariant(FpeHarped));
-         pStrSave->put_Property(_T("Fpe_Temporary"),CComVariant(FpeTemp));
-         pStrSave->EndUnit(); // Fpe
-      }
-      pStrSave->EndUnit(); // EffectivePrestress
-   }
+   m_Strands[m_GirderType][HAULING].Save(pStrSave);
+
+   const stbHaulingStabilityProblem& haulingProblem = GetHaulingStabilityProblem();
 
    bool bDirectCamber;
    Float64 camber;
-   m_HaulingStabilityProblem.GetCamber(&bDirectCamber,&camber);
+   haulingProblem.GetCamber(&bDirectCamber,&camber);
    pStrSave->put_Property(_T("DirectCamber"),CComVariant(bDirectCamber));
    pStrSave->put_Property(_T("Camber"),CComVariant(camber));
 
    Float64 Ll,Lr;
-   m_HaulingStabilityProblem.GetSupportLocations(&Ll,&Lr);
+   haulingProblem.GetSupportLocations(&Ll,&Lr);
    ATLASSERT(IsEqual(Ll,Lr));
    pStrSave->put_Property(_T("LeftBunkPoint"),CComVariant(Ll));
    pStrSave->put_Property(_T("RightBunkPoint"),CComVariant(Lr));
 
    pStrSave->put_Property(_T("Hgb"),CComVariant(m_Hgb));
 
-   Float64 SweepTolerance = m_HaulingStabilityProblem.GetSweepTolerance();
+   Float64 SweepTolerance = haulingProblem.GetSweepTolerance();
    pStrSave->put_Property(_T("SweepTolerance"),CComVariant(SweepTolerance));
 
-   Float64 SupportPlacementTolerance = m_HaulingStabilityProblem.GetSupportPlacementTolerance();
+   Float64 SupportPlacementTolerance = haulingProblem.GetSupportPlacementTolerance();
    pStrSave->put_Property(_T("SupportPlacementTolerance"),CComVariant(SupportPlacementTolerance));
 
    Float64 imup,imdn;
-   m_HaulingStabilityProblem.GetImpact(&imup,&imdn);
+   haulingProblem.GetImpact(&imup,&imdn);
    pStrSave->put_Property(_T("ImpactUp"),CComVariant(imup));
    pStrSave->put_Property(_T("ImpactDown"),CComVariant(imdn));
 
-   bool bApplyImpact = m_HaulingStabilityProblem.ApplyImpactToTiltedGirder();
-   pStrSave->put_Property(_T("ApplyImpactToTiltedGirder"),CComVariant(bApplyImpact));
+   stbTypes::HaulingImpact impactUsage = haulingProblem.GetImpactUsage();
+   pStrSave->put_Property(_T("ImpactUsage"),CComVariant(impactUsage));
 
-   Float64 WindPressure = m_HaulingStabilityProblem.GetWindPressure();
-   pStrSave->put_Property(_T("WindPressure"),CComVariant(WindPressure));
+   stbTypes::WindType windLoadType;
+   Float64 windLoad;
+   haulingProblem.GetWindLoading(&windLoadType,&windLoad);
+   pStrSave->put_Property(_T("WindLoadType"),CComVariant(windLoadType));
+   pStrSave->put_Property(_T("WindLoad"),CComVariant(windLoad));
 
-   Float64 Ktheta = m_HaulingStabilityProblem.GetTruckRotationalStiffness();
+   Float64 Ktheta = haulingProblem.GetTruckRotationalStiffness();
    pStrSave->put_Property(_T("Ktheta"),CComVariant(Ktheta));
-   Float64 Wcc = m_HaulingStabilityProblem.GetWheelLineSpacing();
+   Float64 Wcc = haulingProblem.GetWheelLineSpacing();
    pStrSave->put_Property(_T("Wcc"),CComVariant(Wcc));
-   Float64 Hrc = m_HaulingStabilityProblem.GetHeightOfRollAxisAboveRoadway();
+   Float64 Hrc = haulingProblem.GetHeightOfRollAxisAboveRoadway();
    pStrSave->put_Property(_T("Hrc"),CComVariant(Hrc));
-   Float64 Superelevation = m_HaulingStabilityProblem.GetSuperelevation();
+   Float64 CrownSlope = haulingProblem.GetCrownSlope();
+   pStrSave->put_Property(_T("CrownSlope"),CComVariant(CrownSlope));
+   Float64 Superelevation = haulingProblem.GetSuperelevation();
    pStrSave->put_Property(_T("Superelevation"),CComVariant(Superelevation));
-   Float64 Velocity = m_HaulingStabilityProblem.GetVelocity();
+   Float64 Velocity = haulingProblem.GetVelocity();
    pStrSave->put_Property(_T("Velocity"),CComVariant(Velocity));
-   Float64 Radius = m_HaulingStabilityProblem.GetTurningRadius();
+   Float64 Radius = haulingProblem.GetTurningRadius();
    pStrSave->put_Property(_T("Radius"),CComVariant(Radius));
+   stbTypes::CFType cfType = haulingProblem.GetCentrifugalForceType();
+   pStrSave->put_Property(_T("CFType"),CComVariant(cfType));
 
+   const matConcreteEx& concrete = haulingProblem.GetConcrete();
    pStrSave->put_Property(_T("FrCoefficient"),CComVariant(m_HaulingFrCoefficient));
-   pStrSave->put_Property(_T("Fc"),CComVariant(m_Fc));
+   pStrSave->put_Property(_T("Fc"),CComVariant(concrete.GetFc()));
    pStrSave->put_Property(_T("ComputeEc"),CComVariant(m_bComputeEc));
-   Float64 Ec = m_HaulingStabilityProblem.GetEc();
-   pStrSave->put_Property(_T("Ec"),CComVariant(Ec));
+   pStrSave->put_Property(_T("Ec"),CComVariant(concrete.GetE()));
    pStrSave->EndUnit(); // HaulingProblem
    }
 
@@ -604,6 +1052,10 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->get_Property(_T("GirderType"),&var);
       m_GirderType = var.lVal;
 
+      var.vt = VT_R8;
+      hr = pStrLoad->get_Property(_T("DragCoefficient"),&var);
+      m_Girder[m_GirderType].SetDragCoefficient(var.dblVal);
+
       hr = pStrLoad->BeginUnit(_T("Girder"));
       hr = pStrLoad->BeginUnit(_T("Sections"));
       m_Girder[m_GirderType].ClearSections();
@@ -615,63 +1067,76 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
          Float64 Ag[2],Ix[2],Iy[2],Yt[2],Hg[2],Wtf[2],Wbf[2];
          
-         hr = pStrLoad->BeginUnit(_T("LeftFace"));
+         hr = pStrLoad->BeginUnit(_T("StartFace"));
          hr = pStrLoad->get_Property(_T("Ag"),&var);
-         Ag[LEFT] = var.dblVal;
+         Ag[stbTypes::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Ix"),&var);
-         Ix[LEFT] = var.dblVal;
+         Ix[stbTypes::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Iy"),&var);
-         Iy[LEFT] = var.dblVal;
+         Iy[stbTypes::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Yt"),&var);
-         Yt[LEFT] = var.dblVal;
+         Yt[stbTypes::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Hg"),&var);
-         Hg[LEFT] = var.dblVal;
+         Hg[stbTypes::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Wtf"),&var);
-         Wtf[LEFT] = var.dblVal;
+         Wtf[stbTypes::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Wbf"),&var);
-         Wbf[LEFT] = var.dblVal;
-         hr = pStrLoad->EndUnit(); // LeftFace
+         Wbf[stbTypes::Start] = var.dblVal;
+         hr = pStrLoad->EndUnit(); // StartFace
 
-         hr = pStrLoad->BeginUnit(_T("RightFace"));
+         hr = pStrLoad->BeginUnit(_T("EndFace"));
          hr = pStrLoad->get_Property(_T("Ag"),&var);
-         Ag[RIGHT] = var.dblVal;
+         Ag[stbTypes::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Ix"),&var);
-         Ix[RIGHT] = var.dblVal;
+         Ix[stbTypes::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Iy"),&var);
-         Iy[RIGHT] = var.dblVal;
+         Iy[stbTypes::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Yt"),&var);
-         Yt[RIGHT] = var.dblVal;
+         Yt[stbTypes::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Hg"),&var);
-         Hg[RIGHT] = var.dblVal;
+         Hg[stbTypes::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Wtf"),&var);
-         Wtf[RIGHT] = var.dblVal;
+         Wtf[stbTypes::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Wbf"),&var);
-         Wbf[RIGHT] = var.dblVal;
-         hr = pStrLoad->EndUnit(); // RightFace
+         Wbf[stbTypes::End] = var.dblVal;
+         hr = pStrLoad->EndUnit(); // EndFace
 
-         m_Girder[m_GirderType].AddSection(L,Ag[LEFT],Ix[LEFT],Iy[LEFT],Yt[LEFT],Hg[LEFT],Wtf[LEFT],Wbf[LEFT],Ag[RIGHT],Ix[RIGHT],Iy[RIGHT],Yt[RIGHT],Hg[RIGHT],Wtf[RIGHT],Wbf[RIGHT]);
+         m_Girder[m_GirderType].AddSection(L,Ag[stbTypes::Start],
+                                             Ix[stbTypes::Start],
+                                             Iy[stbTypes::Start],
+                                             Yt[stbTypes::Start],
+                                             Hg[stbTypes::Start],
+                                             Wtf[stbTypes::Start],
+                                             Wbf[stbTypes::Start],
+                                             Ag[stbTypes::End],
+                                             Ix[stbTypes::End],
+                                             Iy[stbTypes::End],
+                                             Yt[stbTypes::End],
+                                             Hg[stbTypes::End],
+                                             Wtf[stbTypes::End],
+                                             Wbf[stbTypes::End]);
 
          hr = pStrLoad->EndUnit(); // Section
       }
       hr = pStrLoad->EndUnit(); // Sections
 
       hr = pStrLoad->get_Property(_T("DensityWithRebar"),&var);
-      m_Girder[m_GirderType].SetDensity(var.dblVal);
+      SetDensityWithRebar(var.dblVal);
 
       hr = pStrLoad->get_Property(_T("Density"),&var);
-      m_Density = var.dblVal;
+      SetDensity(var.dblVal);
 
       hr = pStrLoad->get_Property(_T("K1"),&var);
       m_K1 = var.dblVal;
@@ -698,49 +1163,12 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
          hr = pStrLoad->EndUnit(); // AdditionalLoads
       }
 
-      m_Strands[m_GirderType].Load(pStrLoad);
       hr = pStrLoad->EndUnit(); // Girder
 
 
       {
       hr = pStrLoad->BeginUnit(_T("LiftingProblem"));
-
-      var.vt = VT_I4;
-      hr = pStrLoad->get_Property(_T("FpeType"),&var);
-      m_LiftingFpeType = var.lVal;
-      if ( m_LiftingFpeType == CONSTANT_FPE )
-      {
-         Float64 FpeStraight,FpeHarped,FpeTemp;
-         var.vt = VT_R8;
-         hr = pStrLoad->get_Property(_T("Fpe_Straight"),&var);
-         FpeStraight = var.dblVal;
-         hr = pStrLoad->get_Property(_T("Fpe_Harped"),&var);
-         FpeHarped = var.dblVal;
-         hr = pStrLoad->get_Property(_T("Fpe_Temporary"),&var);
-         FpeTemp = var.dblVal;
-         m_LiftingStabilityProblem.AddFpe(0,FpeStraight,FpeHarped,FpeTemp);
-      }
-      else
-      {
-         hr = pStrLoad->BeginUnit(_T("EffectivePrestress"));
-         m_LiftingStabilityProblem.ClearFpe();
-         while ( SUCCEEDED(pStrLoad->BeginUnit(_T("Fpe"))) )
-         {
-            var.vt = VT_R8;
-            Float64 X,FpeStraight,FpeHarped,FpeTemp;
-            hr = pStrLoad->get_Property(_T("X"),&var);
-            X = var.dblVal;
-            hr = pStrLoad->get_Property(_T("Fpe_Straight"),&var);
-            FpeStraight = var.dblVal;
-            hr = pStrLoad->get_Property(_T("Fpe_Harped"),&var);
-            FpeHarped = var.dblVal;
-            hr = pStrLoad->get_Property(_T("Fpe_Temporary"),&var);
-            FpeTemp = var.dblVal;
-            m_LiftingStabilityProblem.AddFpe(X,FpeStraight,FpeHarped,FpeTemp);
-            hr = pStrLoad->EndUnit(); // Fpe
-         }
-         hr = pStrLoad->EndUnit(); // EffectivePrestress
-      }
+      hr = m_Strands[m_GirderType][LIFTING].Load(pStrLoad);
 
       bool bDirectCamber;
       Float64 camber;
@@ -774,12 +1202,17 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       m_LiftingStabilityProblem.SetImpact(imup,imdn);
 
       var.vt = VT_BOOL;
-      hr = pStrLoad->get_Property(_T("ApplyImpactToTiltedGirder"),&var);
-      m_LiftingStabilityProblem.ApplyImpactToTiltedGirder(var.boolVal == VARIANT_TRUE ? true : false);
+      hr = pStrLoad->get_Property(_T("PlumbGirderStresses"),&var);
+      m_LiftingStabilityProblem.EvaluateStressesForPlumbGirder(var.boolVal == VARIANT_TRUE ? true : false);
+
+      var.vt = VT_I4;
+      hr = pStrLoad->get_Property(_T("WindLoadType"),&var);
+      stbTypes::WindType windLoadType = (stbTypes::WindType)var.lVal;
 
       var.vt = VT_R8;
-      hr = pStrLoad->get_Property(_T("WindPressure"),&var);
-      m_LiftingStabilityProblem.SetWindPressure(var.dblVal);
+      hr = pStrLoad->get_Property(_T("WindLoad"),&var);
+      Float64 windLoad = var.dblVal;
+      m_LiftingStabilityProblem.SetWindLoading(windLoadType,windLoad);
 
       hr = pStrLoad->get_Property(_T("LiftAngle"),&var);
       m_LiftingStabilityProblem.SetLiftAngle(var.dblVal);
@@ -788,58 +1221,24 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       m_LiftingFrCoefficient = var.dblVal;
 
       hr = pStrLoad->get_Property(_T("Fci"),&var);
-      m_Fci = var.dblVal;
-
+      Float64 fci = var.dblVal;
+      
       var.vt = VT_BOOL;
       hr = pStrLoad->get_Property(_T("ComputeEci"),&var);
       m_bComputeEci = (var.boolVal == VARIANT_TRUE ? true : false);
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("Eci"),&var);
-      m_LiftingStabilityProblem.SetEc(var.dblVal);
+      Float64 Eci = var.dblVal;
+
+      m_LiftingStabilityProblem.GetConcrete().SetFc(fci);
+      m_LiftingStabilityProblem.GetConcrete().SetE(Eci);
       hr = pStrLoad->EndUnit(); // LiftingProblem
       }
 
       {
       hr = pStrLoad->BeginUnit(_T("HaulingProblem"));
-
-
-      var.vt = VT_I4;
-      hr = pStrLoad->get_Property(_T("FpeType"),&var);
-      m_HaulingFpeType = var.lVal;
-      if ( m_HaulingFpeType == CONSTANT_FPE )
-      {
-         Float64 FpeStraight,FpeHarped,FpeTemp;
-         var.vt = VT_R8;
-         hr = pStrLoad->get_Property(_T("Fpe_Straight"),&var);
-         FpeStraight = var.dblVal;
-         hr = pStrLoad->get_Property(_T("Fpe_Harped"),&var);
-         FpeHarped = var.dblVal;
-         hr = pStrLoad->get_Property(_T("Fpe_Temporary"),&var);
-         FpeTemp = var.dblVal;
-         m_HaulingStabilityProblem.AddFpe(0,FpeStraight,FpeHarped,FpeTemp);
-      }
-      else
-      {
-         hr = pStrLoad->BeginUnit(_T("EffectivePrestress"));
-         m_HaulingStabilityProblem.ClearFpe();
-         while ( SUCCEEDED(pStrLoad->BeginUnit(_T("Fpe"))) )
-         {
-            var.vt = VT_R8;
-            Float64 X,FpeStraight,FpeHarped,FpeTemp;
-            hr = pStrLoad->get_Property(_T("X"),&var);
-            X = var.dblVal;
-            hr = pStrLoad->get_Property(_T("Fpe_Straight"),&var);
-            FpeStraight = var.dblVal;
-            hr = pStrLoad->get_Property(_T("Fpe_Harped"),&var);
-            FpeHarped = var.dblVal;
-            hr = pStrLoad->get_Property(_T("Fpe_Temporary"),&var);
-            FpeTemp = var.dblVal;
-            m_HaulingStabilityProblem.AddFpe(X,FpeStraight,FpeHarped,FpeTemp);
-            hr = pStrLoad->EndUnit(); // Fpe
-         }
-         hr = pStrLoad->EndUnit(); // EffectivePrestress
-      }
+      hr = m_Strands[m_GirderType][HAULING].Load(pStrLoad);
 
       bool bDirectCamber;
       Float64 camber;
@@ -877,13 +1276,18 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       imdn = var.dblVal;
       m_HaulingStabilityProblem.SetImpact(imup,imdn);
 
-      var.vt = VT_BOOL;
-      hr = pStrLoad->get_Property(_T("ApplyImpactToTiltedGirder"),&var);
-      m_HaulingStabilityProblem.ApplyImpactToTiltedGirder(var.boolVal == VARIANT_TRUE ? true : false);
+      var.vt = VT_I4;
+      hr = pStrLoad->get_Property(_T("ImpactUsage"),&var);
+      m_HaulingStabilityProblem.SetImpactUsage((stbTypes::HaulingImpact)var.lVal);
+
+      var.vt = VT_I4;
+      hr = pStrLoad->get_Property(_T("WindLoadType"),&var);
+      stbTypes::WindType windLoadType = (stbTypes::WindType)var.lVal;
 
       var.vt = VT_R8;
-      hr = pStrLoad->get_Property(_T("WindPressure"),&var);
-      m_HaulingStabilityProblem.SetWindPressure(var.dblVal);
+      hr = pStrLoad->get_Property(_T("WindLoad"),&var);
+      Float64 windLoad = var.dblVal;
+      m_HaulingStabilityProblem.SetWindLoading(windLoadType,windLoad);
 
       hr = pStrLoad->get_Property(_T("Ktheta"),&var);
       m_HaulingStabilityProblem.SetTruckRotationalStiffness(var.dblVal);
@@ -894,6 +1298,9 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->get_Property(_T("Hrc"),&var);
       m_HaulingStabilityProblem.SetHeightOfRollAxisAboveRoadway(var.dblVal);
 
+      hr = pStrLoad->get_Property(_T("CrownSlope"),&var);
+      m_HaulingStabilityProblem.SetCrownSlope(var.dblVal);
+
       hr = pStrLoad->get_Property(_T("Superelevation"),&var);
       m_HaulingStabilityProblem.SetSuperelevation(var.dblVal);
 
@@ -903,11 +1310,16 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->get_Property(_T("Radius"),&var);
       m_HaulingStabilityProblem.SetTurningRadius(var.dblVal);
 
+      var.vt = VT_I4;
+      hr = pStrLoad->get_Property(_T("CFType"),&var);
+      m_HaulingStabilityProblem.SetCentrifugalForceType((stbTypes::CFType)var.lVal);
+
+      var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("FrCoefficient"),&var);
       m_HaulingFrCoefficient = var.dblVal;
 
       hr = pStrLoad->get_Property(_T("Fc"),&var);
-      m_Fc = var.dblVal;
+      Float64 fc = var.dblVal;
 
       var.vt = VT_BOOL;
       hr = pStrLoad->get_Property(_T("ComputeEc"),&var);
@@ -915,7 +1327,11 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("Ec"),&var);
-      m_HaulingStabilityProblem.SetEc(var.dblVal);
+      Float64 Ec = var.dblVal;
+
+      m_HaulingStabilityProblem.GetConcrete().SetFc(fc);
+      m_HaulingStabilityProblem.GetConcrete().SetE(Ec);
+
       hr = pStrLoad->EndUnit(); // HaulingProblem
       }
       
@@ -937,7 +1353,8 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
    if ( m_GirderType == PRISMATIC )
    {
       m_Girder[NONPRISMATIC] = m_Girder[PRISMATIC];
-      m_Strands[NONPRISMATIC] = m_Strands[PRISMATIC];
+      m_Strands[NONPRISMATIC][LIFTING] = m_Strands[PRISMATIC][LIFTING];
+      m_Strands[NONPRISMATIC][HAULING] = m_Strands[PRISMATIC][HAULING];
    }
    else
    {
@@ -945,41 +1362,11 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       Float64 L = m_Girder[NONPRISMATIC].GetSectionLength(0);
       Float64 Ag,Ix,Iy,Yt,Hg,Wtf,Wbf;
-      m_Girder[NONPRISMATIC].GetSectionProperties(0,LEFT,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
+      m_Girder[NONPRISMATIC].GetSectionProperties(0,stbTypes::Start,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
 
       m_Girder[PRISMATIC].ClearSections();
       m_Girder[PRISMATIC].AddSection(L,Ag,Ix,Iy,Yt,Hg,Wtf,Wbf);
-
-      m_Strands[PRISMATIC] = m_Strands[NONPRISMATIC];
-      m_Strands[PRISMATIC].Xh1 = 0.0;
-      m_Strands[PRISMATIC].Xh1Measure = FRACTION;
-
-      m_Strands[PRISMATIC].Xh4 = 1.0;
-      m_Strands[PRISMATIC].Xh4Measure = FRACTION;
-      m_Strands[PRISMATIC].Yh4 = m_Strands[PRISMATIC].Yh1;
-      m_Strands[PRISMATIC].Yh4Measure = m_Strands[PRISMATIC].Yh1Measure;
-
-      Float64 hp;
-      if ( m_Strands[NONPRISMATIC].Xh2Measure == DISTANCE )
-      {
-         hp = m_Strands[NONPRISMATIC].Xh2/m_Girder[NONPRISMATIC].GetGirderLength();
-         if ( 0.5 < hp )
-         {
-            hp = 0.5;
-         }
-      }
-      else
-      {
-         hp = m_Strands[NONPRISMATIC].Xh2;
-      }
-      m_Strands[PRISMATIC].Xh2 = hp;
-      m_Strands[PRISMATIC].Xh2Measure = FRACTION;
-      m_Strands[PRISMATIC].Xh3 = 1 - hp;
-      m_Strands[PRISMATIC].Xh3Measure = FRACTION;
-      m_Strands[PRISMATIC].Yh3 = m_Strands[PRISMATIC].Yh2;
-      m_Strands[PRISMATIC].Yh3Measure = m_Strands[PRISMATIC].Yh2Measure;
    }
 
    return S_OK;
 }
-

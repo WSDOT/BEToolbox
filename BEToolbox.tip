@@ -4,3 +4,6 @@ You can quickly determine roadway elevations using Curvel
 You can import Curvel profile data into PGSuper and PGSplice
 PGSuper and PGSplice can create Curvel input files
 PGSuper and PGSplice can create GenComp input files
+PGStability can be used to analyzing prestressed girder stability during lifting and hauling
+PGStability considers wind and centrifugal forces during girder lifting and hauling
+Girders can be exported from PGSuper and PGSplice for further analysis in PGStability

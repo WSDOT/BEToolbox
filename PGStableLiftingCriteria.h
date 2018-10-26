@@ -22,35 +22,17 @@
 
 #pragma once
 
-#include <EAF\EAFReportView.h>
+// CPGStableLiftingCriteria document
 
-class CPGStableReportView : public CEAFReportView
+class CPGStableLiftingCriteria : public stbLiftingCriteria
 {
-	DECLARE_DYNCREATE(CPGStableReportView)
-
-protected:
-	CPGStableReportView();           // protected constructor used by dynamic creation
-	virtual ~CPGStableReportView();
-
-   virtual boost::shared_ptr<CReportSpecification> CreateReportSpecification();
-   virtual boost::shared_ptr<CReportBrowser> CreateReportBrowser();
-   virtual void RefreshReport();
-
-
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-#ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-#endif
-
-protected:
-   virtual void OnActivateView(BOOL bActivate,CView* pActivateView,CView* pDeactiveView);
-
-	DECLARE_MESSAGE_MAP()
 public:
-   virtual void OnInitialUpdate();
-   virtual void OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint);
+	CPGStableLiftingCriteria();
+	virtual ~CPGStableLiftingCriteria();
+   bool operator==(const CPGStableLiftingCriteria& other) const;
+   bool operator!=(const CPGStableLiftingCriteria& other) const;
+   void operator=(const stbLiftingCriteria& other);
+
+   HRESULT Save(IStructuredSave* pStrSave);
+   HRESULT Load(IStructuredLoad* pStrLoad);
 };
-
-

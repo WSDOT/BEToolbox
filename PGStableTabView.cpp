@@ -29,8 +29,6 @@
 #include "PGStableGirderView.h"
 #include "PGStableLiftingView.h"
 #include "PGStableHaulingView.h"
-#include "PGStableCriteriaView.h"
-#include "PGStableReportView.h"
 
 // CPGStableView
 
@@ -38,7 +36,7 @@ IMPLEMENT_DYNCREATE(CPGStableTabView, CTabView)
 
 CPGStableTabView::CPGStableTabView()
 {
-
+   m_pLastView = NULL;
 }
 
 CPGStableTabView::~CPGStableTabView()
@@ -71,6 +69,9 @@ int CPGStableTabView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
    int result = CTabView::OnCreate(lpCreateStruct);
 
+   CMFCTabCtrl& tabCtrl = GetTabControl();
+   tabCtrl.SetActiveTabBoldFont();
+
 
    // NOTE: One assert for each tab control is going to fire, plus one additional assert
    // These asserts are all related to the module state when the tab control does its
@@ -84,21 +85,28 @@ int CPGStableTabView::OnCreate(LPCREATESTRUCT lpCreateStruct)
    AddView(RUNTIME_CLASS(CPGStableGirderView),  _T("Girder")   );
    AddView(RUNTIME_CLASS(CPGStableLiftingView), _T("Lifting")  );
    AddView(RUNTIME_CLASS(CPGStableHaulingView), _T("Hauling")  );
-   AddView(RUNTIME_CLASS(CPGStableCriteriaView),_T("Criteria") );
-   AddView(RUNTIME_CLASS(CPGStableReportView),  _T("Report")   );
 
    return result;
 }
 
 void CPGStableTabView::OnInitialUpdate()
 {
-   //CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-
    CTabView::OnInitialUpdate();
 }
 
 void CPGStableTabView::OnActivateView(CView* pView)
 {
+   if ( m_pLastView )
+   {
+      m_pLastView->OnDeactivateView();
+   }
+
+   if ( pView && pView->IsKindOf(RUNTIME_CLASS(CPGStableFormView)) )
+   {
+      CPGStableFormView* pPGSView = (CPGStableFormView*)pView;
+      pPGSView->OnActivateView();
+      m_pLastView = pPGSView;
+   }
 }
 
 void CPGStableTabView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)

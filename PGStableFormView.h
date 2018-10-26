@@ -22,45 +22,18 @@
 
 #pragma once
 
-#include "PGStableCriteria.h"
+// CPGStableFormView form view
 
-
-// CPGStableCriteriaView form view
-
-class CPGStableCriteriaView : public CFormView
+class CPGStableFormView : public CFormView
 {
-	DECLARE_DYNCREATE(CPGStableCriteriaView)
+	DECLARE_DYNAMIC(CPGStableFormView)
+
+   virtual void OnActivateView() = 0;
+   virtual void OnDeactivateView() = 0;
 
 protected:
-	CPGStableCriteriaView();           // protected constructor used by dynamic creation
-	virtual ~CPGStableCriteriaView();
-
-public:
-	enum { IDD = IDD_PGSTABLECRITERIAVIEW };
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-#ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-#endif
-
-   CPGStableCriteria m_LiftingCriteria;
-   CPGStableCriteria m_HaulingCriteria;
-
-   virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext);
-
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-   virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
-
-	DECLARE_MESSAGE_MAP()
-   virtual void OnActivateView(BOOL bActivate,CView* pActivateView,CView* pDeactivateView);
-
-public:
-   virtual void OnInitialUpdate();
-
-   afx_msg void OnClickedLiftingTensionMax();
-   afx_msg void OnClickedHaulingTensionMax();
+	CPGStableFormView(UINT nTemplate);
+	virtual ~CPGStableFormView();
 };
 
 

@@ -25,6 +25,7 @@
 #include "BEToolbox_i.h"
 
 #include "PGStableExporter.h"
+#include "PGStableDoc.h"
 
 #include <EAF\EAFAutoProgress.h>
 #include <EAF\EAFDocument.h>
@@ -37,10 +38,12 @@
 #include <IFace\AnalysisResults.h>
 #include <IFace\DocumentType.h>
 #include <IFace\Selection.h>
+#include <IFace\BeamFactory.h>
 
 #include <WBFLCore.h>
 
 #include <PgsExt\Prompts.h>
+#include <PgsExt\SplicedGirderData.h>
 #include <PgsExt\PrecastSegmentData.h>
 #include <PgsExt\GirderLabel.h>
 
@@ -156,6 +159,38 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
 
       pStrSave->BeginUnit(_T("BEToolbox"),1.0);
 
+      GET_IFACE2(pBroker,IProjectProperties,pProjProps);
+      pStrSave->BeginUnit(_T("ProjectProperties"),1.0);
+      pStrSave->put_Property(_T("Engineer"),CComVariant(pProjProps->GetEngineer()));
+      pStrSave->put_Property(_T("Company"),CComVariant(pProjProps->GetCompany()));
+      pStrSave->put_Property(_T("Job"),CComVariant(pProjProps->GetJobNumber()));
+      pStrSave->put_Property(_T("Comments"),CComVariant(_T("")));
+      pStrSave->EndUnit(); // ProjectProperties
+
+      GET_IFACE2(pBroker,ISpecification,pSpec);
+      GET_IFACE2(pBroker,IBridgeDescription,pBridgeDesc);
+      CString strSpec = pSpec->GetSpecification().c_str();
+      CString strTruck = pBridgeDesc->GetGirder(segmentKey)->GetSegment(segmentKey.segmentIndex)->HandlingData.HaulTruckName.c_str();
+
+      CString strGirder = gs_strGirder;
+
+      const GirderLibraryEntry* pGirderEntry = pBridgeDesc->GetGirder(segmentKey)->GetGirderLibraryEntry();
+      const GirderLibraryEntry::Dimensions& dimensions = pGirderEntry->GetDimensions();
+      CComPtr<IBeamFactory> factory;
+      pGirderEntry->GetBeamFactory(&factory);
+
+      CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be NULL
+      if ( splicedFactory == NULL && factory->IsPrismatic(dimensions) )
+      {
+         strGirder = pBridgeDesc->GetGirder(segmentKey)->GetGirderName();
+      }
+
+      pStrSave->BeginUnit(_T("LibraryReferences"),1.0);
+      pStrSave->put_Property(_T("ProjectCriteria"),CComVariant(strSpec));
+      pStrSave->put_Property(_T("Girder"),CComVariant(strGirder));
+      pStrSave->put_Property(_T("HaulTruck"),CComVariant(strTruck));
+      pStrSave->EndUnit(); // LibraryReferences
+
       model.Save(pStrSave);
 
       pStrSave->EndUnit(); // BEToolbox
@@ -175,318 +210,87 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
 
    GET_IFACE2(pBroker,IIntervals,pIntervals);
    IntervalIndexType releaseIntervalIdx = pIntervals->GetPrestressReleaseInterval(segmentKey);
-   IntervalIndexType liftIntervalIdx = pIntervals->GetLiftSegmentInterval(segmentKey);
-   IntervalIndexType haulIntervalIdx = pIntervals->GetHaulSegmentInterval(segmentKey);
+   IntervalIndexType liftingIntervalIdx = pIntervals->GetLiftSegmentInterval(segmentKey);
+   IntervalIndexType haulingIntervalIdx = pIntervals->GetHaulSegmentInterval(segmentKey);
 
    GET_IFACE2(pBroker,IGirder,pGirder);
-   bool bIsPrismatic = pGirder->IsPrismatic(liftIntervalIdx,segmentKey);
-   ATLASSERT(bIsPrismatic == pGirder->IsPrismatic(haulIntervalIdx,segmentKey));
+   bool bIsPrismatic = pGirder->IsPrismatic(liftingIntervalIdx,segmentKey);
+   ATLASSERT(bIsPrismatic == pGirder->IsPrismatic(haulingIntervalIdx,segmentKey));
 
-   // Girder Section Properties
+   GET_IFACE2(pBroker,IStrandGeometry,pStrandGeom);
+   bool bHasDebonding = pStrandGeom->HasDebonding(segmentKey);
+
+   model.SetGirderType((bIsPrismatic ? PRISMATIC : NONPRISMATIC));
+   model.SetGirder(model.GetGirderType(),*pGirder->GetSegmentStabilityModel(segmentKey));
+
    GET_IFACE2(pBroker,IBridge,pBridge);
-   GET_IFACE2(pBroker,IPointOfInterest,pPoi);
+   Float64 Lg = pBridge->GetSegmentLength(segmentKey);
+
    GET_IFACE2(pBroker,ISectionProperties,pSectProps);
-   Float64 L = pBridge->GetSegmentLength(segmentKey);
-   if ( bIsPrismatic )
-   {
-      model.m_GirderType = PRISMATIC;
-      model.m_Girder[model.m_GirderType].ClearSections();
-      std::vector<pgsPointOfInterest> vPoi = pPoi->GetPointsOfInterest(segmentKey,POI_0L | POI_RELEASED_SEGMENT);
-      ATLASSERT(vPoi.size() == 1);
-      pgsPointOfInterest poi = vPoi.front();
-      Float64 Ag = pSectProps->GetAg(liftIntervalIdx,poi);
-      Float64 Ix = pSectProps->GetIx(liftIntervalIdx,poi);
-      Float64 Iy = pSectProps->GetIy(liftIntervalIdx,poi);
-      Float64 Yt = -pSectProps->GetY(liftIntervalIdx,poi,pgsTypes::TopGirder);
-      Float64 Hg = pSectProps->GetHg(liftIntervalIdx,poi);
-      Float64 Wtop = pGirder->GetTopWidth(poi);
-      Float64 Wbot = pGirder->GetBottomWidth(poi);
-      model.m_Girder[model.m_GirderType].AddSection(L,Ag,Ix,Iy,Yt,Hg,Wtop,Wbot);
-   }
-   else
-   {
-      model.m_GirderType = NONPRISMATIC;
-      model.m_Girder[model.m_GirderType].ClearSections();
-      std::vector<pgsPointOfInterest> vPoi = pPoi->GetPointsOfInterest(segmentKey,POI_SECTCHANGE);
-      std::vector<pgsPointOfInterest>::iterator iter1(vPoi.begin());
-      std::vector<pgsPointOfInterest>::iterator iter2(iter1+1);
-      std::vector<pgsPointOfInterest>::iterator end(vPoi.end());
-      for ( ; iter2 != end; iter1++, iter2++ )
-      {
-         pgsPointOfInterest poi1 = *iter1;
-         pgsPointOfInterest poi2 = *iter2;
-         Float64 Ls = poi2.GetDistFromStart() - poi1.GetDistFromStart();
-         Float64 Ag1 = pSectProps->GetAg(liftIntervalIdx,poi1);
-         Float64 Ix1 = pSectProps->GetIx(liftIntervalIdx,poi1);
-         Float64 Iy1 = pSectProps->GetIy(liftIntervalIdx,poi1);
-         Float64 Yt1 = -pSectProps->GetY(liftIntervalIdx,poi1,pgsTypes::TopGirder);
-         Float64 Hg1 = pSectProps->GetHg(liftIntervalIdx,poi1);
-         Float64 Wtop1 = pGirder->GetTopWidth(poi1);
-         Float64 Wbot1 = pGirder->GetBottomWidth(poi1);
-
-         Float64 Ag2 = pSectProps->GetAg(liftIntervalIdx,poi2);
-         Float64 Ix2 = pSectProps->GetIx(liftIntervalIdx,poi2);
-         Float64 Iy2 = pSectProps->GetIy(liftIntervalIdx,poi2);
-         Float64 Yt2 = -pSectProps->GetY(liftIntervalIdx,poi2,pgsTypes::TopGirder);
-         Float64 Hg2 = pSectProps->GetHg(liftIntervalIdx,poi2);
-         Float64 Wtop2 = pGirder->GetTopWidth(poi2);
-         Float64 Wbot2 = pGirder->GetBottomWidth(poi2);
-         model.m_Girder[model.m_GirderType].AddSection(Ls,Ag1,Ix1,Iy1,Yt1,Hg1,Wtop1,Wbot1,Ag2,Ix2,Iy2,Yt2,Hg2,Wtop2,Wbot2);
-      }
-   }
-
-   GET_IFACE2(pBroker,IProductLoads,pProductLoads);
-   std::vector<DiaphragmLoad> vDiaLoads;
-   pProductLoads->GetPrecastDiaphragmLoads(segmentKey,&vDiaLoads);
-   BOOST_FOREACH(DiaphragmLoad& diaLoad,vDiaLoads)
-   {
-      model.m_Girder[model.m_GirderType].AddPointLoad(diaLoad.Loc,-diaLoad.Load);
-   }
-
-   // Strand Geometry
-   GET_IFACE2(pBroker,IBridgeDescription,pIBridgeDesc);
-   const CPrecastSegmentData* pSegment = pIBridgeDesc->GetPrecastSegmentData(segmentKey);
-
-   if ( pSegment->Strands.GetStrandDefinitionType() == CStrandData::sdtDirectInput )
-   {
-#pragma Reminder("WORKING HERE - need to deal with the direct input case")
-      // this is the case that corresponds to cantilevered girders with harped strands
-      // that straighten out on the top of the girder.... 
-      // 
-      // don't really have a good way to handle this case since there could be multiple harp points
-      // as well as straight strands that aren't parallel to girder faces
-      if ( AfxMessageBox(_T("This girder uses direct input strands. These strands cannot be added to the PGStable model"),MB_OKCANCEL | MB_ICONINFORMATION) == IDCANCEL )
-      {
-         return false;
-      }
-
-      //{
-      //   ATLASSERT(vhpPoi.size() == 3 || vhpPoi.size() == 4);
-      //   std::vector<pgsPointOfInterest>::iterator iter(vhpPoi.begin());
-      //   pgsPointOfInterest poi(*iter++);
-      //   model.m_Strands[model.m_GirderType].Xh1 = poi.GetDistFromStart();
-      //   model.m_Strands[model.m_GirderType].Xh1Measure = DISTANCE;
-      //   model.m_Strands[model.m_GirderType].Yh1 = -pStrandGeom->GetStrandLocation(poi,pgsTypes::Harped,liftIntervalIdx);
-      //   model.m_Strands[model.m_GirderType].Yh1Measure = TOP;
-      //   
-      //   poi = *iter++;
-      //   Hg = pSectProps->GetHg(liftIntervalIdx,poi);
-      //   model.m_Strands[model.m_GirderType].Xh2 = poi.GetDistFromStart();
-      //   model.m_Strands[model.m_GirderType].Xh2Measure = DISTANCE;
-      //   model.m_Strands[model.m_GirderType].Yh2 = Hg + pStrandGeom->GetStrandLocation(poi,pgsTypes::Harped,liftIntervalIdx);
-      //   model.m_Strands[model.m_GirderType].Yh2Measure = BOTTOM;
-
-      //   poi = *iter++;
-      //   Hg = pSectProps->GetHg(liftIntervalIdx,poi);
-      //   model.m_Strands[model.m_GirderType].Xh3 = poi.GetDistFromStart();
-      //   model.m_Strands[model.m_GirderType].Xh3Measure = DISTANCE;
-      //   model.m_Strands[model.m_GirderType].Yh3 = Hg + pStrandGeom->GetStrandLocation(poi,pgsTypes::Harped,liftIntervalIdx);
-      //   model.m_Strands[model.m_GirderType].Yh3Measure = BOTTOM;
-
-      //   poi = *iter++;
-      //   model.m_Strands[model.m_GirderType].Xh4 = poi.GetDistFromStart();
-      //   model.m_Strands[model.m_GirderType].Xh4Measure = DISTANCE;
-      //   model.m_Strands[model.m_GirderType].Yh4 = -pStrandGeom->GetStrandLocation(poi,pgsTypes::Harped,liftIntervalIdx);
-      //   model.m_Strands[model.m_GirderType].Yh4Measure = TOP;
-
-      //   // the 4 harp point model can only be used with nonprismatic girders (that is the way the PGStable UI works)
-      //   // make the girder nonprismatic
-      //   if ( bIsPrismatic )
-      //   {
-      //      model.m_Girder[NONPRISMATIC]  = model.m_Girder[PRISMATIC];
-      //      model.m_Strands[NONPRISMATIC] = model.m_Strands[PRISMATIC];
-      //      model.m_GirderType = NONPRISMATIC;
-      //      bIsPrismatic = false;
-      //   }
-      //}
-   }
-   else
-   {
-      GET_IFACE2(pBroker,IStrandGeometry,pStrandGeom);
-      std::vector<pgsPointOfInterest> vPoi = pPoi->GetPointsOfInterest(segmentKey,POI_0L | POI_10L | POI_RELEASED_SEGMENT);
-      ATLASSERT(vPoi.size() == 2);
-      pgsPointOfInterest poi0 = vPoi.front();
-      pgsPointOfInterest poi10 = vPoi.back();
-
-      Float64 Hg = pSectProps->GetHg(liftIntervalIdx,poi0);
-      
-      model.m_Strands[model.m_GirderType].Ys = Hg + pStrandGeom->GetStrandLocation(poi0,pgsTypes::Straight,liftIntervalIdx);
-      model.m_Strands[model.m_GirderType].YsMeasure = BOTTOM;
-      model.m_Strands[model.m_GirderType].Yt = -pStrandGeom->GetStrandLocation(poi0,pgsTypes::Temporary,liftIntervalIdx);
-      model.m_Strands[model.m_GirderType].YtMeasure = TOP;
-
-      std::vector<pgsPointOfInterest> vhpPoi = pPoi->GetPointsOfInterest(segmentKey,POI_HARPINGPOINT);
-      if ( vhpPoi.size() == 0 )
-      {
-         // no POI's so use dummy values
-         model.m_Strands[model.m_GirderType].Xh1 = 0.0;
-         model.m_Strands[model.m_GirderType].Xh1Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh1 = -pStrandGeom->GetStrandLocation(poi0,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh1Measure = TOP;
-
-         model.m_Strands[model.m_GirderType].Xh2 = 0.4;
-         model.m_Strands[model.m_GirderType].Xh2Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh2 = Hg + pStrandGeom->GetStrandLocation(poi0,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh2Measure = BOTTOM;
-
-         model.m_Strands[model.m_GirderType].Xh3 = 0.6;
-         model.m_Strands[model.m_GirderType].Xh3Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh3 = Hg + pStrandGeom->GetStrandLocation(poi0,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh3Measure = BOTTOM;
-
-         model.m_Strands[model.m_GirderType].Xh4 = 1.0;
-         model.m_Strands[model.m_GirderType].Xh4Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh4 = -pStrandGeom->GetStrandLocation(poi10,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh4Measure = TOP;
-      }
-      else if ( vhpPoi.size() == 1 )
-      {
-         pgsPointOfInterest hpPoi = vhpPoi.front();
-         model.m_Strands[model.m_GirderType].Xh1 = 0.0;
-         model.m_Strands[model.m_GirderType].Xh1Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh1 = -pStrandGeom->GetStrandLocation(poi0,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh1Measure = TOP;
-
-         Hg = pSectProps->GetHg(liftIntervalIdx,hpPoi);
-
-         model.m_Strands[model.m_GirderType].Xh2 = hpPoi.GetDistFromStart()/L;
-         model.m_Strands[model.m_GirderType].Xh2Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh2 = Hg + pStrandGeom->GetStrandLocation(hpPoi,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh2Measure = BOTTOM;
-
-         model.m_Strands[model.m_GirderType].Xh3 = hpPoi.GetDistFromStart()/L;
-         model.m_Strands[model.m_GirderType].Xh3Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh3 = Hg + pStrandGeom->GetStrandLocation(hpPoi,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh3Measure = BOTTOM;
-
-         model.m_Strands[model.m_GirderType].Xh4 = 1.0;
-         model.m_Strands[model.m_GirderType].Xh4Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh4 = -pStrandGeom->GetStrandLocation(poi10,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh4Measure = TOP;
-      }
-      else
-      {
-         ATLASSERT(vhpPoi.size() == 2);
-         pgsPointOfInterest hp1Poi = vhpPoi.front();
-         pgsPointOfInterest hp2Poi = vhpPoi.back();
-         model.m_Strands[model.m_GirderType].Xh1 = 0.0;
-         model.m_Strands[model.m_GirderType].Xh1Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh1 = -pStrandGeom->GetStrandLocation(poi0,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh1Measure = TOP;
-
-         Hg = pSectProps->GetHg(liftIntervalIdx,hp1Poi);
-
-         model.m_Strands[model.m_GirderType].Xh2 = hp1Poi.GetDistFromStart()/L;
-         model.m_Strands[model.m_GirderType].Xh2Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh2 = Hg + pStrandGeom->GetStrandLocation(hp1Poi,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh2Measure = BOTTOM;
-
-         Hg = pSectProps->GetHg(liftIntervalIdx,hp2Poi);
-
-         model.m_Strands[model.m_GirderType].Xh3 = hp2Poi.GetDistFromStart()/L;
-         model.m_Strands[model.m_GirderType].Xh3Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh3 = Hg + pStrandGeom->GetStrandLocation(hp2Poi,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh3Measure = BOTTOM;
-
-         model.m_Strands[model.m_GirderType].Xh4 = 1.0;
-         model.m_Strands[model.m_GirderType].Xh4Measure = FRACTION;
-         model.m_Strands[model.m_GirderType].Yh4 = -pStrandGeom->GetStrandLocation(poi0,pgsTypes::Harped,liftIntervalIdx);
-         model.m_Strands[model.m_GirderType].Yh4Measure = TOP;
-      }
-   }
-
-   // Materials
-   GET_IFACE2(pBroker,IMaterials,pMaterials);
-   model.m_Girder[model.m_GirderType].SetDensity(pMaterials->GetSegmentWeightDensity(segmentKey,liftIntervalIdx)); // density for computing dead load
-   model.m_Density = pMaterials->GetSegmentStrengthDensity(segmentKey); // density for computed Ec
-
-   model.m_Fci = pMaterials->GetSegmentFc(segmentKey,liftIntervalIdx);
-   model.m_Fc  = pMaterials->GetSegmentFc(segmentKey,haulIntervalIdx);
-
-   model.m_bComputeEci = !pSegment->Material.Concrete.bUserEci;
-   model.m_bComputeEc  = !pSegment->Material.Concrete.bUserEc;
-   
-   model.m_LiftingStabilityProblem.SetEc(pMaterials->GetSegmentEc(segmentKey,liftIntervalIdx));
-   model.m_HaulingStabilityProblem.SetEc(pMaterials->GetSegmentEc(segmentKey,haulIntervalIdx));
-
-   GET_IFACE2(pBroker,ISegmentLiftingSpecCriteria,pSegmentLiftingSpecCriteria);
-   model.m_LiftingFrCoefficient = pSegmentLiftingSpecCriteria->GetLiftingModulusOfRuptureFactor(pSegment->Material.Concrete.Type);
-
-   GET_IFACE2(pBroker,ISegmentHaulingSpecCriteria,pSegmentHaulingSpecCriteria);
-   model.m_HaulingFrCoefficient = pSegmentHaulingSpecCriteria->GetHaulingModulusOfRuptureFactor(pSegment->Material.Concrete.Type);
-
-   // Effective Prestress Force
+   GET_IFACE2(pBroker,IPointOfInterest,pPoi);
    GET_IFACE2(pBroker,IPretensionForce,pPSForce);
-   model.m_LiftingFpeType = VARYING_FPE;
-   model.m_HaulingFpeType = VARYING_FPE;
-   model.m_LiftingStabilityProblem.ClearFpe();
-   model.m_HaulingStabilityProblem.ClearFpe();
-   std::vector<pgsPointOfInterest> vPoi = pPoi->GetPointsOfInterest(segmentKey);
+   std::vector<pgsPointOfInterest> vPoi(pPoi->GetPointsOfInterest(segmentKey));
+   CPGStableStrands liftingStrands = model.GetStrands(model.GetGirderType(),LIFTING);
+   CPGStableStrands haulingStrands = model.GetStrands(model.GetGirderType(),HAULING);
+   liftingStrands.strandMethod = CPGStableStrands::Detailed;
+   haulingStrands.strandMethod = CPGStableStrands::Detailed;
+   liftingStrands.m_vFpe.clear();
+   haulingStrands.m_vFpe.clear();
    BOOST_FOREACH(pgsPointOfInterest& poi,vPoi)
    {
       Float64 X = poi.GetDistFromStart();
-      Float64 Fse = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftIntervalIdx,pgsTypes::Start);
-      Float64 Fhe = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftIntervalIdx,pgsTypes::Start);
-      Float64 Fte = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftIntervalIdx,pgsTypes::Start);
-      model.m_LiftingStabilityProblem.AddFpe(X,Fse,Fhe,Fte);
+      if ( X < 0 || Lg < X )
+      {
+         continue;
+      }
 
-      Fse = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulIntervalIdx,pgsTypes::Start);
-      Fhe = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulIntervalIdx,pgsTypes::Start);
-      Fte = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulIntervalIdx,pgsTypes::Start);
-      model.m_HaulingStabilityProblem.AddFpe(X,Fse,Fhe,Fte);
+      Float64 Ns;
+      Float64 es = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Straight, &Ns);
+      Float64 eh = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped,   &Ns);
+      Float64 et = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary,&Ns);
+
+      Float64 Ytop = pSectProps->GetY(releaseIntervalIdx,poi,pgsTypes::TopGirder);
+
+      Float64 Ys = Ytop + es;
+      Float64 Yh = Ytop + eh;
+      Float64 Yt = Ytop + et;
+
+      if ( IsZero(et) )
+      {
+         // if there aren't any temporary strands, Yt is zero. This value doesn't
+         // work well in PGStable so make it 2"
+         Yt = ::ConvertToSysUnits(2.0,unitMeasure::Inch);
+      }
+
+      Float64 Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftingIntervalIdx,pgsTypes::Start);
+      Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start);
+      Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start);
+
+      liftingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Ys,TOP,Ph,Yh,TOP,Pt,Yt,TOP));
+
+      Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start);
+      Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start);
+      Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start);
+
+      haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Ys,TOP,Ph,Yh,TOP,Pt,Yt,TOP));
    }
+   model.SetStrands(model.GetGirderType(),LIFTING,liftingStrands);
+   model.SetStrands(model.GetGirderType(),HAULING,haulingStrands);
 
-   // Lifting Analysis Parameters
-   vPoi = pPoi->GetPointsOfInterest(segmentKey,POI_5L | POI_RELEASED_SEGMENT);
-   pgsPointOfInterest msPoi(vPoi.front());
-   GET_IFACE2(pBroker,IProductForces,pProductForces);
-   GET_IFACE2(pBroker,ICamber,pCamber);
-   Float64 gms  = pProductForces->GetDeflection(releaseIntervalIdx,pgsTypes::pftGirder,msPoi,pgsTypes::SimpleSpan,rtCumulative,false);
-   Float64 gend = pProductForces->GetDeflection(releaseIntervalIdx,pgsTypes::pftGirder,pgsPointOfInterest(segmentKey,0.0),pgsTypes::SimpleSpan,rtCumulative,false);
-   Float64 g = gms - gend; // girder dead load deflection relative to ends of girder
-   Float64 psp = pCamber->GetPrestressDeflection(msPoi,pgsTypes::pddRelease);
-   Float64 pst = pCamber->GetInitialTempPrestressDeflection(msPoi,pgsTypes::pddRelease);
-   Float64 camber = g + psp + pst; // we want camber relative to the ends of the girder
-   model.m_LiftingStabilityProblem.SetCamber(true,camber);
-   model.m_LiftingStabilityProblem.SetSupportLocations(pSegment->HandlingData.LeftLiftPoint,pSegment->HandlingData.RightLiftPoint);
-   model.m_LiftingStabilityProblem.SetYRollAxis(pSegmentLiftingSpecCriteria->GetHeightOfPickPointAboveGirderTop());
-   model.m_LiftingStabilityProblem.SetSweepTolerance(pSegmentLiftingSpecCriteria->GetLiftingSweepTolerance());
-   model.m_LiftingStabilityProblem.SetSupportPlacementTolerance(pSegmentLiftingSpecCriteria->GetLiftingLoopPlacementTolerance());
-   Float64 impactUp,impactDown;
-   pSegmentLiftingSpecCriteria->GetLiftingImpact(&impactDown,&impactUp);
-   model.m_LiftingStabilityProblem.SetImpact(impactUp,impactDown);
-   model.m_LiftingStabilityProblem.ApplyImpactToTiltedGirder(true);
-   model.m_LiftingStabilityProblem.SetWindPressure(0);
+   model.SetLiftingStabilityProblem( *pGirder->GetSegmentLiftingStabilityProblem(segmentKey));
+   model.SetHaulingStabilityProblem( *pGirder->GetSegmentHaulingStabilityProblem(segmentKey));
 
-   // Hauling Analysis Parameters
-   model.m_HaulingStabilityProblem.SetCamber(false,pSegmentHaulingSpecCriteria->GetIncreaseInCgForCamber());
-   model.m_HaulingStabilityProblem.SetSupportLocations(pSegment->HandlingData.TrailingSupportPoint,pSegment->HandlingData.LeadingSupportPoint);
-   model.m_HaulingStabilityProblem.SetSweepTolerance(pSegmentHaulingSpecCriteria->GetHaulingSweepTolerance());
-   model.m_HaulingStabilityProblem.SetSupportPlacementTolerance(pSegmentHaulingSpecCriteria->GetHaulingSupportPlacementTolerance());
-   pSegmentHaulingSpecCriteria->GetHaulingImpact(&impactDown,&impactUp);
-   model.m_HaulingStabilityProblem.SetImpact(impactUp,impactDown);
-   model.m_HaulingStabilityProblem.ApplyImpactToTiltedGirder(false);
-   model.m_HaulingStabilityProblem.SetWindPressure(0);
-   model.m_HaulingStabilityProblem.SetWheelLineSpacing(pSegmentHaulingSpecCriteria->GetAxleWidth());
-   model.m_HaulingStabilityProblem.SetHeightOfRollAxisAboveRoadway(pSegmentHaulingSpecCriteria->GetHeightOfTruckRollCenterAboveRoadway());
-   model.m_HaulingStabilityProblem.SetSuperelevation(pSegmentHaulingSpecCriteria->GetMaxSuperelevation());
-   model.m_HaulingStabilityProblem.SetVelocity(0);
-   //model.m_HaulingStabilityProblem.SetTurningRadius(Float64 r); // don't have a value for this... use the default
-   model.m_Hgb = pSegmentHaulingSpecCriteria->GetHeightOfGirderBottomAboveRoadway();
+   GET_IFACE2(pBroker,ISegmentLiftingSpecCriteria,pSegmentLiftingSpecCriteria);
+   GET_IFACE2(pBroker,ISegmentHaulingSpecCriteria,pSegmentHaulingSpecCriteria);
 
-#pragma Reminder("WORKING HERE - this is based on current methodology... will need to convert this to use new methodology once implemented")
-   if ( pSegmentHaulingSpecCriteria->GetRollStiffnessMethod() == ISegmentHaulingSpecCriteria::LumpSum )
-   {
-      model.m_HaulingStabilityProblem.SetTruckRotationalStiffness(pSegmentHaulingSpecCriteria->GetLumpSumRollStiffness());
-   }
-   else
-   {
-      Float64 Wa = pSegmentHaulingSpecCriteria->GetAxleWeightLimit();
-      IndexType nAxles = int(model.m_Girder[model.m_GirderType].GetGirderWeight()/Wa) + 1;
-      Float64 Ktheta = nAxles*pSegmentHaulingSpecCriteria->GetAxleStiffness();
-      Ktheta = Max(Ktheta,pSegmentHaulingSpecCriteria->GetMinimumRollStiffness());
-      model.m_HaulingStabilityProblem.SetTruckRotationalStiffness(Ktheta);
-   }
+   CPGStableLiftingCriteria liftingCriteria;
+   liftingCriteria = pSegmentLiftingSpecCriteria->GetLiftingStabilityCriteria(segmentKey); 
+   model.SetLiftingCriteria(liftingCriteria);
+
+
+   CPGStableHaulingCriteria haulingCriteria;
+   haulingCriteria = pSegmentHaulingSpecCriteria->GetHaulingStabilityCriteria(segmentKey);
+   model.SetHaulingCriteria(haulingCriteria);
 
    return true;
 }

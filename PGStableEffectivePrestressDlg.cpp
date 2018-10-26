@@ -51,11 +51,11 @@ void CPGStableEffectivePrestressDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
    if ( pDX->m_bSaveAndValidate )
    {
-      m_Grid.GetFpe(m_Fpe);
+      m_Grid.GetFpe(m_Strands.m_vFpe);
    }
    else
    {
-      m_Grid.FillGrid(m_Fpe);
+      m_Grid.FillGrid(m_Strands.m_vFpe);
    }
 }
 
@@ -63,7 +63,6 @@ void CPGStableEffectivePrestressDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPGStableEffectivePrestressDlg, CDialog)
    ON_BN_CLICKED(IDC_ADD, &CPGStableEffectivePrestressDlg::OnAdd)
    ON_BN_CLICKED(IDC_REMOVE, &CPGStableEffectivePrestressDlg::OnRemove)
-   ON_BN_CLICKED(IDC_HELP, &CPGStableEffectivePrestressDlg::OnHelp)
 END_MESSAGE_MAP()
 
 // CPGStableEffectivePrestressDlg message handlers
@@ -89,9 +88,4 @@ void CPGStableEffectivePrestressDlg::OnAdd()
 void CPGStableEffectivePrestressDlg::OnRemove()
 {
    m_Grid.RemoveSelected();
-}
-
-void CPGStableEffectivePrestressDlg::OnHelp()
-{
-   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_VARIABLE_EFFECTIVE_PRESTRESS);
 }

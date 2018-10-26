@@ -46,10 +46,11 @@ protected:
 #endif
 #endif
 
-protected:
-   virtual void CreateEditButton();
+   virtual BOOL CanEditReport() { return FALSE; }
 
+protected:
 	DECLARE_MESSAGE_MAP()
+
 public:
    virtual void OnInitialUpdate();
 };

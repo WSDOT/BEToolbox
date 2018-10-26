@@ -25,8 +25,8 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "PGStableNonprismaticGirder.h"
 #include "PGStableDoc.h"
+#include "PGStableNonprismaticGirder.h"
 #include "PGStableDDX.h"
 #include "PGStableGirderControl.h"
 #include <MFCTools\MFCTools.h>
@@ -49,13 +49,18 @@ void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
+   DDX_CBEnum(pDX,IDC_PS_METHOD,strands.strandMethod);
+
    DDX_UnitValueAndTag(pDX,IDC_XFER_LENGTH,IDC_XFER_LENGTH_UNIT,strands.XferLength,pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX,IDC_XFER_LENGTH,strands.XferLength,pDispUnits->ComponentDim);
 
    DDX_CBItemData(pDX,IDC_YS_MEASURE,strands.YsMeasure);
    DDX_UnitValueAndTag(pDX,IDC_YS,IDC_YS_UNIT,strands.Ys,pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX,IDC_YS,strands.Ys,pDispUnits->ComponentDim);
 
    DDX_CBItemData(pDX,IDC_YT_MEASURE,strands.YtMeasure);
    DDX_UnitValueAndTag(pDX,IDC_YTEMP,IDC_YTEMP_UNIT,strands.Yt,pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX,IDC_YTEMP,strands.Yt,pDispUnits->ComponentDim);
 
    DDX_CBItemData(pDX,IDC_XH1_UNIT,strands.Xh1Measure);
    if ( strands.Xh1Measure == DISTANCE )
@@ -65,9 +70,11 @@ void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
    else
    {
       DDX_Percentage(pDX,IDC_XH1,strands.Xh1);
+      DDV_MinMaxDouble(pDX,100*strands.Xh1,0,100.0);
    }
    DDX_CBItemData(pDX,IDC_YH1_MEASURE,strands.Yh1Measure);
    DDX_UnitValueAndTag(pDX,IDC_YH1,IDC_YH1_UNIT,strands.Yh1,pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX,IDC_YH1,strands.Yh1,pDispUnits->ComponentDim);
 
    DDX_CBItemData(pDX,IDC_XH2_UNIT,strands.Xh2Measure);
    if ( strands.Xh2Measure == DISTANCE )
@@ -77,9 +84,11 @@ void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
    else
    {
       DDX_Percentage(pDX,IDC_XH2,strands.Xh2);
+      DDV_MinMaxDouble(pDX,100*strands.Xh2,0,100.0);
    }
    DDX_CBItemData(pDX,IDC_YH2_MEASURE,strands.Yh2Measure);
    DDX_UnitValueAndTag(pDX,IDC_YH2,IDC_YH2_UNIT,strands.Yh2,pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX,IDC_YH2,strands.Yh2,pDispUnits->ComponentDim);
 
    DDX_CBItemData(pDX,IDC_XH3_UNIT,strands.Xh3Measure);
    if ( strands.Xh3Measure == DISTANCE )
@@ -89,9 +98,11 @@ void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
    else
    {
       DDX_Percentage(pDX,IDC_XH3,strands.Xh3);
+      DDV_MinMaxDouble(pDX,100*strands.Xh3,0,100.0);
    }
    DDX_CBItemData(pDX,IDC_YH3_MEASURE,strands.Yh3Measure);
    DDX_UnitValueAndTag(pDX,IDC_YH3,IDC_YH3_UNIT,strands.Yh3,pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX,IDC_YH3,strands.Yh3,pDispUnits->ComponentDim);
 
    DDX_CBItemData(pDX,IDC_XH4_UNIT,strands.Xh4Measure);
    if ( strands.Xh4Measure == DISTANCE )
@@ -101,9 +112,11 @@ void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
    else
    {
       DDX_Percentage(pDX,IDC_XH4,strands.Xh4);
+      DDV_MinMaxDouble(pDX,100*strands.Xh4,0,100.0);
    }
    DDX_CBItemData(pDX,IDC_YH4_MEASURE,strands.Yh4Measure);
    DDX_UnitValueAndTag(pDX,IDC_YH4,IDC_YH4_UNIT,strands.Yh4,pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX,IDC_YH4,strands.Yh4,pDispUnits->ComponentDim);
 }
 
 // CPGStableNonprismaticGirder dialog
@@ -136,34 +149,67 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
    stbGirder girder = pDoc->GetGirder(NONPRISMATIC);
-   DDX_GirderSectionGrid(pDX,m_pGirderSectionGrid,girder);
+   CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);
 
-   CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC);
+   DDX_GirderSectionGrid(pDX,m_pGirderSectionGrid,girder);
    DDX_Strands(pDX,strands);
 
-   Float64 densityWithRebar = girder.GetDensity();
+   Float64 Cd = girder.GetDragCoefficient();
+   DDX_Text(pDX,IDC_DRAG_COEFFICIENT,Cd);
+   DDV_GreaterThanZero(pDX,IDC_DRAG_COEFFICIENT,Cd);
+
+   Float64 densityWithRebar = pDoc->GetDensityWithRebar();
    Float64 density = pDoc->GetDensity();
 
    DDX_UnitValueAndTag(pDX,IDC_DENSITY,IDC_DENSITY_UNIT,density,pDispUnits->Density);
+   DDV_UnitValueGreaterThanZero(pDX,IDC_DENSITY,density,pDispUnits->Density);
    DDX_UnitValueAndTag(pDX,IDC_DENSITY_WITH_REBAR,IDC_DENSITY_WITH_REBAR_UNIT,densityWithRebar,pDispUnits->Density);
+   DDV_UnitValueGreaterThanZero(pDX,IDC_DENSITY_WITH_REBAR,densityWithRebar,pDispUnits->Density);
 
    std::vector<std::pair<Float64,Float64>> vLoads = girder.GetAdditionalLoads();
    DDX_PointLoadGrid(pDX,m_pPointLoadGrid,vLoads);
 
    if ( pDX->m_bSaveAndValidate )
    {
-#pragma Reminder("WORKING HERE - add validation")
-      // most values cannot be zero
-      // check vLoads... X must be between 0 and L
-      // harp point must be between 0 and 0.5
-
-      girder.SetDensity(densityWithRebar);
-
       girder.SetAdditionalLoads(vLoads);
 
+      girder.SetDragCoefficient(Cd);
+
       pDoc->SetGirder(NONPRISMATIC,girder);
-      pDoc->SetStrands(NONPRISMATIC,strands);
+
       pDoc->SetDensity(density);
+      pDoc->SetDensityWithRebar(densityWithRebar);
+
+      pDoc->SetStrands(NONPRISMATIC,LIFTING,strands);
+
+      CPGStableStrands haulingStrands = pDoc->GetStrands(NONPRISMATIC,HAULING);
+      haulingStrands.strandMethod = strands.strandMethod;
+      if ( strands.strandMethod == CPGStableStrands::Simplified )
+      {
+         // we were operating on the lifting prestress information
+         // since we are using the simplified method the geometry
+         // of the hauling prestress is the same as the lifting prestress
+         // update the hauling prestress information here
+         haulingStrands.XferLength = strands.XferLength;
+         haulingStrands.Xh1 = strands.Xh1;
+         haulingStrands.Xh1Measure = strands.Xh1Measure;
+         haulingStrands.Xh2 = strands.Xh2;
+         haulingStrands.Xh2Measure = strands.Xh2Measure;
+         haulingStrands.Xh3 = strands.Xh3;
+         haulingStrands.Xh3Measure = strands.Xh3Measure;
+         haulingStrands.Xh4 = strands.Xh4;
+         haulingStrands.Xh4Measure = strands.Xh4Measure;
+         haulingStrands.Ys = strands.Ys;
+         haulingStrands.YsMeasure = strands.YsMeasure;
+         haulingStrands.Yt = strands.Yt;
+         haulingStrands.YtMeasure = strands.YtMeasure;
+      }
+      pDoc->SetStrands(NONPRISMATIC,HAULING,haulingStrands);
+   }
+
+   if ( !pDX->m_bSaveAndValidate )
+   {
+      OnChange();
    }
 }
 
@@ -195,8 +241,17 @@ BEGIN_MESSAGE_MAP(CPGStableNonprismaticGirder, CDialog)
    ON_CBN_SELCHANGE(IDC_YH2_MEASURE, &CPGStableNonprismaticGirder::OnChange)
    ON_CBN_SELCHANGE(IDC_YH3_MEASURE, &CPGStableNonprismaticGirder::OnChange)
    ON_CBN_SELCHANGE(IDC_YH4_MEASURE, &CPGStableNonprismaticGirder::OnChange)
-   ON_CBN_SELCHANGE(IDC_YT_MEASURE, &CPGStableNonprismaticGirder::OnChange)
+   ON_CBN_SELCHANGE(IDC_YT_MEASURE, CPGStableNonprismaticGirder::OnChange)
+   ON_CBN_SELCHANGE(IDC_PS_METHOD, &CPGStableNonprismaticGirder::OnPSMethodChanged)
+	ON_MESSAGE(WM_HELP, OnCommandHelp)
 END_MESSAGE_MAP()
+
+
+LRESULT CPGStableNonprismaticGirder::OnCommandHelp(WPARAM, LPARAM lParam)
+{
+   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_PGSTABLE_NONPRISMATIC_GIRDER_VIEW );
+   return TRUE;
+}
 
 
 BOOL CPGStableNonprismaticGirder::OnInitDialog()
@@ -215,7 +270,6 @@ BOOL CPGStableNonprismaticGirder::OnInitDialog()
    m_ctrlGirder.CustomInit();
    }
 
-
    FillComboBoxes(0,IDC_YS_MEASURE);
    FillComboBoxes(0,IDC_YT_MEASURE);
    FillComboBoxes(IDC_XH1_UNIT,IDC_YH1_MEASURE);
@@ -223,7 +277,13 @@ BOOL CPGStableNonprismaticGirder::OnInitDialog()
    FillComboBoxes(IDC_XH3_UNIT,IDC_YH3_MEASURE);
    FillComboBoxes(IDC_XH4_UNIT,IDC_YH4_MEASURE);
 
+   CComboBox* pcbMethod = (CComboBox*)GetDlgItem(IDC_PS_METHOD);
+   pcbMethod->SetItemData(pcbMethod->AddString(_T("Simplified")),(DWORD_PTR)CPGStableStrands::Simplified);
+   pcbMethod->SetItemData(pcbMethod->AddString(_T("Detailed")),(DWORD_PTR)CPGStableStrands::Detailed);
+
    CDialog::OnInitDialog();
+
+   OnPSMethodChanged();
 
    // TODO:  Add extra initialization here
 
@@ -329,7 +389,7 @@ std::vector<std::pair<Float64,Float64>> CPGStableNonprismaticGirder::GetGirderPr
    return m_pGirderSectionGrid->GetGirderProfile();
 }
 
-std::vector<std::pair<Float64,Float64>> CPGStableNonprismaticGirder::GetStrandProfile(int strandType)
+void CPGStableNonprismaticGirder::GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp)
 {
    std::vector<std::pair<Float64,Float64>> vProfile;
 
@@ -337,40 +397,91 @@ std::vector<std::pair<Float64,Float64>> CPGStableNonprismaticGirder::GetStrandPr
    stbGirder girder;
    DDX_GirderSectionGrid(&dx,m_pGirderSectionGrid,girder);
 
-   CPGStableStrands strands;
-   DDX_Strands(&dx,strands);
-
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   pDoc->ResolveStrandLocations(&strands,&girder);
+   CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);
+   DDX_Strands(&dx,strands);
 
-   if ( strandType == STRAIGHT )
+   pDoc->GetStrandProfiles(strands,girder,pvStraight,pvHarped,pvTemp);
+}
+
+void CPGStableNonprismaticGirder::OnPSMethodChanged()
+{
+   // TODO: Add your control notification handler code here
+   CComboBox* pcbMethod = (CComboBox*)GetDlgItem(IDC_PS_METHOD);
+   int curSel = pcbMethod->GetCurSel();
+   CPGStableStrands::StrandMethod method = (CPGStableStrands::StrandMethod)(pcbMethod->GetItemData(curSel));
+   int show = (method == CPGStableStrands::Simplified ? SW_SHOW : SW_HIDE);
+
+   CString strFpeNote;
+   if ( method == CPGStableStrands::Simplified )
    {
-      Float64 Lg = m_pGirderSectionGrid->GetGirderLength();
-      Float64 Ys = girder.GetStraightStrandLocation();
-      vProfile.push_back(std::make_pair(0.0,Ys));
-      vProfile.push_back(std::make_pair(Lg,Ys));
-   }
-   else if ( strandType == TEMPORARY )
-   {
-      Float64 Lg = m_pGirderSectionGrid->GetGirderLength();
-      Float64 Yt = girder.GetTemporaryStrandLocation();
-      vProfile.push_back(std::make_pair(0.0,Yt));
-      vProfile.push_back(std::make_pair(Lg,Yt));
+      strFpeNote = _T("NOTE: Effective prestress force (Fpe) is defined on the Lifting and Hauling tabs");
    }
    else
    {
-      ATLASSERT(strandType == HARPED);
-      Float64 Lg = m_pGirderSectionGrid->GetGirderLength();
-      Float64 Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4;
-      girder.GetHarpedStrandLocation(&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4);
-      vProfile.push_back(std::make_pair(0.0,Yh1));
-      vProfile.push_back(std::make_pair(Xh1,Yh1));
-      vProfile.push_back(std::make_pair(Xh2,Yh2));
-      vProfile.push_back(std::make_pair(Xh3,Yh3));
-      vProfile.push_back(std::make_pair(Xh4,Yh4));
-      vProfile.push_back(std::make_pair(Lg,Yh4));
+      strFpeNote = _T("NOTE: Magnitude and location of the effective prestress force (Fpe) is defined on the Lifting and Hauling tabs");
    }
-   return vProfile;
+   GetDlgItem(IDC_FPE_NOTE)->SetWindowText(strFpeNote);
+
+   GetDlgItem(IDC_XFER_LENGTH_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_XFER_LENGTH)->ShowWindow(show);
+   GetDlgItem(IDC_XFER_LENGTH_UNIT)->ShowWindow(show);
+
+   //GetDlgItem(IDC_GIRDER)->ShowWindow(show);
+
+   GetDlgItem(IDC_YS_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_YS)->ShowWindow(show);
+   GetDlgItem(IDC_YS_UNIT)->ShowWindow(show);
+   GetDlgItem(IDC_YS_MEASURE_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_YS_MEASURE)->ShowWindow(show);
+
+   GetDlgItem(IDC_XH1_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_XH1)->ShowWindow(show);
+   GetDlgItem(IDC_XH1_UNIT)->ShowWindow(show);
+
+   GetDlgItem(IDC_YH1_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_YH1)->ShowWindow(show);
+   GetDlgItem(IDC_YH1_UNIT)->ShowWindow(show);
+   GetDlgItem(IDC_YH1_MEASURE)->ShowWindow(show);
+
+   GetDlgItem(IDC_XH2_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_XH2)->ShowWindow(show);
+   GetDlgItem(IDC_XH2_UNIT)->ShowWindow(show);
+
+   GetDlgItem(IDC_YH2_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_YH2)->ShowWindow(show);
+   GetDlgItem(IDC_YH2_UNIT)->ShowWindow(show);
+   GetDlgItem(IDC_YH2_MEASURE)->ShowWindow(show);
+
+   GetDlgItem(IDC_XH3_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_XH3)->ShowWindow(show);
+   GetDlgItem(IDC_XH3_UNIT)->ShowWindow(show);
+
+   GetDlgItem(IDC_YH3_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_YH3)->ShowWindow(show);
+   GetDlgItem(IDC_YH3_UNIT)->ShowWindow(show);
+   GetDlgItem(IDC_YH3_MEASURE)->ShowWindow(show);
+
+   GetDlgItem(IDC_XH4_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_XH4)->ShowWindow(show);
+   GetDlgItem(IDC_XH4_UNIT)->ShowWindow(show);
+
+   GetDlgItem(IDC_YH4_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_YH4)->ShowWindow(show);
+   GetDlgItem(IDC_YH4_UNIT)->ShowWindow(show);
+   GetDlgItem(IDC_YH4_MEASURE)->ShowWindow(show);
+
+   GetDlgItem(IDC_FACE_LABEL)->ShowWindow(show);
+
+   GetDlgItem(IDC_YTEMP_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_YTEMP)->ShowWindow(show);
+   GetDlgItem(IDC_YTEMP_UNIT)->ShowWindow(show);
+   GetDlgItem(IDC_YT_MEASURE_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_YT_MEASURE)->ShowWindow(show);
+
+   GetDlgItem(IDC_SS_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_HS_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_TS_LABEL)->ShowWindow(show);
 }
