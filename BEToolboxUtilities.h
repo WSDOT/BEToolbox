@@ -22,17 +22,6 @@
 
 #pragma once
 
-#include <ctype.h>
-
-inline void make_upper( std::_tstring::iterator begin,std::_tstring::iterator end)
-{
-   while ( begin != end )
-   {
-      *begin = toupper(*begin);
-      begin++;
-   }
-}
-
 rptRcTable* CreateTable(ColumnIndexType nColumns);
 const std::_tstring& GetImagePath();
 

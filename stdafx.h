@@ -46,6 +46,7 @@
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFHelp.h>
 
+#include <WBFLSTL.h>
 #include <WBFLRCCapacity.h>
 #include <WBFLTools.h>
 #include <WBFLUnitServer.h>
