@@ -54,6 +54,11 @@
 #include "PGStableTabView.h"
 #include "PGStableChildFrame.h"
 
+#include "SpectraDocTemplate.h"
+#include "SpectraDoc.h"
+#include "SpectraRptView.h"
+#include "SpectraChildFrame.h"
+
 #include <MFCTools\VersionInfo.h>
 
 
@@ -150,6 +155,18 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
       NULL,1);
 
    vDocTemplates.push_back(pPGStableDocTemplate);
+
+
+   CSpectraDocTemplate* pSpectraDocTemplate;
+   pSpectraDocTemplate = new CSpectraDocTemplate(
+      IDR_SPECTRA,
+      NULL,
+      RUNTIME_CLASS(CSpectraDoc),
+      RUNTIME_CLASS(CSpectraChildFrame),
+      RUNTIME_CLASS(CSpectraRptView),
+      NULL,1);
+
+   vDocTemplates.push_back(pSpectraDocTemplate);
 
    return vDocTemplates;
 }

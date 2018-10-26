@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include <cctype>
+
 #include <WBFLAll.h>
 
 #ifndef _AFX_NO_AFXCMN_SUPPORT
@@ -71,6 +73,9 @@
 
 #include <UnitMgt\UnitMgt.h>
 #include <Stability\Stability.h>
+
+#include "SpectraBuilder\SpectraValues.h"
+
 
 // prior to WBFL Version 3.3.0 the _WBFL_VERSION macro did not exist
 // we need it for conditional compilation so if it isn't defined

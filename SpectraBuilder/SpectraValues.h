@@ -1,0 +1,70 @@
+///////////////////////////////////////////////////////////////////////
+// SpectraBuilder
+// Copyright © 1999-2016  Washington State Department of Transportation
+//                        Bridge and Structures Office
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as 
+// published by the Washington State Department of Transportation, 
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful, but 
+// distribution is AS IS, WITHOUT ANY WARRANTY; without even the implied 
+// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See 
+// the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Route Open Source 
+// License along with this program; if not, write to the Washington 
+// State Department of Transportation, Bridge and Structures Office, 
+// P.O. Box  47340, Olympia, WA 98503, USA or e-mail 
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+#include <math.h>
+
+#define MIN_LATITUDE 24.6
+#define MAX_LATITUDE 50.0
+#define INC_LATITUDE 0.05
+
+#define MIN_LONGITUDE -125.0
+#define MAX_LONGITUDE -65.0
+#define INC_LONGITUDE 0.05
+
+#define RANGE_LATITUDE 509 //((long)ceil(MAX_LATITUDE-MIN_LATITUDE)/INC_LATITUDE)+1)
+#define RANGE_LONGITUDE 1201 // ((long)ceil(MAX_LONGITUDE-MIN_LONGITUDE)/INC_LONGITUDE)+1)
+
+#define SPECTRAL_VALUE_COUNT 611309 //RANGE_LATITUDE*RANGE_LONGITUDE
+
+#define SPECTRUM_POINT_COUNT 29
+#define SPECTRUM_MAX_PERIOD 4.0
+
+inline void GetSpectralValueIndies(Float64 lat,Float64 lng,long* i1,long* i2,long* i3,long* i4)
+{
+   long k = (long)floor((MAX_LATITUDE - lat)/INC_LATITUDE);
+   long l = (long)floor((lng - MIN_LONGITUDE)/INC_LONGITUDE);
+
+   *i1 = k*RANGE_LONGITUDE + l;
+   *i2 = k*RANGE_LONGITUDE + l+1;
+   *i3 = (k+1)*RANGE_LONGITUDE + l;
+   *i4 = (k+1)*RANGE_LONGITUDE + l+1;
+}
+
+typedef enum SiteClass
+{
+   scA,
+   scB,
+   scC,
+   scD,
+   scE
+} SiteClass;
+
+typedef struct SpectralValues
+{
+   Float64 lng;
+   Float64 lat;
+   Float64 v1hz;
+   Float64 v5hz;
+   Float64 vpga;
+} SpectralValues;

@@ -119,7 +119,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to BridgeLink\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\&#x0D;&#x0A;xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
@@ -221,7 +221,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to BridgeLink\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\&#x0D;&#x0A;xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
@@ -323,7 +323,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to BridgeLink\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\&#x0D;&#x0A;xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
@@ -424,7 +424,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to BridgeLink\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\&#x0D;&#x0A;xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
@@ -526,7 +526,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to BridgeLink\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\&#x0D;&#x0A;xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
@@ -628,7 +628,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to BridgeLink\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\&#x0D;&#x0A;xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)"
 			/>
 		</Configuration>
 	</Configurations>
@@ -908,6 +908,14 @@
 			</File>
 			<File
 				RelativePath=".\res\PGStableToolbar.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\Spectra.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\res\Spectra.ico"
 				>
 			</File>
 			<File
@@ -1690,6 +1698,86 @@
 				</File>
 				<File
 					RelativePath=".\PGStableTitlePageBuilder.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Spectra"
+			>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath=".\ResponseSpectra.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraChapterBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraChildFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraDlgBar.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraDoc.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraDocTemplate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraRptView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraTitlePageBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraBuilder\SpectraValues.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath=".\ResponseSpectra.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraChapterBuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraChildFrame.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraDlgBar.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraDoc.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraDocTemplate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraRptView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SpectraTitlePageBuilder.cpp"
 					>
 				</File>
 			</Filter>

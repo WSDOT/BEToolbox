@@ -26,29 +26,6 @@
 #include <Reporter\Reporter.h>
 #include <GraphicsLib\GraphicsLib.h>
 
-void to_upper( std::_tstring::iterator begin,std::_tstring::iterator end)
-{
-   while ( begin != end )
-   {
-      *begin = toupper(*begin);
-      begin++;
-   }
-}
-
-std::_tstring filename_to_URL(const std::_tstring& fname)
-{
-   //turn into an internet-looking url
-   std::_tstring filename(fname);
-   std::_tstring::size_type pos;
-   while((pos=filename.find(_T("\\"))) != std::_tstring::npos)
-   {
-      filename.replace(pos,1,_T("/"));
-   }
-
-   filename = _T("file://") + filename;
-   return filename;
-}
-
 //////////////////////////////////
 CUltColChapterBuilder::CUltColChapterBuilder(CUltColDoc* pDoc)
 {
@@ -325,7 +302,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
       ::DeleteFile( temp_file );
    }
 
-   to_upper( strFilename.begin(), strFilename.end() );
+   std::transform(strFilename.begin(),strFilename.end(),strFilename.begin(),(int(*)(int))std::toupper);
 
    // this is a const function so we have to cast away const-ness to save
    // the file name

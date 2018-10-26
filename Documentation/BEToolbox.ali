@@ -16,3 +16,4 @@ IDH_PGSTABLE_NONPRISMATIC_GIRDER_VIEW=pgstable_nonprismatic_girder_view.html
 IDH_PGSTABLE_LIFTING_VIEW=pgstable_lifting_view.html
 IDH_PGSTABLE_HAULING_VIEW=pgstable_hauling_view.html
 
+IDH_SPECTRA=spectra.html
