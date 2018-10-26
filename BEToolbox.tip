@@ -1,3 +1,6 @@
 BEToolbox is a collection of WSDOT Bridge Engineering Programs
 UltCol is a quick and easy way to estimate the capacity of a circular column
 You can quickly determine roadway elevations using Curvel
+You can import Curvel profile data into PGSuper and PGSplice
+PGSuper and PGSplice can create Curvel input files
+PGSuper and PGSplice can create GenComp input files

@@ -361,88 +361,10 @@ CString CBoxGdrDoc::GetToolbarSectionName()
    return _T("BoxGdr");
 }
 
-BOOL CBoxGdrDoc::OpenOldFormat(LPCTSTR lpszPathName)
+void CBoxGdrDoc::OnOldFormat(LPCTSTR lpszPathName)
 {
-   std::_tifstream is;
-   is.open(lpszPathName);
-   
-   TCHAR buffer[80];
-   is.getline(buffer,ARRAYSIZE(buffer));
-
-   sysTokenizer tokenizer(_T(","));
-   tokenizer.push_back(buffer);
-   sysTokenizer::size_type nTokens = tokenizer.size();
-   ATLASSERT(nTokens == 3);
-   std::_tstring strIdent = tokenizer[0];
-   std::_tstring strX = tokenizer[1];
-
-   ClearProblems();
-
-   CEAFApp* pApp = EAFGetApp();
-   pApp->SetUnitsMode(eafTypes::umUS);
-   const unitmgtIndirectMeasure* pDisplayUnits = pApp->GetDisplayUnits();
-
-   long nProblems;
-   sysTokenizer::ParseLong(tokenizer[2].c_str(),&nProblems);
-   for ( long i = 0; i < nProblems; i++ )
-   {
-      is.getline(buffer,ARRAYSIZE(buffer));
-      tokenizer.push_back(buffer);
-      BOXGDRDIMENSIONS dimensions;
-      sysTokenizer::iterator iter(tokenizer.begin());
-      iter++; // skip problem number
-
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.D);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.T);
-      iter++;
-      long n;
-      sysTokenizer::ParseLong(iter->c_str(),&n);
-      dimensions.N = n;
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.W);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.ST);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.SB);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.FT);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.FB);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.EL);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.CL);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.BL);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.ER);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.CR);
-      iter++;
-      sysTokenizer::ParseDouble(iter->c_str(),&dimensions.BR);
-      iter++;
-
-      dimensions.D = ::ConvertToSysUnits(dimensions.D,pDisplayUnits->SpanLength.UnitOfMeasure);
-      dimensions.T = ::ConvertToSysUnits(dimensions.T,pDisplayUnits->ComponentDim.UnitOfMeasure);
-      dimensions.W = ::ConvertToSysUnits(dimensions.W,pDisplayUnits->SpanLength.UnitOfMeasure);
-      dimensions.ST = ::ConvertToSysUnits(dimensions.ST,pDisplayUnits->ComponentDim.UnitOfMeasure);
-      dimensions.SB = ::ConvertToSysUnits(dimensions.SB,pDisplayUnits->ComponentDim.UnitOfMeasure);
-      dimensions.FT = ::ConvertToSysUnits(dimensions.FT,pDisplayUnits->ComponentDim.UnitOfMeasure);
-      dimensions.FB = ::ConvertToSysUnits(dimensions.FB,pDisplayUnits->ComponentDim.UnitOfMeasure);
-      dimensions.EL = ::ConvertToSysUnits(dimensions.EL,pDisplayUnits->SpanLength.UnitOfMeasure);
-      dimensions.CL = ::ConvertToSysUnits(dimensions.CL,pDisplayUnits->ComponentDim.UnitOfMeasure);
-      dimensions.BL = ::ConvertToSysUnits(dimensions.BL,pDisplayUnits->SpanLength.UnitOfMeasure);
-      dimensions.ER = ::ConvertToSysUnits(dimensions.ER,pDisplayUnits->SpanLength.UnitOfMeasure);
-      dimensions.CR = ::ConvertToSysUnits(dimensions.CR,pDisplayUnits->ComponentDim.UnitOfMeasure);
-      dimensions.BR = ::ConvertToSysUnits(dimensions.BR,pDisplayUnits->SpanLength.UnitOfMeasure);
-
-      AddProblem(dimensions);
-   }
-
-   is.close();
-
-   return TRUE;
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   AfxMessageBox(_T("Error: Invalid file format.\n\nThis is not a BoxGdr file or it is in a legacy format that is not supported"),MB_OK | MB_ICONEXCLAMATION);
 }
 
 IndexType CBoxGdrDoc::GetProblemCount() const

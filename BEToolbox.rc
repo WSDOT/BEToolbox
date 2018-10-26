@@ -69,8 +69,8 @@ SUPERELEVATION          METAFILE                "res\\Superelevation.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,1
- PRODUCTVERSION 3,0,0,1
+ FILEVERSION 3,0,0,2
+ PRODUCTVERSION 3,0,0,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -88,12 +88,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.0.0.1"
+            VALUE "FileVersion", "3.0.0.2"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2013, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.0.0.1"
+            VALUE "ProductVersion", "3.0.0.2"
         END
     END
     BLOCK "VarFileInfo"
@@ -554,7 +554,7 @@ STRINGTABLE
 BEGIN
     IDS_PROJNAME            "BEToolbox"
     IDR_GENCOMP             "GenComp\nGenComp\nBEToolbox\nGenComp (*.GenComp)\n.GenComp\nGenComp.Document\nGenComp Document"
-    IDR_BOXGDR              "BoxGdr\nBoxGdr\nBEToolbox\nBoxGdr (*.BoxGirder)\n.BoxGirder\nBoxGdr.Document\nBoxGdr Document"
+    IDR_BOXGDR              "BoxGdr\nBoxGdr\nBEToolbox\nBoxGdr (*.BoxGdr)\n.BoxGdr\nBoxGdr.Document\nBoxGdr Document"
     IDR_GIRCOMP             "GirComp\nGirComp\nBEToolbox\nGirComp (*.GirComp)\n.GirComp\nGirComp.Document\nGirComp Document"
     IDR_ULTCOL              "UltCol\nUltCol\nBEToolbox\nUltCol (*.UltCol)\n.UltCol\nUltCol.Document\nUltCol Document"
 END

@@ -81,7 +81,7 @@ protected:
    virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
    virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
 
-   BOOL OpenOldFormat(LPCTSTR lpszPathName);
+   virtual void OnOldFormat(LPCTSTR lpszPathName);
 
    std::vector<BOXGDRDIMENSIONS> m_Problems;
 

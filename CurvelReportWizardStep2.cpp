@@ -167,10 +167,13 @@ bool CCurvelReportWizardStep2::CorrectForSuperelevation()
 void CCurvelReportWizardStep2::UpdateReportSpecification(CCurvelReportSpecification* pRptSpec)
 {
    pRptSpec->CorrectForSuperelevation(m_bCorrectForSuperelevation);
-   pRptSpec->SetProfileGradeOffset(m_ProfileGradeOffset);
-   pRptSpec->SetSuperelevationPoint(0,m_SuperelevationPoint[0]);
-   pRptSpec->SetSuperelevationPoint(1,m_SuperelevationPoint[1]);
-   pRptSpec->SetSuperelevationPoint(2,m_SuperelevationPoint[2]);
+   if ( m_bCorrectForSuperelevation )
+   {
+      pRptSpec->SetProfileGradeOffset(m_ProfileGradeOffset);
+      pRptSpec->SetSuperelevationPoint(0,m_SuperelevationPoint[0]);
+      pRptSpec->SetSuperelevationPoint(1,m_SuperelevationPoint[1]);
+      pRptSpec->SetSuperelevationPoint(2,m_SuperelevationPoint[2]);
+   }
 }
 
 void CCurvelReportWizardStep2::OnHelp()

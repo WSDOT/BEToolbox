@@ -30,9 +30,6 @@ public:
 	CCurvelReportSpecification(LPCTSTR strReportName);
    ~CCurvelReportSpecification(void);
 
-   HRESULT Save(IStructuredSave* pStrSave);
-   HRESULT Load(IStructuredLoad* pStrLoad);
-
    void SetVerticalCurveParameters(Float64 g1,Float64 g2,Float64 PVIStation,Float64 PVIElevation,Float64 length);
    void GetVerticalCurveParameters(Float64* g1,Float64* g2,Float64* PVIStation,Float64* PVIElevation,Float64* length) const;
 
@@ -57,17 +54,8 @@ public:
    virtual HRESULT Validate() const;
 
 protected:
-   Float64 m_g1;
-   Float64 m_g2;
-   Float64 m_PVIStation;
-   Float64 m_PVIElevation;
-   Float64 m_Length;
 
-   bool m_bCorrectForSuperelevation;
-   Float64 m_ProfileGradeOffset;
-   SuperelevationProfilePoint m_SuperelevationPoint[3];
-
-   std::vector<IndividualStation> m_IndividualStations;
-   std::vector<StationRange> m_StationRanges;
-   std::vector<SkewLine> m_SkewLines;
+   mutable std::vector<IndividualStation> m_IndividualStations;
+   mutable std::vector<StationRange> m_StationRanges;
+   mutable std::vector<SkewLine> m_SkewLines;
 };

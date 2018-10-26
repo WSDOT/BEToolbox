@@ -44,6 +44,8 @@
 #include <WBFLCogo.h>
 #include <WBFLCogo_i.c>
 
+#include <WBFLUnitServer_i.c>
+
 CBEToolboxModule _AtlModule;
 
 BEGIN_MESSAGE_MAP(CBEToolboxApp, CWinApp)

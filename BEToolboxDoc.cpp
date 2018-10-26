@@ -27,6 +27,7 @@
 #include "resource.h"
 #include "BEToolboxDoc.h"
 #include "BEToolboxStatusBar.h"
+#include "BEToolboxPlugin.h"
 #include "AboutDlg.h"
 
 // CBEToolboxDoc
@@ -36,6 +37,7 @@ IMPLEMENT_DYNAMIC(CBEToolboxDoc, CEAFDocument)
 #define ID_MYTOOLBAR ID_MAINFRAME_TOOLBAR+1
 #define PLUGIN_COMMAND_COUNT 256
 
+static const Float64 FILE_VERSION = 1.0;
 
 CBEToolboxDoc::CBEToolboxDoc()
 {
@@ -91,7 +93,17 @@ BOOL CBEToolboxDoc::Init()
    return TRUE;
 }
 
-BOOL CBEToolboxDoc::OpenTheDocument(LPCTSTR lpszPathName)
+CString CBEToolboxDoc::GetRootNodeName()
+{
+   return _T("BEToolbox");
+}
+
+Float64 CBEToolboxDoc::GetRootNodeVersion()
+{
+   return FILE_VERSION;
+}
+
+BOOL CBEToolboxDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
    // Open the file and see if it starts with XML... if it does
    // pass it on for normal processing, otherwise, assume it is an old fortran fixed format file
@@ -124,15 +136,19 @@ BOOL CBEToolboxDoc::OpenTheDocument(LPCTSTR lpszPathName)
    is.close();
 
    if ( strHeader != _T("<?xml") )
-      return OpenOldFormat(lpszPathName);
+   {
+      OnOldFormat(lpszPathName);
+      return FALSE;
+   }
    else
-      return CEAFDocument::OpenTheDocument(lpszPathName);
+   {
+      return CEAFDocument::OnOpenDocument(lpszPathName);
+   }
 }
 
-BOOL CBEToolboxDoc::OpenOldFormat(LPCTSTR lpszPathName)
+void CBEToolboxDoc::OnOldFormat(LPCTSTR lpszPathName)
 {
    // Do nothing by default
-   return TRUE;
 }
 
 void CBEToolboxDoc::OnCloseDocument()

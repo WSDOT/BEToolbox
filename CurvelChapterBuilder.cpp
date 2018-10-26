@@ -567,8 +567,6 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
    m_Alignment.QueryInterface(&m_Path);
    m_Path->get_Profile(&m_Profile);
 
-   Float64 profileGradeOffset = pRptSpec->GetProfileGradeOffset();
-
    // Build the profile
    CComPtr<IVertCurve> vertCurve;
    vertCurve.CoCreateInstance(CLSID_VertCurve);
@@ -576,10 +574,10 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
    Float64 g1,g2,pviStation,pviElevation,length;
    pRptSpec->GetVerticalCurveParameters(&g1,&g2,&pviStation,&pviElevation,&length);
 
-   Float64 pbgStation = pviStation - max(100,length);
+   Float64 pbgStation   = pviStation   - max(100,length);
    Float64 pbgElevation = pviElevation - g1*max(100,length);
 
-   Float64 pfgStation = pviStation + max(100,length);
+   Float64 pfgStation   = pviStation   + max(100,length);
    Float64 pfgElevation = pviElevation + g2*max(100,length);
 
    CComPtr<IProfilePoint> PBG;
@@ -604,6 +602,8 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
    vertCurve->put_L2(length/2);
 
    m_Profile->AddEx(vertCurve);
+
+   Float64 profileGradeOffset = pRptSpec->GetProfileGradeOffset();
 
    // Superelevation
    CComPtr<ICrossSectionCollection> crossSections;
