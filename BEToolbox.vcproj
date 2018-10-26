@@ -118,7 +118,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to $(SolutionName)\Image folder"
-				CommandLine="copy $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
 			/>
 		</Configuration>
 		<Configuration
@@ -219,7 +219,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to $(SolutionName)\Image folder"
-				CommandLine="copy $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
 			/>
 		</Configuration>
 		<Configuration
@@ -320,7 +320,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to $(SolutionName)\Image folder"
-				CommandLine="copy $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
 			/>
 		</Configuration>
 		<Configuration
@@ -420,7 +420,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to $(SolutionName)\Image folder"
-				CommandLine="copy $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
 			/>
 		</Configuration>
 	</Configurations>
