@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{b231b241-74c2-44fd-85b9-cd5236d28b1c}</UniqueIdentifier>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="M3C">
+      <UniqueIdentifier>{f1966a28-964e-46e7-8a4e-7ac440668386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="M3C\Header Files">
+      <UniqueIdentifier>{644aff67-c488-43e5-ae4a-a74e3a18f489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="M3C\Resource Files">
+      <UniqueIdentifier>{d37f5312-16fc-4efd-82c2-0e8f3d901606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="M3C\Source Files">
+      <UniqueIdentifier>{e0ce3175-e360-4fb1-bc67-ef0a6b35b051}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CChapterBuilder.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CChildFrame.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CDlgBar.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CDoc.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CDocTemplate.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CTitlePageBuilder.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CProblemParameters.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CDetailsChapterBuilder.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CTabView.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CMainView.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CSectionView.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CReportView.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CView.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CGraphView.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CAnalysisDetailsChapterBuilder.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CAnalysisDetailsReportSpecification.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CAnalysisDetailsReportSpecificationBuilder.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M3CPrintJob.cpp">
+      <Filter>M3C\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BEToolboxToolExtensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dllmain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CChapterBuilder.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CChildFrame.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CDlgBar.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CDoc.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CDocTemplate.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CTitlePageBuilder.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CProblemParameters.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CDetailsChapterBuilder.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CTabView.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CMainView.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CSectionView.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CReportView.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CView.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CGraphView.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CAnalysisDetailsChapterBuilder.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CAnalysisDetailsReportSpecification.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CAnalysisDetailsReportSpecificationBuilder.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3C.hh">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="M3CPrintJob.h">
+      <Filter>M3C\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BEToolboxToolExtensions_i.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BEToolboxToolExtensions.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="M3CTool.rgs">
+      <Filter>M3C\Resource Files</Filter>
+    </None>
+    <None Include="BEToolboxToolExtensions.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="BEToolboxToolExtensions.rgs">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\M3C.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\m3ctoolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

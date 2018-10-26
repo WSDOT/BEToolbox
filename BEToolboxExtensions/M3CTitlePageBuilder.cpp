@@ -53,7 +53,7 @@ rptChapter* CM3CTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& p
 
    rptParagraph* pPara = new rptParagraph(_T("BEToolboxReportTitle"));
    (*pTitlePage) << pPara;
-   (*pPara) << _T("ULTCOL") << Super(symbol(TRADEMARK)) << rptNewLine;
+   (*pPara) << _T("M3C") << Super(symbol(TRADEMARK)) << rptNewLine;
 
    pPara = new rptParagraph(_T("BEToolboxReportSubtitle"));
    *pTitlePage << pPara;

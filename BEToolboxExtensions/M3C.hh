@@ -22,37 +22,4 @@
 
 #pragma once
 
-
-// CM3CView view
-
-#include <EAF\EAFReportView.h>
-
-class CM3CView : public CEAFReportView
-{
-	DECLARE_DYNCREATE(CM3CView)
-
-protected:
-	CM3CView();           // protected constructor used by dynamic creation
-	virtual ~CM3CView();
-
-   virtual std::shared_ptr<CReportSpecification> CreateReportSpecification();
-   virtual std::shared_ptr<CReportBrowser> CreateReportBrowser();
-   virtual void RefreshReport() override;
-
-#ifdef _DEBUG
-	virtual void AssertValid() const override;
-#ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const override;
-#endif
-#endif
-
-   virtual BOOL CanEditReport() override { return FALSE; }
-
-protected:
-	DECLARE_MESSAGE_MAP()
-
-public:
-   virtual void OnInitialUpdate() override;
-};
-
-
+#define IDH_M3C 1000

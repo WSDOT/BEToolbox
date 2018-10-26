@@ -21,6 +21,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
+
 #include <EAF\EAFChildFrame.h>
 #include <EAF\EAFTypes.h>
 #include "M3CDlgBar.h"
@@ -32,25 +33,29 @@ class CM3CChildFrame :
 public:
 	DECLARE_DYNCREATE(CM3CChildFrame)
 
+   void OnUnitsChanging();
+   void OnUnitsChanged();
    void SetProblemParameters(const CM3CProblemParameters& params);
-   void SetUnitsMode(eafTypes::UnitMode um);
 
 protected:
    CM3CChildFrame(void);
    ~CM3CChildFrame(void);
 
    afx_msg void OnUpdate();
-   afx_msg void OnUSUnits();
-   afx_msg void OnSIUnits();
+
 
    afx_msg BOOL OnToolTipNotify(UINT id,NMHDR* pNMHDR, LRESULT* pResult);
-   
+
    DECLARE_MESSAGE_MAP()
    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
    afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
+   afx_msg void OnFilePrint();
+   afx_msg void OnFilePrintDirect();
 
 protected:
    CM3CDlgBar m_DlgBar;
+
+   void DoFilePrint(bool bPrintDirect);
 
 public:
 #if defined _DEBUG

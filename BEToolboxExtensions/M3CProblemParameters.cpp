@@ -27,29 +27,40 @@ CM3CProblemParameters::CM3CProblemParameters()
 {
    D = ::ConvertToSysUnits(72, unitMeasure::Inch);
 
-   fco = ::ConvertToSysUnits(5.2, unitMeasure::KSI);
-   eco = 0.002;
-   R = 5;
-
-   Cover = ::ConvertToSysUnits(1.5, unitMeasure::Inch);
-   As_per_bar = ::ConvertToSysUnits(1.56, unitMeasure::Inch2);
-   nBars = 28;
-   fy = ::ConvertToSysUnits(66.0, unitMeasure::KSI);
-   fu = ::ConvertToSysUnits(92.4, unitMeasure::KSI);
-   Es = ::ConvertToSysUnits(29000, unitMeasure::KSI);
-   esh = 0.0115;
-   efr = 0.06;
+   fco = ::ConvertToSysUnits(5.0, unitMeasure::KSI);
+   eco = 0.003;
 
    AsSpiral = ::ConvertToSysUnits(0.44, unitMeasure::Inch2);
    db = ::ConvertToSysUnits(0.75, unitMeasure::Inch);
    S = ::ConvertToSysUnits(3, unitMeasure::Inch);
-   FySpiral = ::ConvertToSysUnits(66, unitMeasure::KSI);
+   FySpiral = ::ConvertToSysUnits(60, unitMeasure::KSI);
    esu = 0.06;
 
-   nSlices = 50;
+   fy = ::ConvertToSysUnits(60.0, unitMeasure::KSI);
+   fu = ::ConvertToSysUnits(90.0, unitMeasure::KSI);
+   Es = ::ConvertToSysUnits(29000, unitMeasure::KSI);
+   esh = 0.0115;
+   efr = 0.06;
+
+   Cover = ::ConvertToSysUnits(1.5, unitMeasure::Inch);
+
+   Bonded_Rebar_As_per_bar = ::ConvertToSysUnits(1.56, unitMeasure::Inch2);
+   Bonded_Rebar_nBars = 28;
+
+   Unbonded_Rebar_As_per_bar = 0;
+   Unbonded_Rebar_nBars = 0;
+   Unbonded_Rebar_Lu = ::ConvertToSysUnits(5.0, unitMeasure::Feet);
+
+   lrfdStrandPool* pPool = lrfdStrandPool::GetInstance();
+   pStrand = pPool->GetStrand(matPsStrand::Gr1860, matPsStrand::LowRelaxation, matPsStrand::None, matPsStrand::D1524);
+   Tendon_Ring_Diameter = ::ConvertToSysUnits(12, unitMeasure::Inch);
+   Tendon_nStrands = 0;
+   Tendon_fpe = ::ConvertToSysUnits(0.85*202.5, unitMeasure::KSI); // assume 15% loss
+   Tendon_Lu = ::ConvertToSysUnits(20.0, unitMeasure::Feet);
+
+   nSlices = 20;
    initialStep = ::ConvertToSysUnits(0.00001,unitMeasure::PerInch);
    P = 0;
-   NASlope = 0;
 }
 
 bool CM3CProblemParameters::operator==(const CM3CProblemParameters& other) const
@@ -63,17 +74,25 @@ bool CM3CProblemParameters::operator==(const CM3CProblemParameters& other) const
    if (!IsEqual(eco, other.eco))
       return false;
 
-   if (!IsEqual(R, other.R))
-      return false;
-
    if (!IsEqual(Cover, other.Cover))
       return false;
 
-   if (!IsEqual(As_per_bar, other.As_per_bar))
+   if (!IsEqual(Bonded_Rebar_As_per_bar, other.Bonded_Rebar_As_per_bar))
       return false;
 
-   if (nBars != other.nBars)
+   if (Bonded_Rebar_nBars != other.Bonded_Rebar_nBars)
       return false;
+
+
+   if (!IsEqual(Unbonded_Rebar_As_per_bar, other.Unbonded_Rebar_As_per_bar))
+      return false;
+
+   if (Unbonded_Rebar_nBars != other.Unbonded_Rebar_nBars)
+      return false;
+
+   if (!IsEqual(Unbonded_Rebar_Lu, other.Unbonded_Rebar_Lu))
+      return false;
+
 
    if (!IsEqual(fy, other.fy))
       return false;
@@ -107,6 +126,23 @@ bool CM3CProblemParameters::operator==(const CM3CProblemParameters& other) const
       return false;
 
 
+   if (pStrand != other.pStrand)
+      return false;
+   
+   
+   if ( !IsEqual(Tendon_Ring_Diameter,other.Tendon_Ring_Diameter) )
+      return false;
+
+   if (Tendon_nStrands != other.Tendon_nStrands)
+      return false;
+
+   if (!IsEqual(Tendon_fpe, other.Tendon_fpe))
+      return false;
+
+   if (!IsEqual(Tendon_Lu, other.Tendon_Lu))
+      return false;
+
+
    if (nSlices != other.nSlices)
       return false;
 
@@ -114,9 +150,6 @@ bool CM3CProblemParameters::operator==(const CM3CProblemParameters& other) const
       return false;
 
    if (!IsEqual(P, other.P))
-      return false;
-
-   if (!IsEqual(NASlope, other.NASlope))
       return false;
 
    return true;
@@ -137,6 +170,7 @@ HRESULT CM3CProblemParameters::Save(IStructuredSave* pStrSave)
    if (FAILED(hr))
       return hr;
 
+   // Confined Concrete Model
    hr = pStrSave->put_Property(_T("fco"), CComVariant(fco));
    if (FAILED(hr))
       return hr;
@@ -145,41 +179,6 @@ HRESULT CM3CProblemParameters::Save(IStructuredSave* pStrSave)
    if (FAILED(hr))
       return hr;
 
-   hr = pStrSave->put_Property(_T("R"), CComVariant(R));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->put_Property(_T("Cover"), CComVariant(Cover));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->put_Property(_T("As_per_bar"), CComVariant(As_per_bar));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->put_Property(_T("nBars"), CComVariant(nBars));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->put_Property(_T("fy"), CComVariant(fy));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->put_Property(_T("fu"), CComVariant(fu));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->put_Property(_T("Es"), CComVariant(Es));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->put_Property(_T("esh"), CComVariant(esh));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->put_Property(_T("efr"), CComVariant(efr));
-   if (FAILED(hr))
-      return hr;
 
    hr = pStrSave->put_Property(_T("AsSpiral"), CComVariant(AsSpiral));
    if (FAILED(hr))
@@ -201,6 +200,61 @@ HRESULT CM3CProblemParameters::Save(IStructuredSave* pStrSave)
    if (FAILED(hr))
       return hr;
 
+   // Reinforcement
+   hr = pStrSave->put_Property(_T("fy"), CComVariant(fy));
+   if (FAILED(hr))
+      return hr;
+
+   hr = pStrSave->put_Property(_T("fu"), CComVariant(fu));
+   if (FAILED(hr))
+      return hr;
+
+   hr = pStrSave->put_Property(_T("Es"), CComVariant(Es));
+   if (FAILED(hr))
+      return hr;
+
+   hr = pStrSave->put_Property(_T("esh"), CComVariant(esh));
+   if (FAILED(hr))
+      return hr;
+
+   hr = pStrSave->put_Property(_T("efr"), CComVariant(efr));
+   if (FAILED(hr))
+      return hr;
+
+   hr = pStrSave->put_Property(_T("Cover"), CComVariant(Cover));
+   if (FAILED(hr))
+      return hr;
+
+   hr = pStrSave->BeginUnit(_T("BondedReinforcement"), 1.0);
+   {
+      hr = pStrSave->put_Property(_T("As_per_bar"), CComVariant(Bonded_Rebar_As_per_bar));
+      if (FAILED(hr))
+         return hr;
+
+      hr = pStrSave->put_Property(_T("nBars"), CComVariant(Bonded_Rebar_nBars));
+      if (FAILED(hr))
+         return hr;
+   }
+   hr = pStrSave->EndUnit(); // BondedReinforcement
+
+
+   hr = pStrSave->BeginUnit(_T("UnbondedReinforcement"), 1.0);
+   {
+      hr = pStrSave->put_Property(_T("As_per_bar"), CComVariant(Unbonded_Rebar_As_per_bar));
+      if (FAILED(hr))
+         return hr;
+
+      hr = pStrSave->put_Property(_T("nBars"), CComVariant(Unbonded_Rebar_nBars));
+      if (FAILED(hr))
+         return hr;
+
+      hr = pStrSave->put_Property(_T("Lu"), CComVariant(Unbonded_Rebar_Lu));
+      if (FAILED(hr))
+         return hr;
+   }
+   hr = pStrSave->EndUnit(); // BondedReinforcement
+
+   // Controls
    hr = pStrSave->put_Property(_T("nSlices"), CComVariant(nSlices));
    if (FAILED(hr))
       return hr;
@@ -213,11 +267,7 @@ HRESULT CM3CProblemParameters::Save(IStructuredSave* pStrSave)
    if (FAILED(hr))
       return hr;
 
-   hr = pStrSave->put_Property(_T("NASlope"), CComVariant(NASlope));
-   if (FAILED(hr))
-      return hr;
-
-   hr = pStrSave->EndUnit();
+   hr = pStrSave->EndUnit(); // ProblemParameters
    if (FAILED(hr))
       return hr;
 
@@ -248,26 +298,31 @@ HRESULT CM3CProblemParameters::Load(IStructuredLoad* pStrLoad)
       return hr;
    eco = var.dblVal;
 
-   hr = pStrLoad->get_Property(_T("R"), &var);
+   hr = pStrLoad->get_Property(_T("AsSpiral"), &var);
    if (FAILED(hr))
       return hr;
-   R = var.dblVal;
+   AsSpiral = var.dblVal;
 
-   hr = pStrLoad->get_Property(_T("Cover"), &var);
+   hr = pStrLoad->get_Property(_T("db"), &var);
    if (FAILED(hr))
       return hr;
-   Cover = var.dblVal;
+   db = var.dblVal;
 
-   hr = pStrLoad->get_Property(_T("As_per_bar"), &var);
+   hr = pStrLoad->get_Property(_T("S"), &var);
    if (FAILED(hr))
       return hr;
-   As_per_bar = var.dblVal;
+   S = var.dblVal;
 
-   var.vt = VT_I4;
-   hr = pStrLoad->get_Property(_T("nBars"), &var);
+   hr = pStrLoad->get_Property(_T("FySpiral"), &var);
    if (FAILED(hr))
       return hr;
-   nBars = var.lVal;
+   FySpiral = var.dblVal;
+
+   hr = pStrLoad->get_Property(_T("esu"), &var);
+   if (FAILED(hr))
+      return hr;
+   esu = var.dblVal;
+
 
    var.vt = VT_R8;
    hr = pStrLoad->get_Property(_T("fy"), &var);
@@ -295,30 +350,46 @@ HRESULT CM3CProblemParameters::Load(IStructuredLoad* pStrLoad)
       return hr;
    efr = var.dblVal;
 
-   hr = pStrLoad->get_Property(_T("AsSpiral"), &var);
+   hr = pStrLoad->get_Property(_T("Cover"), &var);
    if (FAILED(hr))
       return hr;
-   AsSpiral = var.dblVal;
+   Cover = var.dblVal;
 
-   hr = pStrLoad->get_Property(_T("db"), &var);
-   if (FAILED(hr))
-      return hr;
-   db = var.dblVal;
+   hr = pStrLoad->BeginUnit(_T("BondedReinforcement"));
+   {
+      hr = pStrLoad->get_Property(_T("As_per_bar"), &var);
+      if (FAILED(hr))
+         return hr;
+      Bonded_Rebar_As_per_bar = var.dblVal;
 
-   hr = pStrLoad->get_Property(_T("S"), &var);
-   if (FAILED(hr))
-      return hr;
-   S = var.dblVal;
+      var.vt = VT_I4;
+      hr = pStrLoad->get_Property(_T("nBars"), &var);
+      if (FAILED(hr))
+         return hr;
+      Bonded_Rebar_nBars = var.lVal;
+   }
+   hr = pStrLoad->EndUnit(); // BondedReinforcement
 
-   hr = pStrLoad->get_Property(_T("FySpiral"), &var);
-   if (FAILED(hr))
-      return hr;
-   FySpiral = var.dblVal;
+   hr = pStrLoad->BeginUnit(_T("UnbondedReinforcement"));
+   {
+      hr = pStrLoad->get_Property(_T("As_per_bar"), &var);
+      if (FAILED(hr))
+         return hr;
+      Unbonded_Rebar_As_per_bar = var.dblVal;
 
-   hr = pStrLoad->get_Property(_T("esu"), &var);
-   if (FAILED(hr))
-      return hr;
-   esu = var.dblVal;
+      var.vt = VT_I4;
+      hr = pStrLoad->get_Property(_T("nBars"), &var);
+      if (FAILED(hr))
+         return hr;
+      Unbonded_Rebar_nBars = var.lVal;
+
+      var.vt = VT_R8;
+      hr = pStrLoad->get_Property(_T("Lu"), &var);
+      if (FAILED(hr))
+         return hr;
+      Unbonded_Rebar_Lu = var.dblVal;
+   }
+   hr = pStrLoad->EndUnit(); // UnbondedReinforcement
 
    var.vt = VT_I4;
    hr = pStrLoad->get_Property(_T("nSlices"), &var);
@@ -336,11 +407,6 @@ HRESULT CM3CProblemParameters::Load(IStructuredLoad* pStrLoad)
    if (FAILED(hr))
       return hr;
    P = var.dblVal;
-
-   hr = pStrLoad->get_Property(_T("NASlope"), &var);
-   if (FAILED(hr))
-      return hr;
-   NASlope = var.dblVal;
 
    hr = pStrLoad->EndUnit();
    if (FAILED(hr))

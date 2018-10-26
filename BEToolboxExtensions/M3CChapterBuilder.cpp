@@ -90,40 +90,57 @@ rptChapter* CM3CChapterBuilder::Build(CReportSpecification* pRptSpec, Uint16 lev
    rptRcTable* pTable = rptStyleManager::CreateDefaultTable(6);
    (*pLayoutTable)(0, 0) << pTable;
 
-   (*pTable)(0, 0) << COLHDR(symbol(varphi), rptPerLengthUnitTag, pDisplayUnits->Curvature);
-   (*pTable)(0, 1) << COLHDR(_T("M"), rptMomentUnitTag, pDisplayUnits->SmallMoment);
-   (*pTable)(0, 2) << Sub2(symbol(epsilon), _T("top left"));
-   (*pTable)(0, 3) << Sub2(symbol(epsilon), _T("top right"));
-   (*pTable)(0, 4) << Sub2(symbol(epsilon), _T("bottom left"));
-   (*pTable)(0, 5) << Sub2(symbol(epsilon), _T("bottom right"));
+   ColumnIndexType col = 0;
+   (*pTable)(0, col++) << COLHDR(_T("Curvature"), rptPerLengthUnitTag, pDisplayUnits->Curvature);
+   (*pTable)(0, col++) << COLHDR(_T("Moment"), rptMomentUnitTag, pDisplayUnits->SmallMoment);
+   (*pTable)(0, col++) << COLHDR(_T("Curvature"), rptPerLengthUnitTag, pDisplayUnits->Curvature);
+   (*pTable)(0, col++) << COLHDR(_T("Moment"), rptMomentUnitTag, pDisplayUnits->SmallMoment);
+   (*pTable)(0, col++) << COLHDR(_T("Curvature"), rptPerLengthUnitTag, pDisplayUnits->Curvature);
+   (*pTable)(0, col++) << COLHDR(_T("Moment"), rptMomentUnitTag, pDisplayUnits->SmallMoment);
 
-   RowIndexType row = pTable->GetNumberOfHeaderRows();
    IndexType nSolutionPoints;
    solution->get_PointCount(&nSolutionPoints);
-   for (IndexType i = 0; i < nSolutionPoints; i++)
+
+   RowIndexType row = pTable->GetNumberOfHeaderRows();
+   IndexType nRows = nSolutionPoints / 3;
+   for (IndexType r = 0; r < nRows; r++, row++)
    {
-      Float64 m, k;
-      solution->get_Moment(i, &m);
-      solution->get_Curvature(i, &k);
-
-      CComPtr<IPlane3d> strainPlane;
-      solution->get_StrainPlane(i, &strainPlane);
-      Float64 etl, etr, ebl, ebr;
-      strainPlane->GetZ(-radius, radius, &etl);
-      strainPlane->GetZ( radius, radius, &etr);
-      strainPlane->GetZ(-radius,-radius, &ebl);
-      strainPlane->GetZ( radius,-radius, &ebr);
-
-      ColumnIndexType col = 0;
-      (*pTable)(row, col++) << curvature.SetValue(k);
-      (*pTable)(row, col++) << moment.SetValue(m);
-      (*pTable)(row, col++) << etl;
-      (*pTable)(row, col++) << etr;
-      (*pTable)(row, col++) << ebl;
-      (*pTable)(row, col++) << ebr;
-
-      row++;
+      col = 0;
+      for (IndexType i = 0; i < 3; i++)
+      {
+         IndexType idx = row + i*nRows;
+         if (idx < nSolutionPoints)
+         {
+            Float64 m, k;
+            solution->get_Moment(idx, &m);
+            solution->get_Curvature(idx, &k);
+            (*pTable)(row, col++) << curvature.SetValue(k);
+            (*pTable)(row, col++) << moment.SetValue(m);
+         }
+         else
+         {
+            (*pTable)(row, col++) << _T("");
+            (*pTable)(row, col++) << _T("");
+         }
+      }
    }
+
+   //for (IndexType i = 0; i < nSolutionPoints; i++)
+   //{
+   //   Float64 m, k;
+   //   solution->get_Moment(i, &m);
+   //   solution->get_Curvature(i, &k);
+
+   //   ColumnIndexType col = 0;
+   //   (*pTable)(row, col++) << curvature.SetValue(k);
+   //   (*pTable)(row, col++) << moment.SetValue(m);
+   //   (*pTable)(row, col++) << etl;
+   //   (*pTable)(row, col++) << etr;
+   //   (*pTable)(row, col++) << ebl;
+   //   (*pTable)(row, col++) << ebr;
+
+   //   row++;
+   //}
 
 
    return pChapter;
@@ -159,7 +176,7 @@ rptRcImage* CM3CChapterBuilder::CreateImage(IMomentCurvatureSolution* pSolution)
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
    graph.SetGridPenStyle(GRAPH_GRID_PEN_STYLE, GRAPH_GRID_PEN_WEIGHT, GRAPH_GRID_COLOR);
 
-   graph.SetTitle(_T("Moment-Curvature Diagram"));
+   graph.SetTitle(_T("Moment-Curvature"));
 
    // Setup X-axis
    CString strCurvature;

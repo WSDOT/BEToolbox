@@ -45,6 +45,10 @@ public:
    void SetProblemParameters(const CM3CProblemParameters& parameters, BOOL bUpdate = TRUE);
    const CM3CProblemParameters& GetProblemParameters() const;
 
+   void GetConcreteModel(IStressStrain** ppConcrete) const;
+   void GetRebarModel(IStressStrain** ppRebar) const;
+   void GetStrandModel(IStressStrain** ppStrand) const;
+   void GetSection(IGeneralSection** ppSection) const;
    void GetMomentCurvature(IMomentCurvatureSolution** ppSolution) const;
 
 #ifdef _DEBUG
@@ -69,7 +73,8 @@ protected:
 
    afx_msg void OnRefreshReport();
    afx_msg void OnHelpFinder();
-	DECLARE_MESSAGE_MAP()
+   afx_msg void OnUpdateHelpFinder(CCmdUI* pUI);
+   DECLARE_MESSAGE_MAP()
 
    CM3CProblemParameters m_ProblemParams;
 
@@ -78,11 +83,25 @@ public:
    // over-ride default behavior by destroying column
    virtual void OnCloseDocument();
 
+   CReportBuilderManager m_RptMgr;
+protected:
+   virtual UINT GetToolbarID() override { return IDR_M3C; }
+   virtual void LoadToolbarResource() override;
+
+private:
    mutable bool m_bIsSolutionValid;
    mutable CComPtr<IMomentCurvatureSolution> m_Solution;
 
+   mutable bool m_bIsModelValid;
+   mutable CComPtr<IGeneralSection> m_Section;
+   mutable CComPtr<IStressStrain> m_Concrete;
+   mutable CComPtr<IStressStrain> m_Rebar;
+   mutable CComPtr<IStressStrain> m_Strand;
+
+   void InvalidateModel();
+   void ValidateModel() const;
    void BuildConcreteModel(IStressStrain** ppConcrete) const;
-   void BuildRebarModel(IStressStrain** ppSteel) const;
-   void BuildColumnSection(IGeneralSection** ppSection) const;
-   CReportBuilderManager m_RptMgr;
+   void BuildRebarModel(IStressStrain** ppRebar) const;
+   void BuildStrandModel(IStressStrain** ppStrand) const;
+   void BuildColumnModel(IGeneralSection** ppSection) const;
 };
