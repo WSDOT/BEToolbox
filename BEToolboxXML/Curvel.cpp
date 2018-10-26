@@ -23,7 +23,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "Curvel.h"
-#include <WBFLUnitServer\UnitServerUtils.h>
+#include <WBFLUnitServer\OpenBridgeML.h>
 #include "Helpers.h"
 
 #include <fstream>
