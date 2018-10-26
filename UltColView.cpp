@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -122,18 +122,16 @@ void CUltColView::OnInitialUpdate()
    CEAFReportView::OnInitialUpdate();
 
    // TODO: Add your specialized code here and/or call the base class
-   Float64 diameter, fc, cover, As, Es, fy, ecl, etl;
+   Float64 diameter, fc, cover, As, Es, fy;
    pDoc->m_Column->get_Diameter(&diameter);
    pDoc->m_Column->get_fc(&fc);
    pDoc->m_Column->get_Cover(&cover);
    pDoc->m_Column->get_As(&As);
    pDoc->m_Column->get_Es(&Es);
    pDoc->m_Column->get_fy(&fy);
-   ecl = pDoc->m_ecl;
-   etl = pDoc->m_etl;
 
    CUltColChildFrame* pFrame = (CUltColChildFrame*)GetParentFrame();
-   pFrame->SetColumnParameters(diameter, fc, cover, As, Es, fy, ecl, etl);
+   pFrame->SetColumnParameters(diameter, fc, cover, As, Es, fy);
 }
 
 void CUltColView::CreateEditButton()

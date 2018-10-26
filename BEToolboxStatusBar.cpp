@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@
 static UINT indicators[] =
 {
 	ID_SEPARATOR,           // status line indicator
-   ID_INDICATOR_MODIFIED,
+   EAFID_INDICATOR_MODIFIED,
    ID_INDICATOR_CAPS,
 	ID_INDICATOR_NUM,
 	ID_INDICATOR_SCRL,

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@
 #include <EAF\EAFAppPlugin.h>
 #include <System\ComCatMgr.h>
 
-#include <BridgeLinkCatCom.h>
+#include <BridgeLinkCATID.h>
 
 // Used to determine whether the DLL can be unloaded by OLE
 STDAPI DllCanUnloadNow(void)
@@ -51,15 +51,11 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 
 HRESULT Register(bool bRegister)
 {
-   HRESULT hr = sysComCatMgr::RegWithCategory(CLSID_BEToolboxComponentInfo,CATID_BridgeLinkComponents,bRegister);
+   HRESULT hr = sysComCatMgr::RegWithCategory(CLSID_BEToolboxComponentInfo,CATID_BridgeLinkComponentInfo,bRegister);
    if ( FAILED(hr) )
       return hr;
 
-   //hr = sysComCatMgr::RegWithCategory(CLSID_BEToolboxPlugin, CATID_BridgeLink, bRegister); // prototype
-   //if ( FAILED(hr) )
-   //   return hr;
-
-   hr = sysComCatMgr::RegWithCategory(CLSID_BEToolboxPlugin, CATID_BridgeLinkAppPlugin, bRegister); // PGSuper
+   hr = sysComCatMgr::RegWithCategory(CLSID_BEToolboxPlugin, CATID_BridgeLinkAppPlugin, bRegister);
    if ( FAILED(hr) )
       return hr;
 

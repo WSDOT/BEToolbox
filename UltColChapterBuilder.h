@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -44,5 +44,5 @@ private:
    // Delete them in the destructor
    std::vector<std::_tstring> m_TemporaryFiles;
 
-   rptRcImage* CreateImage(IPoint2dCollection* unfactored,IPoint2dCollection* factored) const;
+   rptRcImage* CreateImage(IPoint2dCollection* points) const;
 };

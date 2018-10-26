@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -281,10 +281,7 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
    graph.SetGridPenStyle(PS_DOT, 1, GRID_COLOR);
 
-#if 400 <= _WBFL_VERSION
    graph.SetIsotropicAxes(true);
-#endif 
-
    graph.SetDoDrawGrid(true);
    graph.DrawLegend(false);
 

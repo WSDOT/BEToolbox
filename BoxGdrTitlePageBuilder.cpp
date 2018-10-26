@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -28,11 +28,6 @@
 
 
 CBoxGdrTitlePageBuilder::CBoxGdrTitlePageBuilder(void)
-{
-}
-
-CBoxGdrTitlePageBuilder::CBoxGdrTitlePageBuilder(const CBoxGdrTitlePageBuilder& other) :
-CTitlePageBuilder(other)
 {
 }
 
@@ -86,9 +81,4 @@ rptChapter* CBoxGdrTitlePageBuilder::Build(boost::shared_ptr<CReportSpecificatio
    *pPara << rptRcImage(GetImagePath() + _T("BoxGdr.png"));
 
    return pTitlePage;
-}
-
-CTitlePageBuilder* CBoxGdrTitlePageBuilder::Clone() const
-{
-   return new CBoxGdrTitlePageBuilder(*this);
 }

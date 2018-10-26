@@ -21,7 +21,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="\ARP\PGSuper\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="\ARP\$(SolutionName)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
@@ -34,6 +34,10 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying BEToolbox Tip of the Day file to BridgeLink"
+				CommandLine="xcopy /y/d BEToolbox.tip \ARP\BridgeLink\&#x0D;&#x0A;"
+				AdditionalDependencies="\ARP\BridgeLink\BEToolbox.tip"
+				Outputs="\ARP\BridgeLink\BEToolbox.tip"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -57,9 +61,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="\ARP\PGSuper;..\Include;\ARP\PGSuper\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
+				AdditionalIncludeDirectories="\ARP\$(SolutionName);..\Include;\ARP\$(SolutionName)\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF"
-				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -67,7 +70,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\vc.pdb"
 				WarningLevel="3"
-				DebugInformationFormat="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -114,13 +116,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying Images to PGSuper\Image folder"
-				CommandLine="copy $(ProjectDir)Images\*.png \ARP\PGSuper\Images"
+				Description="Copying Images to $(SolutionName)\Image folder"
+				CommandLine="copy $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="\ARP\PGSuper\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="\ARP\$(SolutionName)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
@@ -133,6 +135,10 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying BEToolbox Tip of the Day file to BridgeLink"
+				CommandLine="xcopy /y/d BEToolbox.tip \ARP\BridgeLink\&#x0D;&#x0A;"
+				AdditionalDependencies="\ARP\BridgeLink\BEToolbox.tip"
+				Outputs="\ARP\BridgeLink\BEToolbox.tip"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -155,9 +161,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="\ARP\PGSuper;..\Include;\ARP\PGSuper\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
+				AdditionalIncludeDirectories="\ARP\$(SolutionName);..\Include;\ARP\$(SolutionName)\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF"
-				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -165,7 +170,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\vc.pdb"
 				WarningLevel="3"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -212,13 +216,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying Images to PGSuper\Image folder"
-				CommandLine="copy $(ProjectDir)Images\*.png \ARP\PGSuper\Images"
+				Description="Copying Images to $(SolutionName)\Image folder"
+				CommandLine="copy $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="\ARP\PGSuper\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="\ARP\$(SolutionName)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
@@ -231,6 +235,10 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying BEToolbox Tip of the Day file to BridgeLink"
+				CommandLine="xcopy /y/d BEToolbox.tip \ARP\BridgeLink\&#x0D;&#x0A;"
+				AdditionalDependencies="\ARP\BridgeLink\BEToolbox.tip"
+				Outputs="\ARP\BridgeLink\BEToolbox.tip"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -254,7 +262,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="\ARP\PGSuper;..\Include;\ARP\PGSuper\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
+				AdditionalIncludeDirectories="\ARP\$(SolutionName);..\Include;\ARP\$(SolutionName)\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -262,7 +270,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\vc.pdb"
 				WarningLevel="3"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -284,7 +291,6 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 				ModuleDefinitionFile=".\BEToolbox.def"
-				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -311,13 +317,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying Images to PGSuper\Image folder"
-				CommandLine="copy $(ProjectDir)Images\*.png \ARP\PGSuper\Images"
+				Description="Copying Images to $(SolutionName)\Image folder"
+				CommandLine="copy $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="\ARP\PGSuper\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="\ARP\$(SolutionName)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
@@ -330,6 +336,10 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying BEToolbox Tip of the Day file to BridgeLink"
+				CommandLine="xcopy /y/d BEToolbox.tip \ARP\BridgeLink\&#x0D;&#x0A;"
+				AdditionalDependencies="\ARP\BridgeLink\BEToolbox.tip"
+				Outputs="\ARP\BridgeLink\BEToolbox.tip"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -352,7 +362,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="\ARP\PGSuper;..\Include;\ARP\PGSuper\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
+				AdditionalIncludeDirectories="\ARP\$(SolutionName);..\Include;\ARP\$(SolutionName)\Include;\ARP\$(SolutionName)\Include\$(PlatformName);\ARP\WBFL\Include;\ARP\WBFL\Include\$(PlatformName)"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -360,7 +370,6 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\vc.pdb"
 				WarningLevel="3"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -382,7 +391,6 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)"
 				ModuleDefinitionFile=".\BEToolbox.def"
-				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -409,8 +417,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Copying Images to PGSuper\Image folder"
-				CommandLine="copy $(ProjectDir)Images\*.png \ARP\PGSuper\Images"
+				Description="Copying Images to $(SolutionName)\Image folder"
+				CommandLine="copy $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
 			/>
 		</Configuration>
 	</Configurations>
@@ -1140,6 +1148,10 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\BEToolbox.tip"
+			>
+		</File>
 	</Files>
 	<Globals>
 		<Global

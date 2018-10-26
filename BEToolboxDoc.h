@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2016  Washington State Department of Transportation
+// Copyright © 1999-2013  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -58,8 +58,6 @@ public:
    virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
    virtual BOOL OpenOldFormat(LPCTSTR lpszPathName);
    virtual void OnCloseDocument();
-   virtual CString GetRootNodeName();
-   virtual Float64 GetRootNodeVersion();
 
 protected:
    CEAFToolBar* m_pMyToolBar;
