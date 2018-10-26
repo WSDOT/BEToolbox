@@ -30,11 +30,6 @@
 #include "ExampleToolView.h"
 #include "ExampleToolChildFrame.h"
 
-#include "M3CDocTemplate.h"
-#include "M3CDoc.h"
-#include "M3CView.h"
-#include "M3CChildFrame.h"
-
 // {23CFD70B-F121-4122-821B-806F9685BE1A}
 DEFINE_GUID(CLSID_ExampleTool,
    0x23cfd70b, 0xf121, 0x4122, 0x82, 0x1b, 0x80, 0x6f, 0x96, 0x85, 0xbe, 0x1a);
@@ -44,14 +39,3 @@ public:
    virtual CString GetName() const override { return _T("ExampleTool"); }
 };
 OBJECT_ENTRY_AUTO(CLSID_ExampleTool, CExampleTool)
-
-
-// {DACA33E6-D45C-4FBA-B04F-50F0A7A8E132}
-DEFINE_GUID(CLSID_M3CTool,
-   0xdaca33e6, 0xd45c, 0x4fba, 0xb0, 0x4f, 0x50, 0xf0, 0xa7, 0xa8, 0xe1, 0x32);
-class CM3CTool : public CToolImpl<CM3CTool, &CLSID_M3CTool, IDR_M3CTOOL, CM3CDoc, CM3CChildFrame, CM3CView, CM3CDocTemplate, IDR_M3C>
-{
-public:
-   virtual CString GetName() const override { return _T("M3C"); }
-};
-OBJECT_ENTRY_AUTO(CLSID_M3CTool, CM3CTool)

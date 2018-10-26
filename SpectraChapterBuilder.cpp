@@ -251,9 +251,9 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pTable)(6,1) << _T("2.4");
    (*pTable)(6,2) << _T("1.7");
    (*pTable)(6,3) << _T("1.3");
-   (*pTable)(6,4) << _T("*");
-   (*pTable)(6,5) << _T("*");
-   (*pTable)(6,6) << _T("*");
+   (*pTable)(6,4) << _T("1.0");
+   (*pTable)(6,5) << _T("0.9");
+   (*pTable)(6,6) << _T("0.9");
 
    (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and ") << Sub2(_T("S"),_T("s")) << _T(" = ") << scalar.SetValue(spectra.GetSs()) << _T(", ") << Sub2(_T("F"),_T("a")) << _T(" = ") << scalar.SetValue(spectra.GetFa()) << rptNewLine;
    (*pPara) << rptNewLine;

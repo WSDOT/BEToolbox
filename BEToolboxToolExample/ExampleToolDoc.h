@@ -53,6 +53,8 @@ protected:
    virtual void SaveDocumentSettings() override;
 
    virtual CString GetDocumentationRootLocation() override;
+   virtual CString GetDocumentationSetName() override;
+   virtual CString GetDocumentationURL() override;
 
    afx_msg void OnHelpFinder();
 	DECLARE_MESSAGE_MAP()
@@ -61,6 +63,7 @@ public:
    // over-ride default behavior by destroying column
    virtual void OnCloseDocument() override;
 
-private:
-   CEAFToolBar* m_pMyToolBar;
+protected:
+   virtual UINT GetToolbarID() override;
+   virtual void LoadToolbarResource() override;
 };

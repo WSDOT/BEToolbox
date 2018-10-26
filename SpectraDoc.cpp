@@ -112,7 +112,7 @@ BOOL CSpectraDoc::Init()
    if ( !LoadSpectralData() )
       return FALSE;
 
-   // Zero Period Site Factors - Table 3.4.2.3-1
+   // Zero Period Site Factors (Fpga) - Table 3.4.2.3-1 (BDM Table 3.4.2.3-1A)
    {
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteA->AddPoint(0.1,0.8);
@@ -163,7 +163,7 @@ BOOL CSpectraDoc::Init()
    }
 
    {
-      // Short Period Site Factors - Table 3.4.2.3-1
+      // Short Period Site Factors (Fa for 0.2 sec period spectral acceleration) - Table 3.4.2.3-1 (BDM Table 3.4.2.3-1B)
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteA->AddPoint(0.25,0.8);
       // all points are the same so we don't actually need to add them
@@ -206,14 +206,14 @@ BOOL CSpectraDoc::Init()
       siteE->AddPoint(0.25,2.4);
       siteE->AddPoint(0.50,1.7);
       siteE->AddPoint(0.75,1.3);
-      //siteE->AddPoint(1.00,0.9); // need site specific values
-      //siteE->AddPoint(1.25,0.9);
-      //siteE->AddPoint(1.50,0.9);
+      siteE->AddPoint(1.00,1.0);
+      siteE->AddPoint(1.25,0.9);
+      siteE->AddPoint(1.50,0.9);
       m_ShortPeriodSiteFactors.push_back(siteE);
    }
 
    {
-      // Long Period Site Factors - Table 3.10.3.2-3
+      // Long Period Site Factors (Fv for 1.0 sec period spectral acceleration) - Table 3.10.3.2-3 (BDM Table 3.4.2.3.2)
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteA->AddPoint(0.1,0.8);
       // all points are the same so we don't actually need to add them

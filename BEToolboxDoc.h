@@ -67,6 +67,7 @@ protected:
    virtual void OnOldFormat(LPCTSTR lpszPathName);
 
    virtual UINT GetToolbarID();
+   virtual void LoadToolbarResource();
    virtual HINSTANCE GetResourceInstance() override;
    virtual void UpdateApplicationIcon() override;
    virtual void ResetApplicationIcon() override;

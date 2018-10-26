@@ -507,6 +507,7 @@ void CPGStablePrismaticGirder::OnGirderChanged()
    GetDlgItem(IDC_IY)->EnableWindow(bEnable);
    GetDlgItem(IDC_IXY)->EnableWindow(bEnable);
    GetDlgItem(IDC_YTOP)->EnableWindow(bEnable);
+   GetDlgItem(IDC_XLEFT)->EnableWindow(bEnable);
    GetDlgItem(IDC_DRAG_COEFFICIENT)->EnableWindow(bEnable);
 
    if ( !bEnable )
@@ -555,6 +556,7 @@ void CPGStablePrismaticGirder::OnGirderChanged()
       DDX_UnitValueAndTag(&dx, IDC_IY, IDC_IY_UNIT, Iyy, pDispUnits->MomentOfInertia);
       DDX_UnitValueAndTag(&dx, IDC_IXY, IDC_IXY_UNIT, Ixy, pDispUnits->MomentOfInertia);
       DDX_UnitValueAndTag(&dx, IDC_YTOP, IDC_YTOP_UNIT, Ytop, pDispUnits->ComponentDim);
+      DDX_UnitValueAndTag(&dx, IDC_XLEFT, IDC_XLEFT_UNIT, Xleft, pDispUnits->ComponentDim);
       DDX_Text(&dx,IDC_DRAG_COEFFICIENT,Cd);
 
       InitStressPoints(Wtf, Wbf, Ytop, Hg);

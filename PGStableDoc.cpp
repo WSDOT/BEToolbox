@@ -84,7 +84,13 @@ CPGStableDoc::~CPGStableDoc()
 
 
 BEGIN_MESSAGE_MAP(CPGStableDoc, CBEToolboxDoc)
+   ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
 END_MESSAGE_MAP()
+
+void CPGStableDoc::OnHelpFinder()
+{
+   EAFHelp(EAFGetDocument()->GetDocumentationSetName(), IDH_PGSTABLE);
+}
 
 // CPGStableDoc diagnostics
 

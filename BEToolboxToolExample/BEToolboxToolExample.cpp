@@ -15,6 +15,8 @@
 #include <WBFLGeometry_i.c>
 #include <WBFLUnitServer_i.c>
 
+#include <DManip\DManip.h>
+
 #include "Tools.h"
 
 using namespace ATL;
@@ -26,13 +28,6 @@ HRESULT Register(bool bRegister)
    HRESULT hr = S_OK;
 
    hr = sysComCatMgr::RegWithCategory(CLSID_ExampleTool, CATID_BEToolboxTool, bRegister);
-   if (FAILED(hr))
-   {
-      return hr;
-   }
-
-
-   hr = sysComCatMgr::RegWithCategory(CLSID_M3CTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;
