@@ -234,6 +234,9 @@
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CustomBuildStep>
@@ -289,6 +292,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
@@ -343,6 +349,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CustomBuildStep>
@@ -396,6 +405,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
     <CustomBuildStep>
