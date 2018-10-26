@@ -73,8 +73,8 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->WindPressure);
    }
 
-   bool bPlumbGirderStresses = problem.EvaluateStressesForPlumbGirder();
-   DDX_CBItemData(pDX,IDC_STRESSES,bPlumbGirderStresses);
+   bool bEvaluateStressesAtEquilibriumAngle = problem.EvaluateStressesAtEquilibriumAngle();
+   DDX_CBItemData(pDX,IDC_STRESSES,bEvaluateStressesAtEquilibriumAngle);
 
    Float64 L;
    problem.GetSupportLocations(&L,&L);
@@ -209,7 +209,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
       problem.SetWindLoading(windLoadType,windLoad);
 
-      problem.EvaluateStressesForPlumbGirder(bPlumbGirderStresses);
+      problem.EvaluateStressesAtEquilibriumAngle(bEvaluateStressesAtEquilibriumAngle);
 
       problem.SetYRollAxis(Yra);
 
@@ -467,8 +467,8 @@ void CPGStableLiftingView::OnInitialUpdate()
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbStresses = (CComboBox*)GetDlgItem(IDC_STRESSES);
-   pcbStresses->SetItemData(pcbStresses->AddString(_T("tilted girder")),(DWORD_PTR)false);
-   pcbStresses->SetItemData(pcbStresses->AddString(_T("plumb girder")),(DWORD_PTR)true);
+   pcbStresses->SetItemData(pcbStresses->AddString(_T("Include girder stability equilibrium angle in stress calculations")), (DWORD_PTR)true);
+   pcbStresses->SetItemData(pcbStresses->AddString(_T("Ignore girder stability equilibrium angle in stress calculations")), (DWORD_PTR)false);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)stbTypes::Speed);
