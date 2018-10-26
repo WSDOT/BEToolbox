@@ -75,7 +75,7 @@ void CCurvelReportWizardStep2::DoDataExchange(CDataExchange* pDX)
    {
       std::_tstring strUnitTag = pDisplayUnits->AlignmentLength.UnitOfMeasure.UnitTag();
       CString strSlopeUnit;
-      strSlopeUnit.Format(_T("%s\\%s"),strUnitTag.c_str(),strUnitTag.c_str());
+      strSlopeUnit.Format(_T("%s/%s"),strUnitTag.c_str(),strUnitTag.c_str());
       GetDlgItem(IDC_LEFT_SLOPE_UNIT_1)->SetWindowText(strSlopeUnit);
       GetDlgItem(IDC_RIGHT_SLOPE_UNIT_1)->SetWindowText(strSlopeUnit);
       GetDlgItem(IDC_LEFT_SLOPE_UNIT_2)->SetWindowText(strSlopeUnit);
