@@ -183,19 +183,18 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    if ( bCorrectForSuperelevation )
    {
-      Float64 cpo;
-      m_Profile->CrownPointOffset(CComVariant(bvcStation),&cpo);
-      (*pTable)(row,col++) << RPT_OFFSET(cpo+profileGradeOffset,alignment);
+      Float64 offset = 0.0; // elevations computed at this offset from the alignment
+      (*pTable)(row,col++) << RPT_OFFSET(offset,alignment);
 
       Float64 elevation;
-      m_Profile->Elevation(CComVariant(bvcStation),cpo,&elevation);
+      m_Profile->Elevation(CComVariant(bvcStation),offset,&elevation);
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->LeftCrownSlope(CComVariant(bvcStation),&slope);
-      (*pTable)(row,col++) << scalar.SetValue(slope);
+      m_Profile->TemplateSegmentSlope(CComVariant(bvcStation),1,&slope);
+      (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->RightCrownSlope(CComVariant(bvcStation),&slope);
+      m_Profile->TemplateSegmentSlope(CComVariant(bvcStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -223,19 +222,18 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    if ( bCorrectForSuperelevation )
    {
-      Float64 cpo;
-      m_Profile->CrownPointOffset(CComVariant(evcStation),&cpo);
-      (*pTable)(row,col++) << RPT_OFFSET(cpo+profileGradeOffset,alignment);
+      Float64 offset = 0.0; // elevations computed at this offset from the alignment
+      (*pTable)(row,col++) << RPT_OFFSET(offset,alignment);
 
       Float64 elevation;
-      m_Profile->Elevation(CComVariant(evcStation),cpo,&elevation);
+      m_Profile->Elevation(CComVariant(evcStation),offset,&elevation);
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->LeftCrownSlope(CComVariant(evcStation),&slope);
-      (*pTable)(row,col++) << scalar.SetValue(slope);
+      m_Profile->TemplateSegmentSlope(CComVariant(evcStation),1,&slope);
+      (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->RightCrownSlope(CComVariant(evcStation),&slope);
+      m_Profile->TemplateSegmentSlope(CComVariant(evcStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -263,19 +261,18 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    if ( bCorrectForSuperelevation )
    {
-      Float64 cpo;
-      m_Profile->CrownPointOffset(CComVariant(lpStation),&cpo);
-      (*pTable)(row,col++) << RPT_OFFSET(cpo+profileGradeOffset,alignment);
+      Float64 offset = 0.0; // elevations computed at this offset from the alignment
+      (*pTable)(row,col++) << RPT_OFFSET(offset,alignment);
 
       Float64 elevation;
-      m_Profile->Elevation(CComVariant(lpStation),cpo,&elevation);
+      m_Profile->Elevation(CComVariant(lpStation),offset,&elevation);
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->LeftCrownSlope(CComVariant(lpStation),&slope);
-      (*pTable)(row,col++) << scalar.SetValue(slope);
+      m_Profile->TemplateSegmentSlope(CComVariant(lpStation),1,&slope);
+      (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->RightCrownSlope(CComVariant(lpStation),&slope);
+      m_Profile->TemplateSegmentSlope(CComVariant(lpStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -302,19 +299,18 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    if ( bCorrectForSuperelevation )
    {
-      Float64 cpo;
-      m_Profile->CrownPointOffset(CComVariant(hpStation),&cpo);
-      (*pTable)(row,col++) << RPT_OFFSET(cpo+profileGradeOffset,alignment);
+      Float64 offset = 0.0; // elevations computed at this offset from the alignment
+      (*pTable)(row,col++) << RPT_OFFSET(offset,alignment);
 
       Float64 elevation;
-      m_Profile->Elevation(CComVariant(hpStation),cpo,&elevation);
+      m_Profile->Elevation(CComVariant(hpStation),offset,&elevation);
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->LeftCrownSlope(CComVariant(hpStation),&slope);
-      (*pTable)(row,col++) << scalar.SetValue(slope);
+      m_Profile->TemplateSegmentSlope(CComVariant(hpStation),1,&slope);
+      (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->RightCrownSlope(CComVariant(hpStation),&slope);
+      m_Profile->TemplateSegmentSlope(CComVariant(hpStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -357,7 +353,7 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
          (*pTable)(row,col++) << rptRcStation(station.Station,&pDispUnits->StationFormat);
 
          Float64 elevation;
-         m_Profile->Elevation(CComVariant(station.Station),0.0,&elevation);
+         m_Profile->Elevation(CComVariant(station.Station),profileGradeOffset,&elevation);
          (*pTable)(row,col++) << alignment.SetValue(elevation);
 
          Float64 grade;
@@ -366,18 +362,16 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
          if ( bCorrectForSuperelevation )
          {
-            Float64 cpo;
-            m_Profile->CrownPointOffset(CComVariant(station.Station),&cpo);
-            (*pTable)(row,col++) << RPT_OFFSET(cpo+profileGradeOffset+station.Offset,alignment);
+            (*pTable)(row,col++) << RPT_OFFSET(station.Offset,alignment);
 
-            m_Profile->Elevation(CComVariant(station.Station),cpo+station.Offset,&elevation);
+            m_Profile->Elevation(CComVariant(station.Station),station.Offset,&elevation);
             (*pTable)(row,col++) << alignment.SetValue(elevation);
 
             Float64 slope;
-            m_Profile->LeftCrownSlope(CComVariant(station.Station),&slope);
-            (*pTable)(row,col++) << scalar.SetValue(slope);
+            m_Profile->TemplateSegmentSlope(CComVariant(station.Station),1,&slope);
+            (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-            m_Profile->RightCrownSlope(CComVariant(station.Station),&slope);
+            m_Profile->TemplateSegmentSlope(CComVariant(station.Station),2,&slope);
             (*pTable)(row,col++) << scalar.SetValue(slope);
          }
       }
@@ -395,29 +389,27 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
             (*pTable)(row,col++) << rptRcStation(station,&pDispUnits->StationFormat);
 
             Float64 elevation;
-            m_Profile->Elevation(CComVariant(station),0.0,&elevation);
+            m_Profile->Elevation(CComVariant(station),profileGradeOffset,&elevation);
             (*pTable)(row,col++) << alignment.SetValue(elevation);
 
             Float64 grade;
             m_Profile->Grade(CComVariant(station),&grade);
             (*pTable)(row,col++) << scalar.SetValue(grade*100);
 
-            if ( bCorrectForSuperelevation )
+           if ( bCorrectForSuperelevation )
             {
-               Float64 cpo;
-               m_Profile->CrownPointOffset(CComVariant(station),&cpo);
-               (*pTable)(row,col++) << RPT_OFFSET(cpo+profileGradeOffset+range.Offset,alignment);
+               (*pTable)(row,col++) << RPT_OFFSET(range.Offset,alignment);
 
-               m_Profile->Elevation(CComVariant(station),cpo+range.Offset,&elevation);
+               m_Profile->Elevation(CComVariant(station),range.Offset,&elevation);
                (*pTable)(row,col++) << alignment.SetValue(elevation);
 
                Float64 slope;
-               m_Profile->LeftCrownSlope(CComVariant(station),&slope);
-               (*pTable)(row,col++) << scalar.SetValue(slope);
+               m_Profile->TemplateSegmentSlope(CComVariant(station),1,&slope);
+               (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-               m_Profile->RightCrownSlope(CComVariant(station),&slope);
+               m_Profile->TemplateSegmentSlope(CComVariant(station),2,&slope);
                (*pTable)(row,col++) << scalar.SetValue(slope);
-            }
+           }
          }
       }
    }
@@ -520,15 +512,13 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
          Float64 offsetDistance;
          m_Alignment->Offset(offsetPoint,&offsetStation,&offsetDistance);
 
-        // ATLASSERT(IsEqual(offsetDistance,skewLine.Offset-skewLine.CrownOffset));
-
          Float64 offsetStationValue;
          offsetStation->get_Value(&offsetStationValue);
 
          (*pTable)(row,col++) << rptRcStation(offsetStationValue,&pDispUnits->StationFormat);
 
          Float64 elevation;
-         m_Profile->Elevation(CComVariant(offsetStation),0.0,&elevation);
+         m_Profile->Elevation(CComVariant(offsetStation),profileGradeOffset,&elevation);
          (*pTable)(row,col++) << alignment.SetValue(elevation);
 
          Float64 grade;
@@ -537,14 +527,14 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
          (*pTable)(row,col++) << RPT_OFFSET(offsetDistance+skewLine.CrownOffset,alignment);
 
-         m_Profile->Elevation(CComVariant(offsetStation),offsetDistance+skewLine.CrownOffset-profileGradeOffset,&elevation);
+         m_Profile->Elevation(CComVariant(offsetStation),offsetDistance+skewLine.CrownOffset,&elevation);
          (*pTable)(row,col++) << alignment.SetValue(elevation);
 
          Float64 slope;
-         m_Profile->LeftCrownSlope(CComVariant(offsetStation),&slope);
-         (*pTable)(row,col++) << scalar.SetValue(slope);
+         m_Profile->TemplateSegmentSlope(CComVariant(offsetStation),1,&slope);
+         (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-         m_Profile->RightCrownSlope(CComVariant(offsetStation),&slope);
+         m_Profile->TemplateSegmentSlope(CComVariant(offsetStation),2,&slope);
          (*pTable)(row,col++) << scalar.SetValue(slope);
       }
    }
@@ -560,12 +550,10 @@ CChapterBuilder* CCurvelChapterBuilder::Clone() const
 void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
 {
    m_Alignment.Release();
-   m_Path.Release();
    m_Profile.Release();
 
    m_Alignment.CoCreateInstance(CLSID_Alignment);
-   m_Alignment.QueryInterface(&m_Path);
-   m_Path->get_Profile(&m_Profile);
+   m_Alignment->get_Profile(&m_Profile);
 
    // Build the profile
    CComPtr<IVertCurve> vertCurve;
@@ -605,20 +593,110 @@ void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
 
    Float64 profileGradeOffset = pRptSpec->GetProfileGradeOffset();
 
-   // Superelevation
-   CComPtr<ICrossSectionCollection> crossSections;
-   m_Profile->get_CrossSections(&crossSections);
+   // Create the roadway surface model
+   CComPtr<ISurfaceCollection> surfaces;
+   m_Profile->get_Surfaces(&surfaces);
+
+   CComPtr<ISurface> surface;
+   surface.CoCreateInstance(CLSID_Surface);
+   surfaces->Add(surface);
+
+   CComPtr<ISurfaceTemplateCollection> templates;
+   surface->get_SurfaceTemplates(&templates);
+
+   surface->put_AlignmentPoint(2);
+   if ( 0 < profileGradeOffset )
+      surface->put_ProfileGradePoint(3);
+   else if ( profileGradeOffset < 0 )
+      surface->put_ProfileGradePoint(1);
+   else
+      surface->put_ProfileGradePoint(2);
+
+   // determine the size of the surface
+   Float64 minStation = DBL_MAX;
+   Float64 maxStation = -DBL_MAX;
+   Float64 width = 0;
+   const std::vector<IndividualStation>& stations(pRptSpec->GetIndividualStations());
+   std::vector<IndividualStation>::const_iterator isIter(stations.begin());
+   std::vector<IndividualStation>::const_iterator isIterEnd(stations.end());
+   for ( ; isIter != isIterEnd; isIter++ )
+   {
+      const IndividualStation& station(*isIter);
+      minStation = min(minStation,station.Station);
+      maxStation = max(maxStation,station.Station);
+      width = max(width,fabs(station.Offset));
+   }
+
+   const std::vector<StationRange>& ranges(pRptSpec->GetStationRanges());
+   std::vector<StationRange>::const_iterator rangeIter(ranges.begin());
+   std::vector<StationRange>::const_iterator rangeIterEnd(ranges.end());
+   for ( ; rangeIter != rangeIterEnd; rangeIter++ )
+   {
+      const StationRange& range(*rangeIter);
+      minStation = min(minStation,range.StartStation);
+      maxStation = max(maxStation,range.EndStation);
+      width = max(width,fabs(range.Offset));
+   }
+   
+   const std::vector<SkewLine>& skewLines(pRptSpec->GetSkewLines());
+   std::vector<SkewLine>::const_iterator skewIter(skewLines.begin());
+   std::vector<SkewLine>::const_iterator skewIterEnd(skewLines.end());
+   for ( ; skewIter != skewIterEnd; skewIter++ )
+   {
+      const SkewLine& skew(*skewIter);
+      minStation = min(minStation,skew.Station);
+      maxStation = max(maxStation,skew.Station);
+      width = max(width,fabs(skew.Offset));
+   }
+
+   // vertical curve stations
+   minStation = min(minStation,pbgStation);
+   maxStation = max(maxStation,pfgStation);
+
+   // expand the surface so it will fit without question
+   minStation /= 2;
+   maxStation *= 2;
+   width *= 2;
 
    for ( IndexType i = 0; i < 3; i++ )
    {
       SuperelevationProfilePoint superelevationPoint = pRptSpec->GetSuperelevationPoint(i);
 
-      CComPtr<ICrossSection> cs;
-      crossSections->Add(CComVariant(superelevationPoint.Station),
-              -profileGradeOffset,
-              superelevationPoint.LeftSlope,
-              superelevationPoint.RightSlope,
-              &cs);
+      if ( i == 0 )
+      {
+         CComPtr<ISurfaceTemplate> surfaceTemplate;
+         surfaceTemplate.CoCreateInstance(CLSID_SurfaceTemplate);
+         surfaceTemplate->put_Station(CComVariant(minStation));
+         surfaceTemplate->AddSegment(width,-superelevationPoint.LeftSlope,tsHorizontal);
+         surfaceTemplate->AddSegment(fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
+         surfaceTemplate->AddSegment(fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
+         surfaceTemplate->AddSegment(width, superelevationPoint.RightSlope,tsHorizontal);
+
+         templates->Add(surfaceTemplate);
+      }
+
+      CComPtr<ISurfaceTemplate> surfaceTemplate;
+      surfaceTemplate.CoCreateInstance(CLSID_SurfaceTemplate);
+      surfaceTemplate->put_Station(CComVariant(superelevationPoint.Station));
+      surfaceTemplate->AddSegment(width,-superelevationPoint.LeftSlope,tsHorizontal);
+      surfaceTemplate->AddSegment(fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
+      surfaceTemplate->AddSegment(fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
+      surfaceTemplate->AddSegment(width, superelevationPoint.RightSlope,tsHorizontal);
+
+      templates->Add(surfaceTemplate);
+
+      if ( i == 2 )
+      {
+         CComPtr<ISurfaceTemplate> surfaceTemplate;
+         surfaceTemplate.CoCreateInstance(CLSID_SurfaceTemplate);
+         surfaceTemplate->put_Station(CComVariant(maxStation));
+         surfaceTemplate->AddSegment(width,-superelevationPoint.LeftSlope,tsHorizontal);
+         surfaceTemplate->AddSegment(fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
+         surfaceTemplate->AddSegment(fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
+         surfaceTemplate->AddSegment(width, superelevationPoint.RightSlope,tsHorizontal);
+
+         templates->Add(surfaceTemplate);
+      }
    }
 }
 

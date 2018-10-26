@@ -96,6 +96,18 @@ CString CGenCompDoc::GetToolbarSectionName()
    return _T("GenComp");
 }
 
+BOOL CGenCompDoc::OnNewDocument()
+{
+   if ( !CBEToolboxDoc::OnNewDocument() )
+      return FALSE;
+
+   m_GenCompXML = CreateGenCompModel();
+   if ( m_GenCompXML.get() == NULL )
+      return FALSE;
+
+   return TRUE;
+}
+
 BOOL CGenCompDoc::OpenTheDocument(LPCTSTR lpszPathName)
 {
    m_GenCompXML = CreateGenCompModel(lpszPathName,m_DocConvert);

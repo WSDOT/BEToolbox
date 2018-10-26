@@ -50,6 +50,5 @@ private:
    void Init(CCurvelReportSpecification* pRptSpec) const;
    void UpdateAlignment(const SkewLine& skewLine) const;
    mutable CComPtr<IAlignment> m_Alignment;
-   mutable CComPtr<IPath> m_Path;
    mutable CComPtr<IProfile> m_Profile;
 };

@@ -60,8 +60,8 @@ IDR_GENCOMP_10_TO_20_XSLT  XSLTFILE    "GenComp_Version_1.0_to_Version_2.0.xslt"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,2
- PRODUCTVERSION 3,0,0,2
+ FILEVERSION 3,0,0,3
+ PRODUCTVERSION 3,0,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -79,12 +79,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolboxXML"
-            VALUE "FileVersion", "3.0.0.2"
+            VALUE "FileVersion", "3.0.0.3"
             VALUE "InternalName", "BEToolboxXML.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2013, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolboxXML.dll"
             VALUE "ProductName", "WSDOT BEToolboxXML"
-            VALUE "ProductVersion", "3.0.0.2"
+            VALUE "ProductVersion", "3.0.0.3"
         END
     END
     BLOCK "VarFileInfo"
