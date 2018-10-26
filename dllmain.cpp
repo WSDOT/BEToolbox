@@ -55,7 +55,6 @@ CBEToolboxApp theApp;
 
 BOOL CBEToolboxApp::InitInstance()
 {
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
    GXInit();
 
    // Store registry entries in HKCU\Software\Washington State Department of Transportation\BEToolbox
@@ -164,8 +163,6 @@ BOOL CBEToolboxApp::InitInstance()
 
 int CBEToolboxApp::ExitInstance()
 {
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   ::GXTerminate();
-
+   GXForceTerminate();
 	return CWinApp::ExitInstance();
 }

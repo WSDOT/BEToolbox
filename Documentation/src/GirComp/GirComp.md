@@ -64,4 +64,4 @@ Q Slab | First moment of area of the slab
 Q Slab + Top Flange | First moment of area of the top flange and slab
 Q Bot Flange | First moment of area of the bottom flange
 
-![](results.png)
+![](gircomp_results.png)

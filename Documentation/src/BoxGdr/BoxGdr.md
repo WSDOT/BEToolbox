@@ -15,7 +15,7 @@ The characteristic dimensions are entered into the input grid in the hupper half
 Analysis Results
 -----------------
 The results of the section properties analysis are listed in the lower half of the BoxGdr window.
-![BoxGdr section properties analysis results](results.png)
+![BoxGdr section properties analysis results](boxgdr_results.png)
 
 The results table lists the input dimensions and the following section properties:
 

@@ -26,4 +26,4 @@ The composite piece is a part that is added to the basic section. Generally the 
 After entering the coordinates of the cross section pieces and the modular ratio, press the [Update] button to refresh the section properties.
 
 The main window lists the input coordinates, the area, centroid (Bar Y), and moment of inertia (I) of the basic section and the composite section. The composite section is also displayed.
-![](results.png)
+![](gencomp_results.png)
