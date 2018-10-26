@@ -61,7 +61,7 @@ CCurvelDoc::CCurvelDoc()
    std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder( std::make_shared<CCurvelReportSpecificationBuilder>() );
    m_pRptSpecBuilder = pRptSpecBuilder;
 
-   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("Curvel")));
+   std::shared_ptr<CReportBuilder> pRptBuilder(std::make_shared<CReportBuilder>(_T("Curvel")));
    
    pRptBuilder->SetReportSpecificationBuilder(pRptSpecBuilder);
 
@@ -71,7 +71,7 @@ CCurvelDoc::CCurvelDoc()
    std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CCurvelChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
-   m_RptMgr.AddReportBuilder(pRptBuilder.release());
+   m_RptMgr.AddReportBuilder(pRptBuilder);
 
    CReportDescription rptDesc = pRptBuilder->GetReportDescription();
    std::shared_ptr<CCurvelReportSpecification> pCurvelRptSpec(std::make_shared<CCurvelReportSpecification>(rptDesc.GetReportName()) );

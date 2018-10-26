@@ -481,3 +481,17 @@ void CPGStablePrismaticGirder::OnGirderChanged()
       DDX_Text(&dx,IDC_DRAG_COEFFICIENT,Cd);
    }
 }
+
+
+void CPGStablePrismaticGirder::OnCancel()
+{
+   // prevent [ESC] from closing window
+   //__super::OnCancel();
+}
+
+
+void CPGStablePrismaticGirder::OnOK()
+{
+   // prevent [Enter] from closing window
+   //__super::OnOK();
+}

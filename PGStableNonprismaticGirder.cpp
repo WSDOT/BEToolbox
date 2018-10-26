@@ -485,3 +485,17 @@ void CPGStableNonprismaticGirder::OnPSMethodChanged()
    GetDlgItem(IDC_HS_LABEL)->ShowWindow(show);
    GetDlgItem(IDC_TS_LABEL)->ShowWindow(show);
 }
+
+
+void CPGStableNonprismaticGirder::OnCancel()
+{
+   // prevent [ESC] from closing window
+   //__super::OnCancel();
+}
+
+
+void CPGStableNonprismaticGirder::OnOK()
+{
+   // prevent [Enter] from closing window
+   //__super::OnOK();
+}
