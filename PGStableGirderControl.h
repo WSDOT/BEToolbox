@@ -23,6 +23,12 @@
 #pragma once
 #include <GraphicsLib\Pointmapper.h>
 
+class CPGStableGirderControlParent
+{
+public:
+   virtual std::vector<std::pair<Float64,Float64>> GetGirderProfile() = 0;
+   virtual void GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) = 0;
+};
 
 // CPGStableGirderControl
 
@@ -42,7 +48,7 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
    void DrawProfile(CDC* pDC,grlibPointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile);
-   void DrawStrands(CDC* pDC,grlibPointMapper& mapper,int strandType);
+   void DrawStrands(CDC* pDC,grlibPointMapper& mapper);
    void Draw(CDC* pDC,grlibPointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile,BOOL bPolygon);
 };
 

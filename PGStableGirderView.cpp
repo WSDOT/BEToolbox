@@ -31,10 +31,10 @@
 
 // CPGStableGirderView
 
-IMPLEMENT_DYNCREATE(CPGStableGirderView, CFormView)
+IMPLEMENT_DYNCREATE(CPGStableGirderView, CPGStableFormView)
 
 CPGStableGirderView::CPGStableGirderView()
-	: CFormView(CPGStableGirderView::IDD)
+	: CPGStableFormView(CPGStableGirderView::IDD)
 {
    m_bViewInitialized = FALSE;
 }
@@ -45,21 +45,39 @@ CPGStableGirderView::~CPGStableGirderView()
 
 void CPGStableGirderView::DoDataExchange(CDataExchange* pDX)
 {
-	CFormView::DoDataExchange(pDX);
+	CPGStableFormView::DoDataExchange(pDX);
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
-   int prismatic = pDoc->GetGirderType();
-   DDX_Radio(pDX,IDC_PRISMATIC,prismatic);
+   CString strSpec = pDoc->GetCriteria();
+   DDX_CBString(pDX,IDC_SPEC,strSpec);
+
+   CString strEngineer, strCompany, strJob, strComments;
+   pDoc->GetProjectProperties(&strEngineer,&strCompany,&strJob,&strComments);
+
+   DDX_Text(pDX,IDC_ENGINEER,strEngineer);
+   DDX_Text(pDX,IDC_COMPANY,strCompany);
+   DDX_Text(pDX,IDC_JOB,strJob);
+   DDX_Text(pDX,IDC_COMMENTS,strComments);
+
+   int girderType = pDoc->GetGirderType();
+   DDX_Radio(pDX,IDC_PRISMATIC,girderType);
    if ( pDX->m_bSaveAndValidate )
    {
-      pDoc->SetGirderType(prismatic);
+      pDoc->SetProjectProperties(strEngineer,strCompany,strJob,strComments);
+      pDoc->SetGirderType(girderType);
+      pDoc->SetCriteria(strSpec);
    }
 }
 
-BEGIN_MESSAGE_MAP(CPGStableGirderView, CFormView)
+BEGIN_MESSAGE_MAP(CPGStableGirderView, CPGStableFormView)
    ON_BN_CLICKED(IDC_PRISMATIC, &CPGStableGirderView::OnSwapUI)
    ON_BN_CLICKED(IDC_NONPRISMATIC, &CPGStableGirderView::OnSwapUI)
+   ON_EN_CHANGE(IDC_ENGINEER, &CPGStableGirderView::OnChange)
+   ON_EN_CHANGE(IDC_COMPANY, &CPGStableGirderView::OnChange)
+   ON_EN_CHANGE(IDC_JOB, &CPGStableGirderView::OnChange)
+   ON_EN_CHANGE(IDC_COMMENTS, &CPGStableGirderView::OnChange)
+	ON_MESSAGE(WM_HELP, OnCommandHelp)
 END_MESSAGE_MAP()
 
 
@@ -69,13 +87,13 @@ END_MESSAGE_MAP()
 void CPGStableGirderView::AssertValid() const
 {
    AFX_MANAGE_STATE(AfxGetAppModuleState());
-	CFormView::AssertValid();
+	CPGStableFormView::AssertValid();
 }
 
 #ifndef _WIN32_WCE
 void CPGStableGirderView::Dump(CDumpContext& dc) const
 {
-	CFormView::Dump(dc);
+	CPGStableFormView::Dump(dc);
 }
 #endif
 #endif //_DEBUG
@@ -86,21 +104,37 @@ void CPGStableGirderView::Dump(CDumpContext& dc) const
 BOOL CPGStableGirderView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return CFormView::Create(lpszClassName,lpszWindowName,dwRequestedStyle,rect,pParentWnd,nID,pContext);
+   return CPGStableFormView::Create(lpszClassName,lpszWindowName,dwRequestedStyle,rect,pParentWnd,nID,pContext);
 }
 
-void CPGStableGirderView::OnActivateView(BOOL bActivate,CView* pActivateView,CView* pDeactivateView)
+void CPGStableGirderView::OnActivateView()
 {
-   CFormView::OnActivateView(bActivate,pActivateView,pDeactivateView);
    if ( m_bViewInitialized )
    {
+      UpdateData(FALSE);
       if ( GetCheckedRadioButton(IDC_PRISMATIC,IDC_NONPRISMATIC) == IDC_PRISMATIC )
       {
-         m_Prismatic.UpdateData(!bActivate);
+         m_Prismatic.UpdateData(FALSE);
       }
       else
       {
-         m_Nonprismatic.UpdateData(!bActivate);
+         m_Nonprismatic.UpdateData(FALSE);
+      }
+   }
+}
+
+void CPGStableGirderView::OnDeactivateView()
+{
+   if ( m_bViewInitialized )
+   {
+      UpdateData(TRUE);
+      if ( GetCheckedRadioButton(IDC_PRISMATIC,IDC_NONPRISMATIC) == IDC_PRISMATIC )
+      {
+         m_Prismatic.UpdateData(TRUE);
+      }
+      else
+      {
+         m_Nonprismatic.UpdateData(TRUE);
       }
    }
 }
@@ -128,9 +162,28 @@ void CPGStableGirderView::OnSwapUI()
    }
 }
 
+LRESULT CPGStableGirderView::OnCommandHelp(WPARAM, LPARAM lParam)
+{
+   EAFHelp( EAFGetDocument()->GetDocumentationSetName(),GetCheckedRadioButton(IDC_PRISMATIC,IDC_NONPRISMATIC) == IDC_PRISMATIC ? IDH_PGSTABLE_PRISMATIC_GIRDER_VIEW : IDH_PGSTABLE_NONPRISMATIC_GIRDER_VIEW);
+   return TRUE;
+}
+
 void CPGStableGirderView::OnInitialUpdate()
 {
-   CFormView::OnInitialUpdate();
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+
+   const SpecLibrary* pSpecLib = pDoc->GetSpecLibrary();
+   libKeyListType keyList;
+   pSpecLib->KeyList(keyList);
+   CComboBox* pcbSpec = (CComboBox*)GetDlgItem(IDC_SPEC);
+   pcbSpec->AddString(gs_strCriteria);
+   BOOST_FOREACH(const std::_tstring& key,keyList)
+   {
+      pcbSpec->AddString(key.c_str());
+   }
+
+
+   CPGStableFormView::OnInitialUpdate();
 
    // Embed dialogs. See http://www.codeproject.com/KB/dialog/embedded_dialog.aspx
    CWnd* pBox = GetDlgItem(IDC_STATIC_BOUNDS);
@@ -142,7 +195,6 @@ void CPGStableGirderView::OnInitialUpdate()
 
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
    int prismatic = pDoc->GetGirderType();
 
    VERIFY(m_Prismatic.Create(CPGStablePrismaticGirder::IDD, this));
@@ -183,4 +235,15 @@ void CPGStableGirderView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*
          }
       }
    }
+}
+
+void CPGStableGirderView::OnChange()
+{
+   // TODO:  If this is a RICHEDIT control, the control will not
+   // send this notification unless you override the CFormView::OnInitDialog()
+   // function and call CRichEditCtrl().SetEventMask()
+   // with the ENM_CHANGE flag ORed into the mask.
+
+   // TODO:  Add your control notification handler code here
+   UpdateData(TRUE);
 }

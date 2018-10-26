@@ -50,8 +50,8 @@ rptChapter* CPGStableLiftingSummaryChapterBuilder::Build(CReportSpecification* p
 {
    int girderType = m_pDoc->GetGirderType();
    stbGirder girder = m_pDoc->GetGirder(girderType);
-   stbLiftingStabilityProblem problem = m_pDoc->GetLiftingStabilityProblem();
    stbLiftingCheckArtifact artifact = m_pDoc->GetLiftingCheckArtifact();
+   const stbLiftingStabilityProblem& problem = m_pDoc->GetLiftingStabilityProblem();
 
    rptChapter* pChapter = new rptChapter;
    stbLiftingStabilityReporter reporter;

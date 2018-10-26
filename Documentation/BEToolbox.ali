@@ -9,3 +9,10 @@ IDH_BOXGDR=BoxGdr.html
 IDH_ULTCOL=UltCol.html
 IDH_GIRCOMP=GirComp.html
 IDH_GENCOMP=GenComp.html
+
+IDH_PGSTABLE=pgstable.html
+IDH_PGSTABLE_PRISMATIC_GIRDER_VIEW=pgstable_prismatic_girder_view.html
+IDH_PGSTABLE_NONPRISMATIC_GIRDER_VIEW=pgstable_nonprismatic_girder_view.html
+IDH_PGSTABLE_LIFTING_VIEW=pgstable_lifting_view.html
+IDH_PGSTABLE_HAULING_VIEW=pgstable_hauling_view.html
+

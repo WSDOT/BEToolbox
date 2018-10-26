@@ -42,8 +42,8 @@ protected:
    
    DECLARE_MESSAGE_MAP()
    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-   afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
-   
+   afx_msg void OnHelpFinder();
+
    void SetUnitsMode(eafTypes::UnitMode um);
 
 public:

@@ -19,6 +19,9 @@ GenComp computes the geometric section properties of a generalized composite cro
 @ref gircomp <br>
 GirComp computes the geometric section properties of a built-up or rolled steel section with a composite concrete slab.
 
+@ref pgstable <br>
+PGStable analyzes precast-prestressed girders for lateral stability.
+
 @ref ultcol <br>
 UltCol computes axial/bending interaction for a circular reinforced concrete column.
 

@@ -77,14 +77,26 @@ BOOL CBEToolboxApp::InitInstance()
    pStyleLib->AddNamedStyle(_T("Normal"), normal);
 
    // We don't want the title pages to show up, so we will make them Print only in style
-   rptRiStyle& reportTitle = pStyleLib->GetNamedStyle(rptStyleManager::GetReportTitleStyle());
+   rptRiStyle reportTitle = pStyleLib->GetNamedStyle(rptStyleManager::GetReportTitleStyle());
    reportTitle.SetMediaType(rptRiStyle::Print);
+   pStyleLib->AddNamedStyle(_T("BEToolboxReportTitle"),reportTitle);
 
-   rptRiStyle& reportSubtitle = pStyleLib->GetNamedStyle(rptStyleManager::GetReportSubtitleStyle());
+   rptRiStyle reportSubtitle = pStyleLib->GetNamedStyle(rptStyleManager::GetReportSubtitleStyle());
    reportSubtitle.SetMediaType(rptRiStyle::Print);
+   pStyleLib->AddNamedStyle(_T("BEToolboxReportSubtitle"),reportSubtitle);
 
-   rptRiStyle& copyright = pStyleLib->GetNamedStyle(rptStyleManager::GetCopyrightStyle());
+   rptRiStyle copyright = pStyleLib->GetNamedStyle(rptStyleManager::GetCopyrightStyle());
    copyright.SetMediaType(rptRiStyle::Print);
+   pStyleLib->AddNamedStyle(_T("BEToolboxCopyright"),copyright);
+
+   rptRiStyle printOnly;
+   printOnly.SetBold( false );
+   printOnly.SetFontSize(9);
+   printOnly.SetFontType(rptRiStyle::SWISS);
+   printOnly.SetVerticalAlignment( rptRiStyle::TOP );
+   printOnly.SetAlignment(rptRiStyle::LEFT);
+   printOnly.SetMediaType(rptRiStyle::Print);
+   pStyleLib->AddNamedStyle(_T("BEToolboxPrintOnly"), printOnly);
 
    return CWinApp::InitInstance();
 }

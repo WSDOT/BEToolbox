@@ -40,13 +40,12 @@ BEGIN_MESSAGE_MAP(CPGStableChildFrame, CEAFChildFrame)
    ON_BN_CLICKED(EAFID_UNITS_US,OnUSUnits)
    ON_BN_CLICKED(EAFID_UNITS_SI,OnSIUnits)
    ON_NOTIFY_EX(TTN_NEEDTEXT,0,OnToolTipNotify)
-	ON_MESSAGE(WM_HELP, OnCommandHelp)
+   ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
 END_MESSAGE_MAP()
 
-LRESULT CPGStableChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
+void CPGStableChildFrame::OnHelpFinder()
 {
-   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_PGSTABLE );
-   return TRUE;
+   EAFHelp(EAFGetDocument()->GetDocumentationSetName(),IDH_PGSTABLE);
 }
 
 BOOL CPGStableChildFrame::PreCreateWindow(CREATESTRUCT& cs)

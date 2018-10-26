@@ -140,16 +140,16 @@ std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
 
 
 
- //  CPGStableDocTemplate* pPGStableDocTemplate;
-	//pPGStableDocTemplate = new CPGStableDocTemplate(
- //     IDR_PGSTABLE,
- //     NULL,
-	//	RUNTIME_CLASS(CPGStableDoc),
-	//	RUNTIME_CLASS(CPGStableChildFrame),
-	//	RUNTIME_CLASS(CPGStableTabView),
- //     NULL,1);
+   CPGStableDocTemplate* pPGStableDocTemplate;
+	pPGStableDocTemplate = new CPGStableDocTemplate(
+      IDR_PGSTABLE,
+      NULL,
+		RUNTIME_CLASS(CPGStableDoc),
+		RUNTIME_CLASS(CPGStableChildFrame),
+		RUNTIME_CLASS(CPGStableTabView),
+      NULL,1);
 
- //  vDocTemplates.push_back(pPGStableDocTemplate);
+   vDocTemplates.push_back(pPGStableDocTemplate);
 
    return vDocTemplates;
 }

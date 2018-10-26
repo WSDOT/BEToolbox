@@ -23,10 +23,11 @@
 #pragma once
 
 // CPGStableGirderView form view
+#include "PGStableFormView.h"
 #include "PGStablePrismaticGirder.h"
 #include "PGStableNonprismaticGirder.h"
 
-class CPGStableGirderView : public CFormView
+class CPGStableGirderView : public CPGStableFormView
 {
 	DECLARE_DYNCREATE(CPGStableGirderView)
 
@@ -45,7 +46,8 @@ public:
 
    void DoDataExchange(CDataExchange* pDX);
 
-   virtual void OnActivateView(BOOL bActivate,CView* pActivateView,CView* pDeactivateView);
+   virtual void OnActivateView();
+   virtual void OnDeactivateView();
    virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext);
 
 protected:
@@ -56,9 +58,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
    afx_msg void OnSwapUI();
+   afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
    virtual void OnInitialUpdate();
 protected:
    virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+public:
+   afx_msg void OnChange();
 };
 
 

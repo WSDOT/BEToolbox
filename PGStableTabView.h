@@ -24,6 +24,8 @@
 
 #include "AfxTabView.h"
 
+class CPGStableFormView;
+
 
 class CPGStableTabView : public CTabView
 {
@@ -42,6 +44,8 @@ protected:
 
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+
+   CPGStableFormView* m_pLastView;
 
 	DECLARE_MESSAGE_MAP()
 public:

@@ -20,19 +20,22 @@
 // Bridge_Support@wsdot.wa.gov
 ///////////////////////////////////////////////////////////////////////
 
-#pragma once
-#include <Stability\Criteria.h>
+// PGStableFormView.cpp : implementation file
+//
 
-// CPGStableCriteria document
+#include "stdafx.h"
+#include "PGStableFormView.h"
 
-class CPGStableCriteria : public stbCriteria
+
+// CPGStableFormView
+
+IMPLEMENT_DYNAMIC(CPGStableFormView, CFormView)
+
+CPGStableFormView::CPGStableFormView(UINT nIDTemplate)
+	: CFormView(nIDTemplate)
 {
-public:
-	CPGStableCriteria();
-	virtual ~CPGStableCriteria();
-   bool operator==(const CPGStableCriteria& other) const;
-   bool operator!=(const CPGStableCriteria& other) const;
+}
 
-   HRESULT Save(IStructuredSave* pStrSave);
-   HRESULT Load(IStructuredLoad* pStrLoad);
-};
+CPGStableFormView::~CPGStableFormView()
+{
+}

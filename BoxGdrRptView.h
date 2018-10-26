@@ -47,8 +47,9 @@ protected:
 #endif
 #endif
 
+   virtual BOOL CanEditReport() { return FALSE; }
+
 protected:
-   virtual void CreateEditButton();
 
    CBoxGdrChildFrame* m_pFrame;
 

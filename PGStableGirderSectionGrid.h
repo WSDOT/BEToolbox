@@ -21,7 +21,6 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <Stability\StabilityProblemImp.h>
 
 // PGStableGirderSectionGrid.h : header file
 //
@@ -67,11 +66,14 @@ protected:
    // virtual overrides for grid
    virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
    virtual void OnModifyCell(ROWCOL nRow,ROWCOL nCol);
+   virtual BOOL OnLButtonClickedRowCol(ROWCOL nRow, ROWCOL nCol, UINT nFlags, CPoint pt);
 
    void UpdateColumnHeaders();
 
    // get a cell value whether is is selected or not
    CString GetCellValue(ROWCOL nRow, ROWCOL nCol);
+
+   void SelectRow(ROWCOL nRow);
 
 public:
    // custom stuff for grid

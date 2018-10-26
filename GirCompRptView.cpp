@@ -135,9 +135,3 @@ void CGirCompRptView::OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint)
 {
    RefreshReport();
 }
-
-void CGirCompRptView::CreateEditButton()
-{
-   // we don't want an edit button in the report view, so don't create one
-   // and don't let the base class do it either.
-}

@@ -21,33 +21,18 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <GraphicsLib\GraphicsLib.h>
-#include <UnitMgt\UnitValueNumericalFormatTools.h>
 
+// CPGStableHaulingCriteria document
 
-// CPGStableGraphControl
-
-class CPGStableGraphControl : public CWnd
+class CPGStableHaulingCriteria : public stbHaulingCriteria
 {
-	DECLARE_DYNAMIC(CPGStableGraphControl)
-
 public:
-	CPGStableGraphControl();
-	virtual ~CPGStableGraphControl();
+	CPGStableHaulingCriteria();
+	virtual ~CPGStableHaulingCriteria();
+   bool operator==(const CPGStableHaulingCriteria& other) const;
+   bool operator!=(const CPGStableHaulingCriteria& other) const;
+   void operator=(const stbHaulingCriteria& other);
 
-   void CustomInit();
-   grGraphXY& GetGraph();
-   void SetAxisFormatters(arvPhysicalConverter* pXFormat,arvPhysicalConverter* pYFormat);
-
-   afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-   afx_msg void OnPaint();
-
-protected:
-   grGraphXY m_Graph;
-   arvPhysicalConverter* m_pXFormat;
-   arvPhysicalConverter* m_pYFormat;
-
-   DECLARE_MESSAGE_MAP()
+   HRESULT Save(IStructuredSave* pStrSave);
+   HRESULT Load(IStructuredLoad* pStrLoad);
 };
-
-

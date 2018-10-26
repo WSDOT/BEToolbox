@@ -117,16 +117,24 @@ void CPGStableFpeGrid::CustomInit()
    // in OnInitialUpdate.
 	Initialize( );
 
+   // we want to merge cells
+   SetMergeCellsMode(gxnMergeEvalOnDisplay);
+
 	GetParam( )->EnableUndo(FALSE);
 
-   const ROWCOL num_rows = 0;
-   const ROWCOL num_cols = 4;
+   const ROWCOL num_rows = 1;
+   const ROWCOL num_cols = 10;
 
 	SetRowCount(num_rows);
 	SetColCount(num_cols);
 
-		// Turn off selecting whole columns when clicking on a column header
+   // Turn off selecting whole columns when clicking on a column header
 	GetParam()->EnableSelection((WORD) (GX_SELFULL & ~GX_SELCOL & ~GX_SELTABLE));
+
+   // no row moving
+	GetParam()->EnableMoveRows(FALSE);
+
+   SetFrozenRows(1/*# frozen rows*/,1/*# extra header rows*/);
 
    // disable left side
 	SetStyleRange(CGXRange(0,0,num_rows,0), CGXStyle()
@@ -152,12 +160,13 @@ void CPGStableFpeGrid::CustomInit()
 
 void CPGStableFpeGrid::AddFpe()
 {
-   Float64 X,FpeStraight,FpeHarped,FpeTemp;
-   GetFpe(GetRowCount(),&X,&FpeStraight,&FpeHarped,&FpeTemp);
-   InsertFpe(X,FpeStraight,FpeHarped,FpeTemp);
+   Float64 X,FpeStraight,YpsStraight,FpeHarped,YpsHarped,FpeTemp,YpsTemp;
+   int YpsStraightMeasure,YpsHarpedMeasure,YpsTempMeasure;
+   GetFpe(GetRowCount(),&X,&FpeStraight,&YpsStraight,&YpsStraightMeasure,&FpeHarped,&YpsHarped,&YpsHarpedMeasure,&FpeTemp,&YpsTemp,&YpsTempMeasure);
+   InsertFpe(X,FpeStraight,YpsStraight,YpsStraightMeasure,FpeHarped,YpsHarped,YpsHarpedMeasure,FpeTemp,YpsTemp,YpsTempMeasure);
 }
 
-void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
+void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float64* pYpsStraight,int* pYpsStraightMeasure,Float64* pFpeHarped,Float64* pYpsHarped,int* pYpsHarpedMeasure,Float64* pFpeTemp,Float64* pYpsTemp,int* pYpsTempMeasure)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -175,17 +184,40 @@ void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
+   *pYpsStraight = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row,col++);
+   *pYpsStraightMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
+
+   strValue = GetCellValue(row,col++);
+   sysTokenizer::ParseDouble(strValue, &value);
    *pFpeHarped = ::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
+   *pYpsHarped = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row,col++);
+   *pYpsHarpedMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
+
+   strValue = GetCellValue(row,col++);
+   sysTokenizer::ParseDouble(strValue, &value);
    *pFpeTemp = ::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
+
+   strValue = GetCellValue(row,col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   *pYpsTemp = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row,col++);
+   *pYpsTempMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
 }
 
-void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 FpeHarped,Float64 FpeTemp)
+void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 YpsTemp,int YpsTempMeasure)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+
+   CString strChoiceList(_T("Top\nBottom"));
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -193,9 +225,12 @@ void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 FpeHarped
 	InsertRows(nRow, 1);
 
    ROWCOL col = 0;
-	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+
+   // Row number
+   SetStyleRange(CGXRange(nRow,col++),CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-         );
+      .SetValue(nRow-1)
+      );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
@@ -209,13 +244,49 @@ void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 FpeHarped
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(YpsStraight,pDispUnits->ComponentDim,false))
+         );
+
+   SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetControl(GX_IDS_CTRL_CBS_DROPDOWNLIST)
+      .SetChoiceList(strChoiceList)
+      .SetValue(YpsStraightMeasure == TOP ? _T("Top") : _T("Bottom"))
+      );
+
+	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
       .SetValue(::FormatDimension(FpeHarped,pDispUnits->GeneralForce,false))
          );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(YpsHarped,pDispUnits->ComponentDim,false))
+         );
+
+   SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetControl(GX_IDS_CTRL_CBS_DROPDOWNLIST)
+      .SetChoiceList(strChoiceList)
+      .SetValue(YpsHarpedMeasure == TOP ? _T("Top") : _T("Bottom"))
+      );
+
+	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
       .SetValue(::FormatDimension(FpeTemp,pDispUnits->GeneralForce,false))
          );
+
+	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(YpsTemp,pDispUnits->ComponentDim,false))
+         );
+
+   SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetControl(GX_IDS_CTRL_CBS_DROPDOWNLIST)
+      .SetChoiceList(strChoiceList)
+      .SetValue(YpsTempMeasure == TOP ? _T("Top") : _T("Bottom"))
+      );
 
    SetCurrentCell(nRow, GetLeftCol(), GX_SCROLLINVIEW|GX_DISPLAYEDITWND);
 	Invalidate();
@@ -249,11 +320,14 @@ BOOL CPGStableFpeGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
       return FALSE;
    }
 
-   Float64 d;
-   if ( !sysTokenizer::ParseDouble(s,&d) )
+   if ( nCol != 4 && nCol != 7 && nCol != 10 ) // these are the Top/Bottom combo box columns
    {
-      SetWarningText(_T("Value must be a number"));
-      return FALSE;
+      Float64 d;
+      if ( !sysTokenizer::ParseDouble(s,&d) )
+      {
+         SetWarningText(_T("Value must be a number"));
+         return FALSE;
+      }
    }
 
 	return CGXGridWnd::OnValidateCell(nRow, nCol);
@@ -278,10 +352,36 @@ void CPGStableFpeGrid::UpdateColumnHeaders()
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
-   ROWCOL col = 1;
+   ROWCOL col = 0;
+	SetStyleRange(CGXRange(0,col,1,col++), CGXStyle()
+         .SetHorizontalAlignment(DT_CENTER)
+         .SetVerticalAlignment(DT_VCENTER)
+			.SetEnabled(FALSE)          // disables usage as current cell
+         .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+         .SetValue(_T(" "))
+		);
+
    CString strDimension;
    strDimension.Format(_T("%s (%s)"),_T("X"),pDispUnits->SpanLength.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+	SetStyleRange(CGXRange(0,col,1,col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+		.SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+		.SetValue(strDimension)
+	);
+
+	SetStyleRange(CGXRange(0,col,0,col+2), CGXStyle()
+         .SetHorizontalAlignment(DT_CENTER)
+         .SetVerticalAlignment(DT_TOP)
+			.SetEnabled(FALSE)          // disables usage as current cell
+         .SetMergeCell(GX_MERGE_HORIZONTAL | GX_MERGE_COMPVALUE)
+			.SetValue(_T("Straight"))
+		);
+
+   strDimension.Format(_T("Fpe (%s)"),pDispUnits->GeneralForce.UnitOfMeasure.UnitTag().c_str());
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
@@ -289,8 +389,8 @@ void CPGStableFpeGrid::UpdateColumnHeaders()
 		.SetValue(strDimension)
 	);
 
-   strDimension.Format(_T("Fpe\r\n%s (%s)"),_T("Straight"),pDispUnits->GeneralForce.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("Yps (%s)"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
@@ -298,8 +398,24 @@ void CPGStableFpeGrid::UpdateColumnHeaders()
 		.SetValue(strDimension)
 	);
 
-   strDimension.Format(_T("Fpe\r\n%s (%s)"),_T("Harped"),pDispUnits->GeneralForce.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+		.SetEnabled(FALSE)          // disables usage as current cell
+		.SetValue(_T("Face"))
+	);
+
+	SetStyleRange(CGXRange(0,col,0,col+2), CGXStyle()
+         .SetHorizontalAlignment(DT_CENTER)
+         .SetVerticalAlignment(DT_TOP)
+			.SetEnabled(FALSE)          // disables usage as current cell
+         .SetMergeCell(GX_MERGE_HORIZONTAL | GX_MERGE_COMPVALUE)
+			.SetValue(_T("Harped"))
+		);
+
+   strDimension.Format(_T("Fpe (%s)"),pDispUnits->GeneralForce.UnitOfMeasure.UnitTag().c_str());
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
@@ -307,41 +423,82 @@ void CPGStableFpeGrid::UpdateColumnHeaders()
 		.SetValue(strDimension)
 	);
 
-   strDimension.Format(_T("Fpe\r\n%s (%s)"),_T("Temporary"),pDispUnits->GeneralForce.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("Yps (%s)"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
 		.SetEnabled(FALSE)          // disables usage as current cell
 		.SetValue(strDimension)
+	);
+
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+		.SetEnabled(FALSE)          // disables usage as current cell
+		.SetValue(_T("Face"))
+	);
+
+	SetStyleRange(CGXRange(0,col,0,col+2), CGXStyle()
+         .SetHorizontalAlignment(DT_CENTER)
+         .SetVerticalAlignment(DT_TOP)
+			.SetEnabled(FALSE)          // disables usage as current cell
+         .SetMergeCell(GX_MERGE_HORIZONTAL | GX_MERGE_COMPVALUE)
+			.SetValue(_T("Temporary"))
+		);
+
+   strDimension.Format(_T("Fpe (%s)"),pDispUnits->GeneralForce.UnitOfMeasure.UnitTag().c_str());
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+		.SetEnabled(FALSE)          // disables usage as current cell
+		.SetValue(strDimension)
+	);
+
+   strDimension.Format(_T("Yps (%s)"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+		.SetEnabled(FALSE)          // disables usage as current cell
+		.SetValue(strDimension)
+	);
+
+	SetStyleRange(CGXRange(1,col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+		.SetEnabled(FALSE)          // disables usage as current cell
+		.SetValue(_T("Face"))
 	);
 }
 
-void CPGStableFpeGrid::FillGrid(const std::set<stbFpe>& vFpe)
+void CPGStableFpeGrid::FillGrid(const std::set<CPGStableFpe>& vFpe)
 {
    ROWCOL nRows = GetRowCount();
-   if ( 0 < nRows )
+   if ( 2 <= nRows )
    {
-      CGXRange range(1, 0, GetRowCount(), 0);
-      RemoveRows(range.top, range.bottom);
+      RemoveRows(2, nRows);
    }
 
-   BOOST_FOREACH(const stbFpe& fpe,vFpe)
+   BOOST_FOREACH(const CPGStableFpe& fpe,vFpe)
    {
-      InsertFpe(fpe.X,fpe.fpeStraight,fpe.fpeHarped,fpe.fpeTemporary);
+      InsertFpe(fpe.X,fpe.FpeStraight,fpe.YpsStraight,fpe.YpsStraightMeasure,fpe.FpeHarped,fpe.YpsHarped,fpe.YpsHarpedMeasure,fpe.FpeTemp,fpe.YpsTemp,fpe.YpsTempMeasure);
    }
 }
 
-void CPGStableFpeGrid::GetFpe(std::set<stbFpe>& vFpe)
+void CPGStableFpeGrid::GetFpe(std::set<CPGStableFpe>& vFpe)
 {
    vFpe.clear();
    
    ROWCOL nRows = GetRowCount();
-   for ( ROWCOL row = 0; row < nRows; row++ )
+   for ( ROWCOL row = 2; row <= nRows; row++ )
    {
-      stbFpe fpe;
+      CPGStableFpe fpe;
 
-      GetFpe(row+1,&fpe.X,&fpe.fpeStraight,&fpe.fpeHarped,&fpe.fpeTemporary);
+      GetFpe(row,&fpe.X,&fpe.FpeStraight,&fpe.YpsStraight,&fpe.YpsStraightMeasure,&fpe.FpeHarped,&fpe.YpsHarped,&fpe.YpsHarpedMeasure,&fpe.FpeTemp,&fpe.YpsTemp,&fpe.YpsTempMeasure);
       vFpe.insert(fpe);
    }
 }

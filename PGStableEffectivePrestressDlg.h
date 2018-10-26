@@ -22,8 +22,7 @@
 
 #pragma once
 #include "PGStableFpeGrid.h"
-#include <Stability\Stability.h>
-#include <set>
+#include "PGStableStrands.h"
 
 // CPGStableEffectivePrestressDlg dialog
 
@@ -35,7 +34,7 @@ public:
 	CPGStableEffectivePrestressDlg(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CPGStableEffectivePrestressDlg();
 
-   std::set<stbFpe> m_Fpe;
+   CPGStableStrands m_Strands;
 
 // Dialog Data
 	enum { IDD = IDD_PGSTABLEEFFECTIVEPRESTRESSDLG };
@@ -50,5 +49,4 @@ public:
    virtual BOOL OnInitDialog();
    afx_msg void OnAdd();
    afx_msg void OnRemove();
-   afx_msg void OnHelp();
 };

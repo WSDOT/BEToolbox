@@ -24,10 +24,11 @@
 
 #include <MfcTools\MetaFileStatic.h>
 #include "PGStablePointLoadGrid.h"
+#include "PGStableGirderControl.h"
 
 // CPGStablePrismaticGirder dialog
 
-class CPGStablePrismaticGirder : public CDialog
+class CPGStablePrismaticGirder : public CDialog, public CPGStableGirderControlParent
 {
 	DECLARE_DYNAMIC(CPGStablePrismaticGirder)
 
@@ -38,10 +39,16 @@ public:
 // Dialog Data
 	enum { IDD = IDD_PRISMATIC_GIRDER };
 
+   // CPGStableGirderControlParent
+   virtual std::vector<std::pair<Float64,Float64>> GetGirderProfile();
+   virtual void GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
+
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
    CMetaFileStatic m_StrandLayout;
+   CPGStableGirderControl m_ctrlGirder;
    CPGStablePointLoadGrid* m_pPointLoadGrid;
 
 	DECLARE_MESSAGE_MAP()
@@ -49,7 +56,10 @@ public:
    afx_msg void OnAddPointLoad();
    afx_msg void OnRemovePointLoad();
    afx_msg void OnUpdateRemove(CCmdUI* pCmdUI);
+   afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
 
    BOOL AreLoadsSelected();
    virtual BOOL OnInitDialog();
+   afx_msg void OnPSMethodChanged();
+   afx_msg void OnGirderChanged();
 };

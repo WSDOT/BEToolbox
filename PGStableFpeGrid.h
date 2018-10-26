@@ -21,7 +21,8 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <Stability\Stability.h>
+
+#include "PGStableStrands.h"
 
 // PGStableFpeGrid.h : header file
 //
@@ -61,7 +62,7 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-   void InsertFpe(Float64 X,Float64 FpeStraight,Float64 FpeHarped,Float64 FpeTemp);
+   void InsertFpe(Float64 X,Float64 FpeStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 YpsTemp,int YpsTempMeasure);
 
    // virtual overrides for grid
    virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
@@ -76,12 +77,12 @@ public:
    void CustomInit();
    void AddFpe();
 
-   void GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp);
+   void GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float64* pYpsStraight,int* pYpsStraightMeasure,Float64* pFpeHarped,Float64* pYpsHarped,int* pYpsHarpedMeasure,Float64* pFpeTemp,Float64* pYpsTemp,int* pYpsTempMeasure);
    void RemoveSelected();
    BOOL AreSelected();
 
-   void FillGrid(const std::set<stbFpe>& vFpe);
-   void GetFpe(std::set<stbFpe>& vFpe);
+   void FillGrid(const std::set<CPGStableFpe>& vFpe);
+   void GetFpe(std::set<CPGStableFpe>& vFpe);
 
 
 

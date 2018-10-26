@@ -20,13 +20,13 @@
 // Bridge_Support@wsdot.wa.gov
 ///////////////////////////////////////////////////////////////////////
 
-// PGStableCriteria.cpp : implementation file
+// PGStableLiftingCriteria.cpp : implementation file
 //
 
 #include "stdafx.h"
-#include "PGStableCriteria.h"
+#include "PGStableLiftingCriteria.h"
 
-CPGStableCriteria::CPGStableCriteria()
+CPGStableLiftingCriteria::CPGStableLiftingCriteria()
 {
    MinFScr = 1.0;
    MinFSf = 1.5;
@@ -37,11 +37,11 @@ CPGStableCriteria::CPGStableCriteria()
    TensionCoefficientWithRebar = ::ConvertToSysUnits(0.1900,unitMeasure::SqrtKSI);
 }
 
-CPGStableCriteria::~CPGStableCriteria()
+CPGStableLiftingCriteria::~CPGStableLiftingCriteria()
 {
 }
 
-bool CPGStableCriteria::operator==(const CPGStableCriteria& other) const
+bool CPGStableLiftingCriteria::operator==(const CPGStableLiftingCriteria& other) const
 {
    if ( !IsEqual(MinFScr,other.MinFScr) )
       return false;
@@ -67,12 +67,17 @@ bool CPGStableCriteria::operator==(const CPGStableCriteria& other) const
    return true;
 }
 
-bool CPGStableCriteria::operator!=(const CPGStableCriteria& other) const
+bool CPGStableLiftingCriteria::operator!=(const CPGStableLiftingCriteria& other) const
 {
    return !(*this == other);
 }
 
-HRESULT CPGStableCriteria::Save(IStructuredSave* pStrSave)
+void CPGStableLiftingCriteria::operator=(const stbLiftingCriteria& other)
+{
+   *((stbLiftingCriteria*)this) = other;
+}
+
+HRESULT CPGStableLiftingCriteria::Save(IStructuredSave* pStrSave)
 {
    HRESULT hr = pStrSave->BeginUnit(_T("Criteria"),1.0);
    if ( FAILED(hr) )
@@ -93,7 +98,7 @@ HRESULT CPGStableCriteria::Save(IStructuredSave* pStrSave)
    return S_OK;
 }
 
-HRESULT CPGStableCriteria::Load(IStructuredLoad* pStrLoad)
+HRESULT CPGStableLiftingCriteria::Load(IStructuredLoad* pStrLoad)
 {
    CHRException hr;
 

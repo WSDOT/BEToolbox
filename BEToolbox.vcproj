@@ -1493,14 +1493,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\PGStableCriteria.h"
-					>
-				</File>
-				<File
-					RelativePath=".\PGStableCriteriaView.h"
-					>
-				</File>
-				<File
 					RelativePath=".\PGStableDoc.h"
 					>
 				</File>
@@ -1514,6 +1506,10 @@
 				</File>
 				<File
 					RelativePath=".\PGStableExporter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableFormView.h"
 					>
 				</File>
 				<File
@@ -1533,7 +1529,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\PGStableGraphControl.h"
+					RelativePath=".\PGStableHaulingCriteria.h"
 					>
 				</File>
 				<File
@@ -1546,6 +1542,10 @@
 				</File>
 				<File
 					RelativePath=".\PGStableHaulingView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableLiftingCriteria.h"
 					>
 				</File>
 				<File
@@ -1577,10 +1577,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\PGStableReportView.h"
-					>
-				</File>
-				<File
 					RelativePath=".\PGStableStrands.h"
 					>
 				</File>
@@ -1601,14 +1597,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\PGStableCriteria.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\PGStableCriteriaView.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\PGStableDoc.cpp"
 					>
 				</File>
@@ -1622,6 +1610,10 @@
 				</File>
 				<File
 					RelativePath=".\PGStableExporter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableFormView.cpp"
 					>
 				</File>
 				<File
@@ -1641,7 +1633,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\PGStableGraphControl.cpp"
+					RelativePath=".\PGStableHaulingCriteria.cpp"
 					>
 				</File>
 				<File
@@ -1654,6 +1646,10 @@
 				</File>
 				<File
 					RelativePath=".\PGStableHaulingView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PGStableLiftingCriteria.cpp"
 					>
 				</File>
 				<File
@@ -1685,10 +1681,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\PGStableReportView.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\PGStableStrands.cpp"
 					>
 				</File>
@@ -1702,6 +1694,10 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\Documentation\BEToolbox.hh"
+			>
+		</File>
 		<File
 			RelativePath=".\BEToolbox.tip"
 			>

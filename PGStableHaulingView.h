@@ -22,16 +22,16 @@
 
 #pragma once
 
-#include <Stability\Stability.h>
 #include <set>
-#include "PGStableGraphControl.h"
 #include "afxcmn.h"
+#include "PGStableStrands.h"
+#include "PGStableFormView.h"
 
 
 
 // CPGStableHaulingView form view
 
-class CPGStableHaulingView : public CFormView
+class CPGStableHaulingView : public CPGStableFormView
 {
 	DECLARE_DYNCREATE(CPGStableHaulingView)
 
@@ -46,13 +46,11 @@ protected:
    CString m_strUserEc;
    void UpdateEc();
 
-   int m_FpeType;
-   std::set<stbFpe> m_Fpe;
 
    void GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp);
 
-   CPGStableGraphControl m_ctrlStressGraph;
-   CPGStableGraphControl m_ctrlFSGraph;
+   CPGStableStrands m_Strands;
+   CPGStableHaulingCriteria m_HaulingCriteria;
 
 public:
 	enum { IDD = IDD_PGSTABLEHAULINGVIEW };
@@ -70,20 +68,35 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
-   virtual void OnActivateView(BOOL bActivate,CView* pActivateView,CView* pDeactivateView);
+   virtual void OnActivateView();
+   virtual void OnDeactivateView();
 
-   void BuildStressGraph();
-   void BuildFSCrackingGraph();
+   boost::shared_ptr<CReportSpecification> m_pRptSpec;
+   boost::shared_ptr<CReportBrowser> m_pBrowser; // this is the actual browser window that displays the report
+   void RefreshReport();
+
+   void UpdateFpeControls();
+   void UpdateCriteriaControls();
 
 public:
    afx_msg void OnUserEc();
    afx_msg void OnChangeFc();
    afx_msg void OnChange();
-   afx_msg void OnFpeType();
    afx_msg void OnEditFpe();
+   afx_msg void OnPrint();
+   afx_msg void OnPrintDirect();
+   afx_msg void OnClickedHaulingTensionMaxCrown();
+   afx_msg void OnClickedHaulingTensionMaxSuper();
+   afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
+   afx_msg void OnCmenuSelected(UINT id);
    virtual void OnInitialUpdate();
+
 protected:
    virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+public:
+   afx_msg void OnSize(UINT nType, int cx, int cy);
+   afx_msg void OnWindTypeChanged();
+   afx_msg void OnHaulTruckChanged();
 };
 
 
