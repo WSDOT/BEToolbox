@@ -44,7 +44,8 @@ CBEToolboxDoc::CBEToolboxDoc()
    m_pMyToolBar = NULL;
 
    // Reserve command IDs for document plug ins
-   GetPluginCommandManager()->ReserveCommandIDRange(PLUGIN_COMMAND_COUNT);
+   UINT nCommands = GetPluginCommandManager()->ReserveCommandIDRange(PLUGIN_COMMAND_COUNT);
+   ATLASSERT(nCommands == PLUGIN_COMMAND_COUNT);
 }
 
 CBEToolboxDoc::~CBEToolboxDoc()
