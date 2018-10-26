@@ -59,4 +59,4 @@ The project definition can be revised by pressing the [Edit] button in the upper
 
 # Analysis Results
 The results of the elevation analysis are shown below. The results consist of a listing of the input data followed by key parameters of the vertical curve and the profile grade elevation, profile grade slope, crown slopes, and elevation at the requested locations.
-![](results.jpg)
+![](curvel_results.jpg)

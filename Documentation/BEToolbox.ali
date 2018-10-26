@@ -1,11 +1,11 @@
 IDH_BETOOLBOX=index.html
 
-IDH_CURVEL=md_src_Curvel_Curvel.html
-IDH_CURVEL_STEP1=md_src_Curvel_Curvel.html#Step1
-IDH_CURVEL_STEP2=md_src_Curvel_Curvel.html#Step2
-IDH_CURVEL_STEP3=md_src_Curvel_Curvel.html#Step3
+IDH_CURVEL=Curvel.html
+IDH_CURVEL_STEP1=Curvel.html#Step1
+IDH_CURVEL_STEP2=Curvel.html#Step2
+IDH_CURVEL_STEP3=Curvel.html#Step3
 
-IDH_BOXGDR=md_src_BoxGdr_BoxGdr.html
-IDH_ULTCOL=md_src_UltCol_UltCol.html
-IDH_GIRCOMP=md_src_GirComp_GirComp.html
-IDH_GENCOMP=md_src_GenComp_GenComp.html
+IDH_BOXGDR=BoxGdr.html
+IDH_ULTCOL=UltCol.html
+IDH_GIRCOMP=GirComp.html
+IDH_GENCOMP=GenComp.html
