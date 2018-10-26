@@ -233,31 +233,7 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetGirder(PRISMATIC,girder);
       pDoc->SetStrands(PRISMATIC,LIFTING,strands);
-
-
-      CPGStableStrands haulingStrands = pDoc->GetStrands(PRISMATIC,HAULING);
-      haulingStrands.strandMethod = strands.strandMethod;
-      if ( strands.strandMethod == CPGStableStrands::Simplified )
-      {
-         // we were operating on the lifting prestress information
-         // since we are using the simplified method the geometry
-         // of the hauling prestress is the same as the lifting prestress
-         // update the hauling prestress information here
-         haulingStrands.XferLength = strands.XferLength;
-         haulingStrands.Xh1 = strands.Xh1;
-         haulingStrands.Xh1Measure = strands.Xh1Measure;
-         haulingStrands.Xh2 = strands.Xh2;
-         haulingStrands.Xh2Measure = strands.Xh2Measure;
-         haulingStrands.Xh3 = strands.Xh3;
-         haulingStrands.Xh3Measure = strands.Xh3Measure;
-         haulingStrands.Xh4 = strands.Xh4;
-         haulingStrands.Xh4Measure = strands.Xh4Measure;
-         haulingStrands.Ys = strands.Ys;
-         haulingStrands.YsMeasure = strands.YsMeasure;
-         haulingStrands.Yt = strands.Yt;
-         haulingStrands.YtMeasure = strands.YtMeasure;
-      }
-      pDoc->SetStrands(PRISMATIC,HAULING,haulingStrands);
+      pDoc->SetStrands(PRISMATIC, HAULING, strands);
 
       pDoc->SetDensity(density);
       pDoc->SetDensityWithRebar(densityWithRebar);

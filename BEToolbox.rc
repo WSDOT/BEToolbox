@@ -77,8 +77,8 @@ PRISMATICSTRANDLAYOUT   METAFILE                "res\\PrismaticStrandLayout.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,2,6,0
- PRODUCTVERSION 3,2,6,0
+ FILEVERSION 3,2,7,0
+ PRODUCTVERSION 3,2,7,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -96,12 +96,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.2.6.0"
+            VALUE "FileVersion", "3.2.7.0"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2018, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.2.6.0"
+            VALUE "ProductVersion", "3.2.7.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -511,18 +511,18 @@ BEGIN
     LTEXT           "Max. Superelevation",IDC_STATIC,18,247,67,8
     EDITTEXT        IDC_SUPERELEVATION,87,245,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SUPERELEVATION_UNIT,133,248,19,8
-    LTEXT           "Wind Loading",IDC_STATIC,20,266,44,8
-    COMBOBOX        IDC_WIND_TYPE,70,265,104,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    EDITTEXT        IDC_WIND_PRESSURE,178,264,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_WIND_PRESSURE_UNIT,224,267,19,8
-    LTEXT           "Centrifugal force is",IDC_STATIC,18,285,62,8
-    COMBOBOX        IDC_CF_TYPE,84,283,77,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Speed",IDC_STATIC,18,302,21,8
-    EDITTEXT        IDC_VELOCITY,42,299,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_VELOCITY_UNIT,85,302,19,8
-    LTEXT           "Turning Radius",IDC_STATIC,109,302,48,8
-    EDITTEXT        IDC_RADIUS,163,299,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_RADIUS_UNIT,209,302,19,8
+    LTEXT           "Centrifugal force is",IDC_STATIC,18,268,62,8
+    COMBOBOX        IDC_CF_TYPE,84,266,77,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Speed",IDC_STATIC,18,285,21,8
+    EDITTEXT        IDC_VELOCITY,42,282,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_VELOCITY_UNIT,85,285,19,8
+    LTEXT           "Turning Radius",IDC_STATIC,109,285,48,8
+    EDITTEXT        IDC_RADIUS,163,282,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_RADIUS_UNIT,209,285,19,8
+    LTEXT           "Wind Loading",IDC_STATIC,17,302,44,8
+    COMBOBOX        IDC_WIND_TYPE,67,302,104,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_WIND_PRESSURE,175,300,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_WIND_PRESSURE_UNIT,221,303,19,8
     CONTROL         "Offset center of gravity by",IDC_CAMBER1,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,17,322,98,10
     CONTROL         "Camber",IDC_CAMBER2,"Button",BS_AUTORADIOBUTTON,17,339,37,10
     EDITTEXT        IDC_CAMBER_OFFSET,117,320,40,14,ES_RIGHT | ES_AUTOHSCROLL
@@ -600,6 +600,8 @@ BEGIN
     EDITTEXT        IDC_HAULING_FS_CRACKING,57,527,40,14,ES_AUTOHSCROLL
     LTEXT           "Failure/Rollover",IDC_STATIC,110,531,51,8
     EDITTEXT        IDC_HAULING_FS_FAILURE,166,528,40,14,ES_AUTOHSCROLL
+    LTEXT           "(No centrifugal force)",IDC_STATIC,159,230,93,8
+    LTEXT           "(Includes centrifugal force)",IDC_STATIC,159,248,93,8
 END
 
 IDD_PRISMATIC_GIRDER DIALOGEX 0, 0, 781, 410

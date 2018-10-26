@@ -14,7 +14,17 @@ Area | Cross sectional area
 Ix | Moment of inertia about the horizontal centroidal axis
 Iy | Moment of inertia about the vertical centroidal axis
 Ytop | Location of the centroid measured down from the top of the girder
+Xleft | Location of the centroid measured from the extreme left edge of the girder
+Precamber | Camber that is constructed into the girder (this is not the natural camber caused be girder self-weight and prestressing)
 L | Girder length
+
+## Stress Points
+Stress points define where girder stresses are computed.
+
+Item | Description
+-----|----------------
+Compute from Properties | Computes top left, top right, bottom left, and bottom right using Height, Wtf, Wbf, and Ytop dimensions
+Explicitly Define | Explicitly enter the coordinates of the top left, top right, bottom left, and bottom right corners of the girder. The origin is at the centroid of the section. This option is intended to be used for asymmetric girders.
 
 ## Dead Loads
 The self weight of the girder is computed from the section properties and the unit weight with reinforcement. Additional dead loads can be modeled.
@@ -53,6 +63,7 @@ Detailed | A detailed prestressing arrangement will be used
 
 Item | Description
 -----|----------------
+ex | Lateral eccentricty of prestressing force (typically zero)
 Prestress Transfer Length | Length from the ends of the girder that the prestress force is increased from zero to its full value
 Ys (E) | Location of the straight strands
 Yh1 (Fo) | Location of the harped strands at the end of the girder

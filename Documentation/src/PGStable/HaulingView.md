@@ -31,7 +31,8 @@ Wind Loading | Select the wind loading type and enter the loading parameters. Fo
 Centrifugal Force | Select the centrifugal force type; Favorable or Adverse. Favorable forces act away from the center of the turning movement while Adverse forces act inwards.
 Speed | Enter the turning speed
 Turning Radius | Enter the turning radius
-Camber | Select the method for accounting for camber. For the offset method, the center of gravity of the girder is adusted by a percentage to allow for camber. For the direct method, an actual camber is input
+Camber | Select the method for accounting for camber. For the offset method, the center of gravity of the girder is adusted by a percentage to allow for camber. For the direct method, an actual camber is input and a camber multiplier can be specified
+Lateral Camber | Asymmetric girders can have lateral deflections due to the geometry of the section. Prestressing that is not symmetric with respect to the vertical axis of the girder can also have lateral deflection. Enter the lateral camber if applicable.
 Haul Truck | Select a haul truck from the drop down list or select "Define haul truck" to input the haul truck parameters
 Height of girder bottom above roadway | Enter the location of the bottom of the girder from the roadway surface directly above the roll center
 Height of roll axis above roadway | Enter the location of the roll axis above the roadway surface
@@ -39,6 +40,8 @@ Truck Roll Stiffness | Enter the roll stiffness of the haul truck
 Truck Width | Enter the center to center width of the truck wheels
 Sweep Tolerance | Enter the girder lateral sweep tolerance
 Support Placement Tolerance | Enter the lateral tolerance for placement of the bunking devices.
+
+> NOTE: Centrifugal forces are only applied to the Max. Superelevation case
 
 ## Criteria
 Define the analysis criteria

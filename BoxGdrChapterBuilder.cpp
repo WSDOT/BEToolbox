@@ -99,65 +99,46 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    ColumnIndexType col = 0;
    pTable->SetRowSpan(0,col,2);
-   (*pTable)(0,col) << _T("PROB");
-   pTable->SetRowSpan(1,col++,SKIP_CELL);
+   (*pTable)(0,col++) << _T("PROB");
 
    pTable->SetRowSpan(0,col,2);
-   (*pTable)(0,col) << COLHDR(_T("D"), rptLengthUnitTag, pDispUnits->SpanLength);
-   pTable->SetRowSpan(1,col++,SKIP_CELL);
+   (*pTable)(0,col++) << COLHDR(_T("D"), rptLengthUnitTag, pDispUnits->SpanLength);
 
    pTable->SetColumnSpan(0,col,2);
    (*pTable)(0,col) << _T("WEB");
-   pTable->SetColumnSpan(0,col+1,SKIP_CELL);
    (*pTable)(1,col++) << COLHDR(_T("T"), rptLengthUnitTag, pDispUnits->ComponentDim);
    (*pTable)(1,col++) << _T("No.");
 
 
    pTable->SetRowSpan(0,col,2);
-   (*pTable)(0,col) << COLHDR(_T("W"),  rptLengthUnitTag, pDispUnits->SpanLength);
-   pTable->SetRowSpan(1,col++,SKIP_CELL);
+   (*pTable)(0,col++) << COLHDR(_T("W"),  rptLengthUnitTag, pDispUnits->SpanLength);
 
    pTable->SetRowSpan(0,col,2);
-   (*pTable)(0,col) << COLHDR(_T("ST"), rptLengthUnitTag, pDispUnits->ComponentDim);
-   pTable->SetRowSpan(1,col++,SKIP_CELL);
+   (*pTable)(0,col++) << COLHDR(_T("ST"), rptLengthUnitTag, pDispUnits->ComponentDim);
 
    pTable->SetRowSpan(0,col,2);
-   (*pTable)(0,col) << COLHDR(_T("SB"), rptLengthUnitTag, pDispUnits->ComponentDim);
-   pTable->SetRowSpan(1,col++,SKIP_CELL);
+   (*pTable)(0,col++) << COLHDR(_T("SB"), rptLengthUnitTag, pDispUnits->ComponentDim);
 
    pTable->SetRowSpan(0,col,2);
-   (*pTable)(0,col) << COLHDR(_T("FT"), rptLengthUnitTag, pDispUnits->ComponentDim);
-   pTable->SetRowSpan(1,col++,SKIP_CELL);
+   (*pTable)(0,col++) << COLHDR(_T("FT"), rptLengthUnitTag, pDispUnits->ComponentDim);
 
    pTable->SetRowSpan(0,col,2);
-   (*pTable)(0,col) << COLHDR(_T("FB"), rptLengthUnitTag, pDispUnits->ComponentDim);
-   pTable->SetRowSpan(1,col++,SKIP_CELL);
+   (*pTable)(0,col++) << COLHDR(_T("FB"), rptLengthUnitTag, pDispUnits->ComponentDim);
 
    pTable->SetColumnSpan(0,col,3);
    (*pTable)(0,col) << _T("LEFT CANTILEVER");
-   pTable->SetColumnSpan(0,col+1,SKIP_CELL);
-   pTable->SetColumnSpan(0,col+2,SKIP_CELL);
    (*pTable)(1,col++) << COLHDR(_T("EL"), rptLengthUnitTag, pDispUnits->SpanLength);
    (*pTable)(1,col++) << COLHDR(_T("CL"), rptLengthUnitTag, pDispUnits->ComponentDim);
    (*pTable)(1,col++) << COLHDR(_T("BL"), rptLengthUnitTag, pDispUnits->SpanLength);
 
    pTable->SetColumnSpan(0,col,3);
    (*pTable)(0,col) << _T("RIGHT CANTILEVER");
-   pTable->SetColumnSpan(0,col+1,SKIP_CELL);
-   pTable->SetColumnSpan(0,col+2,SKIP_CELL);
    (*pTable)(1,col++) << COLHDR(_T("ER"), rptLengthUnitTag, pDispUnits->SpanLength);
    (*pTable)(1,col++) << COLHDR(_T("CR"), rptLengthUnitTag, pDispUnits->ComponentDim);
    (*pTable)(1,col++) << COLHDR(_T("BR"), rptLengthUnitTag, pDispUnits->SpanLength);
 
    pTable->SetColumnSpan(0,col,7);
    (*pTable)(0,col) << _T("PROPERTIES");
-   pTable->SetColumnSpan(0,col+1,SKIP_CELL);
-   pTable->SetColumnSpan(0,col+2,SKIP_CELL);
-   pTable->SetColumnSpan(0,col+3,SKIP_CELL);
-   pTable->SetColumnSpan(0,col+4,SKIP_CELL);
-   pTable->SetColumnSpan(0,col+5,SKIP_CELL);
-   pTable->SetColumnSpan(0,col+6,SKIP_CELL);
-
    (*pTable)(1,col++) << COLHDR(_T("I"), rptLength4UnitTag, m_MomentOfInertia);
    (*pTable)(1,col++) << COLHDR(_T("YT"), rptLengthUnitTag, pDispUnits->SpanLength);
    (*pTable)(1,col++) << COLHDR(_T("YB"), rptLengthUnitTag, pDispUnits->SpanLength);
