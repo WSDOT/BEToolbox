@@ -121,15 +121,15 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    // Create the table
    //
    INIT_UV_PROTOTYPE( rptForceUnitValue,  axial,  pDispUnits->GeneralForce, false);
-   INIT_UV_PROTOTYPE( rptMomentUnitValue, moment, pDispUnits->SmallMoment,  false);
+   INIT_UV_PROTOTYPE( rptMomentUnitValue, moment, pDispUnits->Moment,  false);
 
    rptRcTable* pTable = rptStyleManager::CreateDefaultTable(5);
    (*pLayoutTable)(0,0) << pTable;
 
-   (*pTable)(0,0) << COLHDR(Sub2(_T("M"),_T("n")), rptMomentUnitTag, pDispUnits->SmallMoment);
+   (*pTable)(0,0) << COLHDR(Sub2(_T("M"),_T("n")), rptMomentUnitTag, pDispUnits->Moment);
    (*pTable)(0,1) << COLHDR(Sub2(_T("P"),_T("n")), rptForceUnitTag,  pDispUnits->GeneralForce);
    (*pTable)(0,2) << symbol(phi);
-   (*pTable)(0,3) << COLHDR(symbol(phi) << Sub2(_T("M"),_T("n")), rptMomentUnitTag, pDispUnits->SmallMoment);
+   (*pTable)(0,3) << COLHDR(symbol(phi) << Sub2(_T("M"),_T("n")), rptMomentUnitTag, pDispUnits->Moment);
    (*pTable)(0,4) << COLHDR(symbol(phi) << Sub2(_T("P"),_T("n")), rptForceUnitTag,  pDispUnits->GeneralForce);
 
 
@@ -191,7 +191,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
    pDC->Rectangle(rect);
    pDC->SelectObject(pOldBrush);
 
-   MomentTool momentTool(pDispUnits->SmallMoment);
+   MomentTool momentTool(pDispUnits->Moment);
    AxialTool  axialTool(pDispUnits->GeneralForce);
    grGraphXY graph(momentTool,axialTool);
 
@@ -203,7 +203,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
 
    // Setup X-axis
    CString strMoment;
-   strMoment.Format(_T("Moment (%s)"),pDispUnits->SmallMoment.UnitOfMeasure.UnitTag().c_str());
+   strMoment.Format(_T("Moment (%s)"),pDispUnits->Moment.UnitOfMeasure.UnitTag().c_str());
    graph.SetXAxisTitle(strMoment.LockBuffer());
    strMoment.UnlockBuffer();
    graph.SetXAxisNiceRange(true);
@@ -234,7 +234,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
       pn->get_X(&Mn);
       pn->get_Y(&Pn);
 
-      Mn = ::ConvertFromSysUnits(Mn,pDispUnits->SmallMoment.UnitOfMeasure);
+      Mn = ::ConvertFromSysUnits(Mn,pDispUnits->Moment.UnitOfMeasure);
       Pn = ::ConvertFromSysUnits(Pn,pDispUnits->GeneralForce.UnitOfMeasure);
 
       CComPtr<IPoint2d> pr;
@@ -244,7 +244,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
       pr->get_X(&Mr);
       pr->get_Y(&Pr);
 
-      Mr = ::ConvertFromSysUnits(Mr,pDispUnits->SmallMoment.UnitOfMeasure);
+      Mr = ::ConvertFromSysUnits(Mr,pDispUnits->Moment.UnitOfMeasure);
       Pr = ::ConvertFromSysUnits(Pr,pDispUnits->GeneralForce.UnitOfMeasure);
 
       graph.AddPoint(series1,gpPoint2d(Mn,-Pn));      

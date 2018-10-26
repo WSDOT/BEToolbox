@@ -23,7 +23,7 @@
 #pragma once
 
 #ifndef _BETOOLBOX_VERSION
-#define _BETOOLBOX_VERSION 325 // version 3.2.5
+#define _BETOOLBOX_VERSION 326 // version 3.2.6
 #endif
 
 #include <\ARP\BridgeLink\Include\BridgeLinkVersion.h>
