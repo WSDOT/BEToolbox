@@ -30,9 +30,14 @@
 #include <WBFLUnitServer.h>
 #include <WBFLUnitServer_i.c>
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
 #endif
+
+
 
 //
 //TODO: If this DLL is dynamically linked against the MFC DLLs,

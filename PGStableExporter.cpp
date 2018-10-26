@@ -47,6 +47,13 @@
 #include <PgsExt\PrecastSegmentData.h>
 #include <PgsExt\GirderLabel.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+
 HRESULT CPGStableExporter::FinalConstruct()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());

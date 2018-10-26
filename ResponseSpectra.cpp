@@ -152,6 +152,7 @@ Float64 CResponseSpectra::GetSa(Float64 time) const
    }
    else
    {
+#pragma warning(disable:4723) // this is a divide by zero warning... can't ever get here with 0.0, see first statement in if block above
       return Sd1/time;
    }
 }

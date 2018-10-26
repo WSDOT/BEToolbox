@@ -23,9 +23,10 @@
 #pragma once
 
 // CBEToolboxDoc document
+#include "BEToolboxLib.h"
 #include <EAF\EAFDocument.h>
 
-class CBEToolboxDoc : public CEAFDocument
+class BETCLASS CBEToolboxDoc : public CEAFDocument
 {
 	DECLARE_DYNAMIC(CBEToolboxDoc)
 

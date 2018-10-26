@@ -81,21 +81,45 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
+    <Import Project="..\BridgeLink\XSD.props" />
+    <Import Project="..\BridgeLink\BridgeLink.props" />
+    <Import Project="..\WBFL\WBFL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
+    <Import Project="..\BridgeLink\XSD.props" />
+    <Import Project="..\BridgeLink\BridgeLink.props" />
+    <Import Project="..\WBFL\WBFL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
+    <Import Project="..\BridgeLink\XSD.props" />
+    <Import Project="..\BridgeLink\BridgeLink.props" />
+    <Import Project="..\WBFL\WBFL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
+    <Import Project="..\BridgeLink\XSD.props" />
+    <Import Project="..\BridgeLink\BridgeLink.props" />
+    <Import Project="..\WBFL\WBFL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
+    <Import Project="..\BridgeLink\XSD.props" />
+    <Import Project="..\BridgeLink\BridgeLink.props" />
+    <Import Project="..\WBFL\WBFL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BridgeLink\ObjectiveGrid.props" />
+    <Import Project="..\BridgeLink\XSD.props" />
+    <Import Project="..\BridgeLink\BridgeLink.props" />
+    <Import Project="..\WBFL\WBFL.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -630,16 +654,23 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <None Include="BEToolbox.tip" />
     <None Include="BEToolboxComponentInfo.rgs" />
     <None Include="BEToolboxPlugin.rgs" />
+    <None Include="BoxGdrTool.rgs" />
     <None Include="CurvelExporter.rgs" />
     <None Include="CurvelImporter.rgs" />
+    <None Include="CurvelTool.rgs" />
     <None Include="GenCompExporter.rgs" />
+    <None Include="GenCompTool.rgs" />
+    <None Include="GirCompTool.rgs" />
     <None Include="PGStableExporter.rgs" />
+    <None Include="PGStableTool.rgs" />
     <None Include="res\BoxGdr.emf" />
     <None Include="res\GirComp.emf" />
     <None Include="res\PrismaticStrandLayout.emf" />
     <None Include="res\StrandLayout.emf" />
     <None Include="res\Superelevation.emf" />
     <None Include="res\VertCurve.emf" />
+    <None Include="SpectraTool.rgs" />
+    <None Include="UltColTool.rgs" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="BEToolbox.idl" />
@@ -654,6 +685,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include="BEToolboxLib.h" />
     <ClInclude Include="BEToolboxPlugin.h" />
     <ClInclude Include="BEToolboxStatusBar.h" />
+    <ClInclude Include="BEToolboxTool.h" />
     <ClInclude Include="BEToolboxTypes.h" />
     <ClInclude Include="BEToolboxUtilities.h" />
     <ClInclude Include="BEToolboxVersion.h" />
@@ -740,6 +772,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include="SpectraRptView.h" />
     <ClInclude Include="SpectraTitlePageBuilder.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ToolImpl.h" />
+    <ClInclude Include="Tools.h" />
     <ClInclude Include="UltColChapterBuilder.h" />
     <ClInclude Include="UltColChildFrame.h" />
     <ClInclude Include="UltColDlgBar.h" />

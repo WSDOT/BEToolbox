@@ -24,47 +24,24 @@
 
 #include "stdafx.h"
 #include "BEToolboxPlugin.h"
-#include "BoxGdrDocTemplate.h"
-#include "BoxGdrDoc.h"
-#include "BoxGdrRptView.h"
-#include "BoxGdrChildFrame.h"
-
-#include "GenCompDocTemplate.h"
-#include "GenCompDoc.h"
-#include "GenCompRptView.h"
-#include "GenCompChildFrame.h"
-
-#include "GirCompDocTemplate.h"
-#include "GirCompDoc.h"
-#include "GirCompRptView.h"
-#include "GirCompChildFrame.h"
-
-#include "UltColDocTemplate.h"
-#include "UltColDoc.h"
-#include "UltColView.h"
-#include "UltColChildFrame.h"
-
-#include "CurvelDocTemplate.h"
-#include "CurvelDoc.h"
-#include "CurvelRptView.h"
-#include "CurvelChildFrame.h"
-
-#include "PGStableDocTemplate.h"
-#include "PGStableDoc.h"
-#include "PGStableTabView.h"
-#include "PGStableChildFrame.h"
-
-#include "SpectraDocTemplate.h"
-#include "SpectraDoc.h"
-#include "SpectraRptView.h"
-#include "SpectraChildFrame.h"
+#include "PGStablePluginCATID.h"
+#include <EAF\EAFApp.h>
 
 #include <MFCTools\VersionInfo.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+
 #define ID_MANAGE_PLUGINS 37000
+#define ID_MANAGE_PGSTABLE_PLUGINS 37001
 
 BEGIN_MESSAGE_MAP(CMyCmdTarget, CCmdTarget)
    ON_COMMAND(ID_MANAGE_PLUGINS, OnManagePlugins)
+   ON_COMMAND(ID_MANAGE_PGSTABLE_PLUGINS, OnManagePGStablePlugins)
 END_MESSAGE_MAP()
 
 void CMyCmdTarget::OnManagePlugins()
@@ -72,16 +49,29 @@ void CMyCmdTarget::OnManagePlugins()
    m_pMyAppPlugin->ManagePlugins();
 }
 
+void CMyCmdTarget::OnManagePGStablePlugins()
+{
+   m_pMyAppPlugin->ManagePGStablePlugins();
+}
+
 // CBEToolboxPlugin
 BOOL CBEToolboxPlugin::Init(CEAFApp* pParent)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    m_DocumentationImpl.Init(this);
+   m_Tools.SetParent(pParent);
+   m_Tools.SetCATID(CATID_BEToolboxTool);
+
+   if (m_Tools.LoadPlugins())
+   {
+      m_Tools.InitPlugins();
+   }
    return TRUE;
 }
 
 void CBEToolboxPlugin::Terminate()
 {
+   m_Tools.UnloadPlugins();
 }
 
 void CBEToolboxPlugin::IntegrateWithUI(BOOL bIntegrate)
@@ -97,105 +87,19 @@ void CBEToolboxPlugin::IntegrateWithUI(BOOL bIntegrate)
 
    if (bIntegrate)
    {
-      pManageMenu->AppendMenu(ID_MANAGE_PLUGINS, _T("PGStable Plugins..."), this);
+      pManageMenu->AppendMenu(ID_MANAGE_PLUGINS, _T("BEToolbox Tools..."), this);
+      pManageMenu->AppendMenu(ID_MANAGE_PGSTABLE_PLUGINS, _T("PGStable plugins..."), this);
    }
    else
    {
+      pManageMenu->RemoveMenu(ID_MANAGE_PGSTABLE_PLUGINS, MF_BYCOMMAND, this);
       pManageMenu->RemoveMenu(ID_MANAGE_PLUGINS, MF_BYCOMMAND, this);
    }
 }
 
 std::vector<CEAFDocTemplate*> CBEToolboxPlugin::CreateDocTemplates()
 {
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-   std::vector<CEAFDocTemplate*> vDocTemplates;
-
-   CBoxGdrDocTemplate* pBoxGdrDocTemplate;
-	pBoxGdrDocTemplate = new CBoxGdrDocTemplate(
-      IDR_BOXGDR,
-      nullptr,
-		RUNTIME_CLASS(CBoxGdrDoc),
-		RUNTIME_CLASS(CBoxGdrChildFrame),
-		RUNTIME_CLASS(CBoxGdrRptView),
-      nullptr,1);
-
-   vDocTemplates.push_back(pBoxGdrDocTemplate);
-
-
-   CGenCompDocTemplate* pGenCompDocTemplate;
-	pGenCompDocTemplate = new CGenCompDocTemplate(
-      IDR_GENCOMP,
-      nullptr,
-		RUNTIME_CLASS(CGenCompDoc),
-		RUNTIME_CLASS(CGenCompChildFrame),
-		RUNTIME_CLASS(CGenCompRptView),
-      nullptr,1);
-
-   vDocTemplates.push_back(pGenCompDocTemplate);
-
-
-   CGirCompDocTemplate* pGirCompDocTemplate;
-	pGirCompDocTemplate = new CGirCompDocTemplate(
-      IDR_GIRCOMP,
-      nullptr,
-		RUNTIME_CLASS(CGirCompDoc),
-		RUNTIME_CLASS(CGirCompChildFrame),
-		RUNTIME_CLASS(CGirCompRptView),
-      nullptr,1);
-
-   vDocTemplates.push_back(pGirCompDocTemplate);
-
-
-   CUltColDocTemplate* pUltColDocTemplate;
-	pUltColDocTemplate = new CUltColDocTemplate(
-      IDR_ULTCOL,
-      nullptr,
-		RUNTIME_CLASS(CUltColDoc),
-		RUNTIME_CLASS(CUltColChildFrame),
-		RUNTIME_CLASS(CUltColView),
-      nullptr,1);
-
-   vDocTemplates.push_back(pUltColDocTemplate);
-
-
-   CCurvelDocTemplate* pCurvelDocTemplate;
-	pCurvelDocTemplate = new CCurvelDocTemplate(
-      IDR_CURVEL,
-      nullptr,
-		RUNTIME_CLASS(CCurvelDoc),
-		RUNTIME_CLASS(CCurvelChildFrame),
-		RUNTIME_CLASS(CCurvelRptView),
-      nullptr,1);
-
-   vDocTemplates.push_back(pCurvelDocTemplate);
-
-
-
-   CPGStableDocTemplate* pPGStableDocTemplate;
-	pPGStableDocTemplate = new CPGStableDocTemplate(
-      IDR_PGSTABLE,
-      nullptr,
-		RUNTIME_CLASS(CPGStableDoc),
-		RUNTIME_CLASS(CPGStableChildFrame),
-		RUNTIME_CLASS(CPGStableTabView),
-      nullptr,1);
-
-   vDocTemplates.push_back(pPGStableDocTemplate);
-
-
-   CSpectraDocTemplate* pSpectraDocTemplate;
-   pSpectraDocTemplate = new CSpectraDocTemplate(
-      IDR_SPECTRA,
-      nullptr,
-      RUNTIME_CLASS(CSpectraDoc),
-      RUNTIME_CLASS(CSpectraChildFrame),
-      RUNTIME_CLASS(CSpectraRptView),
-      nullptr,1);
-
-   vDocTemplates.push_back(pSpectraDocTemplate);
-
-   return vDocTemplates;
+   return m_Tools.CreateDocumentTemplates();
 }
 
 HMENU CBEToolboxPlugin::GetSharedMenuHandle()
@@ -284,36 +188,40 @@ BOOL CBEToolboxPlugin::GetToolTipMessageString(UINT nID, CString& rMessage) cons
    return TRUE;
 }
 
-
 void CBEToolboxPlugin::ManagePlugins()
 {
-   std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage PGStable Plugins"), _T("Select the PGStable plugins that you want to be available"), CATID_PGStablePlugin, EAFGetMainFrame());
+   std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage BEToolbox Tools"), _T("Select the BEToolbox Tools that you want to be available"), CATID_BEToolboxTool, EAFGetMainFrame());
 
    if (pluginStates.size() == 0)
+   {
       return;
+   }
 
    // Find our document template
    CEAFApp* pApp = EAFGetApp();
 
-   // write the plugin states into the registry 
-   std::vector<CEAFPluginState>::iterator iter;
-   for (iter = pluginStates.begin(); iter != pluginStates.end(); iter++)
+   // write the plugin states into the registry
+   for(auto& state : pluginStates)
    {
-      CEAFPluginState& state = *iter;
-#if !defined _WBFL_VERSION
-#error _WBFL_VERSION must be defined... add #include <WBFLAll.h>
-#endif
-
-#if _WBFL_VERSION < 330
-      // Prior to WBFL version 3.3, there is a bug in the state.IsEnabled function
-      // This code works around the bug
-      bool bIsEnabled = false;
-      if ((state.InitiallyEnabled() && !state.StateChanged()) || (!state.InitiallyEnabled() && state.StateChanged()))
-         bIsEnabled = true;
-
-      pApp->WriteProfileString(_T("Plugins"), state.GetCLSIDString(), bIsEnabled ? _T("Enabled") : _T("Disabled"));
-#else
       pApp->WriteProfileString(_T("Plugins"), state.GetCLSIDString(), state.IsEnabled() ? _T("Enabled") : _T("Disabled"));
-#endif
+   }
+}
+
+void CBEToolboxPlugin::ManagePGStablePlugins()
+{
+   std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage PGStable plugins"), _T("Select the PGStable plugins that you want to be available"), CATID_PGStablePlugin, EAFGetMainFrame());
+
+   if (pluginStates.size() == 0)
+   {
+      return;
+   }
+
+   // Find our document template
+   CEAFApp* pApp = EAFGetApp();
+
+   // write the plugin states into the registry
+   for (auto& state : pluginStates)
+   {
+      pApp->WriteProfileString(_T("Plugins"), state.GetCLSIDString(), state.IsEnabled() ? _T("Enabled") : _T("Disabled"));
    }
 }

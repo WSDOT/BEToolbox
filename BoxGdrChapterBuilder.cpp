@@ -26,6 +26,13 @@
 
 #include <GraphicsLib\GraphicsLib.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+
 //////////////////////////////////
 CBoxGdrChapterBuilder::CBoxGdrChapterBuilder(CBoxGdrDoc* pDoc) :
 m_Area(unitMeasure::Feet2,0.001,6,2),

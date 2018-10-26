@@ -38,6 +38,13 @@
 #include <PgsExt\Prompts.h>
 #include <PgsExt\BridgeDescription2.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+
 HRESULT CGenCompExporter::FinalConstruct()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -126,8 +133,9 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
    if (fileDlg.DoModal() == IDOK)
    {
       GET_IFACE2(pBroker, IShapes, pShapes);
+      GET_IFACE2(pBroker, ISectionProperties, pSectProps);
       CComPtr<IShape> shape;
-      pShapes->GetSegmentShape(intervalIdx, poi, false, pgsTypes::scGirder, &shape);
+      pShapes->GetSegmentShape(intervalIdx, poi, false, pgsTypes::scGirder,pSectProps->GetHaunchAnalysisSectionPropertiesType(), &shape);
 
       CComPtr<IPoint2dCollection> primaryShapePoints;
       CComPtr<IPoint2dCollection> secondaryShapePoints;

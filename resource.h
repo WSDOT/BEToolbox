@@ -380,6 +380,13 @@
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
 #define ID_PLACEHOLDER                  36869
+#define IDR_ULTCOLTOOL                  250
+#define IDR_BOXGDRTOOL                  251
+#define IDR_GENCOMPTOOL                 252
+#define IDR_GIRCOMPTOOL                 253
+#define IDR_CURVELTOOL                  254
+#define IDR_PGSTABLETOOL                255
+#define IDR_SPECTRATOOL                 256
 
 // Next default values for new objects
 // 

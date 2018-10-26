@@ -1,0 +1,25 @@
+HKCR
+{
+	BEToolbox.BoxGdr.1 = s 'BoxGdr'
+	{
+		CLSID = s '{4C9C743B-199E-43C8-AF13-F1D16669ACC9}'
+	}
+	BEToolbox.BoxGdr = s 'BoxGdr'
+	{
+		CLSID = s '{4C9C743B-199E-43C8-AF13-F1D16669ACC9}'
+		CurVer = s 'BEToolbox.BoxGdr.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {4C9C743B-199E-43C8-AF13-F1D16669ACC9} = s 'BoxGdr'
+		{
+			ProgID = s 'BEToolbox.BoxGdr.1'
+			VersionIndependentProgID = s 'BEToolbox.BoxGdr'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{}'
+		}
+	}
+}
