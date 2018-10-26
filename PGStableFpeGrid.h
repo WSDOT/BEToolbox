@@ -62,7 +62,7 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-   void InsertFpe(Float64 X,Float64 FpeStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 YpsTemp,int YpsTempMeasure);
+   void InsertFpe(Float64 X,Float64 FpeStraight,Float64 XpsStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 XpsHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 XpsTemp,Float64 YpsTemp,int YpsTempMeasure);
 
    // virtual overrides for grid
    virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
@@ -77,7 +77,7 @@ public:
    void CustomInit();
    void AddFpe();
 
-   void GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float64* pYpsStraight,int* pYpsStraightMeasure,Float64* pFpeHarped,Float64* pYpsHarped,int* pYpsHarpedMeasure,Float64* pFpeTemp,Float64* pYpsTemp,int* pYpsTempMeasure);
+   void GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float64* pXpsStraight,Float64* pYpsStraight,int* pYpsStraightMeasure,Float64* pFpeHarped,Float64* pXpsHarped,Float64* pYpsHarped,int* pYpsHarpedMeasure,Float64* pFpeTemp,Float64* pXpsTemp,Float64* pYpsTemp,int* pYpsTempMeasure);
    void RemoveSelected();
    BOOL AreSelected();
 

@@ -98,7 +98,7 @@ public:
    Float64 GetHeightOfGirderBottomAboveRoadway() const;
    bool SetHeightOfGirderBottomAboveRoadway(Float64 Hgb);
 
-   void ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pYs,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pYt);
+   void ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt);
    void GetStrandProfiles(const CPGStableStrands& strands,const stbGirder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const;
 
    HRESULT Save(IStructuredSave* pStrSave);
@@ -139,7 +139,7 @@ protected:
    void ResolveSimplifedHaulingStrandLocations() const;
    void ResolveExactHaulingStrandLocations() const;
    void MapSimplifiedToExactStrandLocations(CPGStableStrands* pStrands);
-   void GetSimplifiedStrandLocations(const CPGStableStrands* pStrands,const stbGirder* pGirder,Float64* pYpsStraight,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pYpsTemp) const;
-   void GetStrandLocations(const CPGStableFpe& fpe,const stbGirder* pGirder,Float64* pYs,Float64* pYh,Float64* pYt) const;
+   void GetSimplifiedStrandLocations(const CPGStableStrands* pStrands,const stbGirder* pGirder,Float64* pXpsStraight,Float64* pYpsStraight,Float64* pXpsHarped,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXpsTemp,Float64* pYpsTemp) const;
+   void GetStrandLocations(const CPGStableFpe& fpe,const stbGirder* pGirder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pYh,Float64* pXt,Float64* pYt) const;
 
 };

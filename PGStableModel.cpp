@@ -319,25 +319,20 @@ void CPGStableModel::ResolveSimplifedLiftingStrandLocations() const
    m_LiftingStabilityProblem.AdjustForXferLength(true);
    m_LiftingStabilityProblem.SetXferLength(m_Strands[m_GirderType][LIFTING].XferLength,L);
 
-   Float64 YpsStraight,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,YpsTemp;
-   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][LIFTING],&m_Girder[m_GirderType],&YpsStraight,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&YpsTemp);
+   Float64 XpsStraight,YpsStraight,XpsHarped,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,XpsTemp,YpsTemp;
+   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][LIFTING],&m_Girder[m_GirderType],&XpsStraight,&YpsStraight,&XpsHarped,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&XpsTemp,&YpsTemp);
 
    m_LiftingStabilityProblem.ClearFpe();
 
    Float64 FpeStraight = m_Strands[m_GirderType][LIFTING].FpeStraight;
    Float64 FpeHarped   = m_Strands[m_GirderType][LIFTING].FpeHarped;
    Float64 FpeTemp     = m_Strands[m_GirderType][LIFTING].FpeTemp;
-   m_LiftingStabilityProblem.AddFpe(0,  FpeStraight,YpsStraight,FpeHarped,Yh1,FpeTemp,YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(Xh1,FpeStraight,YpsStraight,FpeHarped,Yh1,FpeTemp,YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(Xh2,FpeStraight,YpsStraight,FpeHarped,Yh2,FpeTemp,YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(Xh3,FpeStraight,YpsStraight,FpeHarped,Yh3,FpeTemp,YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(Xh4,FpeStraight,YpsStraight,FpeHarped,Yh4,FpeTemp,YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(L,  FpeStraight,YpsStraight,FpeHarped,Yh4,FpeTemp,YpsTemp);
-
-   m_LiftingStabilityProblem.SetFpeLateralEccentricity(-m_Strands[m_GirderType][LIFTING].ex); 
-   // use negative for ex because, ex is input in girder section coordinates so positive values are 
-   // to the right of the Y axis. However, if the PS force is right of the Y axis, this is a
-   // negative eccentricity
+   m_LiftingStabilityProblem.AddFpe(0,   FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh1, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(Xh1, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh1, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(Xh2, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh2, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(Xh3, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh3, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(Xh4, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh4, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(L,   FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh4, FpeTemp, XpsTemp, YpsTemp);
 }
 
 void CPGStableModel::ResolveExactLiftingStrandLocations() const
@@ -348,16 +343,11 @@ void CPGStableModel::ResolveExactLiftingStrandLocations() const
    {
       if ( ::InRange(0.0,fpe.X,Lg) )
       {
-         Float64 Ys,Yh,Yt;
-         GetStrandLocations(fpe,&m_Girder[m_GirderType],&Ys,&Yh,&Yt);
-         m_LiftingStabilityProblem.AddFpe(fpe.X,fpe.FpeStraight,Ys,fpe.FpeHarped,Yh,fpe.FpeTemp,Yt);
+         Float64 Xs,Ys,Xh,Yh,Xt,Yt;
+         GetStrandLocations(fpe,&m_Girder[m_GirderType],&Xs,&Ys,&Xh,&Yh,&Xt,&Yt);
+         m_LiftingStabilityProblem.AddFpe(fpe.X,fpe.FpeStraight,Xs,Ys,fpe.FpeHarped,Xh,Yh,fpe.FpeTemp,Xt,Yt);
       }
    }
-
-   m_LiftingStabilityProblem.SetFpeLateralEccentricity(-m_Strands[m_GirderType][LIFTING].ex);
-   // use negative for ex because, ex is input in girder section coordinates so positive values are 
-   // to the right of the Y axis. However, if the PS force is right of the Y axis, this is a
-   // negative eccentricity
 }
 
 void CPGStableModel::ResolveHaulingStrandLocations() const
@@ -378,25 +368,20 @@ void CPGStableModel::ResolveSimplifedHaulingStrandLocations() const
    m_HaulingStabilityProblem.AdjustForXferLength(true);
    m_HaulingStabilityProblem.SetXferLength(m_Strands[m_GirderType][HAULING].XferLength,L);
 
-   Float64 YpsStraight,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,YpsTemp;
-   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][HAULING],&m_Girder[m_GirderType],&YpsStraight,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&YpsTemp);
+   Float64 XpsStraight,YpsStraight,XpsHarped,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,XpsTemp,YpsTemp;
+   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][HAULING],&m_Girder[m_GirderType],&XpsStraight,&YpsStraight,&XpsHarped,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&XpsTemp,&YpsTemp);
 
    m_HaulingStabilityProblem.ClearFpe();
 
    Float64 FpeStraight = m_Strands[m_GirderType][HAULING].FpeStraight;
    Float64 FpeHarped   = m_Strands[m_GirderType][HAULING].FpeHarped;
    Float64 FpeTemp     = m_Strands[m_GirderType][HAULING].FpeTemp;
-   m_HaulingStabilityProblem.AddFpe(0,  FpeStraight,YpsStraight,FpeHarped,Yh1,FpeTemp,YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(Xh1,FpeStraight,YpsStraight,FpeHarped,Yh1,FpeTemp,YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(Xh2,FpeStraight,YpsStraight,FpeHarped,Yh2,FpeTemp,YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(Xh3,FpeStraight,YpsStraight,FpeHarped,Yh3,FpeTemp,YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(Xh4,FpeStraight,YpsStraight,FpeHarped,Yh4,FpeTemp,YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(L,  FpeStraight,YpsStraight,FpeHarped,Yh4,FpeTemp,YpsTemp);
-
-   m_HaulingStabilityProblem.SetFpeLateralEccentricity(-m_Strands[m_GirderType][HAULING].ex);
-   // use negative for ex because, ex is input in girder section coordinates so positive values are 
-   // to the right of the Y axis. However, if the PS force is right of the Y axis, this is a
-   // negative eccentricity
+   m_HaulingStabilityProblem.AddFpe(0,   FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh1, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(Xh1, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh1, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(Xh2, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh2, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(Xh3, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh3, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(Xh4, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh4, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(L,   FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh4, FpeTemp, XpsTemp, YpsTemp);
 }
 
 void CPGStableModel::ResolveExactHaulingStrandLocations() const
@@ -407,16 +392,11 @@ void CPGStableModel::ResolveExactHaulingStrandLocations() const
    {
       if ( ::InRange(0.0,fpe.X,Lg) )
       {
-         Float64 Ys,Yh,Yt;
-         GetStrandLocations(fpe,&m_Girder[m_GirderType],&Ys,&Yh,&Yt);
-         m_HaulingStabilityProblem.AddFpe(fpe.X,fpe.FpeStraight,Ys,fpe.FpeHarped,Yh,fpe.FpeTemp,Yt);
+         Float64 Xs, Ys, Xh, Yh, Xt, Yt;
+         GetStrandLocations(fpe, &m_Girder[m_GirderType], &Xs, &Ys, &Xh, &Yh, &Xt, &Yt);
+         m_HaulingStabilityProblem.AddFpe(fpe.X, fpe.FpeStraight, Xs, Ys, fpe.FpeHarped, Xh, Yh, fpe.FpeTemp, Xt, Yt);
       }
    }
-
-   m_HaulingStabilityProblem.SetFpeLateralEccentricity(-m_Strands[m_GirderType][HAULING].ex);
-   // use negative for ex because, ex is input in girder section coordinates so positive values are 
-   // to the right of the Y axis. However, if the PS force is right of the Y axis, this is a
-   // negative eccentricity
 }
 
 void CPGStableModel::MapSimplifiedToExactStrandLocations(CPGStableStrands* pStrands)
@@ -425,26 +405,30 @@ void CPGStableModel::MapSimplifiedToExactStrandLocations(CPGStableStrands* pStra
 
    // this call gets the strand location information for the stability engine.
    // we only want to create input parameters so we only want the X values for the harped strands
-   Float64 YpsStraight,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,YpsTemp;
-   GetSimplifiedStrandLocations(pStrands,&m_Girder[m_GirderType],&YpsStraight,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&YpsTemp);
+   Float64 XpsStraight,YpsStraight,XpsHarped,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,XpsTemp,YpsTemp;
+   GetSimplifiedStrandLocations(pStrands,&m_Girder[m_GirderType],&XpsStraight,&YpsStraight,&XpsHarped,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&XpsTemp,&YpsTemp);
 
    Float64 L = m_Girder[m_GirderType].GetGirderLength();
 
    pStrands->m_vFpe.clear();
-   pStrands->m_vFpe.insert(CPGStableFpe(0,  pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh1,pStrands->Yh1Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
-   pStrands->m_vFpe.insert(CPGStableFpe(Xh1,pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh1,pStrands->Yh1Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
-   pStrands->m_vFpe.insert(CPGStableFpe(Xh2,pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh2,pStrands->Yh2Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
-   pStrands->m_vFpe.insert(CPGStableFpe(Xh3,pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh3,pStrands->Yh3Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
-   pStrands->m_vFpe.insert(CPGStableFpe(Xh4,pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh4,pStrands->Yh4Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
-   pStrands->m_vFpe.insert(CPGStableFpe(L,  pStrands->FpeStraight,pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped,pStrands->Yh4,pStrands->Yh4Measure, pStrands->FpeTemp,pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(0,  pStrands->FpeStraight, XpsStraight, pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped, XpsHarped, pStrands->Yh1,pStrands->Yh1Measure, pStrands->FpeTemp, XpsTemp, pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(Xh1,pStrands->FpeStraight, XpsStraight, pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped, XpsHarped, pStrands->Yh1,pStrands->Yh1Measure, pStrands->FpeTemp, XpsTemp, pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(Xh2,pStrands->FpeStraight, XpsStraight, pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped, XpsHarped, pStrands->Yh2,pStrands->Yh2Measure, pStrands->FpeTemp, XpsTemp, pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(Xh3,pStrands->FpeStraight, XpsStraight, pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped, XpsHarped, pStrands->Yh3,pStrands->Yh3Measure, pStrands->FpeTemp, XpsTemp, pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(Xh4,pStrands->FpeStraight, XpsStraight, pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped, XpsHarped, pStrands->Yh4,pStrands->Yh4Measure, pStrands->FpeTemp, XpsTemp, pStrands->Yt,pStrands->YtMeasure));
+   pStrands->m_vFpe.insert(CPGStableFpe(L,  pStrands->FpeStraight, XpsStraight, pStrands->Ys,pStrands->YsMeasure, pStrands->FpeHarped, XpsHarped, pStrands->Yh4,pStrands->Yh4Measure, pStrands->FpeTemp, XpsTemp, pStrands->Yt,pStrands->YtMeasure));
 }
 
-void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStrands,const stbGirder* pGirder,Float64* pYpsStraight,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pYpsTemp) const
+void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStrands,const stbGirder* pGirder,Float64* pXpsStraight,Float64* pYpsStraight,Float64* pXpsHarped,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXpsTemp,Float64* pYpsTemp) const
 {
    Float64 L = pGirder->GetGirderLength();
 
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
    pGirder->GetSectionProperties(0,stbTypes::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+
+   Float64 XpsStraight = Xleft + pStrands->ex;
+   Float64 XpsHarped = Xleft + pStrands->ex;
+   Float64 XpsTemp = Xleft + pStrands->ex;
 
    Float64 YpsStraight = (pStrands->YsMeasure == TOP ? -pStrands->Ys : pStrands->Ys - Hg);
    Float64 YpsTemp = (pStrands->YtMeasure == TOP ? -pStrands->Yt : pStrands->Yt - Hg);
@@ -525,7 +509,9 @@ void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStran
       Yh4 = pStrands->Yh4 - Hg;
    }
    
+   *pXpsStraight = XpsStraight;
    *pYpsStraight = YpsStraight;
+   *pXpsHarped = XpsHarped;
    *pXh1 = Xh1;
    *pYh1 = Yh1;
    *pXh2 = Xh2;
@@ -534,6 +520,7 @@ void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStran
    *pYh3 = Yh3;
    *pXh4 = Xh4;
    *pYh4 = Yh4;
+   *pXpsTemp = XpsTemp;
    *pYpsTemp = YpsTemp;
 }
 
@@ -805,17 +792,17 @@ bool CPGStableModel::SetHeightOfGirderBottomAboveRoadway(Float64 Hgb)
    return false;
 }
 
-void CPGStableModel::ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pYs,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pYt)
+void CPGStableModel::ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt)
 {
-   GetSimplifiedStrandLocations(&strands,&girder,pYs,pXh1,pYh1,pXh2,pYh2,pXh3,pYh3,pXh4,pYh4,pYt);
+   GetSimplifiedStrandLocations(&strands,&girder,pXs,pYs,pXh,pXh1,pYh1,pXh2,pYh2,pXh3,pYh3,pXh4,pYh4,pXt,pYt);
 }
 
 void CPGStableModel::GetStrandProfiles(const CPGStableStrands& strands,const stbGirder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const
 {
    if ( strands.strandMethod == CPGStableStrands::Simplified )
    {
-      Float64 Ys,Yt,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4;
-      GetSimplifiedStrandLocations(&strands,&girder,&Ys,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&Yt);
+      Float64 Xs,Ys,Xh,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,Xt,Yt;
+      GetSimplifiedStrandLocations(&strands,&girder,&Xs,&Ys,&Xh,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&Xt,&Yt);
 
       Float64 Lg = girder.GetGirderLength();
 
@@ -843,9 +830,9 @@ void CPGStableModel::GetStrandProfiles(const CPGStableStrands& strands,const stb
       pvHarped->clear();
       pvTemp->clear();
 
-      Float64 Ys,Yh,Yt;
+      Float64 Xs,Ys,Xh,Yh,Xt,Yt;
       const CPGStableFpe& firstFpe = *strands.m_vFpe.begin();
-      GetStrandLocations(firstFpe,&girder,&Ys,&Yh,&Yt);
+      GetStrandLocations(firstFpe,&girder,&Xs,&Ys,&Xh,&Yh,&Xt,&Yt);
       pvStraight->emplace_back(0,Ys);
       pvHarped->emplace_back(0,Yh);
       pvTemp->emplace_back(0,Yt);
@@ -855,7 +842,7 @@ void CPGStableModel::GetStrandProfiles(const CPGStableStrands& strands,const stb
          if ( ::InRange(0.0,fpe.X,Lg) )
          {
             // ignore all fpe values that aren't on the girder
-            GetStrandLocations(fpe,&girder,&Ys,&Yh,&Yt);
+            GetStrandLocations(fpe,&girder,&Xs,&Ys,&Xh,&Yh,&Xt,&Yt);
             pvStraight->emplace_back(fpe.X,Ys);
             pvHarped->emplace_back(fpe.X,Yh);
             pvTemp->emplace_back(fpe.X,Yt);
@@ -865,7 +852,7 @@ void CPGStableModel::GetStrandProfiles(const CPGStableStrands& strands,const stb
       const CPGStableFpe& lastFpe = *strands.m_vFpe.rbegin();
       if (::InRange(0.0,lastFpe.X,Lg) )
       {
-         GetStrandLocations(lastFpe,&girder,&Ys,&Yh,&Yt);
+         GetStrandLocations(lastFpe,&girder,&Xs,&Ys,&Xh,&Yh,&Xt,&Yt);
          pvStraight->emplace_back(Lg,Ys);
          pvHarped->emplace_back(Lg,Yh);
          pvTemp->emplace_back(Lg,Yt);
@@ -873,7 +860,7 @@ void CPGStableModel::GetStrandProfiles(const CPGStableStrands& strands,const stb
    }
 }
 
-void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const stbGirder* pGirder,Float64* pYs,Float64* pYh,Float64* pYt) const
+void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const stbGirder* pGirder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pYh,Float64* pXt,Float64* pYt) const
 {
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
    pGirder->GetSectionProperties(fpe.X,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
@@ -886,6 +873,7 @@ void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const stbGirder*
    {
       *pYs = fpe.YpsStraight - Hg;
    }
+   *pXs = fpe.XpsStraight;
 
    if ( fpe.YpsHarpedMeasure == TOP )
    {
@@ -895,6 +883,7 @@ void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const stbGirder*
    {
       *pYh = fpe.YpsHarped - Hg;
    }
+   *pXh = fpe.XpsHarped;
 
    if ( fpe.YpsTempMeasure == TOP )
    {
@@ -904,6 +893,7 @@ void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const stbGirder*
    {
       *pYt = fpe.YpsTemp - Hg;
    }
+   *pXt = fpe.XpsTemp;
 }
 
 HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)

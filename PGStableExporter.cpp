@@ -229,6 +229,7 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
 
    model.SetGirderType((bIsPrismatic ? PRISMATIC : NONPRISMATIC));
    model.SetGirder(model.GetGirderType(),*pGirder->GetSegmentLiftingStabilityModel(segmentKey));
+   model.SetStressPointType(bIsPrismatic ? COMPUTE_STRESS_POINTS : DEFINE_STRESS_POINTS);
 
    GET_IFACE2(pBroker,IBridge,pBridge);
    Float64 Lg = pBridge->GetSegmentLength(segmentKey);
@@ -236,15 +237,17 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    GET_IFACE2(pBroker,ISectionProperties,pSectProps);
    GET_IFACE2(pBroker,IPointOfInterest,pPoi);
    GET_IFACE2(pBroker,IPretensionForce,pPSForce);
+   
    PoiList vPoi;
    pPoi->GetPointsOfInterest(segmentKey, &vPoi);
+
    CPGStableStrands liftingStrands = model.GetStrands(model.GetGirderType(),LIFTING);
    CPGStableStrands haulingStrands = model.GetStrands(model.GetGirderType(),HAULING);
    liftingStrands.strandMethod = CPGStableStrands::Detailed;
    haulingStrands.strandMethod = CPGStableStrands::Detailed;
    liftingStrands.m_vFpe.clear();
    haulingStrands.m_vFpe.clear();
-   bool bex = false;
+
    for (const pgsPointOfInterest& poi : vPoi)
    {
       Float64 X = poi.GetDistFromStart();
@@ -253,26 +256,24 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
          continue;
       }
 
+      Float64 Ytop = pSectProps->GetY(releaseIntervalIdx, poi, pgsTypes::TopGirder);
+      Float64 Xleft = pSectProps->GetXleft(releaseIntervalIdx, poi);
+
       Float64 Ns;
-      Float64 es, esx;
-      pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight, &Ns,&esx, &es);
-      Float64 eh = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped,   &Ns);
-      Float64 et = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary,&Ns);
+      Float64 esx, esy;
+      pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight, &Ns, &esx, &esy);
+      Float64 Xs = Xleft - esx;
+      Float64 Ys = Ytop + esy;
 
-      if (!bex)
-      {
-         liftingStrands.ex = esx;
-         haulingStrands.ex = esx;
-         bex = true;
-      }
+      pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped, &Ns, &esx, &esy);
+      Float64 Xh = Xleft - esx;
+      Float64 Yh = Ytop + esy;
 
-      Float64 Ytop = pSectProps->GetY(releaseIntervalIdx,poi,pgsTypes::TopGirder);
+      pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary, &Ns, &esx, &esy);
+      Float64 Xt = Xleft - esx;
+      Float64 Yt = Ytop + esy;
 
-      Float64 Ys = Ytop + es;
-      Float64 Yh = Ytop + eh;
-      Float64 Yt = Ytop + et;
-
-      if ( IsZero(et) )
+      if ( IsZero(Ns) )
       {
          // if there aren't any temporary strands, Yt is zero. This value doesn't
          // work well in PGStable so make it 2"
@@ -283,14 +284,15 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start);
       Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start);
 
-      liftingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Ys,TOP,Ph,Yh,TOP,Pt,Yt,TOP));
+      liftingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
 
       Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start);
       Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start);
       Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start);
 
-      haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Ys,TOP,Ph,Yh,TOP,Pt,Yt,TOP));
+      haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
    }
+
    model.SetStrands(model.GetGirderType(),LIFTING,liftingStrands);
    model.SetStrands(model.GetGirderType(),HAULING,haulingStrands);
 

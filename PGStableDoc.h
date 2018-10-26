@@ -107,7 +107,7 @@ public:
 
    CString UpdateEc(const CString& strFc,const CString& strDensity,const CString& strK1,const CString& strK2);
 
-   void ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pYs,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pYt);
+   void ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt);
    void GetStrandProfiles(const CPGStableStrands& strands,const stbGirder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
 
    stbLiftingResults GetLiftingResults() const;

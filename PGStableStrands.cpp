@@ -38,8 +38,8 @@ CPGStableFpe::CPGStableFpe()
    memset((void*)this,0,sizeof(CPGStableFpe));
 }
 
-CPGStableFpe::CPGStableFpe(Float64 X,Float64 FpeStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 YpsTemp,int YpsTempMeasure) :
-X(X),FpeStraight(FpeStraight),YpsStraight(YpsStraight),YpsStraightMeasure(YpsStraightMeasure),FpeHarped(FpeHarped),YpsHarped(YpsHarped),YpsHarpedMeasure(YpsHarpedMeasure),FpeTemp(FpeTemp),YpsTemp(YpsTemp),YpsTempMeasure(YpsTempMeasure)
+CPGStableFpe::CPGStableFpe(Float64 X,Float64 FpeStraight,Float64 XpsStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 XpsHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 XpsTemp,Float64 YpsTemp,int YpsTempMeasure) :
+X(X),FpeStraight(FpeStraight),XpsStraight(XpsStraight),YpsStraight(YpsStraight),YpsStraightMeasure(YpsStraightMeasure),FpeHarped(FpeHarped),XpsHarped(XpsHarped),YpsHarped(YpsHarped),YpsHarpedMeasure(YpsHarpedMeasure),FpeTemp(FpeTemp),XpsTemp(XpsTemp),YpsTemp(YpsTemp),YpsTempMeasure(YpsTempMeasure)
 {
 }
 
@@ -52,13 +52,16 @@ bool CPGStableFpe::operator==(const CPGStableFpe& other) const
 {
    if ( !IsEqual(X,other.X) ||
         !IsEqual(FpeStraight,other.FpeStraight) ||
-        !IsEqual(YpsStraight,other.YpsStraight) ||
+        !IsEqual(XpsStraight, other.XpsStraight) ||
+        !IsEqual(YpsStraight, other.YpsStraight) ||
         YpsStraightMeasure != other.YpsStraightMeasure ||
         !IsEqual(FpeHarped,other.FpeHarped) ||
-        !IsEqual(YpsHarped,other.YpsHarped) ||
+        !IsEqual(XpsHarped, other.XpsHarped) ||
+        !IsEqual(YpsHarped, other.YpsHarped) ||
         YpsHarpedMeasure != YpsHarpedMeasure ||
         !IsEqual(FpeTemp,other.FpeTemp) ||
-        !IsEqual(YpsTemp,other.YpsTemp) ||
+        !IsEqual(XpsTemp, other.XpsTemp) ||
+        !IsEqual(YpsTemp, other.YpsTemp) ||
         YpsTempMeasure != other.YpsTempMeasure )
    {
       return false;
@@ -183,15 +186,17 @@ bool CPGStableStrands::operator!=(const CPGStableStrands& other) const
 
 HRESULT CPGStableStrands::Save(IStructuredSave* pStrSave)
 {
-   pStrSave->BeginUnit(_T("Strands"),2.0);
+   pStrSave->BeginUnit(_T("Strands"),3.0);
 
    pStrSave->put_Property(_T("DefinitionMethod"),CComVariant(strandMethod));
-   pStrSave->put_Property(_T("ex"), CComVariant(ex)); // added in version 2
+   // pStrSave->put_Property(_T("ex"), CComVariant(ex)); // added in version 2, removed version 3
 
    if ( strandMethod == CPGStableStrands::Simplified )
    {
       pStrSave->put_Property(_T("XferLength"), CComVariant(XferLength));
 
+      pStrSave->put_Property(_T("ex"), CComVariant(ex)); // added in version 3
+                                                         
       // Straight Strands
       pStrSave->put_Property(_T("FpeStraight"),CComVariant(FpeStraight));
       pStrSave->put_Property(_T("Ys"),CComVariant(Ys));
@@ -231,15 +236,18 @@ HRESULT CPGStableStrands::Save(IStructuredSave* pStrSave)
          pStrSave->BeginUnit(_T("Fpe"),1.0);
          pStrSave->put_Property(_T("X"),CComVariant(fpe.X));
          pStrSave->put_Property(_T("FpeStraight"),CComVariant(fpe.FpeStraight));
-         pStrSave->put_Property(_T("YpsStraight"),CComVariant(fpe.YpsStraight));
+         pStrSave->put_Property(_T("XpsStraight"), CComVariant(fpe.XpsStraight)); // added in version 3
+         pStrSave->put_Property(_T("YpsStraight"), CComVariant(fpe.YpsStraight));
          pStrSave->put_Property(_T("YpsStraightMeasure"),CComVariant(fpe.YpsStraightMeasure));
 
          pStrSave->put_Property(_T("FpeHarped"),CComVariant(fpe.FpeHarped));
-         pStrSave->put_Property(_T("YpsHarped"),CComVariant(fpe.YpsHarped));
+         pStrSave->put_Property(_T("XpsHarped"), CComVariant(fpe.XpsHarped)); // added in version 3
+         pStrSave->put_Property(_T("YpsHarped"), CComVariant(fpe.YpsHarped));
          pStrSave->put_Property(_T("YpsHarpedMeasure"),CComVariant(fpe.YpsHarpedMeasure));
 
          pStrSave->put_Property(_T("FpeTemp"),CComVariant(fpe.FpeTemp));
-         pStrSave->put_Property(_T("YpsTemp"),CComVariant(fpe.YpsTemp));
+         pStrSave->put_Property(_T("XpsTemp"), CComVariant(fpe.XpsTemp)); // added in version 3
+         pStrSave->put_Property(_T("YpsTemp"), CComVariant(fpe.YpsTemp));
          pStrSave->put_Property(_T("YpsTempMeasure"),CComVariant(fpe.YpsTempMeasure));
 
          pStrSave->EndUnit(); // Fpe
@@ -265,9 +273,9 @@ HRESULT CPGStableStrands::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->get_Property(_T("DefinitionMethod"),&var);
       strandMethod = (CPGStableStrands::StrandMethod)var.lVal;
 
-      if (1 < version)
+      if (1 < version && version < 3)
       {
-         // added in vesrion 2
+         // added in version 2, removed in version 3
          var.vt = VT_R8;
          hr = pStrLoad->get_Property(_T("ex"), &var);
          ex = var.dblVal;
@@ -279,6 +287,14 @@ HRESULT CPGStableStrands::Load(IStructuredLoad* pStrLoad)
          var.vt = VT_R8;
          hr = pStrLoad->get_Property(_T("XferLength"),&var);
          XferLength = var.dblVal;
+
+         if (2 < version)
+         {
+            // added in version 3
+            var.vt = VT_R8;
+            hr = pStrLoad->get_Property(_T("ex"), &var);
+            ex = var.dblVal;
+         }
 
          // Straight Strands
          var.vt = VT_R8;
@@ -368,6 +384,13 @@ HRESULT CPGStableStrands::Load(IStructuredLoad* pStrLoad)
             hr = pStrLoad->get_Property(_T("FpeStraight"),&var);
             fpe.FpeStraight = var.dblVal;
 
+            if (2 < version)
+            {
+               // added in version 3
+               hr = pStrLoad->get_Property(_T("XpsStraight"), &var);
+               fpe.XpsStraight = var.dblVal;
+            }
+
             hr = pStrLoad->get_Property(_T("YpsStraight"),&var);
             fpe.YpsStraight = var.dblVal;
 
@@ -379,6 +402,13 @@ HRESULT CPGStableStrands::Load(IStructuredLoad* pStrLoad)
             hr = pStrLoad->get_Property(_T("FpeHarped"),&var);
             fpe.FpeHarped = var.dblVal;
 
+            if (2 < version)
+            {
+               // added in version 3
+               hr = pStrLoad->get_Property(_T("XpsHarped"), &var);
+               fpe.XpsHarped = var.dblVal;
+            }
+
             hr = pStrLoad->get_Property(_T("YpsHarped"),&var);
             fpe.YpsHarped = var.dblVal;
 
@@ -389,6 +419,13 @@ HRESULT CPGStableStrands::Load(IStructuredLoad* pStrLoad)
             var.vt = VT_R8;
             hr = pStrLoad->get_Property(_T("FpeTemp"),&var);
             fpe.FpeTemp = var.dblVal;
+
+            if (2 < version)
+            {
+               // added in version 3
+               hr = pStrLoad->get_Property(_T("XpsTemp"), &var);
+               fpe.XpsTemp = var.dblVal;
+            }
 
             hr = pStrLoad->get_Property(_T("YpsTemp"),&var);
             fpe.YpsTemp = var.dblVal;
