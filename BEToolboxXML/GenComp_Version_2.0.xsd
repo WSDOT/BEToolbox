@@ -9,7 +9,7 @@
     </xs:documentation>
   </xs:annotation>
 
-  <xs:import namespace="http://www.wsdot.wa.gov/OpenBridgeML/Units" schemaLocation="..\..\..\OpenBridgeML\Schema\OpenBridgeML_Units.xsd" />
+  <xs:import namespace="http://www.wsdot.wa.gov/OpenBridgeML/Units" schemaLocation="..\..\OpenBridgeML\Schema\OpenBridgeML_Units.xsd" />
 
   <xs:element name="GenComp">
     <xs:complexType>

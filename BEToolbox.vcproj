@@ -90,7 +90,7 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="htmlhelp.lib OpenBridgeMLD.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				ModuleDefinitionFile=".\BEToolbox.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -118,7 +118,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to $(SolutionName)\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images\"
 			/>
 		</Configuration>
 		<Configuration
@@ -191,7 +191,7 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="htmlhelp.lib OpenBridgeMLD.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				ModuleDefinitionFile=".\BEToolbox.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -219,7 +219,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to $(SolutionName)\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images\"
 			/>
 		</Configuration>
 		<Configuration
@@ -291,7 +291,7 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="htmlhelp.lib OpenBridgeML.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				ModuleDefinitionFile=".\BEToolbox.def"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -320,7 +320,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to $(SolutionName)\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images\"
 			/>
 		</Configuration>
 		<Configuration
@@ -391,7 +391,7 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="htmlhelp.lib OpenBridgeML.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)$(PlatformName)\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;\ARP\WBFL\RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(SolutionDir)RegFreeCOM\$(PlatformName)\$(ConfigurationName)&quot;"
 				ModuleDefinitionFile=".\BEToolbox.def"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -420,7 +420,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying Images to $(SolutionName)\Image folder"
-				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images"
+				CommandLine="xcopy /y/d $(ProjectDir)Images\*.png \ARP\$(SolutionName)\Images\"
 			/>
 		</Configuration>
 	</Configurations>
