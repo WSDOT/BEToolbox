@@ -37,12 +37,12 @@ class CSpectraDoc : public CBEToolboxDoc
 public:
 	CSpectraDoc();
 	virtual ~CSpectraDoc();
-   virtual CString GetToolbarSectionName();
+   virtual CString GetToolbarSectionName() override;
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
@@ -51,13 +51,13 @@ protected:
    virtual BOOL Init(); 
 
    // Called by the framework when the document is to be loaded and saved
-   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
-   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
+   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave) override;
+   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad) override;
 
-   virtual void LoadDocumentSettings();
-   virtual void SaveDocumentSettings();
+   virtual void LoadDocumentSettings() override;
+   virtual void SaveDocumentSettings() override;
 
-   virtual CString GetDocumentationRootLocation();
+   virtual CString GetDocumentationRootLocation() override;
 
 
    afx_msg void OnHelpFinder();
@@ -70,9 +70,9 @@ protected:
    SiteClass m_SiteClass;
 
    SpectralValues* m_pValues;
-   std::vector<boost::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_ZeroPeriodSiteFactors;  // Table 3.10.3.2-1
-   std::vector<boost::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_ShortPeriodSiteFactors; // Table 3.10.3.2-2
-   std::vector<boost::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_LongPeriodSiteFactors;  // Table 3.10.3.2-3
+   std::vector<std::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_ZeroPeriodSiteFactors;  // Table 3.10.3.2-1
+   std::vector<std::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_ShortPeriodSiteFactors; // Table 3.10.3.2-2
+   std::vector<std::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_LongPeriodSiteFactors;  // Table 3.10.3.2-3
 
 public:
    void SetLocation(Float64 lat,Float64 lng);
@@ -83,7 +83,7 @@ public:
    LPCTSTR GetSpectraResultExplaination(Uint32 result);
    Uint32 GetResponseSpectra(Float64 lat,Float64 lng,SiteClass siteClass,CResponseSpectra* pSpectra);
 
-   virtual void OnCloseDocument();
+   virtual void OnCloseDocument() override;
 
    CReportBuilderManager m_RptMgr;
 

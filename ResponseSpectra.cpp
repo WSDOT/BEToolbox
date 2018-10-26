@@ -23,7 +23,6 @@
 #include "stdafx.h"
 #include "ResponseSpectra.h"
 #include <MathEx.h>
-#include <boost\bind.hpp>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -186,10 +185,10 @@ std::vector<std::pair<Float64,Float64>> CResponseSpectra::GetSpectraValues(Float
    values.push_back(std::make_pair(Tmax,GetSa(Tmax)));
 
    // sort
-   std::sort(values.begin(),values.end(), boost::bind(&std::pair<Float64,Float64>::first,_1)<boost::bind(&std::pair<Float64,Float64>::first,_2) );
+   std::sort(values.begin(), values.end(), [](const auto& v1, const auto& v2) {return v1.first < v2.first;});
 
    // remove duplicates
-   values.erase(std::unique(values.begin(),values.end(),boost::bind(&std::pair<Float64,Float64>::first,_1)==boost::bind(&std::pair<Float64,Float64>::first,_2)),values.end());
+   values.erase(std::unique(values.begin(), values.end(), [](const auto& v1, const auto& v2) {return v1.first == v2.first;}), values.end());
 
    return values;
 }

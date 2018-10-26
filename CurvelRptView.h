@@ -36,12 +36,12 @@ protected:
 	CCurvelRptView();           // protected constructor used by dynamic creation
 	virtual ~CCurvelRptView();
 
-   virtual boost::shared_ptr<CReportBrowser> CreateReportBrowser();
+   virtual std::shared_ptr<CReportBrowser> CreateReportBrowser();
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
@@ -49,8 +49,8 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-   virtual void OnInitialUpdate();
-   virtual void OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint);
+   virtual void OnInitialUpdate() override;
+   virtual void OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint) override;
 };
 
 

@@ -46,14 +46,13 @@ BEGIN_MESSAGE_MAP(CCurvelRptView, CEAFReportView)
    ON_COMMAND(ID_FILE_PRINT_DIRECT,&CCurvelRptView::OnFilePrint)
 END_MESSAGE_MAP()
 
-boost::shared_ptr<CReportBrowser> CCurvelRptView::CreateReportBrowser()
+std::shared_ptr<CReportBrowser> CCurvelRptView::CreateReportBrowser()
 {
-   if ( m_pReportSpec == NULL )
-      return boost::shared_ptr<CReportBrowser>();
+   if (m_pReportSpec == nullptr)
+      return nullptr;
 
    CCurvelDoc* pDoc = (CCurvelDoc*)GetDocument();
-   boost::shared_ptr<CReportSpecificationBuilder> nullSpecBuilder;
-   return pDoc->GetReportBuilderManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec,nullSpecBuilder);
+   return pDoc->GetReportBuilderManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<CReportSpecificationBuilder>());
 }
 
 // CCurvelRptView diagnostics

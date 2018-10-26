@@ -98,7 +98,7 @@ CPGStableModel::CPGStableModel()
    m_HaulingStabilityProblem.SetWheelLineSpacing(::ConvertToSysUnits(72.,unitMeasure::Inch));
    m_HaulingStabilityProblem.SetHeightOfRollAxisAboveRoadway(::ConvertToSysUnits(24.,unitMeasure::Inch));
    m_HaulingStabilityProblem.SetImpact(0,0);
-   m_HaulingStabilityProblem.SetImpactUsage(stbTypes::Both);
+   m_HaulingStabilityProblem.SetImpactUsage(stbTypes::NormalCrown);
    m_HaulingStabilityProblem.SetVelocity(0);
    m_HaulingStabilityProblem.SetTurningRadius(::ConvertToSysUnits(100,unitMeasure::Feet));
 
@@ -303,7 +303,7 @@ void CPGStableModel::ResolveExactLiftingStrandLocations() const
 {
    Float64 Lg = m_Girder[m_GirderType].GetGirderLength();
    m_LiftingStabilityProblem.ClearFpe();
-   BOOST_FOREACH(const CPGStableFpe& fpe,m_Strands[m_GirderType][LIFTING].m_vFpe)
+   for (const auto& fpe : m_Strands[m_GirderType][LIFTING].m_vFpe)
    {
       if ( ::InRange(0.0,fpe.X,Lg) )
       {
@@ -352,7 +352,7 @@ void CPGStableModel::ResolveExactHaulingStrandLocations() const
 {
    Float64 Lg = m_Girder[m_GirderType].GetGirderLength();
    m_HaulingStabilityProblem.ClearFpe();
-   BOOST_FOREACH(const CPGStableFpe& fpe,m_Strands[m_GirderType][HAULING].m_vFpe)
+   for (const auto& fpe : m_Strands[m_GirderType][HAULING].m_vFpe)
    {
       if ( ::InRange(0.0,fpe.X,Lg) )
       {
@@ -775,7 +775,7 @@ void CPGStableModel::GetStrandProfiles(const CPGStableStrands& strands,const stb
       pvHarped->push_back(std::make_pair(0,Yh));
       pvTemp->push_back(std::make_pair(0,Yt));
 
-      BOOST_FOREACH(const CPGStableFpe& fpe,strands.m_vFpe)
+      for (const auto& fpe : strands.m_vFpe)
       {
          if ( ::InRange(0.0,fpe.X,Lg) )
          {

@@ -32,10 +32,10 @@ public:
                       CRuntimeClass* pDocClass,
                       CRuntimeClass* pFrameClass,
                       CRuntimeClass* pViewClass,
-                      HMENU hSharedMenu = NULL,
+                      HMENU hSharedMenu = nullptr,
                       int maxViewCount = -1);
 
-   virtual CString GetTemplateGroupItemDescription(const CEAFTemplateItem* pItem) const;
+   virtual CString GetTemplateGroupItemDescription(const CEAFTemplateItem* pItem) const override;
 
    DECLARE_DYNAMIC(CGenCompDocTemplate)
 };

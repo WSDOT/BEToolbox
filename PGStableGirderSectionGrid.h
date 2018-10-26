@@ -64,9 +64,9 @@ protected:
    void InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ix,Float64 Iy,Float64 Yt,Float64 Hg,Float64 Wtf,Float64 Wbf);
 
    // virtual overrides for grid
-   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
-   virtual void OnModifyCell(ROWCOL nRow,ROWCOL nCol);
-   virtual BOOL OnLButtonClickedRowCol(ROWCOL nRow, ROWCOL nCol, UINT nFlags, CPoint pt);
+   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
+   virtual void OnModifyCell(ROWCOL nRow,ROWCOL nCol) override;
+   virtual BOOL OnLButtonClickedRowCol(ROWCOL nRow, ROWCOL nCol, UINT nFlags, CPoint pt) override;
 
    void UpdateColumnHeaders();
 

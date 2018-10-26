@@ -77,3 +77,6 @@
 #include <Stability\Stability.h>
 
 #include "SpectraBuilder\SpectraValues.h"
+
+#include <OpenBridgeML.hxx>
+#include <BEToolboxXML.h>

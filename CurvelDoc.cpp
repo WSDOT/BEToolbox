@@ -58,24 +58,24 @@ CCurvelDoc::CCurvelDoc()
    m_DocUnitServer->QueryInterface(&m_DocConvert);
 
    // Setup the reporting mechanism
-   boost::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder( new CCurvelReportSpecificationBuilder() );
+   std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder( std::make_shared<CCurvelReportSpecificationBuilder>() );
    m_pRptSpecBuilder = pRptSpecBuilder;
 
-   CReportBuilder* pRptBuilder = new CReportBuilder(_T("Curvel"));
+   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("Curvel")));
    
    pRptBuilder->SetReportSpecificationBuilder(pRptSpecBuilder);
 
-   boost::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(new CCurvelTitlePageBuilder());
+   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CCurvelTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   boost::shared_ptr<CChapterBuilder> pChBuilder( new CCurvelChapterBuilder(this) );
+   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CCurvelChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
-   m_RptMgr.AddReportBuilder(pRptBuilder);
+   m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
    CReportDescription rptDesc = pRptBuilder->GetReportDescription();
-   boost::shared_ptr<CCurvelReportSpecification> pCurvelRptSpec( new CCurvelReportSpecification(rptDesc.GetReportName()) );
-   boost::shared_ptr<CReportSpecification> pRptSpec = boost::dynamic_pointer_cast<CReportSpecification,CCurvelReportSpecification>(pCurvelRptSpec);
+   std::shared_ptr<CCurvelReportSpecification> pCurvelRptSpec(std::make_shared<CCurvelReportSpecification>(rptDesc.GetReportName()) );
+   std::shared_ptr<CReportSpecification> pRptSpec = std::dynamic_pointer_cast<CReportSpecification,CCurvelReportSpecification>(pCurvelRptSpec);
    rptDesc.ConfigureReportSpecification(pRptSpec);
 
    m_pDefaultRptSpec = pCurvelRptSpec;
@@ -125,7 +125,7 @@ BOOL CCurvelDoc::OnNewDocument()
       return FALSE;
 
    m_CurvelXML = CreateCurvelModel();
-   if ( m_CurvelXML.get() == NULL )
+   if ( m_CurvelXML.get() == nullptr )
       return FALSE;
 
    return TRUE;
@@ -136,7 +136,7 @@ BOOL CCurvelDoc::OpenTheDocument(LPCTSTR lpszPathName)
    USES_CONVERSION;
 
    m_CurvelXML = CreateCurvelModel(lpszPathName,m_DocUnitServer);
-   if ( m_CurvelXML.get() == NULL )
+   if ( m_CurvelXML.get() == nullptr )
       return FALSE;
 
    return TRUE;
@@ -176,12 +176,12 @@ CReportBuilderManager* CCurvelDoc::GetReportBuilderManager()
    return &m_RptMgr;
 }
 
-boost::shared_ptr<CReportSpecificationBuilder> CCurvelDoc::GetReportSpecificationBuilder()
+std::shared_ptr<CReportSpecificationBuilder> CCurvelDoc::GetReportSpecificationBuilder()
 {
    return m_pRptSpecBuilder;
 }
 
-boost::shared_ptr<CReportSpecification> CCurvelDoc::GetDefaultReportSpecification()
+std::shared_ptr<CReportSpecification> CCurvelDoc::GetDefaultReportSpecification()
 {
    return m_pDefaultRptSpec;
 }

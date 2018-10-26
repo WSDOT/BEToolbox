@@ -35,7 +35,7 @@ IMPLEMENT_DYNAMIC(CBoxGdrDialogBar, CDialogBar)
 
 CBoxGdrDialogBar::CBoxGdrDialogBar()
 {
-   m_pGrid = NULL;
+   m_pGrid = nullptr;
 }
 
 CBoxGdrDialogBar::~CBoxGdrDialogBar()

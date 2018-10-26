@@ -49,7 +49,7 @@ CCurvelDocTemplate::CCurvelDocTemplate(UINT nIDResource,
    GetDocString(strDocName,CDocTemplate::docName);
 
    HICON hIcon = AfxGetApp()->LoadIcon(IDR_CURVEL);
-   m_TemplateGroup.AddItem( new CEAFTemplateItem(this,strDocName,NULL,hIcon) );
+   m_TemplateGroup.AddItem( new CEAFTemplateItem(this,strDocName,nullptr,hIcon) );
 
    hIcon = AfxGetApp()->LoadIcon(IDR_BETOOLBOX);
    m_TemplateGroup.SetIcon(hIcon);
@@ -61,11 +61,11 @@ CString CCurvelDocTemplate::GetTemplateGroupItemDescription(const CEAFTemplateIt
    return strDescription;
 }
 
-CDocument* CCurvelDocTemplate::OpenDocumentFile(LPCTSTR lpszPathName,BOOL bMakeVisible)
+CDocument* CCurvelDocTemplate::OpenDocumentFile(LPCTSTR lpszPathName, BOOL bAddToMRU, BOOL bMakeVisible)
 {
-   CDocument* pDoc = CEAFDocTemplate::OpenDocumentFile(lpszPathName,bMakeVisible);
+   CDocument* pDoc = CEAFDocTemplate::OpenDocumentFile(lpszPathName,bAddToMRU,bMakeVisible);
 
-   if ( lpszPathName == NULL )
+   if ( lpszPathName == nullptr )
    {
       // This is a new document... show the editing window
       CView* pActiveView = EAFGetActiveView();

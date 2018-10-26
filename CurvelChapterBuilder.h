@@ -34,11 +34,11 @@ public:
    CCurvelChapterBuilder(CCurvelDoc* pDoc);
    ~CCurvelChapterBuilder(void);
 
-   virtual LPCTSTR GetName() const;
-   virtual Uint16 GetMaxLevel() const;
-   virtual rptChapter* Build(CReportSpecification* pRptSpec,Uint16 level) const;
-   virtual bool Select() const { return true; }
-   virtual CChapterBuilder* Clone() const;
+   virtual LPCTSTR GetName() const override;
+   virtual Uint16 GetMaxLevel() const override;
+   virtual rptChapter* Build(CReportSpecification* pRptSpec,Uint16 level) const override;
+   virtual bool Select() const override { return true; }
+   virtual CChapterBuilder* Clone() const override;
 
 private:
    CCurvelDoc* m_pDoc;

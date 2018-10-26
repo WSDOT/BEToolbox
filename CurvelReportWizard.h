@@ -34,13 +34,13 @@ class CCurvelReportWizard : public CPropertySheet
 	DECLARE_DYNAMIC(CCurvelReportWizard)
 
 public:
-   CCurvelReportWizard(boost::shared_ptr<CCurvelReportSpecification>& pRptSpec, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
+   CCurvelReportWizard(std::shared_ptr<CCurvelReportSpecification>& pRptSpec, CWnd* pParentWnd = nullptr, UINT iSelectPage = 0);
 	virtual ~CCurvelReportWizard();
 
    LRESULT GetNextPage();
    LRESULT GetBackPage();
 
-   void UpdateReportSpecification(CCurvelReportSpecification* pRptSpec);
+   void UpdateReportSpecification(std::shared_ptr<CCurvelReportSpecification>& pRptSpec);
 
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -50,7 +50,7 @@ protected:
    bool IsLastPage();
    bool IsFirstPage();
 
-   boost::shared_ptr<CCurvelReportSpecification> m_pRptSpec;
+   std::shared_ptr<CCurvelReportSpecification> m_pRptSpec;
 
    std::vector<LRESULT> m_Pages;
    std::vector<LRESULT>::iterator m_CurrentPage;

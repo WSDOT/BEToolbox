@@ -26,11 +26,11 @@
 #include <Curvel_Version_2.0.hxx>
 #include <WBFLUnitServer.h>
 
-// Creates a Curvel data model. If lpszFileName is NULL, a default
+// Creates a Curvel data model. If lpszFileName is nullptr, a default
 // model is created, otherwise the model is created from the
 // curvel dataset supplied in the specified file.
-std::auto_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel();
-std::auto_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer);
+std::unique_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel();
+std::unique_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer);
 
 // Saves a curvel model to the specified file.
 BOOL BETOOLBOXXMLFUNC SaveCurvelModel(LPCTSTR lpszFilePath,Curvel* pCurvelXML);

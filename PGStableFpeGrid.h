@@ -65,7 +65,7 @@ protected:
    void InsertFpe(Float64 X,Float64 FpeStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 YpsTemp,int YpsTempMeasure);
 
    // virtual overrides for grid
-   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
+   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
 
    void UpdateColumnHeaders();
 

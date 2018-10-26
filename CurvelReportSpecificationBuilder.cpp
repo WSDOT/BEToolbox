@@ -42,19 +42,19 @@ CCurvelReportSpecificationBuilder::~CCurvelReportSpecificationBuilder(void)
 {
 }
 
-boost::shared_ptr<CReportSpecification> CCurvelReportSpecificationBuilder::CreateReportSpec(const CReportDescription& rptDesc,boost::shared_ptr<CReportSpecification>& pRptSpec)
+std::shared_ptr<CReportSpecification> CCurvelReportSpecificationBuilder::CreateReportSpec(const CReportDescription& rptDesc,std::shared_ptr<CReportSpecification>& pRptSpec)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
    CCurvelDoc* pDoc = (CCurvelDoc*)EAFGetDocument();
 
-   boost::shared_ptr<CCurvelReportSpecification> pInitRptSpec( boost::dynamic_pointer_cast<CCurvelReportSpecification>(pRptSpec) );
+   std::shared_ptr<CCurvelReportSpecification> pInitRptSpec( std::dynamic_pointer_cast<CCurvelReportSpecification>(pRptSpec) );
    CCurvelReportWizard wiz(pInitRptSpec);
 
    if ( wiz.DoModal() == ID_WIZFINISH )
    {
-      CCurvelReportSpecification* pSpec = new CCurvelReportSpecification(rptDesc.GetReportName());
-      boost::shared_ptr<CReportSpecification> pRptSpec(pSpec);
+      std::shared_ptr<CCurvelReportSpecification> pSpec(std::make_shared<CCurvelReportSpecification>(rptDesc.GetReportName()));
+      std::shared_ptr<CReportSpecification> pRptSpec(pSpec);
 
       wiz.UpdateReportSpecification(pSpec);
 
@@ -74,5 +74,5 @@ boost::shared_ptr<CReportSpecification> CCurvelReportSpecificationBuilder::Creat
       return pDoc->GetDefaultReportSpecification();
    }
 
-   return boost::shared_ptr<CReportSpecification>();
+   return nullptr;
 }

@@ -26,11 +26,11 @@
 #include <GenComp_Version_2.0.hxx>
 #include <WBFLUnitServer.h>
 
-// Creates a GenComp data model. If lpszFileName is NULL, a default
+// Creates a GenComp data model. If lpszFileName is nullptr, a default
 // model is created, otherwise the model is created from the
 // GenComp dataset supplied in the specified file.
-std::auto_ptr<GenComp> BETOOLBOXXMLFUNC CreateGenCompModel();
-std::auto_ptr<GenComp> BETOOLBOXXMLFUNC CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer);
+std::unique_ptr<GenComp> BETOOLBOXXMLFUNC CreateGenCompModel();
+std::unique_ptr<GenComp> BETOOLBOXXMLFUNC CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer);
 
 // Saves a GenComp model to the specified file.
 BOOL BETOOLBOXXMLFUNC SaveGenCompModel(LPCTSTR lpszFilePath,GenComp* pGenCompXML);

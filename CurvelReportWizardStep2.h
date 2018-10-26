@@ -35,13 +35,13 @@ public:
 	virtual ~CCurvelReportWizardStep2();
 
    bool CorrectForSuperelevation();
-   void UpdateReportSpecification(CCurvelReportSpecification* pRptSpec);
+   void UpdateReportSpecification(std::shared_ptr<CCurvelReportSpecification>& pRptSpec);
 
 // Dialog Data
 	enum { IDD = IDD_CURVEL_WIZ_2 };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
    void InitFromRptSpec();
 
@@ -55,9 +55,9 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-   virtual LRESULT OnWizardNext();
-   virtual LRESULT OnWizardBack();
-   virtual BOOL OnInitDialog();
-   virtual BOOL OnKillActive();
+   virtual LRESULT OnWizardNext() override;
+   virtual LRESULT OnWizardBack() override;
+   virtual BOOL OnInitDialog() override;
+   virtual BOOL OnKillActive() override;
    afx_msg void OnBnClickedCrownOption();
 };

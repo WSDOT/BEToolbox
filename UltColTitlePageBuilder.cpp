@@ -37,7 +37,7 @@ CUltColTitlePageBuilder::~CUltColTitlePageBuilder(void)
 {
 }
 
-rptChapter* CUltColTitlePageBuilder::Build(boost::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CUltColTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 

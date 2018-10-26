@@ -31,7 +31,7 @@ public:
    CUltColTitlePageBuilder(const CUltColTitlePageBuilder& other);
    ~CUltColTitlePageBuilder(void);
 
-   virtual rptChapter* Build(boost::shared_ptr<CReportSpecification>& pRptSpec);
+   virtual rptChapter* Build(std::shared_ptr<CReportSpecification>& pRptSpec) override;
 
-   virtual CTitlePageBuilder* Clone() const;
+   virtual CTitlePageBuilder* Clone() const override;
 };

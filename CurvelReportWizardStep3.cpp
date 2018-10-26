@@ -163,7 +163,7 @@ void CCurvelReportWizardStep3::InitFromRptSpec()
    m_SkewLines          = pParent->m_pRptSpec->GetSkewLines();
 }
 
-void CCurvelReportWizardStep3::UpdateReportSpecification(CCurvelReportSpecification* pRptSpec)
+void CCurvelReportWizardStep3::UpdateReportSpecification(std::shared_ptr<CCurvelReportSpecification>& pRptSpec)
 {
    pRptSpec->SetIndividualStations(m_IndividualStations);
    pRptSpec->SetStationRanges(m_StationRanges);

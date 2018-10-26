@@ -51,7 +51,7 @@ public:
    const std::vector<SkewLine>& GetSkewLines() const;
    void SetSkewLines(const std::vector<SkewLine>& skewLines);
 
-   virtual HRESULT Validate() const;
+   virtual HRESULT Validate() const override;
 
 protected:
 

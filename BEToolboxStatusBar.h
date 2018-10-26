@@ -30,5 +30,5 @@ public:
    CBEToolboxStatusBar() {}
 
 protected:
-   virtual void GetStatusIndicators(const UINT** lppIDArray,int* pnIDCount);
+   virtual void GetStatusIndicators(const UINT** lppIDArray,int* pnIDCount) override;
 };

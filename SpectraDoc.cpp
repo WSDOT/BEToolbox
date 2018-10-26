@@ -47,15 +47,15 @@ IMPLEMENT_DYNCREATE(CSpectraDoc, CBEToolboxDoc)
 
 CSpectraDoc::CSpectraDoc()
 {
-   CReportBuilder* pRptBuilder = new CReportBuilder(_T("Spectra"));
+   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("Spectra")));
 
-   boost::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(new CSpectraTitlePageBuilder());
+   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CSpectraTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   boost::shared_ptr<CChapterBuilder> pChBuilder( new CSpectraChapterBuilder(this) );
+   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CSpectraChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
-   m_RptMgr.AddReportBuilder(pRptBuilder);
+   m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
    UIHints(FALSE); // not using UIHints feature
 
@@ -64,7 +64,7 @@ CSpectraDoc::CSpectraDoc()
    m_Lng = -122.91888;
    m_SiteClass = scB;
 
-   m_pValues = NULL;
+   m_pValues = nullptr;
 }
 
 CSpectraDoc::~CSpectraDoc()
@@ -112,7 +112,7 @@ BOOL CSpectraDoc::Init()
 
    // Zero Period Site Factors - Table 3.4.2.3-1
    {
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteA->AddPoint(0.1,0.8);
       // all points are the same so we don't actually need to add them
       //siteA->AddPoint(0.2,0.8);
@@ -122,7 +122,7 @@ BOOL CSpectraDoc::Init()
       //siteA->AddPoint(0.6,0.8);
       m_ZeroPeriodSiteFactors.push_back(siteA);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteB->AddPoint(0.1,0.9);
       // all points are the same so we don't actually need to add them
       //siteB->AddPoint(0.2,0.9);
@@ -132,7 +132,7 @@ BOOL CSpectraDoc::Init()
       //siteB->AddPoint(0.6,0.9);
       m_ZeroPeriodSiteFactors.push_back(siteB);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteC->AddPoint(0.1,1.3);
       siteC->AddPoint(0.2,1.2);
       siteC->AddPoint(0.3,1.2);
@@ -141,7 +141,7 @@ BOOL CSpectraDoc::Init()
       siteC->AddPoint(0.6,1.2);
       m_ZeroPeriodSiteFactors.push_back(siteC);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteD->AddPoint(0.1,1.6);
       siteD->AddPoint(0.2,1.4);
       siteD->AddPoint(0.3,1.3);
@@ -150,7 +150,7 @@ BOOL CSpectraDoc::Init()
       siteD->AddPoint(0.6,1.1);
       m_ZeroPeriodSiteFactors.push_back(siteD);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteE->AddPoint(0.1,2.4);
       siteE->AddPoint(0.2,1.9);
       siteE->AddPoint(0.3,1.6);
@@ -162,7 +162,7 @@ BOOL CSpectraDoc::Init()
 
    {
       // Short Period Site Factors - Table 3.4.2.3-1
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteA->AddPoint(0.25,0.8);
       // all points are the same so we don't actually need to add them
       //siteA->AddPoint(0.50,0.8);
@@ -172,7 +172,7 @@ BOOL CSpectraDoc::Init()
       //siteA->AddPoint(1.50,0.8);
       m_ShortPeriodSiteFactors.push_back(siteA);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteB->AddPoint(0.25,0.9);
       // all points are the same so we don't actually need to add them
       //siteB->AddPoint(0.50,0.9);
@@ -182,7 +182,7 @@ BOOL CSpectraDoc::Init()
       //siteB->AddPoint(1.50,0.9);
       m_ShortPeriodSiteFactors.push_back(siteB);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteC->AddPoint(0.25,1.3);
       siteC->AddPoint(0.50,1.3);
       siteC->AddPoint(0.75,1.2);
@@ -191,7 +191,7 @@ BOOL CSpectraDoc::Init()
       siteC->AddPoint(1.50,1.2);
       m_ShortPeriodSiteFactors.push_back(siteC);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteD->AddPoint(0.25,1.6);
       siteD->AddPoint(0.50,1.4);
       siteD->AddPoint(0.75,1.2);
@@ -200,7 +200,7 @@ BOOL CSpectraDoc::Init()
       siteD->AddPoint(1.50,1.0);
       m_ShortPeriodSiteFactors.push_back(siteD);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteE->AddPoint(0.25,2.4);
       siteE->AddPoint(0.50,1.7);
       siteE->AddPoint(0.75,1.3);
@@ -212,7 +212,7 @@ BOOL CSpectraDoc::Init()
 
    {
       // Long Period Site Factors - Table 3.10.3.2-3
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteA->AddPoint(0.1,0.8);
       // all points are the same so we don't actually need to add them
       //siteA->AddPoint(0.2,0.8);
@@ -222,7 +222,7 @@ BOOL CSpectraDoc::Init()
       //siteA->AddPoint(0.6,0.8);
       m_LongPeriodSiteFactors.push_back(siteA);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteB->AddPoint(0.1,0.8);
       // all points are the same so we don't actually need to add them
       //siteB->AddPoint(0.2,0.8);
@@ -232,7 +232,7 @@ BOOL CSpectraDoc::Init()
       //siteB->AddPoint(0.6,0.8);
       m_LongPeriodSiteFactors.push_back(siteB);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteC->AddPoint(0.1,1.5);
       //siteC->AddPoint(0.2,1.5);
       //siteC->AddPoint(0.3,1.5);
@@ -241,7 +241,7 @@ BOOL CSpectraDoc::Init()
       siteC->AddPoint(0.6,1.4);
       m_LongPeriodSiteFactors.push_back(siteC);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteD->AddPoint(0.1,2.4);
       siteD->AddPoint(0.2,2.2);
       siteD->AddPoint(0.3,2.0);
@@ -250,7 +250,7 @@ BOOL CSpectraDoc::Init()
       siteD->AddPoint(0.6,1.7);
       m_LongPeriodSiteFactors.push_back(siteD);
 
-      boost::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(new mathPwLinearFunction2dUsingPoints);
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
       siteE->AddPoint(0.1,4.2);
       siteE->AddPoint(0.2,3.3);
       siteE->AddPoint(0.3,2.8);
@@ -268,7 +268,7 @@ void CSpectraDoc::OnCloseDocument()
    EAFGetApp()->SetUnitsMode(eafTypes::umUS);
    
    delete[] m_pValues;
-   m_pValues = NULL;
+   m_pValues = nullptr;
 
    CBEToolboxDoc::OnCloseDocument();
 }
@@ -356,7 +356,7 @@ CString CSpectraDoc::GetDocumentationRootLocation()
 CString CSpectraDoc::GetResourcePath()
 {
    TCHAR szBuff[_MAX_PATH];
-   ::GetModuleFileName(::GetModuleHandle(NULL), szBuff, _MAX_PATH);
+   ::GetModuleFileName(::GetModuleHandle(nullptr), szBuff, _MAX_PATH);
    CString filename(szBuff);
    filename.MakeUpper();
 
@@ -402,7 +402,7 @@ void CSpectraDoc::SetLocation(Float64 lat,Float64 lng)
    {
       m_Lat = lat;
       m_Lng = lng;
-      UpdateAllViews(NULL);
+      UpdateAllViews(nullptr);
       SetModifiedFlag();
    }
 }
@@ -418,7 +418,7 @@ void CSpectraDoc::SetSiteClass(SiteClass siteClass)
    if ( m_SiteClass != siteClass )
    {
       m_SiteClass = siteClass;
-      UpdateAllViews(NULL);
+      UpdateAllViews(nullptr);
       SetModifiedFlag();
    }
 }

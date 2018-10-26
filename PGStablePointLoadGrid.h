@@ -40,7 +40,7 @@ public:
 
 // Operations
 public:
-   void DoDataExchange(CDataExchange* pDX);
+   virtual void DoDataExchange(CDataExchange* pDX) override;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -61,7 +61,7 @@ protected:
    void InsertLoad(Float64 X,Float64 P);
 
    // virtual overrides for grid
-   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
+   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
 
    void UpdateColumnHeaders();
 

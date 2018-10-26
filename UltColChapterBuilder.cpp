@@ -34,7 +34,7 @@ CUltColChapterBuilder::CUltColChapterBuilder(CUltColDoc* pDoc)
 
 CUltColChapterBuilder::~CUltColChapterBuilder(void)
 {
-   BOOST_FOREACH(std::_tstring& file,m_TemporaryFiles)
+   for (const auto& file : m_TemporaryFiles)
    {
       ::DeleteFile( file.c_str() );
    }
@@ -55,7 +55,7 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
 
-   if ( m_pDoc->m_Column == NULL )
+   if ( m_pDoc->m_Column == nullptr )
    {
        pPara = new rptParagraph;
       (*pChapter) << pPara;

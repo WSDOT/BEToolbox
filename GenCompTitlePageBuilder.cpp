@@ -41,7 +41,7 @@ CGenCompTitlePageBuilder::~CGenCompTitlePageBuilder(void)
 {
 }
 
-rptChapter* CGenCompTitlePageBuilder::Build(boost::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CGenCompTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 

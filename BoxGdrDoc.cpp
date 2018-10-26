@@ -42,10 +42,10 @@ CBoxGdrDoc::CBoxGdrDoc()
 {
    CReportBuilder* pRptBuilder = new CReportBuilder(_T("BoxGdr"));
 
-   boost::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(new CBoxGdrTitlePageBuilder());
+   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CBoxGdrTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   boost::shared_ptr<CChapterBuilder> pChBuilder( new CBoxGdrChapterBuilder(this) );
+   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CBoxGdrChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    m_RptMgr.AddReportBuilder(pRptBuilder);

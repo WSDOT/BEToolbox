@@ -33,18 +33,18 @@ class CPGStableNonprismaticGirder : public CDialog, public CPGStableGirderContro
 	DECLARE_DYNAMIC(CPGStableNonprismaticGirder)
 
 public:
-	CPGStableNonprismaticGirder(CWnd* pParent = NULL);   // standard constructor
+	CPGStableNonprismaticGirder(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CPGStableNonprismaticGirder();
 
 // Dialog Data
 	enum { IDD = IDD_NONPRISMATIC_GIRDER };
 
    // CPGStableGirderControlParent
-   virtual std::vector<std::pair<Float64,Float64>> GetGirderProfile();
-   virtual void GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
+   virtual std::vector<std::pair<Float64,Float64>> GetGirderProfile() override;
+   virtual void GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) override;
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
    void FillComboBoxes(INT xIDC,INT yIDC);
 
@@ -70,6 +70,6 @@ public:
 
    void SetGirderLength(Float64 Lg);
 
-   virtual BOOL OnInitDialog();
+   virtual BOOL OnInitDialog() override;
    afx_msg void OnChange();
 };

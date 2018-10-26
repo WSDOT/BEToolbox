@@ -55,7 +55,7 @@ public:
 	CBoxGdrDoc();
 	virtual ~CBoxGdrDoc();
 
-   virtual CString GetToolbarSectionName();
+   virtual CString GetToolbarSectionName() override;
 
    IndexType GetProblemCount() const;
    void AddProblem(const BOXGDRDIMENSIONS& problem);
@@ -67,26 +67,26 @@ public:
    void ComputeShapeProperties(IndexType idx,IShapeProperties** ppShapeProperties);
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
 protected:
    /// called when a document is created (New or Open)
-   virtual BOOL Init(); 
+   virtual BOOL Init() override; 
 
    // Called by the framework when the document is to be loaded and saved
-   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave);
-   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad);
+   virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave) override;
+   virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad) override;
 
-   virtual void LoadDocumentSettings();
-   virtual void SaveDocumentSettings();
+   virtual void LoadDocumentSettings() override;
+   virtual void SaveDocumentSettings() override;
 
-   virtual CString GetDocumentationRootLocation();
+   virtual CString GetDocumentationRootLocation() override;
 
-   virtual void OnOldFormat(LPCTSTR lpszPathName);
+   virtual void OnOldFormat(LPCTSTR lpszPathName) override;
 
    std::vector<BOXGDRDIMENSIONS> m_Problems;
 
@@ -95,7 +95,7 @@ protected:
 public:
 
    // over-ride default behavior by destroying column
-   virtual void OnCloseDocument();
+   virtual void OnCloseDocument() override;
 
    CReportBuilderManager m_RptMgr;
 

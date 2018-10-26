@@ -30,6 +30,7 @@
 #define IDB_SPECTRA                     117
 #define IDI_WSDOT                       200
 #define IDC_UPDATE                      201
+#define IDC_EXPORT                      202
 #define IDR_TOOLBAR                     207
 #define IDR_PGSTOOLBAR                  208
 #define IDR_CURVEL                      209
@@ -312,7 +313,7 @@
 #define IDC_LAT_RANGE                   448
 #define IDC_LNG_RANGE                   449
 #define IDC_DESCRIPTION                 450
-#define IDC_EXPORT                      202
+#define IDC_CAMBER_MULTIPLIER           452
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -369,9 +370,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        218
+#define _APS_NEXT_RESOURCE_VALUE        220
 #define _APS_NEXT_COMMAND_VALUE         36871
-#define _APS_NEXT_CONTROL_VALUE         452
+#define _APS_NEXT_CONTROL_VALUE         453
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

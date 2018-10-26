@@ -40,7 +40,7 @@ CSpectraTitlePageBuilder::~CSpectraTitlePageBuilder(void)
 {
 }
 
-rptChapter* CSpectraTitlePageBuilder::Build(boost::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CSpectraTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 

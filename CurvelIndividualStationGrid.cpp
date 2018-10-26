@@ -72,7 +72,7 @@ void CCurvelIndividualStationGrid::RemoveSelectedStations()
 
 BOOL CCurvelIndividualStationGrid::AreStationsSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}

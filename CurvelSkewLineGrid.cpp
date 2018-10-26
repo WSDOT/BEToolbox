@@ -73,7 +73,7 @@ void CCurvelSkewLineGrid::RemoveSelectedSkewLines()
 
 BOOL CCurvelSkewLineGrid::AreSkewLinesSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}

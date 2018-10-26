@@ -67,8 +67,8 @@ protected:
    void InsertRow(const BOXGDRDIMENSIONS& dimensions);
 
    // virtual overrides for grid
-   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol);
-   virtual void OnModifyCell(ROWCOL nRow,ROWCOL nCol);
+   virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
+   virtual void OnModifyCell(ROWCOL nRow,ROWCOL nCol) override;
 
    void UpdateColumnHeaders();
 

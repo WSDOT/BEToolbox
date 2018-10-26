@@ -99,12 +99,12 @@ void CGirCompDimensionGrid::RemoveSelectedProblems()
 
    UpdateData(TRUE);
    CGirCompDoc* pDoc = (CGirCompDoc*)EAFGetDocument();
-   pDoc->UpdateAllViews(NULL,0,NULL);
+   pDoc->UpdateAllViews(nullptr,0,nullptr);
 }
 
 BOOL CGirCompDimensionGrid::AreProblemsSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}
@@ -166,7 +166,7 @@ void CGirCompDimensionGrid::AddProblem()
 
    UpdateData(TRUE);
    CGirCompDoc* pDoc = (CGirCompDoc*)EAFGetDocument();
-   pDoc->UpdateAllViews(NULL,0,NULL);
+   pDoc->UpdateAllViews(nullptr,0,nullptr);
 }
 
 void CGirCompDimensionGrid::GetProblemData(ROWCOL row,GIRCOMPDIMENSIONS& dimensions)

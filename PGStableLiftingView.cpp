@@ -136,6 +136,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    Float64 camber;
    Float64 camberOffset;
    problem.GetCamber(&bDirectCamber,&camber);
+   Float64 camberMultiplier = problem.GetCamberMultiplier();
    int camber_method;
    if ( bDirectCamber )
    {
@@ -151,6 +152,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_Radio(pDX,IDC_CAMBER1,camber_method);
    DDX_Percentage(pDX,IDC_CAMBER_OFFSET,camberOffset);
    DDX_UnitValueAndTag(pDX,IDC_CAMBER,IDC_CAMBER_UNIT,camber,pDispUnits->ComponentDim);
+   DDX_Text(pDX, IDC_CAMBER_MULTIPLIER, camberMultiplier);
 
 
    Float64 fci, frCoefficient;
@@ -221,6 +223,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
          bDirectCamber = true;
       }
       problem.SetCamber(bDirectCamber,camber);
+      problem.SetCamberMultiplier(camberMultiplier);
 
       pDoc->SetLiftingStabilityProblem(problem);
       pDoc->SetLiftingMaterials(fci,!bComputeEci,frCoefficient);
@@ -256,6 +259,7 @@ BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_CAMBER, &CPGStableLiftingView::OnChange)
    ON_BN_CLICKED(IDC_CAMBER1, &CPGStableLiftingView::OnChange)
    ON_BN_CLICKED(IDC_CAMBER2, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_CAMBER_MULTIPLIER, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_YRA, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_SWEEP_TOLERANCE, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_LATERAL_SWEEP_INCREMENT, &CPGStableLiftingView::OnChange)
@@ -407,6 +411,7 @@ void CPGStableLiftingView::UpdateCriteriaControls()
    {
       GetDlgItem(IDC_CAMBER)->EnableWindow(TRUE); // if camber is a direct input value, always enable
    }
+   GetDlgItem(IDC_CAMBER_MULTIPLIER)->EnableWindow(bEnable);
    GetDlgItem(IDC_YRA)->EnableWindow(bEnable);
    GetDlgItem(IDC_SWEEP_TOLERANCE)->EnableWindow(bEnable);
    GetDlgItem(IDC_SUPPORT_PLACEMENT_TOLERANCE)->EnableWindow(bEnable);
@@ -450,13 +455,13 @@ void CPGStableLiftingView::OnInitialUpdate()
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
    pWnd->ShowWindow(SW_HIDE);
 
-   boost::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(_T("Lifting"));
+   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(_T("Lifting"));
    CReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
-   boost::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
    m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
 
-   boost::shared_ptr<CReportSpecificationBuilder> nullSpecBuilder;
+   std::shared_ptr<CReportSpecificationBuilder> nullSpecBuilder;
    m_pBrowser = pDoc->m_RptMgr.CreateReportBrowser(GetSafeHwnd(),m_pRptSpec,nullSpecBuilder);
 
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
@@ -478,15 +483,15 @@ void CPGStableLiftingView::OnInitialUpdate()
 
 void CPGStableLiftingView::RefreshReport()
 {
-   if ( m_pRptSpec == NULL )
+   if ( m_pRptSpec == nullptr )
       return;
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    // refresh the report
    m_pRptSpec = m_pBrowser->GetReportSpecification();
-   boost::shared_ptr<CReportBuilder> pBuilder = pDoc->m_RptMgr.GetReportBuilder( m_pRptSpec->GetReportName() );
-   boost::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
+   std::shared_ptr<CReportBuilder> pBuilder = pDoc->m_RptMgr.GetReportBuilder( m_pRptSpec->GetReportName() );
+   std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 
 }
@@ -504,7 +509,7 @@ void CPGStableLiftingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,F
       Float64 FpeStraight = 0;
       Float64 FpeHarped = 0;
       Float64 FpeTemporary = 0;
-      BOOST_FOREACH(CPGStableFpe& fpe,m_Strands.m_vFpe)
+      for (const auto& fpe : m_Strands.m_vFpe)
       {
          FpeStraight  = Max(FpeStraight,fpe.FpeStraight);
          FpeHarped    = Max(FpeHarped,fpe.FpeHarped);

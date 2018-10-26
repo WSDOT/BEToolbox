@@ -40,7 +40,7 @@ CCurvelTitlePageBuilder::~CCurvelTitlePageBuilder(void)
 {
 }
 
-rptChapter* CCurvelTitlePageBuilder::Build(boost::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CCurvelTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 

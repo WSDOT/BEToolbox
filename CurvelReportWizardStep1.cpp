@@ -122,7 +122,7 @@ void CCurvelReportWizardStep1::InitFromRptSpec()
    pParent->m_pRptSpec->GetVerticalCurveParameters(&m_G1,&m_G2,&m_PVIStation,&m_PVIElevation,&m_Length);
 }
 
-void CCurvelReportWizardStep1::UpdateReportSpecification(CCurvelReportSpecification* pRptSpec)
+void CCurvelReportWizardStep1::UpdateReportSpecification(std::shared_ptr<CCurvelReportSpecification>& pRptSpec)
 {
    pRptSpec->SetVerticalCurveParameters(m_G1,m_G2,m_PVIStation,m_PVIElevation,m_Length);
 }

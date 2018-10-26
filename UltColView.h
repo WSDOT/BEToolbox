@@ -35,24 +35,24 @@ protected:
 	CUltColView();           // protected constructor used by dynamic creation
 	virtual ~CUltColView();
 
-   virtual boost::shared_ptr<CReportSpecification> CreateReportSpecification();
-   virtual boost::shared_ptr<CReportBrowser> CreateReportBrowser();
-   virtual void RefreshReport();
+   virtual std::shared_ptr<CReportSpecification> CreateReportSpecification();
+   virtual std::shared_ptr<CReportBrowser> CreateReportBrowser();
+   virtual void RefreshReport() override;
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
-   virtual BOOL CanEditReport() { return FALSE; }
+   virtual BOOL CanEditReport() override { return FALSE; }
 
 protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-   virtual void OnInitialUpdate();
+   virtual void OnInitialUpdate() override;
 };
 
 

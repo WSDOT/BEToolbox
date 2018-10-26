@@ -33,14 +33,14 @@ public:
 	CBEToolboxDoc();
 	virtual ~CBEToolboxDoc();
 
-   virtual void DoIntegrateWithUI(BOOL bIntegrate);
-   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const;
-   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const;
+   virtual void DoIntegrateWithUI(BOOL bIntegrate) override;
+   virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const override;
+   virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const override;
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
@@ -48,17 +48,17 @@ protected:
    /// called when a document is created (New or Open)
    virtual BOOL Init(); 
 
-   virtual void LoadToolbarState();
-   virtual void SaveToolbarState();
+   virtual void LoadToolbarState() override;
+   virtual void SaveToolbarState() override;
 
    afx_msg void OnAbout();
 
 	DECLARE_MESSAGE_MAP()
 public:
-   virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
-   virtual void OnCloseDocument();
-   virtual CString GetRootNodeName();
-   virtual Float64 GetRootNodeVersion();
+   virtual BOOL OnOpenDocument(LPCTSTR lpszPathName) override;
+   virtual void OnCloseDocument() override;
+   virtual CString GetRootNodeName() override;
+   virtual Float64 GetRootNodeVersion() override;
 
 protected:
    CEAFToolBar* m_pMyToolBar;
@@ -66,9 +66,9 @@ protected:
    virtual void OnOldFormat(LPCTSTR lpszPathName);
 
    virtual UINT GetToolbarID();
-   virtual HINSTANCE GetResourceInstance();
-   virtual void UpdateApplicationIcon();
-   virtual void ResetApplicationIcon();
+   virtual HINSTANCE GetResourceInstance() override;
+   virtual void UpdateApplicationIcon() override;
+   virtual void ResetApplicationIcon() override;
 
    HICON m_hMainFrameBigIcon;
    HICON m_hMainFrameSmallIcon;

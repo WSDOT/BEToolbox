@@ -49,9 +49,9 @@ XALAN_USING_XALAN(XalanCompiledStylesheet)
 XALAN_USING_XALAN(XalanParsedSource)
 XALAN_USING_XALAN(XalanTransformer)
 
-std::auto_ptr<Curvel> CreateCurvelModel()
+std::unique_ptr<Curvel> CreateCurvelModel()
 {
-   std::auto_ptr<Curvel> curvelXML(new Curvel(VerticalCurveDataType(0,0,0,0,0)));
+   std::unique_ptr<Curvel> curvelXML(std::make_unique<Curvel>(VerticalCurveDataType(0.0,0.0,0.0,0.0,0.0)));
 
    return curvelXML;
 }
@@ -156,10 +156,10 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitServer* pDocUnitServer)
    return TRUE;
 }
 
-std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer)
+std::unique_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer)
 {
-   ATLASSERT(lpszFilePath != NULL);
-   ATLASSERT(pDocUnitServer != NULL);
+   ATLASSERT(lpszFilePath != nullptr);
+   ATLASSERT(pDocUnitServer != nullptr);
 
    USES_CONVERSION;
 
@@ -172,7 +172,7 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUn
    //
    // Most of this code is taken from the TransformToXercesDOM example
    // from the Xalan distribution.
-   std::auto_ptr<Curvel> curvelXML;
+   std::unique_ptr<Curvel> curvelXML;
    try
    {
       XALAN_USING_XERCES(XMLPlatformUtils)
@@ -190,7 +190,7 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUn
          CString strMsg;
          strMsg.Format(_T("Error parsing source document: %s"),A2T(theTransformer.getLastError()));
          AfxMessageBox(strMsg);
-         return std::auto_ptr<Curvel>();
+         return std::unique_ptr<Curvel>();
       }
       else
       {
@@ -198,13 +198,13 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUn
 
            const XalanCompiledStylesheet*  theCompiledStylesheet = 0;
 
-           const char* lpstrXSLT = NULL;
+           const char* lpstrXSLT = nullptr;
            DWORD size = 0;
 #pragma Reminder("UPDATE: add error handling")
            if ( !LoadXMLResource(IDR_CURVEL_10_TO_20_XSLT,XSLTFILE,size,lpstrXSLT) )
            {
               AfxMessageBox(_T("Error loading XSL Transform resource"));
-              return std::auto_ptr<Curvel>();
+              return std::unique_ptr<Curvel>();
            }
 
            std::string strXSLT(lpstrXSLT,size);
@@ -221,7 +221,7 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUn
               CString strMsg;
               strMsg.Format(_T("Error compiling stylesheet: %s"),A2T(theTransformer.getLastError()));
               AfxMessageBox(strMsg);
-              return std::auto_ptr<Curvel>();
+              return std::unique_ptr<Curvel>();
            }
            else
            {
@@ -232,7 +232,7 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUn
 
                 // This is the document which we'll build...
                 const XalanAutoPtr<DOMDocument>     theDocument(DOMImplementation::getImplementation()->createDocument());
-                assert(theDocument.get() != 0);
+                assert(theDocument.get() != nullptr);
 
                 // This is a class derived from FormatterListener, which
                 // we'll hook up to Xalan's output stage...
@@ -251,7 +251,7 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUn
                     CString strMsg;
                     strMsg.Format(_T("Error transforming: %s"),theTransformer.getLastError());
                     AfxMessageBox(strMsg);
-                    return std::auto_ptr<Curvel>();
+                    return std::unique_ptr<Curvel>();
                 }
                 else
                 {
@@ -268,17 +268,17 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUn
       XalanTransformer::terminate();
       XMLPlatformUtils::Terminate();
    }
-   catch(const xml_schema::exception& e)
+   catch(const xml_schema::exception& /*e*/)
    {
 #pragma Reminder("UPDATE: provide better error handling")
       AfxMessageBox(_T("An error occured while loading the file"));
-      return std::auto_ptr<Curvel>();
+      return std::unique_ptr<Curvel>();
    }
    catch(...)
    {
 #pragma Reminder("UPDATE: provide better error handling")
       AfxMessageBox(_T("An error occured while loading the file"));
-      return std::auto_ptr<Curvel>();
+      return std::unique_ptr<Curvel>();
    }
 
    if ( !ConvertToBaseUnits(curvelXML.get(),pDocUnitServer) )
@@ -286,7 +286,7 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUn
       // something went wrong in the unit conversion
 #pragma Reminder("UPDATE: provide better error handling")
       AfxMessageBox(_T("An error occured while loading the file"));
-      return std::auto_ptr<Curvel>();
+      return std::unique_ptr<Curvel>();
    }
 
    return curvelXML;
@@ -300,7 +300,7 @@ BOOL SaveCurvelModel(LPCTSTR lpszPathName,Curvel* pCurvelXML)
 #pragma Reminder("UPDATE: error handle file opening")
       Curvel_(file,*pCurvelXML);
    }
-   catch(const xml_schema::exception& e)
+   catch(const xml_schema::exception& /*e*/)
    {
 #pragma Reminder("UPDATE: provide better error handling")
       AfxMessageBox(_T("An error occured while saving the file"));

@@ -39,15 +39,15 @@ IMPLEMENT_DYNCREATE(CUltColDoc, CBEToolboxDoc)
 
 CUltColDoc::CUltColDoc()
 {
-   CReportBuilder* pRptBuilder = new CReportBuilder(_T("UltCol"));
+   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("UltCol")));
 
-   boost::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(new CUltColTitlePageBuilder());
+   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CUltColTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   boost::shared_ptr<CChapterBuilder> pChBuilder( new CUltColChapterBuilder(this) );
+   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CUltColChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
-   m_RptMgr.AddReportBuilder(pRptBuilder);
+   m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
    UIHints(FALSE); // not using UIHints feature
 }
@@ -93,7 +93,7 @@ BOOL CUltColDoc::CreateColumn()
 
    m_Column.CoCreateInstance(CLSID_RoundColumn);
 
-   return (m_Column == NULL ? FALSE : TRUE);
+   return (m_Column == nullptr ? FALSE : TRUE);
 }
 
 BOOL CUltColDoc::Init()
@@ -126,7 +126,7 @@ void CUltColDoc::OnCloseDocument()
 
 void CUltColDoc::OnRefreshReport()
 {
-   UpdateAllViews(NULL);
+   UpdateAllViews(nullptr);
 }
 
 HRESULT CUltColDoc::WriteTheDocument(IStructuredSave* pStrSave)

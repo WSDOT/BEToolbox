@@ -40,7 +40,7 @@ CGirCompTitlePageBuilder::~CGirCompTitlePageBuilder(void)
 {
 }
 
-rptChapter* CGirCompTitlePageBuilder::Build(boost::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CGirCompTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 

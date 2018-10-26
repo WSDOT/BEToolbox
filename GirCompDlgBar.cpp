@@ -35,7 +35,7 @@ IMPLEMENT_DYNAMIC(CGirCompDialogTopBar, CDialogBar)
 
 CGirCompDialogTopBar::CGirCompDialogTopBar()
 {
-   m_pGrid = NULL;
+   m_pGrid = nullptr;
 }
 
 CGirCompDialogTopBar::~CGirCompDialogTopBar()

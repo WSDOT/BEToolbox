@@ -107,7 +107,7 @@ void CPGStableGirderSectionGrid::RemoveSelectedGirderSections()
 
 BOOL CPGStableGirderSectionGrid::AreGirderSectionsSelected()
 {
-	if (GetParam() == NULL)
+	if (GetParam() == nullptr)
 	{
       return FALSE;
 	}

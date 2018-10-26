@@ -163,7 +163,7 @@ bool CCurvelReportWizardStep2::CorrectForSuperelevation()
    return m_bCorrectForSuperelevation;
 }
 
-void CCurvelReportWizardStep2::UpdateReportSpecification(CCurvelReportSpecification* pRptSpec)
+void CCurvelReportWizardStep2::UpdateReportSpecification(std::shared_ptr<CCurvelReportSpecification>& pRptSpec)
 {
    pRptSpec->CorrectForSuperelevation(m_bCorrectForSuperelevation);
    if ( m_bCorrectForSuperelevation )

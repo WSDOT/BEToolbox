@@ -32,7 +32,7 @@
 
 IMPLEMENT_DYNAMIC(CCurvelReportWizard, CPropertySheet)
 
-CCurvelReportWizard::CCurvelReportWizard(boost::shared_ptr<CCurvelReportSpecification>& pRptSpec, CWnd* pParentWnd, UINT iSelectPage)
+CCurvelReportWizard::CCurvelReportWizard(std::shared_ptr<CCurvelReportSpecification>& pRptSpec, CWnd* pParentWnd, UINT iSelectPage)
 	:CPropertySheet(_T(""), pParentWnd, iSelectPage),
    m_pRptSpec(pRptSpec)
 {
@@ -119,7 +119,7 @@ BOOL CCurvelReportWizard::OnInitDialog()
    return bResult;
 }
 
-void CCurvelReportWizard::UpdateReportSpecification(CCurvelReportSpecification* pRptSpec)
+void CCurvelReportWizard::UpdateReportSpecification(std::shared_ptr<CCurvelReportSpecification>& pRptSpec)
 {
    m_Step1.UpdateReportSpecification(pRptSpec);
    m_Step2.UpdateReportSpecification(pRptSpec);

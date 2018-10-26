@@ -36,9 +36,9 @@ protected:
 	virtual ~CPGStableTabView();
 
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
@@ -49,10 +49,10 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-   virtual void OnInitialUpdate();
-   virtual void OnActivateView(CView* pView);
+   virtual void OnInitialUpdate() override;
+   virtual void OnActivateView(CView* pView) override;
 protected:
-   virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+   virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/) override;
 };
 
 

@@ -42,5 +42,5 @@ public:
 
 protected:
 	DECLARE_MESSAGE_MAP()
-   virtual void DoDataExchange(CDataExchange* pDX);
+   virtual void DoDataExchange(CDataExchange* pDX) override;
 };

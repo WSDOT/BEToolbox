@@ -38,14 +38,14 @@ public:
 	CCurvelReportWizardStep3();
 	virtual ~CCurvelReportWizardStep3();
 
-   void UpdateReportSpecification(CCurvelReportSpecification* pRptSpec);
+   void UpdateReportSpecification(std::shared_ptr<CCurvelReportSpecification>& pRptSpec);
 
 // Dialog Data
 	enum { IDD = IDD_CURVEL_WIZ_3 };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-   virtual BOOL PreTranslateMessage(MSG* pMsg);
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
+   virtual BOOL PreTranslateMessage(MSG* pMsg) override;
 
    void InitFromRptSpec();
 
@@ -62,11 +62,11 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-   virtual LRESULT OnWizardNext();
-   virtual LRESULT OnWizardBack();
-   virtual BOOL OnInitDialog();
-   virtual BOOL OnSetActive();
-   virtual BOOL OnKillActive();
+   virtual LRESULT OnWizardNext() override;
+   virtual LRESULT OnWizardBack() override;
+   virtual BOOL OnInitDialog() override;
+   virtual BOOL OnSetActive() override;
+   virtual BOOL OnKillActive() override;
 
    afx_msg void OnAddIndividualStation();
    afx_msg void OnRemoveIndividualStation();

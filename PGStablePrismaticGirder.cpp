@@ -131,10 +131,10 @@ void DDX_PrismaticGirderStrands(CDataExchange* pDX,CPGStableStrands& strands)
 
 IMPLEMENT_DYNAMIC(CPGStablePrismaticGirder, CDialog)
 
-CPGStablePrismaticGirder::CPGStablePrismaticGirder(CWnd* pParent /*=NULL*/)
+CPGStablePrismaticGirder::CPGStablePrismaticGirder(CWnd* pParent /*=nullptr*/)
 	: CDialog(CPGStablePrismaticGirder::IDD, pParent)
 {
-   m_pPointLoadGrid = NULL;
+   m_pPointLoadGrid = nullptr;
 }
 
 CPGStablePrismaticGirder::~CPGStablePrismaticGirder()
@@ -268,7 +268,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    const GirderLibrary* pLib = pDoc->GetGirderLibrary();
    libKeyListType keyList;
    pLib->KeyList(keyList);
-   BOOST_FOREACH(const std::_tstring& key,keyList)
+   for (const auto& key : keyList)
    {
       // fill combo box with only the names of prismatic girders
       const GirderLibraryEntry* pGirderEntry = (const GirderLibraryEntry*)(pLib->GetEntry(key.c_str()));
@@ -276,8 +276,8 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
       CComPtr<IBeamFactory> factory;
       pGirderEntry->GetBeamFactory(&factory);
 
-      CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be NULL
-      if ( splicedFactory == NULL && factory->IsPrismatic(dimensions) )
+      CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be nullptr
+      if ( splicedFactory == nullptr && factory->IsPrismatic(dimensions) )
       {
          pcbGirders->AddString(key.c_str());
       }
@@ -448,11 +448,11 @@ void CPGStablePrismaticGirder::OnGirderChanged()
 
       IBeamFactory::Dimensions dimensions = pEntry->GetDimensions();
       CComPtr<IGirderSection> section;
-      factory->CreateGirderSection(NULL,INVALID_ID,dimensions,-1,-1,&section);
+      factory->CreateGirderSection(nullptr,INVALID_ID,dimensions,-1,-1,&section);
 
       CComPtr<IShape> pShape;
       section.QueryInterface(&pShape);
-      ATLASSERT(pShape != NULL);
+      ATLASSERT(pShape != nullptr);
 
       CComPtr<IShapeProperties> shapeProperties;
       pShape->get_ShapeProperties(&shapeProperties);

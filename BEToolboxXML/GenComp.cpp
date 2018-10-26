@@ -48,9 +48,9 @@ XALAN_USING_XALAN(XalanCompiledStylesheet)
 XALAN_USING_XALAN(XalanParsedSource)
 XALAN_USING_XALAN(XalanTransformer)
 
-std::auto_ptr<GenComp> CreateGenCompModel()
+std::unique_ptr<GenComp> CreateGenCompModel()
 {
-   std::auto_ptr<GenComp> genCompXML(new GenComp(UnitMode::US,1.0,ShapeType(),ShapeType()));
+   std::unique_ptr<GenComp> genCompXML(std::make_unique<GenComp>(UnitMode::US,1.0,ShapeType(),ShapeType()));
    return genCompXML;
 }
 
@@ -103,10 +103,10 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitServer* pDocUnitServer)
    return TRUE;
 }
 
-std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer)
+std::unique_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer)
 {
-   ATLASSERT(lpszFilePath != NULL);
-   ATLASSERT(pDocUnitServer != NULL);
+   ATLASSERT(lpszFilePath != nullptr);
+   ATLASSERT(pDocUnitServer != nullptr);
 
    // Creating is a two phase process.
    // Step 1 is to run the document through the Xalan XSLT engine,
@@ -117,7 +117,7 @@ std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDoc
    //
    // Most of this code is taken from the TransformToXercesDOM example
    // from the Xalan distribution.
-   std::auto_ptr<GenComp> genCompXML;
+   std::unique_ptr<GenComp> genCompXML;
    try
    {
       XALAN_USING_XERCES(XMLPlatformUtils)
@@ -142,7 +142,7 @@ std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDoc
 
            const XalanCompiledStylesheet*  theCompiledStylesheet = 0;
 
-           const char* lpstrXSLT = NULL;
+           const char* lpstrXSLT = nullptr;
            DWORD size = 0;
 #pragma Reminder("UPDATE: add error handling")
            if ( !LoadXMLResource(IDR_GENCOMP_10_TO_20_XSLT,XSLTFILE,size,lpstrXSLT) )
@@ -172,7 +172,7 @@ std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDoc
 
                 // This is the document which we'll build...
                 const XalanAutoPtr<DOMDocument>     theDocument(DOMImplementation::getImplementation()->createDocument());
-                assert(theDocument.get() != 0);
+                assert(theDocument.get() != nullptr);
 
                 // This is a class derived from FormatterListener, which
                 // we'll hook up to Xalan's output stage...
@@ -207,17 +207,17 @@ std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDoc
       XalanTransformer::terminate();
       XMLPlatformUtils::Terminate();
    }
-   catch(const xml_schema::exception& e)
+   catch(const xml_schema::exception& /*e*/)
    {
 //#pragma Reminder("UPDATE: provide better error handling")
 //      AfxMessageBox(_T("An error occured while loading the file"));
-      return std::auto_ptr<GenComp>();
+      return std::unique_ptr<GenComp>();
    }
    catch(...)
    {
 //#pragma Reminder("UPDATE: provide better error handling")
 //      AfxMessageBox(_T("An error occured while loading the file"));
-      return std::auto_ptr<GenComp>();
+      return std::unique_ptr<GenComp>();
    }
 
    if ( !ConvertToBaseUnits(genCompXML.get(),pDocUnitServer) )
@@ -225,7 +225,7 @@ std::auto_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDoc
       // something went wrong in the unit conversion
 #pragma Reminder("UPDATE: provide better error handling")
       AfxMessageBox(_T("An error occured while loading the file"));
-      return std::auto_ptr<GenComp>();
+      return std::unique_ptr<GenComp>();
    }
 
    return genCompXML;
@@ -239,7 +239,7 @@ BOOL SaveGenCompModel(LPCTSTR lpszPathName,GenComp* pGenCompXML)
 #pragma Reminder("UPDATE: error handle file opening")
       GenComp_(file,*pGenCompXML);
    }
-   catch(const xml_schema::exception& e)
+   catch(const xml_schema::exception& /*e*/)
    {
 #pragma Reminder("UPDATE: provide better error handling")
       AfxMessageBox(_T("An error occured while saving the file"));

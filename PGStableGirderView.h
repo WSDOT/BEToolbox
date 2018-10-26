@@ -38,17 +38,17 @@ protected:
 public:
 	enum { IDD = IDD_PGSTABLEGIRDERVIEW };
 #ifdef _DEBUG
-	virtual void AssertValid() const;
+	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 #endif
 
    void DoDataExchange(CDataExchange* pDX);
 
-   virtual void OnActivateView();
-   virtual void OnDeactivateView();
-   virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext);
+   virtual void OnActivateView() override;
+   virtual void OnDeactivateView() override;
+   virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext) override;
 
 protected:
    BOOL m_bViewInitialized; // set to FALSE until OnInitialUpdate completes. The child dialog windows are not created until OnInitialUpdate is called
@@ -59,9 +59,9 @@ protected:
 public:
    afx_msg void OnSwapUI();
    afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
-   virtual void OnInitialUpdate();
+   virtual void OnInitialUpdate() override;
 protected:
-   virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+   virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/) override;
 public:
    afx_msg void OnChange();
 };
