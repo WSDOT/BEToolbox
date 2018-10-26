@@ -63,6 +63,8 @@ public:
 #endif
 #endif
 
+	virtual BOOL OnNewDocument();
+
 protected:
    virtual BOOL OpenTheDocument(LPCTSTR lpszPathName);
    virtual BOOL SaveTheDocument(LPCTSTR lpszPathName);

@@ -360,8 +360,9 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitConvert* pDocU
       if (theResult != 0)
       {
          CString strMsg;
-         strMsg.Format(_T("Error parsing source document: %s"),theTransformer.getLastError());
+         strMsg.Format(_T("Error parsing source document: %s"),A2T(theTransformer.getLastError()));
          AfxMessageBox(strMsg);
+         return std::auto_ptr<Curvel>();
       }
       else
       {
