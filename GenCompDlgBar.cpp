@@ -31,7 +31,7 @@
 
 // CGenCompDialogBar
 
-IMPLEMENT_DYNAMIC(CGenCompDialogBar, CEAFPaneDialog)
+IMPLEMENT_DYNAMIC(CGenCompDialogBar, CDialogBar)
 
 CGenCompDialogBar::CGenCompDialogBar()
 {
@@ -46,7 +46,7 @@ CGenCompDialogBar::~CGenCompDialogBar()
 }
 
 
-BEGIN_MESSAGE_MAP(CGenCompDialogBar, CEAFPaneDialog)
+BEGIN_MESSAGE_MAP(CGenCompDialogBar, CDialogBar)
 END_MESSAGE_MAP()
 
 
@@ -57,7 +57,7 @@ END_MESSAGE_MAP()
 
 void CGenCompDialogBar::DoDataExchange(CDataExchange* pDX)
 {
-   CEAFPaneDialog::DoDataExchange(pDX);
+   CDialogBar::DoDataExchange(pDX);
 
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -78,7 +78,7 @@ void CGenCompDialogBar::DoDataExchange(CDataExchange* pDX)
 
 BOOL CGenCompDialogBar::Create(CWnd* pParentWnd,UINT nIDTemplate,UINT nStyle,UINT nID)
 {
-   if ( CEAFPaneDialog::Create(pParentWnd,nIDTemplate,nStyle,nID) )
+   if ( CDialogBar::Create(pParentWnd,nIDTemplate,nStyle,nID) )
       InitGrids();
 
    return TRUE;
@@ -136,6 +136,6 @@ void CGenCompDialogBar::OnUnitsModeChanged()
 void CGenCompDialogBar::AssertValid() const
 {
    AFX_MANAGE_STATE(AfxGetAppModuleState());
-   CEAFPaneDialog::AssertValid();
+   CDialogBar::AssertValid();
 }
 #endif
