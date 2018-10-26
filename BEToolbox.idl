@@ -38,7 +38,7 @@ library BEToolboxLib
 {
 	importlib("stdole2.tlb");
 	[
-		uuid(EA33DB99-86FB-4678-9442-AB1D334456E4),
+		uuid(B5E128D4-78F3-48e0-970E-812C2281EE4E),
 		helpstring("BEToolboxPlugin Class")
 	]
 	coclass BEToolboxPlugin
@@ -47,7 +47,7 @@ library BEToolboxLib
 	};
 
    [
-      uuid(71B4631C-5AB5-468e-A1AD-5764A728E419)
+      uuid(8BC4CCD2-35D5-4f2c-AA18-0E2D58FF5C3A)
    ]
    coclass BEToolboxComponentInfo
    {

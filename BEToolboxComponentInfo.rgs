@@ -2,16 +2,16 @@ HKCR
 {
 	BEToolbox.BEToolboxComponentInfo.1 = s 'BEToolbox Component Info'
 	{
-		CLSID = s '{71B4631C-5AB5-468e-A1AD-5764A728E419}'
+		CLSID = s '{8BC4CCD2-35D5-4f2c-AA18-0E2D58FF5C3A}'
 	}
 	BEToolbox.BEToolboxComponentInfo = s 'BEToolbox Component Info'
 	{
-		CLSID = s '{71B4631C-5AB5-468e-A1AD-5764A728E419}'
+		CLSID = s '{8BC4CCD2-35D5-4f2c-AA18-0E2D58FF5C3A}'
 		CurVer = s 'BEToolbox.BEToolboxComponentInfo.1'
 	}
 	NoRemove CLSID
 	{
-		ForceRemove {71B4631C-5AB5-468e-A1AD-5764A728E419} = s 'BEToolbox Component Info'
+		ForceRemove {8BC4CCD2-35D5-4f2c-AA18-0E2D58FF5C3A} = s 'BEToolbox Component Info'
 		{
 			ProgID = s 'BEToolbox.BEToolboxComponentInfo.1'
 			VersionIndependentProgID = s 'BEToolbox.BEToolboxComponentInfo'
