@@ -559,6 +559,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BEToolboxColors.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BEToolboxComponentInfo.h"
 				>
 			</File>

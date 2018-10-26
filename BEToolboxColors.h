@@ -21,20 +21,8 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <ReportManager\TitlePageBuilder.h>
 
-class CGenCompTitlePageBuilder :
-   public CTitlePageBuilder
-{
-public:
-   CGenCompTitlePageBuilder(void);
-   CGenCompTitlePageBuilder(const CGenCompTitlePageBuilder& other);
-   ~CGenCompTitlePageBuilder(void);
-
-   virtual rptChapter* Build(boost::shared_ptr<CReportSpecification>& pRptSpec);
-
-   virtual CTitlePageBuilder* Clone() const;
-
-private:
-   std::_tstring m_strImagePath;
-};
+#define GRAPH_BACKGROUND ALICEBLUE
+#define GRAPH_GRID_PEN_STYLE PS_DOT
+#define GRAPH_GRID_PEN_WEIGHT 1
+#define GRAPH_GRID_COLOR LIGHTSTEELBLUE

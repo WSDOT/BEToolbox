@@ -22,8 +22,8 @@
 
 #include "StdAfx.h"
 #include "UltColChapterBuilder.h"
+#include "BEToolboxColors.h"
 #include <Reporter\Reporter.h>
-#include <Colors.h>
 #include <GraphicsLib\GraphicsLib.h>
 
 void to_upper( std::_tstring::iterator begin,std::_tstring::iterator end)
@@ -93,10 +93,6 @@ private:
 
 typedef PhysicalFormatTool<unitmgtMomentData>  MomentTool;
 typedef PhysicalFormatTool<unitmgtForceData>   AxialTool;
-
-static const COLORREF GRAPH_BACKGROUND = ALICEBLUE;
-static const COLORREF GRID_COLOR       = LIGHTSTEELBLUE;
-
 
 //////////////////////////////////
 CUltColChapterBuilder::CUltColChapterBuilder(CUltColDoc* pDoc)
@@ -283,7 +279,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
-   graph.SetGridPenStyle(PS_DOT, 1, GRID_COLOR);
+   graph.SetGridPenStyle(GRAPH_GRID_PEN_STYLE, GRAPH_GRID_PEN_WEIGHT, GRAPH_GRID_COLOR);
 
    graph.SetTitle(_T("Interaction Diagram"));
 
