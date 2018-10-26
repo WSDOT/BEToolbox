@@ -299,6 +299,10 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    model.SetLiftingStabilityProblem( *pGirder->GetSegmentLiftingStabilityProblem(segmentKey));
    model.SetHaulingStabilityProblem( *pGirder->GetSegmentHaulingStabilityProblem(segmentKey));
 
+   GET_IFACE2(pBroker, IMaterials, pMaterial);
+   model.SetK1(pMaterial->GetSegmentEccK1(segmentKey));
+   model.SetK2(pMaterial->GetSegmentEccK2(segmentKey));
+
    GET_IFACE2(pBroker,ISegmentLiftingSpecCriteria,pSegmentLiftingSpecCriteria);
    GET_IFACE2(pBroker,ISegmentHaulingSpecCriteria,pSegmentHaulingSpecCriteria);
 
