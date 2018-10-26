@@ -23,8 +23,10 @@
 #pragma once
 
 // CPGStableDoc document
+#include "BEToolboxLib.h"
 #include "BEToolboxDoc.h"
 #include "PGStableModel.h"
+#include "PGStablePluginCATID.h"
 
 #include <ReportManager\ReportManager.h>
 #include <PsgLib\LibraryManager.h>
@@ -34,7 +36,9 @@ static CString gs_strCriteria(_T("Define project criteria"));
 static CString gs_strHaulTruck(_T("Define haul truck"));
 static CString gs_strGirder(_T("Define girder properties"));
 
-class CPGStableDoc : public CBEToolboxDoc
+#define HINT_UPDATE_DATA 1
+
+class BETCLASS CPGStableDoc : public CBEToolboxDoc
 {
 	DECLARE_DYNCREATE(CPGStableDoc)
 
@@ -58,6 +62,9 @@ public:
 
    void SetGirderType(int type);
    int GetGirderType() const;
+
+   void SetStressPointType(int stressPointType);
+   int GetStressPointType() const;
 
    const stbGirder& GetGirder(int type) const;
    void SetGirder(int type,const stbGirder& girder);
@@ -118,6 +125,8 @@ public:
    const GirderLibrary* GetGirderLibrary() const;
    const GirderLibraryEntry* GetGirderLibraryEntry() const;
 
+   bool IsPermittedGirderEntry(const GirderLibraryEntry* pGirderEntry) const;
+
    CReportBuilderManager m_RptMgr;
 
 #ifdef _DEBUG
@@ -130,6 +139,9 @@ public:
 protected:
    /// called when a document is created (New or Open)
    virtual BOOL Init() override;
+
+   // Plugins
+   virtual CATID GetDocumentPluginCATID() override { return CATID_PGStablePlugin; };
 
    void LoadPGSLibrary();
 

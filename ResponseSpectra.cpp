@@ -164,9 +164,9 @@ std::vector<std::pair<Float64,Float64>> CResponseSpectra::GetSpectraValues(Float
    std::vector<std::pair<Float64,Float64>> values;
 
    // store the key values
-   values.push_back(std::make_pair(0.0,GetSa(0.0)));
-   values.push_back(std::make_pair(To,GetSa(To)));
-   values.push_back(std::make_pair(Ts,GetSa(Ts)));
+   values.emplace_back(0.0,GetSa(0.0));
+   values.emplace_back(To,GetSa(To));
+   values.emplace_back(Ts,GetSa(Ts));
 
    if ( Tmax - Ts < 0 )
    {
@@ -177,12 +177,12 @@ std::vector<std::pair<Float64,Float64>> CResponseSpectra::GetSpectraValues(Float
    Float64 t = tStep;
    while ( t < Tmax )
    {
-      values.push_back(std::make_pair(t,GetSa(t)));
+      values.emplace_back(t,GetSa(t));
       t += tStep;
    }
 
    // add the last value
-   values.push_back(std::make_pair(Tmax,GetSa(Tmax)));
+   values.emplace_back(Tmax,GetSa(Tmax));
 
    // sort
    std::sort(values.begin(), values.end(), [](const auto& v1, const auto& v2) {return v1.first < v2.first;});

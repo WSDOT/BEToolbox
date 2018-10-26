@@ -20,44 +20,25 @@
 // Bridge_Support@wsdot.wa.gov
 ///////////////////////////////////////////////////////////////////////
 
-// CurvelImporter.h : Declaration of the CCurvelImporter
-
 #pragma once
 
-#include <PGSuperIEPlugin.h>
-#include "resource.h"       // main symbols
+// Define BUILDBETOOLBOXLIB when building this library
+// For static builds, define BETOOLBOXLIB
+// For static binding, define BETOOLBOXLIB
+// For dynamic binding, nothing is required to be defined
 
+#if defined (BUILDBETOOLBOXLIB) && !defined(BETOOLBOXLIB)
+#define BETCLASS __declspec(dllexport)
+#define BETFUNC  __declspec(dllexport)
+#define BETTPL   template class BETCLASS
+#elif defined(BETOOLBOXLIB)
+#define BETCLASS
+#define BETFUNC
+#define BETTPL
+#else
+#define BETCLASS __declspec(dllimport)
+#define BETFUNC
+#define BETTPL   extern template class BETFUNC
+#endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CCurvelImporter
-class ATL_NO_VTABLE CCurvelImporter : 
-	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CCurvelImporter, &CLSID_CurvelImporter>,
-   public IPGSDataImporter
-{
-public:
-	CCurvelImporter()
-	{
-	}
-
-   HRESULT FinalConstruct();
-   CBitmap m_Bitmap;
-
-DECLARE_REGISTRY_RESOURCEID(IDR_CURVELIMPORTER)
-
-DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-BEGIN_COM_MAP(CCurvelImporter)
-	COM_INTERFACE_ENTRY(IPGSDataImporter)
-END_COM_MAP()
-
-// IPGSDataImporter
-public:
-   STDMETHOD(Init)(UINT nCmdID);
-   STDMETHOD(GetMenuText)(/*[out,retval]*/BSTR*  bstrText) const;
-   STDMETHOD(GetBitmapHandle)(/*[out]*/HBITMAP* phBmp) const;
-   STDMETHOD(GetCommandHintText)(BSTR*  bstrText) const;
-   STDMETHOD(Import)(/*[in]*/IBroker* pBroker);
-};
-
-OBJECT_ENTRY_AUTO(__uuidof(CurvelImporter), CCurvelImporter)
+#include <AutoLib.h>

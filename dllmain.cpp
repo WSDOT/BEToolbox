@@ -46,6 +46,8 @@
 
 #include <WBFLUnitServer_i.c>
 
+#include "PGStablePluginCATID.h"
+
 CBEToolboxModule _AtlModule;
 
 BEGIN_MESSAGE_MAP(CBEToolboxApp, CWinApp)
@@ -97,6 +99,8 @@ BOOL CBEToolboxApp::InitInstance()
    printOnly.SetAlignment(rptRiStyle::LEFT);
    printOnly.SetMediaType(rptRiStyle::Print);
    pStyleLib->AddNamedStyle(_T("BEToolboxPrintOnly"), printOnly);
+
+   sysComCatMgr::CreateCategory(L"PGStable Plugins", CATID_PGStablePlugin);
 
    return CWinApp::InitInstance();
 }

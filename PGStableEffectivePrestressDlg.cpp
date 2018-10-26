@@ -49,6 +49,12 @@ void CPGStableEffectivePrestressDlg::DoDataExchange(CDataExchange* pDX)
    CPGStableDoc* pDoc = (CPGStableDoc*)EAFGetDocument();
 
 	CDialog::DoDataExchange(pDX);
+
+   CEAFApp* pApp = EAFGetApp();
+   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+
+   DDX_UnitValueAndTag(pDX, IDC_EX, IDC_EX_UNIT, m_Strands.ex, pDispUnits->ComponentDim);
+
    if ( pDX->m_bSaveAndValidate )
    {
       m_Grid.GetFpe(m_Strands.m_vFpe);

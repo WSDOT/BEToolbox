@@ -54,6 +54,8 @@ void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
    DDX_UnitValueAndTag(pDX,IDC_XFER_LENGTH,IDC_XFER_LENGTH_UNIT,strands.XferLength,pDispUnits->ComponentDim);
    DDV_UnitValueZeroOrMore(pDX,IDC_XFER_LENGTH,strands.XferLength,pDispUnits->ComponentDim);
 
+   DDX_UnitValueAndTag(pDX, IDC_EX, IDC_EX_UNIT, strands.ex, pDispUnits->ComponentDim);
+
    DDX_CBItemData(pDX,IDC_YS_MEASURE,strands.YsMeasure);
    DDX_UnitValueAndTag(pDX,IDC_YS,IDC_YS_UNIT,strands.Ys,pDispUnits->ComponentDim);
    DDV_UnitValueZeroOrMore(pDX,IDC_YS,strands.Ys,pDispUnits->ComponentDim);
@@ -154,6 +156,12 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_GirderSectionGrid(pDX,m_pGirderSectionGrid,girder);
    DDX_Strands(pDX,strands);
 
+   int stressPointType = pDoc->GetStressPointType();
+   DDX_Radio(pDX, IDC_COMPUTE_STRESS_POINTS, stressPointType);
+
+   Float64 precamber = girder.GetPrecamber();
+   DDX_UnitValueAndTag(pDX, IDC_PRECAMBER, IDC_PRECAMBER_UNIT, precamber, pDispUnits->ComponentDim);
+
    Float64 Cd = girder.GetDragCoefficient();
    DDX_Text(pDX,IDC_DRAG_COEFFICIENT,Cd);
    DDV_GreaterThanZero(pDX,IDC_DRAG_COEFFICIENT,Cd);
@@ -174,6 +182,20 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
       girder.SetAdditionalLoads(vLoads);
 
       girder.SetDragCoefficient(Cd);
+
+      girder.SetPrecamber(precamber);
+
+      pDoc->SetStressPointType(stressPointType);
+      if (stressPointType == DEFINE_STRESS_POINTS)
+      {
+         std::vector<StressPoints> vStressPoints = m_pGirderSectionGrid->GetStressPoints();
+         IndexType sectIdx = 0;
+         for (const auto& sp : vStressPoints)
+         {
+            girder.SetStressPoints(sectIdx, sp.pntTL[stbTypes::Start], sp.pntTR[stbTypes::Start], sp.pntBL[stbTypes::Start], sp.pntBR[stbTypes::Start], sp.pntTL[stbTypes::End], sp.pntTR[stbTypes::End], sp.pntBL[stbTypes::End], sp.pntBR[stbTypes::End]);
+            sectIdx++;
+         }
+      }
 
       pDoc->SetGirder(NONPRISMATIC,girder);
 
@@ -244,8 +266,10 @@ BEGIN_MESSAGE_MAP(CPGStableNonprismaticGirder, CDialog)
    ON_CBN_SELCHANGE(IDC_YT_MEASURE, CPGStableNonprismaticGirder::OnChange)
    ON_CBN_SELCHANGE(IDC_PS_METHOD, &CPGStableNonprismaticGirder::OnPSMethodChanged)
 	ON_MESSAGE(WM_HELP, OnCommandHelp)
+   ON_BN_CLICKED(IDC_COMPUTE_STRESS_POINTS, &CPGStableNonprismaticGirder::OnBnClickedComputeStressPoints)
+   ON_BN_CLICKED(IDC_DEFINE_STRESS_POINTS, &CPGStableNonprismaticGirder::OnBnClickedDefineStressPoints)
+   ON_WM_SHOWWINDOW()
 END_MESSAGE_MAP()
-
 
 LRESULT CPGStableNonprismaticGirder::OnCommandHelp(WPARAM, LPARAM lParam)
 {
@@ -281,12 +305,17 @@ BOOL CPGStableNonprismaticGirder::OnInitDialog()
    pcbMethod->SetItemData(pcbMethod->AddString(_T("Simplified")),(DWORD_PTR)CPGStableStrands::Simplified);
    pcbMethod->SetItemData(pcbMethod->AddString(_T("Detailed")),(DWORD_PTR)CPGStableStrands::Detailed);
 
+   CView* pParent = (CView*)GetParent();
+   CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
+   const stbGirder& girder = pDoc->GetGirder(NONPRISMATIC);
+   InitStressPointCache(girder);
+
    CDialog::OnInitDialog();
 
    OnPSMethodChanged();
 
-   // TODO:  Add extra initialization here
-
+   m_pGirderSectionGrid->EnableStressPoints(pDoc->GetStressPointType() == DEFINE_STRESS_POINTS); // enable grid if user defined stress points
+                                                                                                 
    return TRUE;  // return TRUE unless you set the focus to a control
    // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -484,6 +513,49 @@ void CPGStableNonprismaticGirder::OnPSMethodChanged()
    GetDlgItem(IDC_SS_LABEL)->ShowWindow(show);
    GetDlgItem(IDC_HS_LABEL)->ShowWindow(show);
    GetDlgItem(IDC_TS_LABEL)->ShowWindow(show);
+
+   GetDlgItem(IDC_EX_LABEL)->ShowWindow(show);
+   GetDlgItem(IDC_EX)->ShowWindow(show);
+   GetDlgItem(IDC_EX_UNIT)->ShowWindow(show);
+}
+
+void CPGStableNonprismaticGirder::InitStressPointCache(const stbGirder& girder)
+{
+   m_StressPointCache.clear();
+   IndexType nSections = girder.GetSectionCount();
+   for (IndexType sectIdx = 0; sectIdx < nSections; sectIdx++)
+   {
+      StressPoints sp;
+      girder.GetStressPoints(sectIdx, stbTypes::Start, &sp.pntTL[stbTypes::Start], &sp.pntTR[stbTypes::Start], &sp.pntBL[stbTypes::Start], &sp.pntBR[stbTypes::Start]);
+      girder.GetStressPoints(sectIdx, stbTypes::End,   &sp.pntTL[stbTypes::End],   &sp.pntTR[stbTypes::End],   &sp.pntBL[stbTypes::End],   &sp.pntBR[stbTypes::End]);
+      m_StressPointCache.push_back(sp);
+   }
+}
+
+void CPGStableNonprismaticGirder::OnBnClickedComputeStressPoints()
+{
+   m_StressPointCache = m_pGirderSectionGrid->GetStressPoints(); // get the user defined values and cache them
+   m_pGirderSectionGrid->ComputeStressPoints();
+   m_pGirderSectionGrid->EnableStressPoints(FALSE);
+}
+
+void CPGStableNonprismaticGirder::OnBnClickedDefineStressPoints()
+{
+   m_pGirderSectionGrid->EnableStressPoints(TRUE);
+   m_pGirderSectionGrid->SetStressPoints(m_StressPointCache); // restore the cached user defined values
+}
+
+
+void CPGStableNonprismaticGirder::OnShowWindow(BOOL bShow, UINT nStatus)
+{
+   __super::OnShowWindow(bShow, nStatus);
+
+   if (bShow)
+   {
+      CView* pParent = (CView*)GetParent();
+      CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
+      m_pGirderSectionGrid->EnableStressPoints(pDoc->GetStressPointType() == DEFINE_STRESS_POINTS); // enable grid if user defined stress points
+   }
 }
 
 
@@ -498,4 +570,10 @@ void CPGStableNonprismaticGirder::OnOK()
 {
    // prevent [Enter] from closing window
    //__super::OnOK();
+}
+
+void CPGStableNonprismaticGirder::OnUnitsChanged()
+{
+   UpdateData(FALSE);
+   m_pGirderSectionGrid->OnUnitsChanged();
 }

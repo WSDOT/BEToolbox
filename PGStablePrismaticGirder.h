@@ -23,6 +23,7 @@
 #pragma once
 
 #include <MfcTools\MetaFileStatic.h>
+#include "PGStableStressPointGrid.h"
 #include "PGStablePointLoadGrid.h"
 #include "PGStableGirderControl.h"
 
@@ -49,7 +50,14 @@ protected:
 
    CMetaFileStatic m_StrandLayout;
    CPGStableGirderControl m_ctrlGirder;
-   CPGStablePointLoadGrid* m_pPointLoadGrid;
+   std::unique_ptr<CPGStablePointLoadGrid> m_pPointLoadGrid;
+   std::unique_ptr<CPGStableStressPointGrid> m_pStressPointGrid;
+
+   gpPoint2d m_pntTL, m_pntTR, m_pntBL, m_pntBR;
+   gpPoint2d m_pntTLCache, m_pntTRCache, m_pntBLCache, m_pntBRCache;
+
+   void InitStressPoints(Float64 Wtf,Float64 Wbf,Float64 Ytop,Float64 Hg);
+   void UpdateStressPoints();
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -62,6 +70,12 @@ public:
    virtual BOOL OnInitDialog() override;
    afx_msg void OnPSMethodChanged();
    afx_msg void OnGirderChanged();
+   afx_msg void OnBnClickedComputeStressPoints();
+   afx_msg void OnBnClickedDefineStressPoints();
+   afx_msg void OnChangedStressPointDimension();
+   afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
    virtual void OnCancel();
    virtual void OnOK();
+
+   void OnUnitsChanged();
 };

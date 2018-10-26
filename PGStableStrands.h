@@ -21,6 +21,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include "BEToolboxLib.h"
 
 #define TOP 0
 #define BOTTOM 1
@@ -28,7 +29,7 @@
 #define DISTANCE 0
 #define FRACTION 1
 
-class CPGStableFpe
+class BETCLASS CPGStableFpe
 {
 public:
    CPGStableFpe();
@@ -51,7 +52,7 @@ public:
    int     YpsTempMeasure;
 };
 
-class CPGStableStrands
+class BETCLASS CPGStableStrands
 {
 public:
    typedef enum StrandMethod
@@ -68,6 +69,8 @@ public:
    HRESULT Load(IStructuredLoad* pStrLoad);
 
    StrandMethod strandMethod;
+
+   Float64 ex; // lateral eccentricity of the prestressing with respect to the vertical centriodal axis (< 0 is the left of the CG)
 
    std::set<CPGStableFpe> m_vFpe; // used if strandMethod == Exact, otherwise all the parameters below are used
 

@@ -154,6 +154,9 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_CAMBER,IDC_CAMBER_UNIT,camber,pDispUnits->ComponentDim);
    DDX_Text(pDX, IDC_CAMBER_MULTIPLIER, camberMultiplier);
 
+   Float64 lateralCamber = problem.GetLateralCamber();
+   DDX_UnitValueAndTag(pDX, IDC_LATERAL_CAMBER, IDC_LATERAL_CAMBER_UNIT, lateralCamber, pDispUnits->ComponentDim);
+
 
    Float64 fci, frCoefficient;
    bool bComputeEci;
@@ -225,6 +228,9 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
       problem.SetCamber(bDirectCamber,camber);
       problem.SetCamberMultiplier(camberMultiplier);
 
+      problem.SetLateralCamber(lateralCamber);
+      problem.IncludeLateralRollAxisOffset(IsZero(lateralCamber) ? false : true);
+
       pDoc->SetLiftingStabilityProblem(problem);
       pDoc->SetLiftingMaterials(fci,!bComputeEci,frCoefficient);
 
@@ -264,6 +270,7 @@ BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_SWEEP_TOLERANCE, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_LATERAL_SWEEP_INCREMENT, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_SUPPORT_PLACEMENT_TOLERANCE, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_LATERAL_CAMBER, &CPGStableLiftingView::OnChange)
    ON_BN_CLICKED(IDC_EDIT_FPE, &CPGStableLiftingView::OnEditFpe)
    ON_COMMAND(ID_FILE_PRINT,&CPGStableLiftingView::OnPrint)
    ON_COMMAND(ID_FILE_PRINT_DIRECT,&CPGStableLiftingView::OnPrintDirect)
@@ -524,9 +531,9 @@ void CPGStableLiftingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,F
 
 void CPGStableLiftingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)
 {
-   if ( EAFGetActiveView() == this )
+   if ( EAFGetActiveView() == this || lHint == HINT_UPDATE_DATA)
    {
-      if ( lHint == EAF_HINT_UNITS_CHANGING )
+      if ( lHint == EAF_HINT_UNITS_CHANGING || lHint == HINT_UPDATE_DATA)
       {
          UpdateData(TRUE);
       }

@@ -201,6 +201,8 @@ UINT CBEToolboxDoc::GetToolbarID()
 
 void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
 {
+   __super::DoIntegrateWithUI(bIntegrate);
+
    CEAFMainFrame* pFrame = EAFGetMainFrame();
 
    if ( bIntegrate )

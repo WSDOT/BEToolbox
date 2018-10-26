@@ -64,7 +64,7 @@ void CGenCompDimensionGrid::DoDataExchange(CDataExchange* pDX)
       {
          Float64 x,y;
          GetPoint(row+1,x,y);
-         points.push_back(std::make_pair(x,y));
+         points.emplace_back(x,y);
       }
 
       if ( m_bPrimaryPoints )

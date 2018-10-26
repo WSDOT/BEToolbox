@@ -125,8 +125,8 @@ void CPGStableGirderSectionGrid::CustomInit()
 
 	GetParam( )->EnableUndo(FALSE);
 
-   const ROWCOL num_rows = 0;
-   const ROWCOL num_cols = 8;
+   const ROWCOL num_rows = 1;
+   const ROWCOL num_cols = 18;
 
 	SetRowCount(num_rows);
 	SetColCount(num_cols);
@@ -158,17 +158,19 @@ void CPGStableGirderSectionGrid::CustomInit()
 
 void CPGStableGirderSectionGrid::AddGirderSection()
 {
-   Float64 L,Ag,Ix,Iy,Yt,Hg,Wtop,Wbot;
-   GetGirderSection(GetRowCount(),&L,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtop,&Wbot);
-   InsertGirderSection(L,Ag,Ix,Iy,Yt,Hg,Wtop,Wbot);
-   InsertGirderSection(L,Ag,Ix,Iy,Yt,Hg,Wtop,Wbot);
+   Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot;
+   gpPoint2d pntTL, pntTR, pntBL, pntBR;
+   GetGirderSection(GetRowCount(),&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtop,&Wbot,&pntTL,&pntTR,&pntBL,&pntBR);
+
+   InsertGirderSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot,pntTL,pntTR,pntBL,pntBR);
+   InsertGirderSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot, pntTL, pntTR, pntBL, pntBR);
 
    AFX_MANAGE_STATE(AfxGetAppModuleState());
    CPGStableNonprismaticGirder* pDlg = (CPGStableNonprismaticGirder*)GetParent();
    pDlg->SetGirderLength(GetGirderLength());
 }
 
-void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIx,Float64* pIy,Float64* pYt,Float64* pHg,Float64* pWtop,Float64* pWbot)
+void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot, gpPoint2d* pntTL, gpPoint2d* pntTR, gpPoint2d* pntBL, gpPoint2d* pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -195,22 +197,62 @@ void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pIx = ::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
+   *pIxx = ::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   *pIyy = ::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   *pIxy = ::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pIy = ::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
+   *pYcg = -1 * ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   strValue = GetCellValue(row,col++);
+   strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pYt = -1 * ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   *pXcg = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
    *pL = ::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   pntTL->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   pntTL->Y() = -1 * ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   pntTR->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   pntTR->Y() = -1 * ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   pntBL->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   pntBL->Y() = -1 * ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   pntBR->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+
+   strValue = GetCellValue(row, col++);
+   sysTokenizer::ParseDouble(strValue, &value);
+   pntBR->Y() = -1 * ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 }
 
-void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ix,Float64 Iy,Float64 Yt,Float64 Hg,Float64 Wtf,Float64 Wbf)
+void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf, const gpPoint2d& pntTL, const gpPoint2d& pntTR, const gpPoint2d& pntBL, const gpPoint2d& pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -223,6 +265,7 @@ void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,F
    ROWCOL col = 0;
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(nRow-1)
          );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
@@ -247,25 +290,35 @@ void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,F
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(::FormatDimension(Ix,pDispUnits->MomentOfInertia,false))
+      .SetValue(::FormatDimension(Ixx,pDispUnits->MomentOfInertia,false))
          );
 
-	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+   SetStyleRange(CGXRange(nRow, col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(::FormatDimension(Iy,pDispUnits->MomentOfInertia,false))
-         );
+      .SetValue(::FormatDimension(Iyy, pDispUnits->MomentOfInertia, false))
+   );
 
-	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+   SetStyleRange(CGXRange(nRow, col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(::FormatDimension(-Yt,pDispUnits->ComponentDim,false))
-         );
+      .SetValue(::FormatDimension(Ixy, pDispUnits->MomentOfInertia, false))
+   );
+
+   SetStyleRange(CGXRange(nRow, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(-Ytop, pDispUnits->ComponentDim, false))
+   );
+
+   SetStyleRange(CGXRange(nRow, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(Xleft, pDispUnits->ComponentDim, false))
+   );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
       .SetValue(::FormatDimension(Length,pDispUnits->SpanLength,false))
          );
 
-   if ( nRow % 2 == 0 )
+   if ( nRow % 2 != 0 )
    {
       col--;
       SetStyleRange(CGXRange(nRow,col++), CGXStyle()
@@ -276,8 +329,62 @@ void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,F
          );
    }
 
+   SetStressPoints(nRow, pntTL, pntTR, pntBL, pntBR);
+
    SetCurrentCell(nRow, GetLeftCol(), GX_SCROLLINVIEW|GX_DISPLAYEDITWND);
 	Invalidate();
+
+   GetParam()->EnableUndo(TRUE);
+}
+
+void CPGStableGirderSectionGrid::SetStressPoints(ROWCOL row,const gpPoint2d& pntTL, const gpPoint2d& pntTR, const gpPoint2d& pntBL, const gpPoint2d& pntBR)
+{
+   CEAFApp* pApp = EAFGetApp();
+   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+
+   GetParam()->EnableUndo(FALSE);
+
+   ROWCOL col = 11;
+
+   SetStyleRange(CGXRange(row, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(pntTL.X(), pDispUnits->ComponentDim, false))
+   );
+
+   SetStyleRange(CGXRange(row, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(-pntTL.Y(), pDispUnits->ComponentDim, false))
+   );
+
+   SetStyleRange(CGXRange(row, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(pntTR.X(), pDispUnits->ComponentDim, false))
+   );
+
+   SetStyleRange(CGXRange(row, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(-pntTR.Y(), pDispUnits->ComponentDim, false))
+   );
+
+   SetStyleRange(CGXRange(row, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(pntBL.X(), pDispUnits->ComponentDim, false))
+   );
+
+   SetStyleRange(CGXRange(row, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(-pntBL.Y(), pDispUnits->ComponentDim, false))
+   );
+
+   SetStyleRange(CGXRange(row, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(pntBR.X(), pDispUnits->ComponentDim, false))
+   );
+
+   SetStyleRange(CGXRange(row, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_RIGHT)
+      .SetValue(::FormatDimension(-pntBR.Y(), pDispUnits->ComponentDim, false))
+   );
 
    GetParam()->EnableUndo(TRUE);
 }
@@ -290,9 +397,11 @@ CString CPGStableGirderSectionGrid::GetCellValue(ROWCOL nRow, ROWCOL nCol)
         CGXControl* pControl = GetControl(nRow, nCol);
         pControl->GetValue(s);
         return s;
-  }
+    }
     else
-        return GetValueRowCol(nRow, nCol);
+    {
+       return GetValueRowCol(nRow, nCol);
+    }
 }
 
 // validate input
@@ -325,7 +434,7 @@ void CPGStableGirderSectionGrid::OnModifyCell(ROWCOL nRow,ROWCOL nCol)
    AFX_MANAGE_STATE(AfxGetAppModuleState());
    CPGStableNonprismaticGirder* pDlg = (CPGStableNonprismaticGirder*)GetParent();
 
-   if ( nCol == 8 )
+   if ( nCol == 9 )
    {
       pDlg->SetGirderLength(GetGirderLength());
    }
@@ -338,88 +447,238 @@ void CPGStableGirderSectionGrid::UpdateColumnHeaders()
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
+   SetMergeCellsMode(gxnMergeEvalOnDisplay); // we want to merge cells
+   SetFrozenRows(1/*# frozen rows*/, 1/*# extra header rows*/);
+
    // set text along top row
-   ROWCOL col = 1;
+   ROWCOL col = 0;
+
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_TOP)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(_T(" "))
+   );
+
+
    CString strDimension;
-   strDimension.Format(_T("%s (%s)"),_T("Height"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("%s\n(%s)"),_T("Height"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+	SetStyleRange(CGXRange(0,col,1,col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
 		.SetEnabled(FALSE)          // disables usage as current cell
-		.SetValue(strDimension)
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
 	);
 
-   strDimension.Format(_T("%s (%s)"),_T("Wtf"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("%s\n(%s)"),_T("Wtf"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
-		.SetEnabled(FALSE)          // disables usage as current cell
-		.SetValue(strDimension)
-	);
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
 
-   strDimension.Format(_T("%s (%s)"),_T("Wbf"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("%s\n(%s)"),_T("Wbf"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
-		.SetEnabled(FALSE)          // disables usage as current cell
-		.SetValue(strDimension)
-	);
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
 
-   strDimension.Format(_T("%s (%s)"),_T("Area"),pDispUnits->Area.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("%s\n(%s)"),_T("Area"),pDispUnits->Area.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
-		.SetEnabled(FALSE)          // disables usage as current cell
-		.SetValue(strDimension)
-	);
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
 
-   strDimension.Format(_T("%s (%s)"),_T("Ix"),pDispUnits->MomentOfInertia.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("%s\n(%s)"),_T("Ixx"),pDispUnits->MomentOfInertia.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
-		.SetEnabled(FALSE)          // disables usage as current cell
-		.SetValue(strDimension)
-	);
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
 
-   strDimension.Format(_T("%s (%s)"),_T("Iy"),pDispUnits->MomentOfInertia.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("%s\n(%s)"), _T("Iyy"), pDispUnits->MomentOfInertia.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
-		.SetEnabled(FALSE)          // disables usage as current cell
-		.SetValue(strDimension)
-	);
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
 
-   strDimension.Format(_T("%s (%s)"),_T("Yt"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("%s\n(%s)"), _T("Ixy"), pDispUnits->MomentOfInertia.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
-		.SetEnabled(FALSE)          // disables usage as current cell
-		.SetValue(strDimension)
-	);
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
 
-   strDimension.Format(_T("%s (%s)"),_T("L"),pDispUnits->SpanLength.UnitOfMeasure.UnitTag().c_str());
-	SetStyleRange(CGXRange(0,col++), CGXStyle()
+   strDimension.Format(_T("%s\n(%s)"), _T("Ytop"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
       .SetWrapText(TRUE)
       .SetHorizontalAlignment(DT_CENTER)
       .SetVerticalAlignment(DT_VCENTER)
-		.SetEnabled(FALSE)          // disables usage as current cell
-		.SetValue(strDimension)
-	);
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
+
+   strDimension.Format(_T("%s\n(%s)"), _T("Xleft"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
+
+   strDimension.Format(_T("%s\n(%s)"),_T("L"),pDispUnits->SpanLength.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(0, col, 1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetMergeCell(GX_MERGE_VERTICAL | GX_MERGE_COMPVALUE)
+      .SetValue(strDimension)
+   );
+
+   SetStyleRange(CGXRange(0, col, 0, col + 1), CGXStyle()
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_TOP)
+      .SetEnabled(FALSE)
+      .SetValue(_T("Top Left"))
+      .SetMergeCell(GX_MERGE_HORIZONTAL | GX_MERGE_COMPVALUE)
+   );
+
+   strDimension.Format(_T("%s (%s)"), _T("X"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetValue(strDimension)
+   );
+
+   strDimension.Format(_T("%s (%s)"), _T("Y"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetValue(strDimension)
+   );
+
+
+   SetStyleRange(CGXRange(0, col, 0, col + 1), CGXStyle()
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_TOP)
+      .SetEnabled(FALSE)
+      .SetValue(_T("Top Right"))
+      .SetMergeCell(GX_MERGE_HORIZONTAL | GX_MERGE_COMPVALUE)
+   );
+
+   strDimension.Format(_T("%s (%s)"), _T("X"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetValue(strDimension)
+   );
+
+   strDimension.Format(_T("%s (%s)"), _T("Y"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetValue(strDimension)
+   );
+
+
+   SetStyleRange(CGXRange(0, col, 0, col + 1), CGXStyle()
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_TOP)
+      .SetEnabled(FALSE)
+      .SetValue(_T("Bottom Left"))
+      .SetMergeCell(GX_MERGE_HORIZONTAL | GX_MERGE_COMPVALUE)
+   );
+
+   strDimension.Format(_T("%s (%s)"), _T("X"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetValue(strDimension)
+   );
+
+   strDimension.Format(_T("%s (%s)"), _T("Y"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetValue(strDimension)
+   );
+
+
+   SetStyleRange(CGXRange(0, col, 0, col + 1), CGXStyle()
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_TOP)
+      .SetEnabled(FALSE)
+      .SetValue(_T("Bottom Right"))
+      .SetMergeCell(GX_MERGE_HORIZONTAL | GX_MERGE_COMPVALUE)
+   );
+
+   strDimension.Format(_T("%s (%s)"), _T("X"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetValue(strDimension)
+   );
+
+   strDimension.Format(_T("%s (%s)"), _T("Y"), pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
+   SetStyleRange(CGXRange(1, col++), CGXStyle()
+      .SetWrapText(TRUE)
+      .SetHorizontalAlignment(DT_CENTER)
+      .SetVerticalAlignment(DT_VCENTER)
+      .SetEnabled(FALSE)          // disables usage as current cell
+      .SetValue(strDimension)
+   );
+
+   ResizeColWidthsToFit(CGXRange(0, 0, GetRowCount(), GetColCount()));
 }
 
 void CPGStableGirderSectionGrid::FillGrid(const stbGirder& girder)
 {
    ROWCOL nRows = GetRowCount();
-   if ( 0 < nRows )
+   if ( 1 < nRows )
    {
-      CGXRange range(1, 0, GetRowCount(), 0);
+      CGXRange range(2, 0, GetRowCount(), 0);
       RemoveRows(range.top, range.bottom);
    }
 
@@ -427,16 +686,22 @@ void CPGStableGirderSectionGrid::FillGrid(const stbGirder& girder)
    for ( IndexType sectIdx = 0; sectIdx < nSections; sectIdx++ )
    {
       Float64 L = girder.GetSectionLength(sectIdx);
-      Float64 Ag[2],Ix[2],Iy[2],Yt[2],Hg[2],Wtf[2],Wbf[2];
+      Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
+      gpPoint2d pntTL, pntTR, pntBL, pntBR;
       for ( int s = 0; s < 2; s++ )
       {
          stbTypes::Section section = (stbTypes::Section)s;
-         girder.GetSectionProperties(sectIdx,section,&Ag[section],&Ix[section],&Iy[section],&Yt[section],&Hg[section],&Wtf[section],&Wbf[section]);
-         InsertGirderSection(L,Ag[section],Ix[section],Iy[section],Yt[section],Hg[section],Wtf[section],Wbf[section]);
+         girder.GetSectionProperties(sectIdx,section,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+         girder.GetStressPoints(sectIdx, section, &pntTL, &pntTR, &pntBL, &pntBR);
+         InsertGirderSection(L, Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtf, Wbf, pntTL, pntTR, pntBL, pntBR);
       }
    }
 
-   UpdateColumnHeaders();
+   //UpdateColumnHeaders();
+
+   //HideCols(8, 8); // don't show Xleft column... we are only doing symmetric girders
+
+   ResizeColWidthsToFit(CGXRange(0, 0, GetRowCount(), GetColCount()));
 
    AFX_MANAGE_STATE(AfxGetAppModuleState());
    CPGStableNonprismaticGirder* pDlg = (CPGStableNonprismaticGirder*)GetParent();
@@ -447,42 +712,64 @@ void CPGStableGirderSectionGrid::GetGirderSections(stbGirder& girder)
 {
    girder.ClearSections();
    ROWCOL nRows = GetRowCount();
-   for ( ROWCOL row = 0; row < nRows; row += 2 )
+   for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
-      Float64 L[2],Ag[2],Ix[2],Iy[2],Yt[2],Hg[2],Wtf[2],Wbf[2];
+      Float64 L[2],Ag[2],Ixx[2],Iyy[2],Ixy[2],Xleft[2],Ytop[2],Hg[2],Wtf[2],Wbf[2];
+      gpPoint2d pntTL[2], pntTR[2], pntBL[2], pntBR[2];
+
       GetGirderSection(row+1,&L[stbTypes::Start], 
                              &Ag[stbTypes::Start], 
-                             &Ix[stbTypes::Start], 
-                             &Iy[stbTypes::Start], 
-                             &Yt[stbTypes::Start], 
-                             &Hg[stbTypes::Start], 
+                             &Ixx[stbTypes::Start], 
+                             &Iyy[stbTypes::Start], 
+                             &Ixy[stbTypes::Start],
+                             &Xleft[stbTypes::Start],
+                             &Ytop[stbTypes::Start],
+                             &Hg[stbTypes::Start],
                              &Wtf[stbTypes::Start], 
-                             &Wbf[stbTypes::Start]);
+                             &Wbf[stbTypes::Start],
+                             &pntTL[stbTypes::Start],
+                             &pntTR[stbTypes::Start],
+                             &pntBL[stbTypes::Start],
+                             &pntBR[stbTypes::Start]
+                             );
 
       GetGirderSection(row+2,&L[stbTypes::End],
                              &Ag[stbTypes::End],
-                             &Ix[stbTypes::End],
-                             &Iy[stbTypes::End],
-                             &Yt[stbTypes::End],
+                             &Ixx[stbTypes::End],
+                             &Iyy[stbTypes::End],
+                             &Ixy[stbTypes::End],
+                             &Xleft[stbTypes::End],
+                             &Ytop[stbTypes::End],
                              &Hg[stbTypes::End],
                              &Wtf[stbTypes::End],
-                             &Wbf[stbTypes::End]);
+                             &Wbf[stbTypes::End],
+                             &pntTL[stbTypes::End],
+                             &pntTR[stbTypes::End],
+                             &pntBL[stbTypes::End],
+                             &pntBR[stbTypes::End]
+                             );
 
       // NOTE: L[stbTypes::Start] is the valid length... the L cell for the second row is disabled and will be out of date if the length changed
-      girder.AddSection(L[stbTypes::Start],Ag[stbTypes::Start], 
-                                                    Ix[stbTypes::Start], 
-                                                    Iy[stbTypes::Start], 
-                                                    Yt[stbTypes::Start], 
+      IndexType sectIdx = girder.AddSection(L[stbTypes::Start],Ag[stbTypes::Start], 
+                                                    Ixx[stbTypes::Start], 
+                                                    Iyy[stbTypes::Start],
+                                                    Ixy[stbTypes::Start],
+                                                    Xleft[stbTypes::Start],
+                                                    Ytop[stbTypes::Start], 
                                                     Hg[stbTypes::Start], 
                                                     Wtf[stbTypes::Start], 
                                                     Wbf[stbTypes::Start],
                                                     Ag[stbTypes::End],
-                                                    Ix[stbTypes::End],
-                                                    Iy[stbTypes::End],
-                                                    Yt[stbTypes::End],
+                                                    Ixx[stbTypes::End],
+                                                    Iyy[stbTypes::End],
+                                                    Ixy[stbTypes::End],
+                                                    Xleft[stbTypes::End],
+                                                    Ytop[stbTypes::End],
                                                     Hg[stbTypes::End],
                                                     Wtf[stbTypes::End],
                                                     Wbf[stbTypes::End]);
+
+      girder.SetStressPoints(sectIdx, pntTL[stbTypes::Start], pntTR[stbTypes::Start], pntBL[stbTypes::Start], pntBR[stbTypes::Start], pntTL[stbTypes::End], pntTR[stbTypes::End], pntBL[stbTypes::End], pntBR[stbTypes::End]);
    }
 }
 
@@ -490,10 +777,11 @@ Float64 CPGStableGirderSectionGrid::GetGirderLength()
 {
    Float64 Lg = 0;
    ROWCOL nRows = GetRowCount();
-   for ( ROWCOL row = 0; row < nRows; row += 2 )
+   for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
-      Float64 L,Ag,Ix,Iy,Yt,Hg,Wtf,Wbf;
-      GetGirderSection(row+1,&L,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
+      Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
+      gpPoint2d pntTL, pntTR, pntBL, pntBR;
+      GetGirderSection(row+1,&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf,&pntTL,&pntTR,&pntBL,&pntBR);
       Lg += L;
    }
    return Lg;
@@ -504,18 +792,49 @@ std::vector<std::pair<Float64,Float64>> CPGStableGirderSectionGrid::GetGirderPro
    std::vector<std::pair<Float64,Float64>> vProfile;
    ROWCOL nRows = GetRowCount();
    Float64 X = 0;
-   for ( ROWCOL row = 0; row < nRows; row += 2 )
+   for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
-      Float64 L,Ag,Ix,Iy,Yt,Hg,Wtf,Wbf;
-      GetGirderSection(row+1,&L,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
-      vProfile.push_back(std::make_pair(X,-Hg));
+      Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
+      gpPoint2d pntTL, pntTR, pntBL, pntBR;
+      GetGirderSection(row+1,&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf, &pntTL, &pntTR, &pntBL, &pntBR);
+      vProfile.emplace_back(X,-Hg);
 
       X += L;
 
-      GetGirderSection(row+2,&L,&Ag,&Ix,&Iy,&Yt,&Hg,&Wtf,&Wbf);
-      vProfile.push_back(std::make_pair(X,-Hg));
+      GetGirderSection(row+2,&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf, &pntTL, &pntTR, &pntBL, &pntBR);
+      vProfile.emplace_back(X,-Hg);
    }
    return vProfile;
+}
+
+std::vector<StressPoints> CPGStableGirderSectionGrid::GetStressPoints()
+{
+   std::vector<StressPoints> vStressPoints;
+   ROWCOL nRows = GetRowCount();
+   for (ROWCOL row = 1; row < nRows; row += 2)
+   {
+      Float64 L, Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtf, Wbf;
+
+      StressPoints sp;
+      GetGirderSection(row + 1, &L, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf, &sp.pntTL[stbTypes::Start], &sp.pntTR[stbTypes::Start], &sp.pntBL[stbTypes::Start], &sp.pntBR[stbTypes::Start]);
+      GetGirderSection(row + 2, &L, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf, &sp.pntTL[stbTypes::End], &sp.pntTR[stbTypes::End], &sp.pntBL[stbTypes::End], &sp.pntBR[stbTypes::End]);
+
+      vStressPoints.push_back(sp);
+   }
+   return vStressPoints;
+}
+
+void CPGStableGirderSectionGrid::SetStressPoints(const std::vector<StressPoints>& vStressPoints)
+{
+   ATLASSERT(vStressPoints.size() == (GetRowCount() - 1)/2);
+   ROWCOL row = 2;
+   for (const auto& sp : vStressPoints)
+   {
+      SetStressPoints(row,   sp.pntTL[stbTypes::Start], sp.pntTR[stbTypes::Start], sp.pntBL[stbTypes::Start], sp.pntBR[stbTypes::Start]);
+      SetStressPoints(row+1, sp.pntTL[stbTypes::End],   sp.pntTR[stbTypes::End],   sp.pntBL[stbTypes::End],   sp.pntBR[stbTypes::End]);
+
+      row += 2;
+   }
 }
 
 #if defined _DEBUG
@@ -548,10 +867,10 @@ void CPGStableGirderSectionGrid::SelectRow(ROWCOL nRow)
       SelectRange(CGXRange(row,0,row,nCols), FALSE);
    }
 
-   if (0 < nRow)
+   if (1 < nRow)
    {
       ROWCOL topRow,botRow;
-      if ( ::IsEven(nRow) )
+      if ( ::IsOdd(nRow) )
       {
          topRow = nRow-1;
          botRow = nRow;
@@ -564,4 +883,71 @@ void CPGStableGirderSectionGrid::SelectRow(ROWCOL nRow)
 
       SelectRange(CGXRange(topRow,0,botRow,nCols), TRUE);
    }
+}
+
+void CPGStableGirderSectionGrid::ComputeStressPoints()
+{
+   ROWCOL nRows = GetRowCount();
+   for (ROWCOL row = 1; row < nRows; row += 2)
+   {
+      Float64 L, Ag[2], Ixx[2], Iyy[2], Ixy[2], Xleft[2], Ytop[2], Hg[2], Wtf[2], Wbf[2];
+
+      StressPoints sp;
+      GetGirderSection(row + 1, &L, &Ag[stbTypes::Start], &Ixx[stbTypes::Start], &Iyy[stbTypes::Start], &Ixy[stbTypes::Start], &Xleft[stbTypes::Start], &Ytop[stbTypes::Start], &Hg[stbTypes::Start], &Wtf[stbTypes::Start], &Wbf[stbTypes::Start], &sp.pntTL[stbTypes::Start], &sp.pntTR[stbTypes::Start], &sp.pntBL[stbTypes::Start], &sp.pntBR[stbTypes::Start]);
+      GetGirderSection(row + 2, &L, &Ag[stbTypes::End],   &Ixx[stbTypes::End],   &Iyy[stbTypes::End],   &Ixy[stbTypes::End],   &Xleft[stbTypes::End],   &Ytop[stbTypes::End],   &Hg[stbTypes::End],   &Wtf[stbTypes::End],   &Wbf[stbTypes::End],   &sp.pntTL[stbTypes::End],   &sp.pntTR[stbTypes::End],   &sp.pntBL[stbTypes::End],   &sp.pntBR[stbTypes::End]);
+
+      sp.pntTL[stbTypes::Start].X() = -Wtf[stbTypes::Start] / 2;
+      sp.pntTL[stbTypes::Start].Y() = Ytop[stbTypes::Start];
+
+      sp.pntTR[stbTypes::Start].X() = Wtf[stbTypes::Start] / 2;
+      sp.pntTR[stbTypes::Start].Y() = Ytop[stbTypes::Start];
+
+      sp.pntBL[stbTypes::Start].X() = -Wbf[stbTypes::Start] / 2;
+      sp.pntBL[stbTypes::Start].Y() = Ytop[stbTypes::Start] - Hg[stbTypes::Start];
+
+      sp.pntBR[stbTypes::Start].X() = Wbf[stbTypes::Start] / 2;
+      sp.pntBR[stbTypes::Start].Y() = Ytop[stbTypes::Start] - Hg[stbTypes::Start];
+
+
+      sp.pntTL[stbTypes::End].X() = -Wtf[stbTypes::End] / 2;
+      sp.pntTL[stbTypes::End].Y() = Ytop[stbTypes::End];
+
+      sp.pntTR[stbTypes::End].X() = Wtf[stbTypes::End] / 2;
+      sp.pntTR[stbTypes::End].Y() = Ytop[stbTypes::End];
+
+      sp.pntBL[stbTypes::End].X() = -Wbf[stbTypes::End] / 2;
+      sp.pntBL[stbTypes::End].Y() = Ytop[stbTypes::End] - Hg[stbTypes::End];
+
+      sp.pntBR[stbTypes::End].X() = Wbf[stbTypes::End] / 2;
+      sp.pntBR[stbTypes::End].Y() = Ytop[stbTypes::End] - Hg[stbTypes::End];
+
+      SetStressPoints(row + 1, sp.pntTL[stbTypes::Start], sp.pntTR[stbTypes::Start], sp.pntBL[stbTypes::Start], sp.pntBR[stbTypes::Start]);
+      SetStressPoints(row + 2, sp.pntTL[stbTypes::End],   sp.pntTR[stbTypes::End],   sp.pntBL[stbTypes::End],   sp.pntBR[stbTypes::End]);
+   }
+}
+
+void CPGStableGirderSectionGrid::EnableStressPoints(BOOL bEnable)
+{
+   GetParam()->EnableUndo(FALSE);
+   GetParam()->SetLockReadOnly(FALSE);
+
+   CGXStyle style;
+   if (bEnable)
+   {
+      style.SetReadOnly(FALSE).SetEnabled(TRUE).SetInterior(::GetSysColor(COLOR_WINDOW)).SetTextColor(::GetSysColor(COLOR_WINDOWTEXT));
+   }
+   else
+   {
+      style.SetReadOnly(TRUE).SetEnabled(FALSE).SetInterior(::GetSysColor(COLOR_BTNFACE)).SetTextColor(::GetSysColor(COLOR_GRAYTEXT));
+   }
+
+   SetStyleRange(CGXRange(2, 11, GetRowCount(), GetColCount()), style);
+
+   GetParam()->EnableUndo(TRUE);
+   GetParam()->SetLockReadOnly(TRUE);
+}
+
+void CPGStableGirderSectionGrid::OnUnitsChanged()
+{
+   UpdateColumnHeaders();
 }

@@ -23,6 +23,7 @@
 #pragma once
 
 // CPGStableEngine document
+#include "BEToolboxLib.h"
 
 #include "PGStableStrands.h"
 #include "PGStableLiftingCriteria.h"
@@ -36,7 +37,11 @@
 #define LIFTING 0
 #define HAULING 1
 
-class CPGStableModel
+// Stress Point Type
+#define COMPUTE_STRESS_POINTS 0
+#define DEFINE_STRESS_POINTS  1
+
+class BETCLASS CPGStableModel
 {
 public:
 	CPGStableModel();
@@ -47,6 +52,8 @@ public:
    stbLiftingResults GetLiftingResults() const;
    stbHaulingResults GetHaulingResults() const;
 
+   // NOTE: For all the "Get" methods.... returns true if the value changed and false if it didn't
+
    bool SetDensity(Float64 density);
    Float64 GetDensity() const;
 
@@ -55,6 +62,9 @@ public:
 
    bool SetGirderType(int girderType);
    int GetGirderType() const;
+
+   bool SetStressPointType(int stressPointType);
+   int GetStressPointType() const;
 
    bool SetStrands(int girderType,int modelType,const CPGStableStrands& strands);
    const CPGStableStrands& GetStrands(int girderType,int modelType) const;
@@ -96,6 +106,7 @@ public:
 
 protected:
    int m_GirderType;
+   int m_StressPointType;
 
    CPGStableStrands m_Strands[2][2]; // array index [girderType][modelType]
    mutable stbGirder m_Girder[2];

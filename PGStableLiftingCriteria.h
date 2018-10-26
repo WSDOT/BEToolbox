@@ -21,10 +21,11 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include "BEToolboxLib.h"
 
 // CPGStableLiftingCriteria document
 
-class CPGStableLiftingCriteria : public stbLiftingCriteria
+class BETCLASS CPGStableLiftingCriteria : public stbLiftingCriteria
 {
 public:
 	CPGStableLiftingCriteria();

@@ -28,7 +28,27 @@
 
 import "oaidl.idl";
 import "ocidl.idl";
-import "PGSuperIEPlugin.idl";  // for the Importer/Exporter plugins
+
+
+cpp_quote("// {E89CC143-53C9-43df-B1B4-E522769DE29B}")
+cpp_quote("DEFINE_GUID(CLSID_CurvelExporter, ")
+cpp_quote("   0xE89CC143, 0x53C9, 0x43df, 0xB1, 0xB4, 0xE5, 0x22, 0x76, 0x9D, 0xE2, 0x9B);")
+cpp_quote("struct __declspec(uuid(\"{E89CC143-53C9-43df-B1B4-E522769DE29B}\")) CurvelExporter;")
+
+cpp_quote("// {E56801AC-B583-4e9e-A2D8-2AA64079BE15}")
+cpp_quote("DEFINE_GUID(CLSID_CurvelImporter, ")
+cpp_quote("0xE56801AC, 0xB583, 0x4e9e, 0xA2, 0xD8, 0x2A, 0xA6, 0x40, 0x79, 0xBE, 0x15);")
+cpp_quote("struct __declspec(uuid(\"{E56801AC-B583-4e9e-A2D8-2AA64079BE15}\")) CurvelImporter;")
+
+cpp_quote("// {16A21688-25B4-4118-ABF4-DD6D4983A2CD}")
+cpp_quote("DEFINE_GUID(CLSID_GenCompExporter, ")
+cpp_quote("0x16A21688, 0x25B4, 0x4118, 0xAB, 0xF4, 0xDD, 0x6D, 0x49, 0x83, 0xA2, 0xCD);")
+cpp_quote("struct __declspec(uuid(\"{16A21688-25B4-4118-ABF4-DD6D4983A2CD}\")) GenCompExporter;")
+
+cpp_quote("// {FF96408C-27B3-4288-8A44-6F80652BE187}")
+cpp_quote("DEFINE_GUID(CLSID_PGStableExporter, ")
+cpp_quote("0xFF96408C, 0x27B3, 0x4288, 0x8A, 0x44, 0x6F, 0x80, 0x65, 0x2B, 0xE1, 0x87);")
+cpp_quote("struct __declspec(uuid(\"{FF96408C-27B3-4288-8A44-6F80652BE187}\")) PGStableExporter;")
 
 [
 	uuid(B00EE67C-9FBF-42ef-8B80-CECD5AE5CC23),
@@ -54,39 +74,4 @@ library BEToolboxLib
    {
       interface IUnknown;
    }
-
-   [
-		uuid(E89CC143-53C9-43df-B1B4-E522769DE29B),
-		helpstring("CurvelExporter Class")
-	]
-	coclass CurvelExporter
-	{
-		[default] interface IPGSDataExporter;
-	};
-	[
-		uuid(E56801AC-B583-4e9e-A2D8-2AA64079BE15),
-		helpstring("CurvelImporter Class")
-	]
-	coclass CurvelImporter
-	{
-		[default] interface IPGSDataImporter;
-	};
-
-  	[
-		uuid(16A21688-25B4-4118-ABF4-DD6D4983A2CD),
-		helpstring("GenCompeExporter Class")
-	]
-	coclass GenCompExporter
-	{
-		[default] interface IPGSDataExporter;
-	};
-
-   [
-		uuid(FF96408C-27B3-4288-8A44-6F80652BE187),
-		helpstring("PGStableExporter Class")
-	]
-	coclass PGStableExporter
-	{
-		[default] interface IPGSDataExporter;
-	};
 };

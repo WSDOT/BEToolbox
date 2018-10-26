@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <PGSuperIEPlugin.h>
 #include "resource.h"       // main symbols
 
 /////////////////////////////////////////////////////////////////////////////
@@ -53,9 +54,9 @@ END_COM_MAP()
 // IPGSDataExporter
 public:
    STDMETHOD(Init)(UINT nCmdID);
-   STDMETHOD(GetMenuText)(/*[out,retval]*/BSTR*  bstrText);
-   STDMETHOD(GetBitmapHandle)(/*[out]*/HBITMAP* phBmp);
-   STDMETHOD(GetCommandHintText)(BSTR*  bstrText);
+   STDMETHOD(GetMenuText)(/*[out,retval]*/BSTR*  bstrText) const;
+   STDMETHOD(GetBitmapHandle)(/*[out]*/HBITMAP* phBmp) const;
+   STDMETHOD(GetCommandHintText)(BSTR*  bstrText) const;
    STDMETHOD(Export)(/*[in]*/IBroker* pBroker);
 };
 

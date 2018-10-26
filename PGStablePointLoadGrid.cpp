@@ -296,7 +296,7 @@ void CPGStablePointLoadGrid::GetLoads(std::vector<std::pair<Float64,Float64>>& v
    {
       Float64 X,P;
       GetLoad(row+1,&X,&P);
-      vLoads.push_back(std::make_pair(X,-P));
+      vLoads.emplace_back(X,-P);
    }
 
    std::sort(vLoads.begin(),vLoads.end());
