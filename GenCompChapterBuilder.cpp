@@ -24,7 +24,7 @@
 #include "GenCompChapterBuilder.h"
 #include "BEToolboxUtilities.h"
 #include <Reporter\Reporter.h>
-#include <Colors.h>
+#include "BEToolboxColors.h"
 #include <GraphicsLib\GraphicsLib.h>
 
 class arvPhysicalConverter: public sysINumericFormatToolBase
@@ -72,9 +72,6 @@ private:
 };
 
 typedef PhysicalFormatTool<unitmgtLengthData>  LengthTool;
-
-static const COLORREF GRAPH_BACKGROUND = ALICEBLUE;
-static const COLORREF GRID_COLOR       = LIGHTSTEELBLUE;
 
 //////////////////////////////////
 CGenCompChapterBuilder::CGenCompChapterBuilder(CGenCompDoc* pDoc)
@@ -279,7 +276,7 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
-   graph.SetGridPenStyle(PS_DOT, 1, GRID_COLOR);
+   graph.SetGridPenStyle(GRAPH_GRID_PEN_STYLE, GRAPH_GRID_PEN_WEIGHT, GRAPH_GRID_COLOR);
 
    graph.SetIsotropicAxes(true);
    graph.SetDoDrawGrid(true);
