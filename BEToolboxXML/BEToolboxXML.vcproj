@@ -507,6 +507,14 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\Curvel_Version_1.0_to_Version_2.0.xslt"
+			>
+		</File>
+		<File
+			RelativePath=".\GenComp_Version_1.0_to_Version_2.0.xslt"
+			>
+		</File>
+		<File
 			RelativePath=".\ReadMe.txt"
 			>
 		</File>
