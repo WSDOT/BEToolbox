@@ -57,7 +57,7 @@ std::auto_ptr<Curvel> CreateCurvelModel()
 }
 
 
-BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitConvert* pDocUnitConvert)
+BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitServer* pDocUnitServer)
 {
    // Walk the XML data structure and make sure all units of measure are in base units
 
@@ -68,94 +68,29 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitConvert* pDocUnitConvert)
    // 2) Walk document and convert all units to Consistent Base Units
    // 3) Do all work in consistent base units
    // 4) Save document with consistent base units
-   CComPtr<IUnitServer> unitServer;
-   HRESULT hr = unitServer.CoCreateInstance(CLSID_UnitServer);
-   ATLASSERT(SUCCEEDED(hr));
-   CComQIPtr<IUnitConvert> convert(unitServer);
+   CComPtr<IUnitServer> xmlDocUnitServer;
+   HRESULT hr = xmlDocUnitServer.CoCreateInstance(CLSID_UnitServer);
 
    Curvel::UnitsDeclaration_optional& unitsDeclaration(pCurvel->UnitsDeclaration());
    if ( unitsDeclaration.present())
    {
-      if ( !InitializeWBFLUnitServer(&unitsDeclaration.get(),unitServer) )
+      if ( !InitializeWBFLUnitServer(&unitsDeclaration.get(),xmlDocUnitServer) )
       {
          return FALSE;
       }
    }
 
-   CComBSTR bstrLengthUnit;
-   unitServer->get_Length(&bstrLengthUnit);
-   Float64 value;
-
-
    // Convert Vertical Curve Parameters
    VerticalCurveDataType& vc(pCurvel->VerticalCurveData());
-
-   if ( vc.Length().unit().present() )
-   {
-      // The unit of measure for PVI Station is specified
-
-      // Get the unit of measure
-      OpenBridgeML::Units::LengthValueType::unit_type unit = vc.Length().unit().get();
-
-      // Convert the value from the specified unit of measure to the
-      // consistent unit of measure defined in <UnitsDeclaration>
-      hr = convert->ConvertToBaseUnits(vc.Length(),T2BSTR(unit.c_str()),&value);
-      ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-
-      // Put the value back into the data model and stop using the locally
-      // defined unit of measure
-      vc.Length(value);
-      vc.Length().unit().reset(); // no longer using the specified unit of measure
-   }
-   // convert from whatever base units were defined in the instance document
-   // to the base units used by this application
-   value = vc.Length();
-   pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-   vc.Length(value);
+   ConvertBetweenBaseUnits(vc.Length(),       xmlDocUnitServer, pDocUnitServer);
+   ConvertBetweenBaseUnits(vc.PVIStation(),   xmlDocUnitServer, pDocUnitServer);
+   ConvertBetweenBaseUnits(vc.PVIElevation(), xmlDocUnitServer, pDocUnitServer);
    
-
-   if ( vc.PVIStation().unit().present() )
-   {
-      // The unit of measure for PVI Station is specified... get it and convert to base units
-      OpenBridgeML::Units::LengthValueType::unit_type unit = vc.PVIStation().unit().get();
-      hr = convert->ConvertToBaseUnits(vc.PVIStation(),T2BSTR(unit.c_str()),&value);
-      ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-      vc.PVIStation(value);
-      vc.PVIStation().unit().reset(); // no longer using the specified unit of measure
-   }
-   value = vc.PVIStation();
-   pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-   vc.PVIStation(value);
-
-   if ( vc.PVIElevation().unit().present() )
-   {
-      // The unit of measure for PVI Elevation is specified... get it and convert to base units
-      OpenBridgeML::Units::LengthValueType::unit_type unit = vc.PVIElevation().unit().get();
-      hr = convert->ConvertToBaseUnits(vc.PVIElevation(),T2BSTR(unit.c_str()),&value);
-      ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-      vc.PVIElevation(value);
-      vc.PVIElevation().unit().reset(); // no longer using the specified unit of measure
-   }
-   value = vc.PVIElevation();
-   pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-   vc.PVIElevation(value);
-
    // Superelevation Data
    Curvel::SuperelevationData_optional& seData(pCurvel->SuperelevationData());
    if ( seData.present() )
    {
-      if ( seData->ProfileGradeOffset().unit().present() )
-      {
-         OpenBridgeML::Units::LengthValueType::unit_type unit = seData->ProfileGradeOffset().unit().get();
-         hr = convert->ConvertToBaseUnits(seData->ProfileGradeOffset(),T2BSTR(unit.c_str()),&value);
-         ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-         seData->ProfileGradeOffset(value);
-         seData->ProfileGradeOffset().unit().reset(); // no longer using the specified unit of measure
-      }
-      value = seData->ProfileGradeOffset();
-      pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-      seData->ProfileGradeOffset(value);
-
+      ConvertBetweenBaseUnits(seData->ProfileGradeOffset(), xmlDocUnitServer, pDocUnitServer);
 
       CrownSlopeType& crownSlope( seData->CrownSlope() );
       CrownSlopeType::SuperelevationProfilePoint_sequence& superPP(crownSlope.SuperelevationProfilePoint());
@@ -163,17 +98,7 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitConvert* pDocUnitConvert)
       ATLASSERT(superPP.size() == 3);
       for ( int i = 0; i < 3; i++ )
       {
-         if ( superPP[i].Station().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = superPP[i].Station().unit().get();
-            hr = convert->ConvertToBaseUnits(superPP[i].Station(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            superPP[i].Station(value);
-            superPP[i].Station().unit().reset();
-         }
-         value = superPP[i].Station();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         superPP[i].Station(value);
+         ConvertBetweenBaseUnits(superPP[i].Station(), xmlDocUnitServer, pDocUnitServer);
       }
    }
    
@@ -188,30 +113,8 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitConvert* pDocUnitConvert)
       {
          IndividualStationType& individualStation(*iter);
 
-         if ( individualStation.Station().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = individualStation.Station().unit().get();
-            hr = convert->ConvertToBaseUnits(individualStation.Station(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            individualStation.Station(value);
-            individualStation.Station().unit().reset();
-         }
-         value = individualStation.Station();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         individualStation.Station(value);
-
-
-         if ( individualStation.Offset().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = individualStation.Offset().unit().get();
-            hr = convert->ConvertToBaseUnits(individualStation.Offset(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            individualStation.Offset(value);
-            individualStation.Offset().unit().reset();
-         }
-         value = individualStation.Offset();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         individualStation.Offset(value);
+         ConvertBetweenBaseUnits(individualStation.Station(), xmlDocUnitServer, pDocUnitServer);
+         ConvertBetweenBaseUnits(individualStation.Offset(),  xmlDocUnitServer, pDocUnitServer);
       }
    }
 
@@ -226,41 +129,9 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitConvert* pDocUnitConvert)
       {
          StationRangeType& stationRange(*iter);
 
-         if ( stationRange.StartStation().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = stationRange.StartStation().unit().get();
-            hr = convert->ConvertToBaseUnits(stationRange.StartStation(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            stationRange.StartStation(value);
-            stationRange.StartStation().unit().reset();
-         }
-         value = stationRange.StartStation();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         stationRange.StartStation(value);
-
-         if ( stationRange.EndStation().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = stationRange.EndStation().unit().get();
-            hr = convert->ConvertToBaseUnits(stationRange.EndStation(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            stationRange.EndStation(value);
-            stationRange.EndStation().unit().reset();
-         }
-         value = stationRange.EndStation();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         stationRange.EndStation(value);
-
-         if ( stationRange.Offset().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = stationRange.Offset().unit().get();
-            hr = convert->ConvertToBaseUnits(stationRange.Offset(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            stationRange.Offset(value);
-            stationRange.Offset().unit().reset();
-         }
-         value = stationRange.Offset();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         stationRange.Offset(value);
+         ConvertBetweenBaseUnits(stationRange.StartStation(), xmlDocUnitServer, pDocUnitServer);
+         ConvertBetweenBaseUnits(stationRange.EndStation(),   xmlDocUnitServer, pDocUnitServer);
+         ConvertBetweenBaseUnits(stationRange.Offset(),       xmlDocUnitServer, pDocUnitServer);
       }
    }
 
@@ -275,63 +146,20 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitConvert* pDocUnitConvert)
       {
          SkewLineType& skewLine(*iter);
 
-         if ( skewLine.Station().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = skewLine.Station().unit().get();
-            hr = convert->ConvertToBaseUnits(skewLine.Station(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            skewLine.Station(value);
-            skewLine.Station().unit().reset();
-         }
-         value = skewLine.Station();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         skewLine.Station(value);
-
-         if ( skewLine.Offset().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = skewLine.Offset().unit().get();
-            hr = convert->ConvertToBaseUnits(skewLine.Offset(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            skewLine.Offset(value);
-            skewLine.Offset().unit().reset();
-         }
-         value = skewLine.Offset();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         skewLine.Offset(value);
-
-         if ( skewLine.Radius().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = skewLine.Radius().unit().get();
-            hr = convert->ConvertToBaseUnits(skewLine.Radius(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            skewLine.Radius(value);
-            skewLine.Radius().unit().reset();
-         }
-         value = skewLine.Radius();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         skewLine.Radius(value);
-
-         if ( skewLine.CrownOffset().unit().present() )
-         {
-            OpenBridgeML::Units::LengthValueType::unit_type unit = skewLine.CrownOffset().unit().get();
-            hr = convert->ConvertToBaseUnits(skewLine.CrownOffset(),T2BSTR(unit.c_str()),&value);
-            ATLASSERT(SUCCEEDED(hr)); // if this fires, then the unit of measure was not valid
-            skewLine.CrownOffset(value);
-            skewLine.CrownOffset().unit().reset();
-         }
-         value = skewLine.CrownOffset();
-         pDocUnitConvert->ConvertToBaseUnits(value,bstrLengthUnit,&value);
-         skewLine.CrownOffset(value);
+         ConvertBetweenBaseUnits(skewLine.Station(),     xmlDocUnitServer, pDocUnitServer);
+         ConvertBetweenBaseUnits(skewLine.Offset(),      xmlDocUnitServer, pDocUnitServer);
+         ConvertBetweenBaseUnits(skewLine.Radius(),      xmlDocUnitServer, pDocUnitServer);
+         ConvertBetweenBaseUnits(skewLine.CrownOffset(), xmlDocUnitServer, pDocUnitServer);
       }
    }
 
    return TRUE;
 }
 
-std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitConvert* pDocUnitConvert)
+std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer)
 {
    ATLASSERT(lpszFilePath != NULL);
-   ATLASSERT(pDocUnitConvert != NULL);
+   ATLASSERT(pDocUnitServer != NULL);
 
    USES_CONVERSION;
 
@@ -453,7 +281,7 @@ std::auto_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitConvert* pDocU
       return std::auto_ptr<Curvel>();
    }
 
-   if ( !ConvertToBaseUnits(curvelXML.get(),pDocUnitConvert) )
+   if ( !ConvertToBaseUnits(curvelXML.get(),pDocUnitServer) )
    {
       // something went wrong in the unit conversion
 #pragma Reminder("UPDATE: provide better error handling")

@@ -110,7 +110,7 @@ BOOL CGenCompDoc::OnNewDocument()
 
 BOOL CGenCompDoc::OpenTheDocument(LPCTSTR lpszPathName)
 {
-   m_GenCompXML = CreateGenCompModel(lpszPathName,m_DocConvert);
+   m_GenCompXML = CreateGenCompModel(lpszPathName,m_DocUnitServer);
    return m_GenCompXML.get() == NULL ? FALSE : TRUE;
 }
 
