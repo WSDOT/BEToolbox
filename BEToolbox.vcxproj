@@ -690,6 +690,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include="BEToolboxUtilities.h" />
     <ClInclude Include="BEToolboxVersion.h" />
     <ClInclude Include="BEToolbox_i.h" />
+    <ClInclude Include="BETResources.h" />
     <ClInclude Include="BoxGdrChapterBuilder.h" />
     <ClInclude Include="BoxGdrChildFrame.h" />
     <ClInclude Include="BoxGdrDimensionGrid.h" />

@@ -25,6 +25,7 @@
 
 #include "stdafx.h"
 #include "resource.h"
+#include "BETResources.h"
 #include "BEToolboxDoc.h"
 #include "BEToolboxStatusBar.h"
 #include "BEToolboxPlugin.h"
@@ -206,6 +207,13 @@ UINT CBEToolboxDoc::GetToolbarID()
    return IDR_TOOLBAR;
 }
 
+void CBEToolboxDoc::LoadToolbarResource()
+{
+   // override this method and call AFX_MANAGE_STATE(AfxGetStaticModuleState()) to set the
+   // correct resource state if your BEToolbox tool is implemented in a DLL
+   m_pMyToolBar->LoadToolBar(GetToolbarID(), nullptr);
+}
+
 void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
 {
    __super::DoIntegrateWithUI(bIntegrate);
@@ -219,9 +227,9 @@ void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
       AFX_MANAGE_STATE(AfxGetStaticModuleState());
       UINT tbID = pFrame->CreateToolBar(GetToolbarSectionName(),GetPluginCommandManager());
       m_pMyToolBar = pFrame->GetToolBar(tbID);
-      m_pMyToolBar->LoadToolBar(GetToolbarID(),nullptr);
+      LoadToolbarResource();
       m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,nullptr,BTNS_DROPDOWN);
-      m_pMyToolBar->HideButton(ID_PLACEHOLDER,nullptr,TRUE); // hides the placeholder button that reserves a little extra space
+      m_pMyToolBar->HideButton(BET_ID_PLACEHOLDER,nullptr,TRUE); // hides the placeholder button that reserves a little extra space
       }
 
       // use our status bar

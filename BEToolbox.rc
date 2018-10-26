@@ -8,6 +8,8 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include <EAF\EAFResources.h>
+#include "BETResources.h"
+
 #ifndef APSTUDIO_INVOKED
 #include <PGSuperVersion.h>
 #endif
@@ -75,8 +77,8 @@ PRISMATICSTRANDLAYOUT   METAFILE                "res\\PrismaticStrandLayout.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,2,2,0
- PRODUCTVERSION 3,2,2,0
+ FILEVERSION 3,2,3,0
+ PRODUCTVERSION 3,2,3,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -94,12 +96,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "3.2.2.0"
+            VALUE "FileVersion", "3.2.3.0"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2018, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "3.2.2.0"
+            VALUE "ProductVersion", "3.2.3.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -1254,7 +1256,7 @@ BEGIN
     BUTTON      ID_FILE_SAVE
     BUTTON      ID_FILE_PRINT_DIRECT
     SEPARATOR
-    BUTTON      ID_PLACEHOLDER
+    BUTTON      BET_ID_PLACEHOLDER
 END
 
 IDR_PGSTOOLBAR TOOLBAR 16, 16
@@ -1267,7 +1269,7 @@ BEGIN
     BUTTON      EAFID_UNITS_SI
     BUTTON      EAFID_UNITS_US
     SEPARATOR
-    BUTTON      ID_PLACEHOLDER
+    BUTTON      BET_ID_PLACEHOLDER
 END
 
 
