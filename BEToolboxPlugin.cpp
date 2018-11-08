@@ -24,7 +24,7 @@
 
 #include "stdafx.h"
 #include "BEToolboxPlugin.h"
-#include "PGStablePluginCATID.h"
+#include ".\PGStable\PGStablePluginCATID.h"
 #include <EAF\EAFApp.h>
 
 #include <MFCTools\VersionInfo.h>

@@ -122,27 +122,27 @@ IDR_BETOOLBOXPLUGIN     REGISTRY                "BEToolboxPlugin.rgs"
 
 IDR_BETOOLBOXCOMPONENTINFO REGISTRY                "BEToolboxComponentInfo.rgs"
 
-IDR_PGSTABLEEXPORTER    REGISTRY                "PGStableExporter.rgs"
+IDR_PGSTABLEEXPORTER    REGISTRY                ".\PGStable\PGStableExporter.rgs"
 
-IDR_CURVELEXPORTER      REGISTRY                "CurvelExporter.rgs"
+IDR_CURVELEXPORTER      REGISTRY                ".\Curvel\CurvelExporter.rgs"
 
-IDR_CURVELIMPORTER      REGISTRY                "CurvelImporter.rgs"
+IDR_CURVELIMPORTER      REGISTRY                ".\Curvel\CurvelImporter.rgs"
 
-IDR_GENCOMPEXPORTER     REGISTRY                "GenCompExporter.rgs"
+IDR_GENCOMPEXPORTER     REGISTRY                ".\GenComp\GenCompExporter.rgs"
 
-IDR_ULTCOLTOOL          REGISTRY                "UltColTool.rgs"
+IDR_ULTCOLTOOL          REGISTRY                ".\UltCol\UltColTool.rgs"
 
-IDR_BOXGDRTOOL          REGISTRY                "BoxGdrTool.rgs"
+IDR_BOXGDRTOOL          REGISTRY                ".\BoxGdr\BoxGdrTool.rgs"
 
-IDR_GENCOMPTOOL         REGISTRY                "GenCompTool.rgs"
+IDR_GENCOMPTOOL         REGISTRY                ".\GenComp\GenCompTool.rgs"
 
-IDR_GIRCOMPTOOL         REGISTRY                "GirCompTool.rgs"
+IDR_GIRCOMPTOOL         REGISTRY                ".\GirComp\GirCompTool.rgs"
 
-IDR_CURVELTOOL          REGISTRY                "CurvelTool.rgs"
+IDR_CURVELTOOL          REGISTRY                ".\Curvel\CurvelTool.rgs"
 
-IDR_PGSTABLETOOL        REGISTRY                "PGStableTool.rgs"
+IDR_PGSTABLETOOL        REGISTRY                ".\PGStable\PGStableTool.rgs"
 
-IDR_SPECTRATOOL         REGISTRY                "SpectraTool.rgs"
+IDR_SPECTRATOOL         REGISTRY                ".\Spectra\SpectraTool.rgs"
 
 
 /////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:bxu="http://www.wsdot.wa.gov/OpenBridgeML/Units"
+           xmlns:bxu="http://www.wsdot.wa.gov/WBFL/Units"
            version="2.0">
   <xs:annotation>
     <xs:documentation>
@@ -9,7 +9,7 @@
     </xs:documentation>
   </xs:annotation>
 
-  <xs:import namespace="http://www.wsdot.wa.gov/OpenBridgeML/Units" schemaLocation="..\..\OpenBridgeML\Schema\OpenBridgeML_Units.xsd" />
+  <xs:import namespace="http://www.wsdot.wa.gov/WBFL/Units" schemaLocation="..\..\WBFL\UnitServer\Schema\WBFLUnitServer.xsd" />
 
   <xs:element name="GenComp">
     <xs:complexType>

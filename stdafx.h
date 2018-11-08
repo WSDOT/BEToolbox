@@ -78,5 +78,5 @@
 
 #include "SpectraBuilder\SpectraValues.h"
 
-#include <OpenBridgeML.hxx>
+#include <WBFLUnitServer.hxx>
 #include <BEToolboxXML.h>
