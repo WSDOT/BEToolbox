@@ -122,13 +122,13 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 
    SpectralValues* values = new SpectralValues[SPECTRAL_VALUE_COUNT];
 
-   LoadValues(_T("\\ARP\\BridgeLinkBEToolbox\\USGS\\2014\\us_hazard.1hz.7pc75"),c1hz,values);
-   LoadValues(_T("\\ARP\\BridgeLinkBEToolbox\\USGS\\2014\\us_hazard.5hz.7pc75"),c5hz,values);
-   LoadValues(_T("\\ARP\\BridgeLinkBEToolbox\\USGS\\2014\\us_hazard.pga.7pc75"),cpga,values);
+   LoadValues(_T("\\ARP\\BEToolbox\\USGS\\2014\\us_hazard.1hz.7pc75"),c1hz,values);
+   LoadValues(_T("\\ARP\\BEToolbox\\USGS\\2014\\us_hazard.5hz.7pc75"),c5hz,values);
+   LoadValues(_T("\\ARP\\BEToolbox\\USGS\\2014\\us_hazard.pga.7pc75"),cpga,values);
 
    std::_tcout << _T("Saving spectral values in binary format") << std::endl;
 
-   std::ofstream ofile(_T("\\ARP\\BridgeLinkBEToolbox\\USGS\\2014\\us_hazard_7pc75.2014.bin"),std::ios::binary);
+   std::ofstream ofile(_T("\\ARP\\BEToolbox\\USGS\\2014\\us_hazard_7pc75.2014.bin"),std::ios::binary);
    int size = SPECTRAL_VALUE_COUNT*sizeof(SpectralValues);
    ofile.write(reinterpret_cast<const char*>(values),size);
    ofile.close();

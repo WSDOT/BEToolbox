@@ -2,15 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by BEToolboxToolExtensions.rc
 //
-#define EAFID_INDICATOR_MIN             1
-#define EAFID_INDICATOR_MODIFIED        1
-#define EAFID_INDICATOR_STATUS          2
-#define EAFID_INDICATOR_AUTOCALC_ON     3
-#define EAFID_INDICATOR_AUTOCALC_OFF    4
-#define EAFID_INDICATOR_MAX             4
-#define EAF_TOOLBAR_MENU_COUNT          40
-#define EAF_REPORT_MENU_COUNT           50
-#define EAF_GRAPH_MENU_COUNT            50
 #define IDS_PROJNAME                    100
 #define IDR_BETOOLBOXTOOLEXTENSIONS     101
 #define IDD_M3C                         108
@@ -68,10 +59,6 @@
 #define IDC_TENDON_DIAMETER             1007
 #define IDC_TENDON_DIAMETER_UNIT        1008
 #define IDC_TENDON_N                    1009
-#define EAF_RESERVED_COMMAND_BASE       0x8000
-#define EAFID_UNITS_SI                  32772
-#define EAFID_UNITS_US                  32773
-#define EAFID_HELP_SOURCE               32782
 #define IDC_UPDATE                      35000
 #define BET_ID_PLACEHOLDER              36869
 
