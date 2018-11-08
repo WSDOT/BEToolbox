@@ -46,7 +46,7 @@
 
 #include <WBFLUnitServer_i.c>
 
-#include "PGStablePluginCATID.h"
+#include ".\PGStable\PGStablePluginCATID.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
