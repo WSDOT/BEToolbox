@@ -30,6 +30,7 @@
     <ProjectGuid>{3282AC39-1BEB-4C8E-8FA0-2E3F4CC1BB45}</ProjectGuid>
     <RootNamespace>BEToolbox</RootNamespace>
     <Keyword>AtlProj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="Configuration">
@@ -126,7 +127,7 @@
     <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
@@ -135,7 +136,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
@@ -144,7 +145,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -153,7 +154,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -162,8 +163,8 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
-    <OutDir>$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -171,7 +172,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -189,7 +190,6 @@
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -202,7 +202,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\WBFL\UnitServer\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -219,10 +219,9 @@
       <AdditionalIncludeDirectories>$(IntDir);\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -230,7 +229,8 @@
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -248,7 +248,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>X64</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -260,7 +259,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\WBFL\UnitServer\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -277,10 +276,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <AdditionalIncludeDirectories>$(IntDir);\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -288,7 +286,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -306,7 +305,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -318,7 +316,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <ValidateAllParameters>true</ValidateAllParameters>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\WBFL\UnitServer\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -333,10 +331,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <AdditionalIncludeDirectories>$(IntDir);\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -345,7 +342,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -363,7 +361,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>X64</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -374,7 +371,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <ProxyFileName>BEToolbox_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\WBFL\UnitServer\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -389,10 +386,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <AdditionalIncludeDirectories>$(IntDir);\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -401,7 +397,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -419,7 +416,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -432,7 +428,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\WBFL\UnitServer\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -450,7 +446,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -459,7 +455,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -474,7 +471,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>X64</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -486,7 +482,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\WBFL\UnitServer\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -504,7 +500,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -514,7 +510,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>

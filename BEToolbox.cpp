@@ -38,7 +38,7 @@
 #include "PGSpliceCatCom.h"
 #include <WBFLCore_i.c>
 #include <WBFLTools_i.c>
-#include <PGSuperIEPlugin.h>
+#include <Plugins\PGSuperIEPlugin.h>
 
 #include <EAF\EAFDocument.h>
 #include <EAF\EAFDisplayUnits.h>
