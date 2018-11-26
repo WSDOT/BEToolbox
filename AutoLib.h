@@ -27,6 +27,9 @@
 #define BET_AUTOLIBNAME "BEToolbox.lib"
 
 #pragma comment(lib,BET_AUTOLIBNAME)
+#if defined AUTOLIB
 #pragma message("Linking with " BET_AUTOLIBNAME )
+#endif
+
 
 #endif // BUILDBETOOLBOXLIB
