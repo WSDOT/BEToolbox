@@ -192,7 +192,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Xalan-C_1D.lib;xerces-c_3D.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -225,7 +225,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Xalan-C_1D.lib;xerces-c_3D.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -257,7 +257,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -291,7 +291,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
       <ShowProgress>NotSet</ShowProgress>
@@ -325,7 +325,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -360,7 +360,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
