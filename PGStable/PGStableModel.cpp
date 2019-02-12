@@ -1111,7 +1111,6 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 
    Float64 Ll,Lr;
    haulingProblem.GetSupportLocations(&Ll,&Lr);
-   ATLASSERT(IsEqual(Ll,Lr));
    pStrSave->put_Property(_T("LeftBunkPoint"),CComVariant(Ll));
    pStrSave->put_Property(_T("RightBunkPoint"),CComVariant(Lr));
 
