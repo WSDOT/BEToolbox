@@ -80,9 +80,6 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->WindPressure);
    }
 
-   bool bEvaluateStressesAtEquilibriumAngle = problem.EvaluateStressesAtEquilibriumAngle();
-   DDX_CBItemData(pDX,IDC_STRESSES,bEvaluateStressesAtEquilibriumAngle);
-
    Float64 L;
    problem.GetSupportLocations(&L,&L);
    DDX_UnitValueAndTag(pDX,IDC_LIFT,IDC_LIFT_UNIT,L,pDispUnits->SpanLength);
@@ -139,25 +136,9 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    Float64 Yra = problem.GetYRollAxis();
    DDX_UnitValueAndTag(pDX,IDC_YRA,IDC_YRA_UNIT,Yra,pDispUnits->ComponentDim);
 
-   bool bDirectCamber;
-   Float64 camber;
-   Float64 camberOffset;
-   problem.GetCamber(&bDirectCamber,&camber);
+   Float64 camber = problem.GetCamber();
    Float64 camberMultiplier = problem.GetCamberMultiplier();
-   int camber_method;
-   if ( bDirectCamber )
-   {
-      camber_method = 1;
-      camberOffset = 0.02;
-   }
-   else
-   {
-      camber_method = 0;
-      camberOffset = camber;
-      camber = ::ConvertToSysUnits(1.0,unitMeasure::Inch);
-   }
-   DDX_Radio(pDX,IDC_CAMBER1,camber_method);
-   DDX_Percentage(pDX,IDC_CAMBER_OFFSET,camberOffset);
+
    DDX_UnitValueAndTag(pDX,IDC_CAMBER,IDC_CAMBER_UNIT,camber,pDispUnits->ComponentDim);
    DDX_Text(pDX, IDC_CAMBER_MULTIPLIER, camberMultiplier);
 
@@ -194,7 +175,10 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
    DDX_Text(pDX,IDC_LIFTING_FS_CRACKING,m_LiftingCriteria.MinFScr);
    DDX_Text(pDX,IDC_LIFTING_FS_FAILURE,m_LiftingCriteria.MinFSf);
-   DDX_Text(pDX,IDC_LIFTING_COMPRESSION,m_LiftingCriteria.CompressionCoefficient);
+   
+   DDX_Text(pDX, IDC_LIFTING_GLOBAL_COMPRESSION, m_LiftingCriteria.CompressionCoefficient_GlobalStress);
+   DDX_Text(pDX, IDC_LIFTING_PEAK_COMPRESSION, m_LiftingCriteria.CompressionCoefficient_PeakStress);
+
    DDX_UnitValue(pDX,IDC_LIFTING_TENSION,m_LiftingCriteria.TensionCoefficient,pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_LIFTING_TENSION_UNIT,strLiftingTag);
    DDX_Check_Bool(pDX,IDC_CHECK_LIFTING_TENSION_MAX,m_LiftingCriteria.bMaxTension);
@@ -219,20 +203,9 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
       problem.SetWindLoading(windLoadType,windLoad);
 
-      problem.EvaluateStressesAtEquilibriumAngle(bEvaluateStressesAtEquilibriumAngle);
-
       problem.SetYRollAxis(Yra);
 
-      if ( camber_method == 0 )
-      {
-         bDirectCamber = false;
-         camber = camberOffset;
-      }
-      else
-      {
-         bDirectCamber = true;
-      }
-      problem.SetCamber(bDirectCamber,camber);
+      problem.SetCamber(camber);
       problem.SetCamberMultiplier(camberMultiplier);
 
       problem.SetLateralCamber(lateralCamber);
@@ -268,10 +241,7 @@ BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_IMPACT_DOWN, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_LIFT_ANGLE, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_WIND_PRESSURE, &CPGStableLiftingView::OnChange)
-   ON_EN_CHANGE(IDC_CAMBER_OFFSET, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_CAMBER, &CPGStableLiftingView::OnChange)
-   ON_BN_CLICKED(IDC_CAMBER1, &CPGStableLiftingView::OnChange)
-   ON_BN_CLICKED(IDC_CAMBER2, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_CAMBER_MULTIPLIER, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_YRA, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_SWEEP_TOLERANCE, &CPGStableLiftingView::OnChange)
@@ -285,8 +255,14 @@ BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_WM_SIZE()
    ON_CBN_SELCHANGE(IDC_WIND_TYPE, &CPGStableLiftingView::OnWindTypeChanged)
 	ON_MESSAGE(WM_HELP, OnCommandHelp)
-   ON_CBN_SELCHANGE(IDC_STRESSES, &CPGStableLiftingView::OnChange)
    ON_COMMAND_RANGE(CCS_CMENU_BASE, CCS_CMENU_MAX, OnCmenuSelected)
+   ON_EN_CHANGE(IDC_LIFTING_FS_CRACKING, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_LIFTING_FS_FAILURE, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_LIFTING_PEAK_COMPRESSION, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_LIFTING_GLOBAL_COMPRESSION, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_LIFTING_TENSION, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_LIFTING_TENSION_MAX, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_LIFTING_TENSION_WITH_REBAR, &CPGStableLiftingView::OnChange)
 END_MESSAGE_MAP()
 
 
@@ -414,25 +390,15 @@ void CPGStableLiftingView::UpdateCriteriaControls()
    GetDlgItem(IDC_LIFT_ANGLE)->EnableWindow(bEnable);
    GetDlgItem(IDC_WIND_TYPE)->EnableWindow(bEnable);
    GetDlgItem(IDC_WIND_PRESSURE)->EnableWindow(bEnable);
-   GetDlgItem(IDC_CAMBER1)->EnableWindow(bEnable);
-   GetDlgItem(IDC_CAMBER2)->EnableWindow(bEnable);
-   GetDlgItem(IDC_CAMBER_OFFSET)->EnableWindow(bEnable);
-   if (GetCheckedRadioButton(IDC_CAMBER1,IDC_CAMBER2) == IDC_CAMBER1 )
-   {
-      GetDlgItem(IDC_CAMBER)->EnableWindow(bEnable == FALSE ? FALSE : TRUE); // disable if we are disabling controls and camber is by the % method
-   }
-   else
-   {
-      GetDlgItem(IDC_CAMBER)->EnableWindow(TRUE); // if camber is a direct input value, always enable
-   }
+   GetDlgItem(IDC_CAMBER)->EnableWindow(TRUE); // if camber is a direct input value, always enable
    GetDlgItem(IDC_CAMBER_MULTIPLIER)->EnableWindow(bEnable);
    GetDlgItem(IDC_YRA)->EnableWindow(bEnable);
    GetDlgItem(IDC_SWEEP_TOLERANCE)->EnableWindow(bEnable);
    GetDlgItem(IDC_SUPPORT_PLACEMENT_TOLERANCE)->EnableWindow(bEnable);
    GetDlgItem(IDC_LIFTING_FS_CRACKING)->EnableWindow(bEnable);
    GetDlgItem(IDC_LIFTING_FS_FAILURE)->EnableWindow(bEnable);
-   GetDlgItem(IDC_STRESSES)->EnableWindow(bEnable);
-   GetDlgItem(IDC_LIFTING_COMPRESSION)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFTING_GLOBAL_COMPRESSION)->EnableWindow(bEnable);
+   GetDlgItem(IDC_LIFTING_PEAK_COMPRESSION)->EnableWindow(bEnable);
    GetDlgItem(IDC_LIFTING_TENSION)->EnableWindow(bEnable);
    GetDlgItem(IDC_CHECK_LIFTING_TENSION_MAX)->EnableWindow(bEnable);
    GetDlgItem(IDC_LIFTING_TENSION_MAX)->EnableWindow(bEnable);
@@ -479,10 +445,6 @@ void CPGStableLiftingView::OnInitialUpdate()
    m_pBrowser = pDoc->m_RptMgr.CreateReportBrowser(GetSafeHwnd(),m_pRptSpec,nullSpecBuilder);
 
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
-
-   CComboBox* pcbStresses = (CComboBox*)GetDlgItem(IDC_STRESSES);
-   pcbStresses->SetItemData(pcbStresses->AddString(_T("Include girder stability equilibrium angle in stress calculations")), (DWORD_PTR)true);
-   pcbStresses->SetItemData(pcbStresses->AddString(_T("Ignore girder stability equilibrium angle in stress calculations")), (DWORD_PTR)false);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)stbTypes::Speed);
@@ -556,6 +518,7 @@ void CPGStableLiftingView::OnClickedLiftingTensionMax()
 {
    BOOL bEnable = IsDlgButtonChecked(IDC_CHECK_LIFTING_TENSION_MAX) == BST_CHECKED ? TRUE : FALSE;
    GetDlgItem(IDC_LIFTING_TENSION_MAX)->EnableWindow(bEnable);
+   OnChange();
 }
 
 LRESULT CPGStableLiftingView::OnCommandHelp(WPARAM, LPARAM lParam)

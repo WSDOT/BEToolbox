@@ -30,256 +30,256 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BoxGdr\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrChildFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BoxGdr\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrDimensionGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BoxGdr\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrDlgBar.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BoxGdr\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrDoc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BoxGdr\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrDocTemplate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BoxGdr\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrRptView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BoxGdr\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrTitlePageBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>BoxGdr\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelChildFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelDoc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelDocTemplate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelExporter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelImporter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelIndividualStationGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelReportSpecification.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelReportSpecificationBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelReportWizard.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelReportWizardStep1.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelReportWizardStep2.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelReportWizardStep3.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelRptView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelSkewLineGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelStationRangeGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Curvel\CurvelTitlePageBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Curvel\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompChildFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompDimensionGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompDlgBar.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompDoc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompDocTemplate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompExporter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompRptView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GenComp\GenCompTitlePageBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GenComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GirComp\GirCompChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GirComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GirComp\GirCompChildFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GirComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GirComp\GirCompDimensionGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GirComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GirComp\GirCompDlgBar.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GirComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GirComp\GirCompDoc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GirComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GirComp\GirCompDocTemplate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GirComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GirComp\GirCompRptView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GirComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\GirComp\GirCompTitlePageBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>GirComp\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableChildFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableDoc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableDocTemplate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableEffectivePrestressDlg.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableExporter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableFormView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableFpeGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableGirderControl.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableGirderSectionGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableGirderView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableHaulingCriteria.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableHaulingDetailsChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableHaulingSummaryChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableHaulingView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableLiftingCriteria.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableLiftingDetailsChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableLiftingSummaryChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableLiftingView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableModel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableNonprismaticGirder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStablePointLoadGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStablePrismaticGirder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableStrands.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableStressPointGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableTabView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\PGStable\PGStableTitlePageBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PGStable\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Spectra\ResponseSpectra.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include=".\SpectraBuilder\SpectraValues.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spectra\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Spectra\SpectraChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spectra\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Spectra\SpectraChildFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spectra\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Spectra\SpectraDlgBar.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spectra\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Spectra\SpectraDoc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spectra\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Spectra\SpectraDocTemplate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spectra\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Spectra\SpectraRptView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spectra\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\Spectra\SpectraTitlePageBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Spectra\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include=".\SpectraBuilder\SpectraValues.cpp">
+      <Filter>Spectra\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\UltCol\UltColChapterBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UltCol\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\UltCol\UltColChildFrame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UltCol\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\UltCol\UltColDlgBar.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UltCol\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\UltCol\UltColDoc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UltCol\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\UltCol\UltColDocTemplate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UltCol\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\UltCol\UltColTitlePageBuilder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UltCol\Source Files</Filter>
     </ClCompile>
     <ClCompile Include=".\UltCol\UltColView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UltCol\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -344,260 +344,260 @@
     <ClInclude Include="BETResources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include=".\BoxGdr\BoxGdrChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\BoxGdr\BoxGdrChildFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\BoxGdr\BoxGdrDimensionGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\BoxGdr\BoxGdrDlgBar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\BoxGdr\BoxGdrDoc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\BoxGdr\BoxGdrDocTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\BoxGdr\BoxGdrRptView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\BoxGdr\BoxGdrTitlePageBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelChildFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelDoc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelDocTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelExporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelImporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelIndividualStationGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelReportSpecification.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelReportSpecificationBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelReportWizard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelReportWizardStep1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelReportWizardStep2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelReportWizardStep3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelRptView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelSkewLineGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelStationRangeGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Curvel\CurvelTitlePageBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompChildFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompDimensionGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompDlgBar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompDoc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompDocTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompExporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompRptView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GenComp\GenCompTitlePageBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GirComp\GirCompChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GirComp\GirCompChildFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GirComp\GirCompDimensionGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GirComp\GirCompDlgBar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GirComp\GirCompDoc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GirComp\GirCompDocTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GirComp\GirCompRptView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\GirComp\GirCompTitlePageBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableChildFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableDoc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableDocTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableEffectivePrestressDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableExporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableFormView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableFpeGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableGirderControl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableGirderSectionGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableGirderView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableHaulingCriteria.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableHaulingDetailsChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableHaulingSummaryChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableHaulingView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableLiftingCriteria.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableLiftingDetailsChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableLiftingSummaryChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableLiftingView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableNonprismaticGirder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStablePluginCATID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStablePointLoadGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStablePrismaticGirder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableStrands.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableStressPointGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableTabView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\PGStable\PGStableTitlePageBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Spectra\ResponseSpectra.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\SpectraBuilder\SpectraValues.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Spectra\SpectraChapterBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Spectra\SpectraChildFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Spectra\SpectraDlgBar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Spectra\SpectraDoc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Spectra\SpectraDocTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Spectra\SpectraRptView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include=".\Spectra\SpectraTitlePageBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include=".\UltCol\UltColChapterBuilder.h">
-      <Filter>Header Files</Filter>
+      <Filter>UltCol\Header Files</Filter>
     </ClInclude>
     <ClInclude Include=".\UltCol\UltColChildFrame.h">
-      <Filter>Header Files</Filter>
+      <Filter>UltCol\Header Files</Filter>
     </ClInclude>
     <ClInclude Include=".\UltCol\UltColDlgBar.h">
-      <Filter>Header Files</Filter>
+      <Filter>UltCol\Header Files</Filter>
     </ClInclude>
     <ClInclude Include=".\UltCol\UltColDoc.h">
-      <Filter>Header Files</Filter>
+      <Filter>UltCol\Header Files</Filter>
     </ClInclude>
     <ClInclude Include=".\UltCol\UltColDocTemplate.h">
-      <Filter>Header Files</Filter>
+      <Filter>UltCol\Header Files</Filter>
     </ClInclude>
     <ClInclude Include=".\UltCol\UltColTitlePageBuilder.h">
-      <Filter>Header Files</Filter>
+      <Filter>UltCol\Header Files</Filter>
     </ClInclude>
     <ClInclude Include=".\UltCol\UltColView.h">
-      <Filter>Header Files</Filter>
+      <Filter>UltCol\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\SpectraBuilder\SpectraValues.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Spectra\ResponseSpectra.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Spectra\SpectraChapterBuilder.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Spectra\SpectraChildFrame.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Spectra\SpectraDlgBar.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Spectra\SpectraDoc.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Spectra\SpectraDocTemplate.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Spectra\SpectraRptView.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Spectra\SpectraTitlePageBuilder.h">
+      <Filter>Spectra\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableTitlePageBuilder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableChildFrame.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableDoc.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableDocTemplate.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableEffectivePrestressDlg.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableExporter.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableFormView.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableFpeGrid.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableGirderControl.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableGirderSectionGrid.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableGirderView.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableHaulingCriteria.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableHaulingDetailsChapterBuilder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableHaulingSummaryChapterBuilder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableHaulingView.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableLiftingCriteria.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableLiftingDetailsChapterBuilder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableLiftingSummaryChapterBuilder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableLiftingView.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableModel.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableNonprismaticGirder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStablePluginCATID.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStablePointLoadGrid.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStablePrismaticGirder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableStrands.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableStressPointGrid.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\PGStable\PGStableTabView.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GirComp\GirCompTitlePageBuilder.h">
+      <Filter>GirComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GirComp\GirCompChapterBuilder.h">
+      <Filter>GirComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GirComp\GirCompChildFrame.h">
+      <Filter>GirComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GirComp\GirCompDimensionGrid.h">
+      <Filter>GirComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GirComp\GirCompDlgBar.h">
+      <Filter>GirComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GirComp\GirCompDoc.h">
+      <Filter>GirComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GirComp\GirCompDocTemplate.h">
+      <Filter>GirComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GirComp\GirCompRptView.h">
+      <Filter>GirComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\BoxGdr\BoxGdrChapterBuilder.h">
+      <Filter>BoxGdr\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\BoxGdr\BoxGdrChildFrame.h">
+      <Filter>BoxGdr\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\BoxGdr\BoxGdrDimensionGrid.h">
+      <Filter>BoxGdr\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\BoxGdr\BoxGdrDlgBar.h">
+      <Filter>BoxGdr\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\BoxGdr\BoxGdrDoc.h">
+      <Filter>BoxGdr\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\BoxGdr\BoxGdrDocTemplate.h">
+      <Filter>BoxGdr\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\BoxGdr\BoxGdrRptView.h">
+      <Filter>BoxGdr\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\BoxGdr\BoxGdrTitlePageBuilder.h">
+      <Filter>BoxGdr\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelChapterBuilder.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelChildFrame.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelDoc.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelDocTemplate.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelExporter.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelImporter.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelIndividualStationGrid.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelReportSpecification.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelReportSpecificationBuilder.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelReportWizard.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelReportWizardStep1.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelReportWizardStep2.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelReportWizardStep3.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelRptView.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelSkewLineGrid.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelStationRangeGrid.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\Curvel\CurvelTitlePageBuilder.h">
+      <Filter>Curvel\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompChapterBuilder.h">
+      <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompChildFrame.h">
+      <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompDimensionGrid.h">
+      <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompDlgBar.h">
+      <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompDoc.h">
+      <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompDocTemplate.h">
+      <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompExporter.h">
+      <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompRptView.h">
+      <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\GenComp\GenCompTitlePageBuilder.h">
+      <Filter>GenComp\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

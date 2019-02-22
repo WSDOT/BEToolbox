@@ -88,7 +88,7 @@ CPGStableModel::CPGStableModel()
    m_LiftingStabilityProblem.SetConcrete(liftingConcrete);
    m_HaulingStabilityProblem.SetConcrete(haulingConcrete);
 
-   m_LiftingStabilityProblem.SetCamber(true,::ConvertToSysUnits(0,unitMeasure::Inch));
+   m_LiftingStabilityProblem.SetCamber(::ConvertToSysUnits(0,unitMeasure::Inch));
    m_LiftingStabilityProblem.SetLateralCamber(0.0);
    m_LiftingStabilityProblem.IncludeLateralRollAxisOffset(false);
 
@@ -98,11 +98,10 @@ CPGStableModel::CPGStableModel()
    m_LiftingStabilityProblem.SetLiftAngle(PI_OVER_2);
    m_LiftingStabilityProblem.SetYRollAxis(::ConvertToSysUnits(0.0,unitMeasure::Inch));
    m_LiftingStabilityProblem.SetImpact(0,0);
-   m_LiftingStabilityProblem.EvaluateStressesAtEquilibriumAngle(true);
 
    ///////////////////////////////////////////////////
 
-   m_HaulingStabilityProblem.SetCamber(true,::ConvertToSysUnits(0,unitMeasure::Inch));
+   m_HaulingStabilityProblem.SetCamber(::ConvertToSysUnits(0,unitMeasure::Inch));
    m_HaulingStabilityProblem.SetLateralCamber(0.0);
    m_HaulingStabilityProblem.IncludeLateralRollAxisOffset(false);
 
@@ -118,8 +117,6 @@ CPGStableModel::CPGStableModel()
    m_HaulingStabilityProblem.SetImpactUsage(stbTypes::NormalCrown);
    m_HaulingStabilityProblem.SetVelocity(0);
    m_HaulingStabilityProblem.SetTurningRadius(::ConvertToSysUnits(100,unitMeasure::Feet));
-   m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope, true);
-   m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::Superelevation, true);
 
    m_Hgb = ::ConvertToSysUnits(72.0,unitMeasure::Inch);
 
@@ -212,7 +209,8 @@ stbLiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
    ResolveLiftingStrandLocations();
 
    // criteria
-   m_LiftingCriteria.AllowableCompression = -m_LiftingCriteria.CompressionCoefficient*fci;
+   m_LiftingCriteria.AllowableCompression_GlobalStress = -m_LiftingCriteria.CompressionCoefficient_GlobalStress*fci;
+   m_LiftingCriteria.AllowableCompression_PeakStress   = -m_LiftingCriteria.CompressionCoefficient_PeakStress*fci;
    m_LiftingCriteria.AllowableTension = m_LiftingCriteria.TensionCoefficient*sqrt(fci);
    if ( m_LiftingCriteria.bMaxTension )
    {
@@ -278,7 +276,8 @@ stbHaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
 
    ResolveHaulingStrandLocations();
 
-   m_HaulingCriteria.AllowableCompression = -m_HaulingCriteria.CompressionCoefficient*fc;
+   m_HaulingCriteria.AllowableCompression_GlobalStress = -m_HaulingCriteria.CompressionCoefficient_GlobalStress*fc;
+   m_HaulingCriteria.AllowableCompression_PeakStress = -m_HaulingCriteria.CompressionCoefficient_PeakStress*fc;
 
    m_HaulingCriteria.AllowableTension[stbTypes::CrownSlope] = m_HaulingCriteria.TensionCoefficient[stbTypes::CrownSlope]*sqrt(fc);
    if ( m_HaulingCriteria.bMaxTension[stbTypes::CrownSlope] )
@@ -1037,14 +1036,12 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 
 
    {
-   pStrSave->BeginUnit(_T("LiftingProblem"),3.0);
+   pStrSave->BeginUnit(_T("LiftingProblem"),4.0);
    const stbLiftingStabilityProblem& liftingProblem = GetLiftingStabilityProblem();
    m_Strands[m_GirderType][LIFTING].Save(pStrSave);
 
-   bool bDirectCamber;
-   Float64 camber;
-   liftingProblem.GetCamber(&bDirectCamber,&camber);
-   pStrSave->put_Property(_T("DirectCamber"),CComVariant(bDirectCamber));
+   Float64 camber = liftingProblem.GetCamber();
+   //pStrSave->put_Property(_T("DirectCamber"),CComVariant(bDirectCamber)); // removed in version 4
    pStrSave->put_Property(_T("Camber"),CComVariant(camber));
 
    // added version 3
@@ -1073,8 +1070,9 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    // changed in version 2.0
    //bool bPlumbGirderStresses = liftingProblem.EvaluateStressesForPlumbGirder();
    //pStrSave->put_Property(_T("PlumbGirderStresses"),CComVariant(bPlumbGirderStresses));
-   bool bEvaluateStressesAtEquilibriumAngle = liftingProblem.EvaluateStressesAtEquilibriumAngle();
-   pStrSave->put_Property(_T("EvaluateStressesAtEquilibriumAngle"), CComVariant(bEvaluateStressesAtEquilibriumAngle));
+   // removed in version 4
+   //bool bEvaluateStressesAtEquilibriumAngle = liftingProblem.EvaluateStressesAtEquilibriumAngle();
+   //pStrSave->put_Property(_T("EvaluateStressesAtEquilibriumAngle"), CComVariant(bEvaluateStressesAtEquilibriumAngle));
 
    stbTypes::WindType windLoadType;
    Float64 windLoad;
@@ -1094,15 +1092,13 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    }
 
    {
-   pStrSave->BeginUnit(_T("HaulingProblem"),3.0);
+   pStrSave->BeginUnit(_T("HaulingProblem"),4.0);
    m_Strands[m_GirderType][HAULING].Save(pStrSave);
 
    const stbHaulingStabilityProblem& haulingProblem = GetHaulingStabilityProblem();
 
-   bool bDirectCamber;
-   Float64 camber;
-   haulingProblem.GetCamber(&bDirectCamber,&camber);
-   pStrSave->put_Property(_T("DirectCamber"),CComVariant(bDirectCamber));
+   Float64 camber = haulingProblem.GetCamber();
+   //pStrSave->put_Property(_T("DirectCamber"),CComVariant(bDirectCamber)); // removed in version 4
    pStrSave->put_Property(_T("Camber"),CComVariant(camber));
 
    // added version 3
@@ -1130,9 +1126,9 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    stbTypes::HaulingImpact impactUsage = haulingProblem.GetImpactUsage();
    pStrSave->put_Property(_T("ImpactUsage"),CComVariant(impactUsage));
 
-   // added in version 2
-   bool bEvaluateStressesAtEquilibriumAngle = haulingProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope);
-   pStrSave->put_Property(_T("EvaluateStressesAtEquilibriumAngle"), CComVariant(bEvaluateStressesAtEquilibriumAngle));
+   // added in version 2, removed in version 4
+   //bool bEvaluateStressesAtEquilibriumAngle = haulingProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope);
+   //pStrSave->put_Property(_T("EvaluateStressesAtEquilibriumAngle"), CComVariant(bEvaluateStressesAtEquilibriumAngle));
 
    stbTypes::WindType windLoadType;
    Float64 windLoad;
@@ -1505,17 +1501,21 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       hr = m_Strands[m_GirderType][LIFTING].Load(pStrLoad);
 
-      bool bDirectCamber;
-      Float64 camber;
-      var.vt = VT_BOOL;
-      hr = pStrLoad->get_Property(_T("DirectCamber"),&var);
-      bDirectCamber = (var.boolVal == VARIANT_TRUE ? true : false);
+      if (version < 4)
+      {
+         // removed in version 4
+         bool bDirectCamber;
+         var.vt = VT_BOOL;
+         hr = pStrLoad->get_Property(_T("DirectCamber"), &var);
+         bDirectCamber = (var.boolVal == VARIANT_TRUE ? true : false);
+      }
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("Camber"),&var);
+      Float64 camber;
       camber = var.dblVal;
 
-      m_LiftingStabilityProblem.SetCamber(bDirectCamber,camber);
+      m_LiftingStabilityProblem.SetCamber(camber);
 
       if (2 < version)
       {
@@ -1553,12 +1553,12 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
          hr = pStrLoad->get_Property(_T("PlumbGirderStresses"), &var);
          var.boolVal = (var.boolVal == VARIANT_TRUE ? VARIANT_FALSE : VARIANT_TRUE);
       }
-      else
+      else if (version < 4)
       {
-         // new in version 2
+         // new in version 2, removed in version 4
          hr = pStrLoad->get_Property(_T("EvaluateStressesAtEquilibriumAngle"), &var);
       }
-      m_LiftingStabilityProblem.EvaluateStressesAtEquilibriumAngle(var.boolVal == VARIANT_TRUE ? true : false);
+      //m_LiftingStabilityProblem.EvaluateStressesAtEquilibriumAngle(var.boolVal == VARIANT_TRUE ? true : false); // removed in version 4
 
       var.vt = VT_I4;
       hr = pStrLoad->get_Property(_T("WindLoadType"),&var);
@@ -1601,17 +1601,21 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       hr = m_Strands[m_GirderType][HAULING].Load(pStrLoad);
 
-      bool bDirectCamber;
-      Float64 camber;
-      var.vt = VT_BOOL;
-      hr = pStrLoad->get_Property(_T("DirectCamber"),&var);
-      bDirectCamber = (var.boolVal == VARIANT_TRUE ? true : false);
+      if (version < 4)
+      {
+         // removed in version 4
+         bool bDirectCamber;
+         var.vt = VT_BOOL;
+         hr = pStrLoad->get_Property(_T("DirectCamber"), &var);
+         bDirectCamber = (var.boolVal == VARIANT_TRUE ? true : false);
+      }
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("Camber"),&var);
+      Float64 camber;
       camber = var.dblVal;
 
-      m_HaulingStabilityProblem.SetCamber(bDirectCamber,camber);
+      m_HaulingStabilityProblem.SetCamber(camber);
 
       if (2 < version)
       {
@@ -1649,11 +1653,11 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->get_Property(_T("ImpactUsage"),&var);
       m_HaulingStabilityProblem.SetImpactUsage((stbTypes::HaulingImpact)var.lVal);
 
-      if (1 < version)
+      if (1 < version && version < 4)
       {
-         // added in version 2
+         // added in version 2, removed in version 4
          hr = pStrLoad->get_Property(_T("EvaluateStressesAtEquilibriumAngle"), &var);
-         m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope,var.boolVal == VARIANT_TRUE ? true : false);
+         //m_HaulingStabilityProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope,var.boolVal == VARIANT_TRUE ? true : false);
       }
 
       var.vt = VT_I4;

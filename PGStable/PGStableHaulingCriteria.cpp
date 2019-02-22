@@ -37,7 +37,8 @@ CPGStableHaulingCriteria::CPGStableHaulingCriteria()
 {
    MinFScr = 1.0;
    MinFSf = 1.5;
-   CompressionCoefficient = (lrfdVersionMgr::GetVersion() < lrfdVersionMgr::SeventhEditionWith2016Interims ? 0.60 : 0.65);
+   CompressionCoefficient_GlobalStress = 0.65;
+   CompressionCoefficient_PeakStress = 0.70;
    TensionCoefficient[stbTypes::CrownSlope] = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
    bMaxTension[stbTypes::CrownSlope] = false;
    MaxTension[stbTypes::CrownSlope] = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
@@ -64,10 +65,13 @@ bool CPGStableHaulingCriteria::operator==(const CPGStableHaulingCriteria& other)
    
    if ( !IsEqual(MinFSf,other.MinFSf) )
       return false;
-   
-   if ( !IsEqual(CompressionCoefficient,other.CompressionCoefficient) )
+
+   if (!IsEqual(CompressionCoefficient_GlobalStress, other.CompressionCoefficient_GlobalStress))
       return false;
-   
+
+   if (!IsEqual(CompressionCoefficient_PeakStress, other.CompressionCoefficient_PeakStress))
+      return false;
+
    for ( int s = 0; s < 2; s++ )
    {
       stbTypes::HaulingSlope slope = (stbTypes::HaulingSlope)s;
@@ -109,13 +113,15 @@ void CPGStableHaulingCriteria::operator=(const stbHaulingCriteria& other)
 
 HRESULT CPGStableHaulingCriteria::Save(IStructuredSave* pStrSave)
 {
-   HRESULT hr = pStrSave->BeginUnit(_T("Criteria"),1.0);
+   HRESULT hr = pStrSave->BeginUnit(_T("Criteria"),2.0);
    if ( FAILED(hr) )
       return hr;
 
    pStrSave->put_Property(_T("FScr"),CComVariant(MinFScr));
    pStrSave->put_Property(_T("FSf"),CComVariant(MinFSf));
-   pStrSave->put_Property(_T("CompressionCoefficient"),CComVariant(CompressionCoefficient));
+   //pStrSave->put_Property(_T("CompressionCoefficient"),CComVariant(CompressionCoefficient)); // removed in version 2
+   pStrSave->put_Property(_T("GlobalCompressionCoefficient"), CComVariant(CompressionCoefficient_GlobalStress)); // add in version 2
+   pStrSave->put_Property(_T("PeakCompressionCoefficient"), CComVariant(CompressionCoefficient_PeakStress)); // add in version 2
    pStrSave->BeginUnit(_T("CrownSlope"),1.0);
    pStrSave->put_Property(_T("TensionCoefficient"),CComVariant(TensionCoefficient[stbTypes::CrownSlope]));
    pStrSave->put_Property(_T("UseMaxTension"),CComVariant(bMaxTension[stbTypes::CrownSlope]));
@@ -147,6 +153,9 @@ HRESULT CPGStableHaulingCriteria::Load(IStructuredLoad* pStrLoad)
    {
       hr = pStrLoad->BeginUnit(_T("Criteria"));
 
+      Float64 version;
+      pStrLoad->get_Version(&version);
+
       CComVariant var;
 
       var.vt = VT_R8;
@@ -156,8 +165,19 @@ HRESULT CPGStableHaulingCriteria::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->get_Property(_T("FSf"),&var);
       MinFSf = var.dblVal;
 
-      hr = pStrLoad->get_Property(_T("CompressionCoefficient"),&var);
-      CompressionCoefficient = var.dblVal;
+      if (version < 2)
+      {
+         hr = pStrLoad->get_Property(_T("CompressionCoefficient"), &var);
+         CompressionCoefficient_GlobalStress = var.dblVal;
+      }
+      else
+      {
+         hr = pStrLoad->get_Property(_T("GlobalCompressionCoefficient"), &var);
+         CompressionCoefficient_GlobalStress = var.dblVal;
+
+         hr = pStrLoad->get_Property(_T("PeakCompressionCoefficient"), &var);
+         CompressionCoefficient_PeakStress = var.dblVal;
+      }
 
       hr = pStrLoad->BeginUnit(_T("CrownSlope"));
       hr = pStrLoad->get_Property(_T("TensionCoefficient"),&var);

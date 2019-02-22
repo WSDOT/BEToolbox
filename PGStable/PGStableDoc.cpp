@@ -391,30 +391,19 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
 
          stbLiftingStabilityProblem liftingProblem = GetLiftingStabilityProblem();
          liftingProblem.SetImpact(pSpec->GetLiftingUpwardImpactFactor(),pSpec->GetLiftingDownwardImpactFactor());
-         if ( pSpec->GetLiftingCamberMethod() == pgsTypes::cmApproximate )
-         {
-            liftingProblem.SetCamber(false,pSpec->GetLiftingCamberPercentEstimate());
-         }
-         else
-         {
-            bool bDirect;
-            Float64 camber;
-            liftingProblem.GetCamber(&bDirect,&camber);
-            liftingProblem.SetCamber(true,camber);
-         }
 
          liftingProblem.SetSupportPlacementTolerance(pSpec->GetLiftingLoopTolerance());
          liftingProblem.SetLiftAngle(pSpec->GetMinCableInclination());
          liftingProblem.SetSweepTolerance(pSpec->GetLiftingMaximumGirderSweepTolerance());
          liftingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetLiftingWindType(),pSpec->GetLiftingWindLoad());
-         liftingProblem.EvaluateStressesAtEquilibriumAngle(pSpec->EvaluateLiftingStressesAtEquilibriumAngle());
          liftingProblem.SetYRollAxis(pSpec->GetPickPointHeight());
          SetLiftingStabilityProblem(liftingProblem);
 
          CPGStableLiftingCriteria liftingCriteria = GetLiftingCriteria();
          liftingCriteria.MinFSf = pSpec->GetLiftingFailureFOS();
          liftingCriteria.MinFScr = pSpec->GetCrackingFOSLifting();
-         liftingCriteria.CompressionCoefficient = pSpec->GetLiftingCompressionStressFactor();
+         liftingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetLiftingCompressionGlobalStressFactor();
+         liftingCriteria.CompressionCoefficient_PeakStress = pSpec->GetLiftingCompressionPeakStressFactor();
          liftingCriteria.AllowableTension = pSpec->GetLiftingTensionStressFactor();
          pSpec->GetLiftingMaximumTensionStress(&liftingCriteria.bMaxTension,&liftingCriteria.MaxTension);
          liftingCriteria.TensionCoefficientWithRebar = pSpec->GetLiftingTensionStressFactorWithRebar();
@@ -433,23 +422,9 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
          haulingProblem.SetCrownSlope(pSpec->GetRoadwayCrownSlope());
          haulingProblem.SetSuperelevation(pSpec->GetRoadwaySuperelevation());
 
-         if ( pSpec->GetHaulingCamberMethod() == pgsTypes::cmApproximate )
-         {
-            haulingProblem.SetCamber(false,pSpec->GetHaulingCamberPercentEstimate());
-         }
-         else
-         {
-            bool bDirect;
-            Float64 camber;
-            haulingProblem.GetCamber(&bDirect,&camber);
-            haulingProblem.SetCamber(true,camber);
-         }
-
          haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
          haulingProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
          haulingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
-         haulingProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope, pSpec->EvaluateHaulingStressesAtEquilibriumAngle());
-         haulingProblem.EvaluateStressesAtEquilibriumAngle(stbTypes::Superelevation, true);
          haulingProblem.SetCentrifugalForceType((stbTypes::CFType)pSpec->GetCentrifugalForceType());
          haulingProblem.SetVelocity(pSpec->GetHaulingSpeed());
          haulingProblem.SetTurningRadius(pSpec->GetTurningRadius());
@@ -458,7 +433,8 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
          CPGStableHaulingCriteria haulingCriteria = GetHaulingCriteria();
          haulingCriteria.MinFSf = pSpec->GetHaulingFailureFOS();
          haulingCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
-         haulingCriteria.CompressionCoefficient = pSpec->GetHaulingCompressionStressFactor();
+         haulingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
+         haulingCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
          haulingCriteria.AllowableTension[stbTypes::CrownSlope] = pSpec->GetHaulingTensionStressFactorNormalCrown();
          pSpec->GetHaulingMaximumTensionStressNormalCrown(&haulingCriteria.bMaxTension[stbTypes::CrownSlope],&haulingCriteria.MaxTension[stbTypes::CrownSlope]);
          haulingCriteria.TensionCoefficientWithRebar[stbTypes::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebarNormalCrown();
