@@ -50,7 +50,7 @@ Item | Description
 -----|----------
 Factors of Safety | Enter the factors of safety against cracking and failure
 Evaluate stresses | Select the method for computing and evaluating stresses in the girder. Stresses computed for a plumb girder do not account for the tilt of the girder into its equilibrium position. Stresses computed for a tilted girder account for the girder tilting into its equilibrium position.
-Compression | Enter the coefficient for computing allowable compression
+Compression | Enter the coefficients for computing allowable compression. The general compression limit is used for compression stress in the general bending condition (girder weight plus prestress). The lateral bending compression limit is used for peak stresses at the section extremities when lateral bending due to girder tilt, wind, and centrifugal force are considered.
 Tension | Enter the coefficients for computing allowable tension with and without sufficient bonded reinforcement. There are allowable tension limits for the Normal Crown Slope and Maximum Superelevation cases
 Max. distance between bunk points | Enter the maximum permissible distance between bunk points
 Max. leading overhang | Enter the maximum leading overhanging

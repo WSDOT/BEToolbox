@@ -36,8 +36,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-
-
 // CPGStableHaulingView
 
 IMPLEMENT_DYNCREATE(CPGStableHaulingView, CPGStableFormView)
@@ -119,25 +117,9 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_Percentage(pDX,IDC_IMPACT_UP,impactUp);
    DDX_Percentage(pDX,IDC_IMPACT_DOWN,impactDown);
 
-   bool bDirectCamber;
-   Float64 camber;
-   Float64 camberOffset;
-   problem.GetCamber(&bDirectCamber,&camber);
+   Float64 camber = problem.GetCamber();
    Float64 camberMultiplier = problem.GetCamberMultiplier();
-   int camber_method;
-   if ( bDirectCamber )
-   {
-      camber_method = 1;
-      camberOffset = 0.02;
-   }
-   else
-   {
-      camber_method = 0;
-      camberOffset = camber;
-      camber = ::ConvertToSysUnits(1.0,unitMeasure::Inch);
-   }
-   DDX_Radio(pDX,IDC_CAMBER1,camber_method);
-   DDX_Percentage(pDX,IDC_CAMBER_OFFSET,camberOffset);
+
    DDX_UnitValueAndTag(pDX,IDC_CAMBER,IDC_CAMBER_UNIT,camber,pDispUnits->ComponentDim);
    DDX_Text(pDX, IDC_CAMBER_MULTIPLIER, camberMultiplier);
 
@@ -228,7 +210,8 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_MAX_BUNK,IDC_MAX_BUNK_UNIT,m_HaulingCriteria.MaxClearSpan,pDispUnits->SpanLength);
    DDX_UnitValueAndTag(pDX,IDC_LEADING_OVERHANG,IDC_LEADING_OVERHANG_UNIT,m_HaulingCriteria.MaxLeadingOverhang,pDispUnits->SpanLength);
    DDX_UnitValueAndTag(pDX,IDC_MAX_GIRDER_WEIGHT,IDC_MAX_GIRDER_WEIGHT_UNIT,m_HaulingCriteria.MaxGirderWeight,pDispUnits->GeneralForce);
-   DDX_Text(pDX,IDC_HAULING_COMPRESSION,m_HaulingCriteria.CompressionCoefficient);
+   DDX_Text(pDX, IDC_HAULING_GLOBAL_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_GlobalStress);
+   DDX_Text(pDX, IDC_HAULING_PEAK_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_PeakStress);
 
    DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN,m_HaulingCriteria.TensionCoefficient[stbTypes::CrownSlope],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_CROWN_UNIT,strHaulingTag);
@@ -243,9 +226,6 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT,m_HaulingCriteria.MaxTension[stbTypes::MaxSuper],pDispUnits->Stress);
    DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER,m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,strHaulingTag);
-
-   bool bEvaluateStressesAtEquilibriumAngle = problem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope);
-   DDX_CBItemData(pDX, IDC_STRESSES, bEvaluateStressesAtEquilibriumAngle);
 
    if ( pDX->m_bSaveAndValidate )
    {
@@ -275,22 +255,11 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetHeightOfGirderBottomAboveRoadway(Hgb);
 
-      if ( camber_method == 0 )
-      {
-         bDirectCamber = false;
-         camber = camberOffset;
-      }
-      else
-      {
-         bDirectCamber = true;
-      }
-      problem.SetCamber(bDirectCamber,camber);
+      problem.SetCamber(camber);
       problem.SetCamberMultiplier(camberMultiplier);
 
       problem.SetLateralCamber(lateralCamber);
       problem.IncludeLateralRollAxisOffset(IsZero(lateralCamber) ? false : true);
-
-      problem.EvaluateStressesAtEquilibriumAngle(stbTypes::CrownSlope,bEvaluateStressesAtEquilibriumAngle);
 
       pDoc->SetHaulingStabilityProblem(problem);
       pDoc->SetHaulingMaterials(fc,!bComputeEc,frCoefficient);
@@ -329,10 +298,7 @@ BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_WIND_PRESSURE, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_VELOCITY, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_RADIUS, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_CAMBER_OFFSET, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_CAMBER, &CPGStableHaulingView::OnChange)
-   ON_BN_CLICKED(IDC_CAMBER1, &CPGStableHaulingView::OnChange)
-   ON_BN_CLICKED(IDC_CAMBER2, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_CAMBER_MULTIPLIER, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_HGB, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_HRC, &CPGStableHaulingView::OnChange)
@@ -350,7 +316,6 @@ BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_WM_SIZE()
    ON_CBN_SELCHANGE(IDC_WIND_TYPE, &CPGStableHaulingView::OnWindTypeChanged)
    ON_CBN_SELCHANGE(IDC_IMPACT_USAGE, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_COMPRESSION,&CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_HAULING_TENSION_CROWN,&CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_CROWN,&CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_CROWN,&CPGStableHaulingView::OnChange)
@@ -358,9 +323,21 @@ BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_SUPER,&CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_SUPER, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_LATERAL_CAMBER, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_FS_CRACKING, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_FS_FAILURE, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_GLOBAL_COMPRESSION, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_PEAK_COMPRESSION, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_CROWN, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_CROWN, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_CROWN, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_SUPER, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_SUPER, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_SUPER, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_MAX_BUNK, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_LEADING_OVERHANG, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_MAX_GIRDER_WEIGHT, &CPGStableHaulingView::OnChange)
    ON_MESSAGE(WM_HELP, OnCommandHelp)
    ON_CBN_SELCHANGE(IDC_HAUL_TRUCK, &CPGStableHaulingView::OnHaulTruckChanged)
-   ON_CBN_SELCHANGE(IDC_STRESSES, &CPGStableHaulingView::OnChange)
    ON_COMMAND_RANGE(CCS_CMENU_BASE, CCS_CMENU_MAX, OnCmenuSelected)
 END_MESSAGE_MAP()
 
@@ -546,23 +523,14 @@ void CPGStableHaulingView::UpdateCriteriaControls()
    GetDlgItem(IDC_CF_TYPE)->EnableWindow(bEnable);
    GetDlgItem(IDC_VELOCITY)->EnableWindow(bEnable);
    GetDlgItem(IDC_RADIUS)->EnableWindow(bEnable);
-   GetDlgItem(IDC_CAMBER1)->EnableWindow(bEnable);
-   GetDlgItem(IDC_CAMBER2)->EnableWindow(bEnable);
-   GetDlgItem(IDC_CAMBER_OFFSET)->EnableWindow(bEnable);
-   if (GetCheckedRadioButton(IDC_CAMBER1,IDC_CAMBER2) == IDC_CAMBER1 )
-   {
-      GetDlgItem(IDC_CAMBER)->EnableWindow(bEnable == FALSE ? FALSE : TRUE); // disable if we are disabling controls and camber is by the % method
-   }
-   else
-   {
-      GetDlgItem(IDC_CAMBER)->EnableWindow(TRUE); // if camber is a direct input value, always enable
-   }
+   GetDlgItem(IDC_CAMBER)->EnableWindow(TRUE); // if camber is a direct input value, always enable
    GetDlgItem(IDC_CAMBER_MULTIPLIER)->EnableWindow(bEnable);
    GetDlgItem(IDC_SWEEP_TOLERANCE)->EnableWindow(bEnable);
    GetDlgItem(IDC_SUPPORT_PLACEMENT_TOLERANCE)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_FS_CRACKING)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_FS_FAILURE)->EnableWindow(bEnable);
-   GetDlgItem(IDC_HAULING_COMPRESSION)->EnableWindow(bEnable);
+   GetDlgItem(IDC_HAULING_GLOBAL_COMPRESSION)->EnableWindow(bEnable);
+   GetDlgItem(IDC_HAULING_PEAK_COMPRESSION)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_TENSION_CROWN)->EnableWindow(bEnable);
    GetDlgItem(IDC_CHECK_HAULING_TENSION_MAX_CROWN)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_TENSION_MAX_CROWN)->EnableWindow(bEnable);
@@ -571,7 +539,6 @@ void CPGStableHaulingView::UpdateCriteriaControls()
    GetDlgItem(IDC_CHECK_HAULING_TENSION_MAX_SUPER)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_TENSION_MAX_SUPER)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_TENSION_WITH_REBAR_SUPER)->EnableWindow(bEnable);
-   GetDlgItem(IDC_STRESSES)->EnableWindow(bEnable);
 }
 
 void CPGStableHaulingView::OnEditFpe()
@@ -636,10 +603,6 @@ void CPGStableHaulingView::OnInitialUpdate()
    CComboBox* pcbCFType = (CComboBox*)GetDlgItem(IDC_CF_TYPE);
    pcbCFType->SetItemData(pcbCFType->AddString(_T("Adverse")),(DWORD_PTR)stbTypes::Adverse);
    pcbCFType->SetItemData(pcbCFType->AddString(_T("Favorable")),(DWORD_PTR)stbTypes::Favorable);
-
-   CComboBox* pcbStresses = (CComboBox*)GetDlgItem(IDC_STRESSES);
-   pcbStresses->SetItemData(pcbStresses->AddString(_T("Include girder stability equilibrium angle in stress calculations")), (DWORD_PTR)true);
-   pcbStresses->SetItemData(pcbStresses->AddString(_T("Ignore girder stability equilibrium angle in stress calculations")), (DWORD_PTR)false);
 
    CPGStableFormView::OnInitialUpdate();
 
@@ -711,12 +674,14 @@ void CPGStableHaulingView::OnClickedHaulingTensionMaxCrown()
 {
    BOOL bEnable = IsDlgButtonChecked(IDC_CHECK_HAULING_TENSION_MAX_CROWN) == BST_CHECKED ? TRUE : FALSE;
    GetDlgItem(IDC_HAULING_TENSION_MAX_CROWN)->EnableWindow(bEnable);
+   OnChange();
 }
 
 void CPGStableHaulingView::OnClickedHaulingTensionMaxSuper()
 {
    BOOL bEnable = IsDlgButtonChecked(IDC_CHECK_HAULING_TENSION_MAX_SUPER) == BST_CHECKED ? TRUE : FALSE;
    GetDlgItem(IDC_HAULING_TENSION_MAX_SUPER)->EnableWindow(bEnable);
+   OnChange();
 }
 
 void CPGStableHaulingView::OnSize(UINT nType, int cx, int cy)
