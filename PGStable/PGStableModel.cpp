@@ -1036,7 +1036,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 
 
    {
-   pStrSave->BeginUnit(_T("LiftingProblem"),4.0);
+   pStrSave->BeginUnit(_T("LiftingProblem"),5.0);
    const stbLiftingStabilityProblem& liftingProblem = GetLiftingStabilityProblem();
    m_Strands[m_GirderType][LIFTING].Save(pStrSave);
 
@@ -1058,6 +1058,9 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 
    Float64 SweepTolerance = liftingProblem.GetSweepTolerance();
    pStrSave->put_Property(_T("SweepTolerance"),CComVariant(SweepTolerance));
+
+   Float64 SweepGrowth = liftingProblem.GetSweepGrowth();
+   pStrSave->put_Property(_T("SweepGrowth"), CComVariant(SweepGrowth)); // added in version 5
 
    Float64 SupportPlacementTolerance = liftingProblem.GetSupportPlacementTolerance();
    pStrSave->put_Property(_T("SupportPlacementTolerance"),CComVariant(SupportPlacementTolerance));
@@ -1092,7 +1095,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    }
 
    {
-   pStrSave->BeginUnit(_T("HaulingProblem"),4.0);
+   pStrSave->BeginUnit(_T("HaulingProblem"),5.0);
    m_Strands[m_GirderType][HAULING].Save(pStrSave);
 
    const stbHaulingStabilityProblem& haulingProblem = GetHaulingStabilityProblem();
@@ -1114,6 +1117,9 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 
    Float64 SweepTolerance = haulingProblem.GetSweepTolerance();
    pStrSave->put_Property(_T("SweepTolerance"),CComVariant(SweepTolerance));
+
+   Float64 SweepGrowth = haulingProblem.GetSweepGrowth();
+   pStrSave->put_Property(_T("SweepGrowth"), CComVariant(SweepGrowth)); // added in version 5
 
    Float64 SupportPlacementTolerance = haulingProblem.GetSupportPlacementTolerance();
    pStrSave->put_Property(_T("SupportPlacementTolerance"),CComVariant(SupportPlacementTolerance));
@@ -1535,6 +1541,13 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->get_Property(_T("SweepTolerance"),&var);
       m_LiftingStabilityProblem.SetSweepTolerance(var.dblVal);
 
+      if (4 < version)
+      {
+         // added in version 5
+         hr = pStrLoad->get_Property(_T("SweepGrowth"), &var);
+         m_LiftingStabilityProblem.SetSweepGrowth(var.dblVal);
+      }
+
       hr = pStrLoad->get_Property(_T("SupportPlacementTolerance"),&var);
       m_LiftingStabilityProblem.SetSupportPlacementTolerance(var.dblVal);
 
@@ -1638,6 +1651,13 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       hr = pStrLoad->get_Property(_T("SweepTolerance"),&var);
       m_HaulingStabilityProblem.SetSweepTolerance(var.dblVal);
+
+      if (4 < version)
+      {
+         // added in version 5
+         hr = pStrLoad->get_Property(_T("SweepGrowth"), &var);
+         m_HaulingStabilityProblem.SetSweepGrowth(var.dblVal);
+      }
 
       hr = pStrLoad->get_Property(_T("SupportPlacementTolerance"),&var);
       m_HaulingStabilityProblem.SetSupportPlacementTolerance(var.dblVal);

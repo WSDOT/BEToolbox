@@ -110,6 +110,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX,IDC_K2,K2);
 
    Float64 sweepTolerance = problem.GetSweepTolerance();
+   Float64 sweepGrowth = problem.GetSweepGrowth();
    Float64 supportPlacementTolerance = problem.GetSupportPlacementTolerance();
 
    Float64 impactUp, impactDown;
@@ -178,6 +179,8 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
       }
    }
 
+   DDX_UnitValueAndTag(pDX, IDC_SWEEP_GROWTH, IDC_SWEEP_GROWTH_UNIT, sweepGrowth, pDispUnits->ComponentDim);
+
    DDX_UnitValueAndTag(pDX,IDC_SUPPORT_PLACEMENT_TOLERANCE,IDC_SUPPORT_PLACEMENT_TOLERANCE_UNIT,supportPlacementTolerance,pDispUnits->ComponentDim);
 
    Float64 Hgb = pDoc->GetHeightOfGirderBottomAboveRoadway();
@@ -234,6 +237,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
       pDoc->SetK2(K2);
 
       problem.SetSweepTolerance(sweepTolerance);
+      problem.SetSweepGrowth(sweepGrowth);
       problem.SetSupportPlacementTolerance(supportPlacementTolerance);
 
       problem.SetSupportLocations(Ll,Lr);
@@ -305,6 +309,7 @@ BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_KTHETA, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_WCC, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_SWEEP_TOLERANCE, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_SWEEP_GROWTH, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_LATERAL_SWEEP_INCREMENT, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_SUPPORT_PLACEMENT_TOLERANCE, &CPGStableHaulingView::OnChange)
    ON_BN_CLICKED(IDC_EDIT_FPE, &CPGStableHaulingView::OnEditFpe)
@@ -526,6 +531,7 @@ void CPGStableHaulingView::UpdateCriteriaControls()
    GetDlgItem(IDC_CAMBER)->EnableWindow(TRUE); // if camber is a direct input value, always enable
    GetDlgItem(IDC_CAMBER_MULTIPLIER)->EnableWindow(bEnable);
    GetDlgItem(IDC_SWEEP_TOLERANCE)->EnableWindow(bEnable);
+   GetDlgItem(IDC_SWEEP_GROWTH)->EnableWindow(bEnable);
    GetDlgItem(IDC_SUPPORT_PLACEMENT_TOLERANCE)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_FS_CRACKING)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_FS_FAILURE)->EnableWindow(bEnable);

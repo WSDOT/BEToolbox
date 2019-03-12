@@ -91,6 +91,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_FPE_TEMP,IDC_FPE_TEMP_UNIT,Ft,pDispUnits->GeneralForce);
 
    Float64 sweepTolerance = problem.GetSweepTolerance();
+   Float64 sweepGrowth = problem.GetSweepGrowth();
    Float64 supportPlacementTolerance = problem.GetSupportPlacementTolerance();
 
    if ( pApp->GetUnitsMode() == eafTypes::umSI )
@@ -122,7 +123,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
          GetDlgItem(IDC_SWEEP_TOLERANCE_UNIT)->SetWindowText(_T("in/10 ft"));
       }
    }
-
+   DDX_UnitValueAndTag(pDX, IDC_SWEEP_GROWTH, IDC_SWEEP_GROWTH_UNIT, sweepGrowth, pDispUnits->ComponentDim);
    DDX_UnitValueAndTag(pDX,IDC_SUPPORT_PLACEMENT_TOLERANCE,IDC_SUPPORT_PLACEMENT_TOLERANCE_UNIT,supportPlacementTolerance,pDispUnits->ComponentDim);
 
    Float64 impactUp, impactDown;
@@ -193,6 +194,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
       pDoc->SetK2(K2);
 
       problem.SetSweepTolerance(sweepTolerance);
+      problem.SetSweepGrowth(sweepGrowth);
       problem.SetSupportPlacementTolerance(supportPlacementTolerance);
 
       problem.SetSupportLocations(L,L);
@@ -245,6 +247,7 @@ BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_CAMBER_MULTIPLIER, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_YRA, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_SWEEP_TOLERANCE, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_SWEEP_GROWTH, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_LATERAL_SWEEP_INCREMENT, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_SUPPORT_PLACEMENT_TOLERANCE, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_LATERAL_CAMBER, &CPGStableLiftingView::OnChange)

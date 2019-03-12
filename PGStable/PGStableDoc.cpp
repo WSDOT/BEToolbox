@@ -395,6 +395,7 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
          liftingProblem.SetSupportPlacementTolerance(pSpec->GetLiftingLoopTolerance());
          liftingProblem.SetLiftAngle(pSpec->GetMinCableInclination());
          liftingProblem.SetSweepTolerance(pSpec->GetLiftingMaximumGirderSweepTolerance());
+         liftingProblem.SetSweepGrowth(0); // no sweep growth for initial lifting problem
          liftingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetLiftingWindType(),pSpec->GetLiftingWindLoad());
          liftingProblem.SetYRollAxis(pSpec->GetPickPointHeight());
          SetLiftingStabilityProblem(liftingProblem);
@@ -424,6 +425,7 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
 
          haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
          haulingProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
+         haulingProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
          haulingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
          haulingProblem.SetCentrifugalForceType((stbTypes::CFType)pSpec->GetCentrifugalForceType());
          haulingProblem.SetVelocity(pSpec->GetHaulingSpeed());
