@@ -341,6 +341,8 @@
 #define IDC_HAULING_PEAK_COMPRESSION    470
 #define IDC_HAULING_GLOBAL_COMPRESSION_UNIT2 471
 #define IDC_HAULING_PEAK_COMPRESSION_UNIT 471
+#define IDC_SWEEP_GROWTH                472
+#define IDC_SWEEP_GROWTH_UNIT           473
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
