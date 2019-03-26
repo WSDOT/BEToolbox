@@ -62,13 +62,19 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    Float64 lat,lng;
    m_pDoc->GetLocation(&lat,&lng);
    SiteClass siteClass = m_pDoc->GetSiteClass();
+   SpecificationType specType = m_pDoc->GetSpecification();
 
    rptRcScalar scalar;
-   scalar.SetFormat( sysNumericFormatTool::Fixed );
+   scalar.SetFormat(sysNumericFormatTool::Fixed);
    scalar.SetWidth(6);
    scalar.SetPrecision(3);
 
-   std::_tstring strSiteClass[] = {_T("A"), _T("B"), _T("C"), _T("D"), _T("E")};
+   rptRcScalar table_value;
+   table_value.SetFormat(sysNumericFormatTool::Fixed);
+   table_value.SetWidth(4);
+   table_value.SetPrecision(1);
+
+   std::_tstring strSiteClass[] = {_T("A"), _T("B"), _T("C"), _T("D"), _T("E"), _T("F")};
 
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
@@ -77,13 +83,14 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pChapter) << pPara;
 
    CResponseSpectra spectra;
-   Uint32 result = m_pDoc->GetResponseSpectra(lat,lng,siteClass,&spectra);
+   Uint32 result = m_pDoc->GetResponseSpectra(specType,lat,lng,siteClass,&spectra);
    if ( result != SPECTRA_OK )
    {
       (*pPara) << _T("Response spectra could not be computed. ") << m_pDoc->GetSpectraResultExplaination(result) << rptNewLine;
       return pChapter;
    }
 
+   (*pPara) << m_pDoc->GetSpecificationDescription(specType) << rptNewLine;
    (*pPara) << _T("2014 Seismic Hazard Map, 7% probability of exceedance in 75 years") << rptNewLine;
    (*pPara) << rptNewLine;
    (*pPara) << _T("Site Coordinates (Latitude,Longitude): ") << lat << _T("° N, ") << -lng << _T("° W") << rptNewLine;
@@ -113,205 +120,156 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pTable)(row,2) << Sub2(_T("S"),_T("1")) << _T(" - Site Class B");
    row++;
 
-   (*pPara) << _T("Values of Site Coefficient, ") << Sub2(_T("F"),_T("pga")) << _T(", for Peak Ground Acceleration") << rptNewLine;
-   ColumnIndexType nColumns = 7;
-   pTable = rptStyleManager::CreateDefaultTable(nColumns);
-   for ( ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++ )
-   {
-      pTable->SetColumnStyle(colIdx,rptStyleManager::GetTableCellStyle(CJ_CENTER));
-      pTable->SetStripeRowColumnStyle(colIdx,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
-   }
 
-   (*pPara) << pTable << rptNewLine;
-   pTable->SetNumberOfHeaderRows(2);
-   pTable->SetRowSpan(0,0,2);
-   (*pTable)(0,0) << _T("Site Class");
+   ColumnIndexType nColumns = (specType == WSDOT_BDM ? 6 : 5) + 1;
 
-   pTable->SetColumnSpan(0,1,6);
-   (*pTable)(0,1) << _T("Mapped Peak Ground Acceleration Coefficient (PGA)");
-   (*pTable)(1,1) << _T("PGA") << symbol(LTE) << _T(" 0.10");
-   (*pTable)(1,2) << _T("PGA") << _T("=")     << _T(" 0.20");
-   (*pTable)(1,3) << _T("PGA") << _T("=")     << _T(" 0.30");
-   (*pTable)(1,4) << _T("PGA") << _T("=")     << _T(" 0.40");
-   (*pTable)(1,5) << _T("PGA") << _T("=")     << _T(" 0.50");
-   (*pTable)(1,6) << _T("PGA") << symbol(GTE) << _T(" 0.60");
-
-   (*pTable)(2,0) << _T("A");
-   (*pTable)(2,1) << _T("0.8");
-   (*pTable)(2,2) << _T("0.8");
-   (*pTable)(2,3) << _T("0.8");
-   (*pTable)(2,4) << _T("0.8");
-   (*pTable)(2,5) << _T("0.8");
-   (*pTable)(2,6) << _T("0.8");
-
-   (*pTable)(3,0) << _T("B");
-   (*pTable)(3,1) << _T("0.9");
-   (*pTable)(3,2) << _T("0.9");
-   (*pTable)(3,3) << _T("0.9");
-   (*pTable)(3,4) << _T("0.9");
-   (*pTable)(3,5) << _T("0.9");
-   (*pTable)(3,6) << _T("0.9");
-
-   (*pTable)(4,0) << _T("C");
-   (*pTable)(4,1) << _T("1.3");
-   (*pTable)(4,2) << _T("1.2");
-   (*pTable)(4,3) << _T("1.2");
-   (*pTable)(4,4) << _T("1.2");
-   (*pTable)(4,5) << _T("1.2");
-   (*pTable)(4,6) << _T("1.2");
-
-   (*pTable)(5,0) << _T("D");
-   (*pTable)(5,1) << _T("1.6");
-   (*pTable)(5,2) << _T("1.4");
-   (*pTable)(5,3) << _T("1.3");
-   (*pTable)(5,4) << _T("1.2");
-   (*pTable)(5,5) << _T("1.1");
-   (*pTable)(5,6) << _T("1.1");
-
-   (*pTable)(6,0) << _T("E");
-   (*pTable)(6,1) << _T("2.4");
-   (*pTable)(6,2) << _T("1.9");
-   (*pTable)(6,3) << _T("1.6");
-   (*pTable)(6,4) << _T("1.4");
-   (*pTable)(6,5) << _T("1.2");
-   (*pTable)(6,6) << _T("1.1");
-
-   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and PGA = ") << scalar.SetValue(spectra.GetPGA()) << _T(", ") << Sub2(_T("F"),_T("pga")) << _T(" = ") << scalar.SetValue(spectra.GetFpga()) << rptNewLine;
+   (*pPara) << _T("Values of Site Coefficient, ") << Sub2(_T("F"), _T("pga")) << _T(", for Peak Ground Acceleration") << rptNewLine;
+   rptRcTable* pZeroPeriodTable = rptStyleManager::CreateDefaultTable(nColumns);
+   (*pPara) << pZeroPeriodTable << rptNewLine;
+   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and PGA = ") << scalar.SetValue(spectra.GetPGA()) << _T(", ") << Sub2(_T("F"), _T("pga")) << _T(" = ") << scalar.SetValue(spectra.GetFpga()) << rptNewLine;
    (*pPara) << rptNewLine;
 
-   (*pPara) << _T("Values for Site Coefficient, ") << Sub2(_T("F"),_T("a")) << _T(", for 0.2 sec Period Spectral Acceleration") << rptNewLine;
-   nColumns = 7;
-   pTable = rptStyleManager::CreateDefaultTable(nColumns);
    for ( ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++ )
    {
-      pTable->SetColumnStyle(colIdx,rptStyleManager::GetTableCellStyle(CJ_CENTER));
-      pTable->SetStripeRowColumnStyle(colIdx,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
+      pZeroPeriodTable->SetColumnStyle(colIdx,rptStyleManager::GetTableCellStyle(CJ_CENTER));
+      pZeroPeriodTable->SetStripeRowColumnStyle(colIdx,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
    }
-   (*pPara) << pTable << rptNewLine;
-   pTable->SetNumberOfHeaderRows(2);
-   pTable->SetRowSpan(0,0,2);
-   (*pTable)(0,0) << _T("Site Class");
 
-   pTable->SetColumnSpan(0,1,6);
-   (*pTable)(0,1) << _T("Mapped Spectral Acceleration Coefficient at Period 0.2 sec (") << Sub2(_T("S"),_T("s")) << _T(")");
+   pZeroPeriodTable->SetNumberOfHeaderRows(2);
+   pZeroPeriodTable->SetRowSpan(0,0,2);
 
-   (*pTable)(1,1) << Sub2(_T("S"),_T("s")) << symbol(LTE) << _T(" 0.25");
-   (*pTable)(1,2) << Sub2(_T("S"),_T("s")) << _T("=")     << _T(" 0.50");
-   (*pTable)(1,3) << Sub2(_T("S"),_T("s")) << _T("=")     << _T(" 0.75");
-   (*pTable)(1,4) << Sub2(_T("S"),_T("s")) << _T("=")     << _T(" 1.00");
-   (*pTable)(1,5) << Sub2(_T("S"),_T("s")) << _T("=")     << _T(" 1.25");
-   (*pTable)(1,6) << Sub2(_T("S"),_T("s")) << symbol(GTE) << _T(" 1.50");
+   ColumnIndexType col = 0;
 
-   (*pTable)(2,0) << _T("A");
-   (*pTable)(2,1) << _T("0.8");
-   (*pTable)(2,2) << _T("0.8");
-   (*pTable)(2,3) << _T("0.8");
-   (*pTable)(2,4) << _T("0.8");
-   (*pTable)(2,5) << _T("0.8");
-   (*pTable)(2,6) << _T("0.8");
+   (*pZeroPeriodTable)(0,col++) << _T("Site Class");
 
-   (*pTable)(3,0) << _T("B");
-   (*pTable)(3,1) << _T("0.9");
-   (*pTable)(3,2) << _T("0.9");
-   (*pTable)(3,3) << _T("0.9");
-   (*pTable)(3,4) << _T("0.9");
-   (*pTable)(3,5) << _T("0.9");
-   (*pTable)(3,6) << _T("0.9");
-
-   (*pTable)(4,0) << _T("C");
-   (*pTable)(4,1) << _T("1.3");
-   (*pTable)(4,2) << _T("1.3");
-   (*pTable)(4,3) << _T("1.2");
-   (*pTable)(4,4) << _T("1.2");
-   (*pTable)(4,5) << _T("1.2");
-   (*pTable)(4,6) << _T("1.2");
-
-   (*pTable)(5,0) << _T("D");
-   (*pTable)(5,1) << _T("1.6");
-   (*pTable)(5,2) << _T("1.4");
-   (*pTable)(5,3) << _T("1.2");
-   (*pTable)(5,4) << _T("1.1");
-   (*pTable)(5,5) << _T("1.0");
-   (*pTable)(5,6) << _T("1.0");
-
-   (*pTable)(6,0) << _T("E");
-   (*pTable)(6,1) << _T("2.4");
-   (*pTable)(6,2) << _T("1.7");
-   (*pTable)(6,3) << _T("1.3");
-   (*pTable)(6,4) << _T("1.0");
-   (*pTable)(6,5) << _T("0.9");
-   (*pTable)(6,6) << _T("0.9");
-
-   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and ") << Sub2(_T("S"),_T("s")) << _T(" = ") << scalar.SetValue(spectra.GetSs()) << _T(", ") << Sub2(_T("F"),_T("a")) << _T(" = ") << scalar.SetValue(spectra.GetFa()) << rptNewLine;
-   (*pPara) << rptNewLine;
-
-   (*pPara) << _T("Values of Site Coefficient, ") << Sub2(_T("F"),_T("v")) << _T(", for 1.0 sec Period Spectral Acceleration") << rptNewLine;
-   nColumns = 7;
-   pTable = rptStyleManager::CreateDefaultTable(nColumns);
-   for ( ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++ )
+   pZeroPeriodTable->SetColumnSpan(0,col,nColumns-1);
+   (*pZeroPeriodTable)(0, col) << _T("Mapped Peak Ground Acceleration Coefficient (PGA)");
+   (*pZeroPeriodTable)(1, col++) << _T("PGA") << symbol(LTE) << _T(" 0.10");
+   (*pZeroPeriodTable)(1, col++) << _T("PGA") << _T("=")     << _T(" 0.20");
+   (*pZeroPeriodTable)(1, col++) << _T("PGA") << _T("=")     << _T(" 0.30");
+   (*pZeroPeriodTable)(1, col++) << _T("PGA") << _T("=")     << _T(" 0.40");
+   if (specType == WSDOT_BDM)
    {
-      pTable->SetColumnStyle(colIdx,rptStyleManager::GetTableCellStyle(CJ_CENTER));
-      pTable->SetStripeRowColumnStyle(colIdx,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
+      (*pZeroPeriodTable)(1, col++) << _T("PGA") << _T("=") << _T(" 0.50");
+      (*pZeroPeriodTable)(1, col++) << _T("PGA") << symbol(GTE) << _T(" 0.60");
    }
-   (*pPara) << pTable << rptNewLine;
-   pTable->SetNumberOfHeaderRows(2);
-   pTable->SetRowSpan(0,0,2);
-   (*pTable)(0,0) << _T("Site Class");
-
-   pTable->SetColumnSpan(0,1,6);
-   (*pTable)(0,1) << _T("Mapped Spectral Acceleration Coefficient at Period 1.0 sec (") << Sub2(_T("S"),_T("1")) << _T(")");
-
-   (*pTable)(1,1) << Sub2(_T("S"),_T("1")) << symbol(LTE) << _T(" 0.1");
-   (*pTable)(1,2) << Sub2(_T("S"),_T("1")) << _T("=")     << _T(" 0.2");
-   (*pTable)(1,3) << Sub2(_T("S"),_T("1")) << _T("=")     << _T(" 0.3");
-   (*pTable)(1,4) << Sub2(_T("S"),_T("1")) << _T("=")     << _T(" 0.4");
-   (*pTable)(1,5) << Sub2(_T("S"),_T("1")) << _T("=")     << _T(" 0.5");
-   (*pTable)(1,6) << Sub2(_T("S"),_T("1")) << symbol(GTE) << _T(" 0.6");
+   else
+   {
+      (*pZeroPeriodTable)(1, col++) << _T("PGA") << symbol(GTE) << _T(" 0.50");
+   }
 
 
-   (*pTable)(2,0) << _T("A");
-   (*pTable)(2,1) << _T("0.8");
-   (*pTable)(2,2) << _T("0.8");
-   (*pTable)(2,3) << _T("0.8");
-   (*pTable)(2,4) << _T("0.8");
-   (*pTable)(2,5) << _T("0.8");
-   (*pTable)(2,6) << _T("0.8");
-
-   (*pTable)(3,0) << _T("B");
-   (*pTable)(3,1) << _T("0.8");
-   (*pTable)(3,2) << _T("0.8");
-   (*pTable)(3,3) << _T("0.8");
-   (*pTable)(3,4) << _T("0.8");
-   (*pTable)(3,5) << _T("0.8");
-   (*pTable)(3,6) << _T("0.8");
-
-   (*pTable)(4,0) << _T("C");
-   (*pTable)(4,1) << _T("1.5");
-   (*pTable)(4,2) << _T("1.5");
-   (*pTable)(4,3) << _T("1.5");
-   (*pTable)(4,4) << _T("1.5");
-   (*pTable)(4,5) << _T("1.5");
-   (*pTable)(4,6) << _T("1.4");
-
-   (*pTable)(5,0) << _T("D");
-   (*pTable)(5,1) << _T("2.4");
-   (*pTable)(5,2) << _T("2.2");
-   (*pTable)(5,3) << _T("2.0");
-   (*pTable)(5,4) << _T("1.9");
-   (*pTable)(5,5) << _T("1.8");
-   (*pTable)(5,6) << _T("1.7");
-
-   (*pTable)(6,0) << _T("E");
-   (*pTable)(6,1) << _T("4.2");
-   (*pTable)(6,2) << _T("3.3");
-   (*pTable)(6,3) << _T("2.8");
-   (*pTable)(6,4) << _T("2.4");
-   (*pTable)(6,5) << _T("2.2");
-   (*pTable)(6,6) << _T("2.0");
-
-   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and ") << Sub2(_T("S"),_T("1")) << _T(" = ") << scalar.SetValue(spectra.GetS1()) << _T(", ") << Sub2(_T("F"),_T("v")) << _T(" = ") << scalar.SetValue(spectra.GetFv()) << rptNewLine;
+   (*pPara) << _T("Values for Site Coefficient, ") << Sub2(_T("F"), _T("a")) << _T(", for 0.2 sec Period Spectral Acceleration") << rptNewLine;
+   rptRcTable* pShortPeriodTable = rptStyleManager::CreateDefaultTable(nColumns);
+   (*pPara) << pShortPeriodTable << rptNewLine;
+   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and ") << Sub2(_T("S"), _T("s")) << _T(" = ") << scalar.SetValue(spectra.GetSs()) << _T(", ") << Sub2(_T("F"), _T("a")) << _T(" = ") << scalar.SetValue(spectra.GetFa()) << rptNewLine;
    (*pPara) << rptNewLine;
 
+   for (ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++)
+   {
+      pShortPeriodTable->SetColumnStyle(colIdx, rptStyleManager::GetTableCellStyle(CJ_CENTER));
+      pShortPeriodTable->SetStripeRowColumnStyle(colIdx, rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
+   }
+   pShortPeriodTable->SetNumberOfHeaderRows(2);
+   pShortPeriodTable->SetRowSpan(0, 0, 2);
+   col = 0;
+   (*pShortPeriodTable)(0, col++) << _T("Site Class");
+
+   pShortPeriodTable->SetColumnSpan(0, col, nColumns-1);
+   (*pShortPeriodTable)(0, col) << _T("Mapped Spectral Acceleration Coefficient at Period 0.2 sec (") << Sub2(_T("S"), _T("s")) << _T(")");
+
+   (*pShortPeriodTable)(1, col++) << Sub2(_T("S"), _T("s")) << symbol(LTE) << _T(" 0.25");
+   (*pShortPeriodTable)(1, col++) << Sub2(_T("S"), _T("s")) << _T("=") << _T(" 0.50");
+   (*pShortPeriodTable)(1, col++) << Sub2(_T("S"), _T("s")) << _T("=") << _T(" 0.75");
+   (*pShortPeriodTable)(1, col++) << Sub2(_T("S"), _T("s")) << _T("=") << _T(" 1.00");
+   if (specType == WSDOT_BDM)
+   {
+      (*pShortPeriodTable)(1, col++) << Sub2(_T("S"), _T("s")) << _T("=") << _T(" 1.25");
+      (*pShortPeriodTable)(1, col++) << Sub2(_T("S"), _T("s")) << symbol(GTE) << _T(" 1.50");
+   }
+   else
+   {
+      (*pShortPeriodTable)(1, col++) << Sub2(_T("S"), _T("s")) << symbol(GTE) << _T(" 1.25");
+   }
+
+   (*pPara) << _T("Values of Site Coefficient, ") << Sub2(_T("F"), _T("v")) << _T(", for 1.0 sec Period Spectral Acceleration") << rptNewLine;
+   rptRcTable* pLongPeriodTable = rptStyleManager::CreateDefaultTable(nColumns);
+   (*pPara) << pLongPeriodTable << rptNewLine;
+   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and ") << Sub2(_T("S"), _T("1")) << _T(" = ") << scalar.SetValue(spectra.GetS1()) << _T(", ") << Sub2(_T("F"), _T("v")) << _T(" = ") << scalar.SetValue(spectra.GetFv()) << rptNewLine;
+   (*pPara) << rptNewLine;
+
+   for (ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++)
+   {
+      pLongPeriodTable->SetColumnStyle(colIdx, rptStyleManager::GetTableCellStyle(CJ_CENTER));
+      pLongPeriodTable->SetStripeRowColumnStyle(colIdx, rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
+   }
+   pLongPeriodTable->SetNumberOfHeaderRows(2);
+   pLongPeriodTable->SetRowSpan(0, 0, 2);
+   col = 0;
+   (*pLongPeriodTable)(0, col++) << _T("Site Class");
+
+   pLongPeriodTable->SetColumnSpan(0, col, nColumns-1);
+   (*pLongPeriodTable)(0, col) << _T("Mapped Spectral Acceleration Coefficient at Period 1.0 sec (") << Sub2(_T("S"), _T("1")) << _T(")");
+
+   (*pLongPeriodTable)(1, col++) << Sub2(_T("S"), _T("1")) << symbol(LTE) << _T(" 0.1");
+   (*pLongPeriodTable)(1, col++) << Sub2(_T("S"), _T("1")) << _T("=") << _T(" 0.2");
+   (*pLongPeriodTable)(1, col++) << Sub2(_T("S"), _T("1")) << _T("=") << _T(" 0.3");
+   (*pLongPeriodTable)(1, col++) << Sub2(_T("S"), _T("1")) << _T("=") << _T(" 0.4");
+   if (specType == WSDOT_BDM)
+   {
+      (*pLongPeriodTable)(1, col++) << Sub2(_T("S"), _T("1")) << _T("=") << _T(" 0.5");
+      (*pLongPeriodTable)(1, col++) << Sub2(_T("S"), _T("1")) << symbol(GTE) << _T(" 0.6");
+   }
+   else
+   {
+      (*pLongPeriodTable)(1, col++) << Sub2(_T("S"), _T("1")) << symbol(GTE) << _T(" 0.5");
+   }
+
+   row = pZeroPeriodTable->GetNumberOfHeaderRows();
+   for (int i = 0; i < (int)(nSiteClasses-1); i++, row++)
+   {
+      SiteClass thisSiteClass = (SiteClass)i;
+
+      col = 0;
+      const mathPwLinearFunction2dUsingPoints* pZeroPeriodSiteFactors = m_pDoc->GetZeroPeriodSiteFactors(specType, thisSiteClass);
+      (*pZeroPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
+      (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.1));
+      (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.2));
+      (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.3));
+      (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.4));
+      (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.5));
+      if (specType == WSDOT_BDM)
+      {
+         (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.6));
+      }
+
+      col = 0;
+      const mathPwLinearFunction2dUsingPoints* pShortPeriodSiteFactors = m_pDoc->GetShortPeriodSiteFactors(specType, thisSiteClass);
+      (*pShortPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.1));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.2));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.3));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.4));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.5));
+      if (specType == WSDOT_BDM)
+      {
+         (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.6));
+      }
+
+      col = 0;
+      const mathPwLinearFunction2dUsingPoints* pLongPeriodSiteFactors = m_pDoc->GetLongPeriodSiteFactors(specType, thisSiteClass);
+      (*pLongPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
+      (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.1));
+      (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.2));
+      (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.3));
+      (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.4));
+      (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.5));
+      if (specType == WSDOT_BDM)
+      {
+         (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.6));
+      }
+   }
+   
    (*pPara) << Sub2(_T("A"),_T("s")) << _T(" = ") << Sub2(_T("F"),_T("pga")) << _T(" PGA = (") << scalar.SetValue(spectra.GetFpga()) << _T(")(") << scalar.SetValue(spectra.GetPGA()) << _T("g) = ") << scalar.SetValue(spectra.GetAs()) << _T("g") << rptNewLine;
    (*pPara) << Sub2(_T("S"),_T("DS")) << _T(" = ") << Sub2(_T("F"),_T("a")) << _T(" ") << Sub2(_T("S"),_T("s")) << _T(" = (") << scalar.SetValue(spectra.GetFa()) << _T(")(") << scalar.SetValue(spectra.GetSs()) << _T("g) = ") << scalar.SetValue(spectra.GetSds()) << _T("g") << rptNewLine;
    (*pPara) << Sub2(_T("S"),_T("D1")) << _T(" = ") << Sub2(_T("F"),_T("v")) << _T(" ") << Sub2(_T("S"),_T("1")) << _T(" = (") << scalar.SetValue(spectra.GetFv()) << _T(")(") << scalar.SetValue(spectra.GetS1()) << _T("g) = ") << scalar.SetValue(spectra.GetSd1()) << _T("g") << rptNewLine;
@@ -322,7 +280,14 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    pPara = new rptParagraph; // create a new paragraph after a page break.
    (*pChapter) << pPara;
 
-   (*pPara) << _T("Partitions for Seismic Design Categories A, B, C, and D") << rptNewLine;
+   if (specType == AASHTO_LRFD)
+   {
+      (*pPara) << _T("Partitions for Seismic Performance Zones 1, 2, 3, and 4") << rptNewLine;
+   }
+   else
+   {
+      (*pPara) << _T("Partitions for Seismic Design Categories A, B, C, and D") << rptNewLine;
+   }
    pTable = rptStyleManager::CreateDefaultTable(2);
    pTable->SetColumnStyle(1,rptStyleManager::GetTableCellStyle(CJ_CENTER));
    pTable->SetStripeRowColumnStyle(1,rptStyleManager::GetTableStripeRowCellStyle(CJ_CENTER));
@@ -332,18 +297,38 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pTable)(0,1) << _T("SDC");
 
    (*pTable)(1,0) << Sub2(_T("S"),_T("D1")) << _T(" < 0.15");
-   (*pTable)(1,1) << _T("A");
+   if (specType == AASHTO_LRFD)
+      (*pTable)(1, 1) << _T("1");
+   else
+      (*pTable)(1, 1) << _T("A");
+
 
    (*pTable)(2,0) << _T("0.15 ") << symbol(LTE) << _T(" ") << Sub2(_T("S"),_T("D1")) << _T(" < 0.30");
-   (*pTable)(2,1) << _T("B");
+   if (specType == AASHTO_LRFD)
+      (*pTable)(2, 1) << _T("2");
+   else
+      (*pTable)(2, 1) << _T("B");
 
    (*pTable)(3,0) << _T("0.30 ") << symbol(LTE) << _T(" ") << Sub2(_T("S"),_T("D1")) << _T(" < 0.50");
-   (*pTable)(3,1) << _T("C");
+   if (specType == AASHTO_LRFD)
+      (*pTable)(3, 1) << _T("3");
+   else
+      (*pTable)(3, 1) << _T("C");
 
    (*pTable)(4,0) << _T("0.50 ") << symbol(LTE) << _T(" ") << Sub2(_T("S"),_T("D1"));
-   (*pTable)(4,1) << _T("D");
+   if (specType == AASHTO_LRFD)
+      (*pTable)(4, 1) << _T("4");
+   else
+      (*pTable)(4, 1) << _T("D");
 
-   (*pPara) << _T("Seismic Design Category (SDC) = ") << spectra.GetSDC() << rptNewLine;
+   if (specType == AASHTO_LRFD)
+   {
+      (*pPara) << _T("Seismic Performance Zone = ") << spectra.GetSDC() << rptNewLine;
+   }
+   else
+   {
+      (*pPara) << _T("Seismic Design Category (SDC) = ") << spectra.GetSDC() << rptNewLine;
+   }
 
    (*pPara) << rptNewLine;
 

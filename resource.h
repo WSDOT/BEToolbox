@@ -343,6 +343,8 @@
 #define IDC_HAULING_PEAK_COMPRESSION_UNIT 471
 #define IDC_SWEEP_GROWTH                472
 #define IDC_SWEEP_GROWTH_UNIT           473
+#define IDC_COMBO2                      473
+#define IDC_SPECIFICATION               473
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -396,9 +398,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        224
+#define _APS_NEXT_RESOURCE_VALUE        225
 #define _APS_NEXT_COMMAND_VALUE         36871
-#define _APS_NEXT_CONTROL_VALUE         473
+#define _APS_NEXT_CONTROL_VALUE         474
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

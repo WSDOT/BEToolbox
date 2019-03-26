@@ -61,7 +61,9 @@ CSpectraDoc::CSpectraDoc()
 
    UIHints(FALSE); // not using UIHints feature
 
+
    // Lat/Lng of the Bridge Office, 7345 Linderson Way SW, Tumwater, WA 98501
+   m_SpecType = WSDOT_BDM;
    m_Lat = 46.981394;
    m_Lng = -122.91888;
    m_SiteClass = scB;
@@ -112,157 +114,440 @@ BOOL CSpectraDoc::Init()
    if ( !LoadSpectralData() )
       return FALSE;
 
-   // Zero Period Site Factors (Fpga) - Table 3.4.2.3-1 (BDM Table 3.4.2.3-1A)
+   InitWSDOT();
+   InitLRFD();
+   InitGuideSpec();
+
+   return TRUE;
+}
+
+void CSpectraDoc::InitWSDOT()
+{
+   // Zero Period Site Factors (Fpga) - BDM Table 3.4.2.3-1A
    {
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteA->AddPoint(0.1,0.8);
+      siteA->AddPoint(0.1, 0.8);
       // all points are the same so we don't actually need to add them
       //siteA->AddPoint(0.2,0.8);
       //siteA->AddPoint(0.3,0.8);
       //siteA->AddPoint(0.4,0.8);
       //siteA->AddPoint(0.5,0.8);
       //siteA->AddPoint(0.6,0.8);
-      m_ZeroPeriodSiteFactors.push_back(siteA);
+      m_ZeroPeriodSiteFactors[WSDOT_BDM].push_back(siteA);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteB->AddPoint(0.1,0.9);
+      siteB->AddPoint(0.1, 0.9);
       // all points are the same so we don't actually need to add them
       //siteB->AddPoint(0.2,0.9);
       //siteB->AddPoint(0.3,0.9);
       //siteB->AddPoint(0.4,0.9);
       //siteB->AddPoint(0.5,0.9);
       //siteB->AddPoint(0.6,0.9);
-      m_ZeroPeriodSiteFactors.push_back(siteB);
+      m_ZeroPeriodSiteFactors[WSDOT_BDM].push_back(siteB);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteC->AddPoint(0.1,1.3);
-      siteC->AddPoint(0.2,1.2);
-      siteC->AddPoint(0.3,1.2);
-      siteC->AddPoint(0.4,1.2);
-      siteC->AddPoint(0.5,1.2);
-      siteC->AddPoint(0.6,1.2);
-      m_ZeroPeriodSiteFactors.push_back(siteC);
+      siteC->AddPoint(0.1, 1.3);
+      siteC->AddPoint(0.2, 1.2);
+      siteC->AddPoint(0.3, 1.2);
+      siteC->AddPoint(0.4, 1.2);
+      siteC->AddPoint(0.5, 1.2);
+      siteC->AddPoint(0.6, 1.2);
+      m_ZeroPeriodSiteFactors[WSDOT_BDM].push_back(siteC);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteD->AddPoint(0.1,1.6);
-      siteD->AddPoint(0.2,1.4);
-      siteD->AddPoint(0.3,1.3);
-      siteD->AddPoint(0.4,1.2);
-      siteD->AddPoint(0.5,1.1);
-      siteD->AddPoint(0.6,1.1);
-      m_ZeroPeriodSiteFactors.push_back(siteD);
+      siteD->AddPoint(0.1, 1.6);
+      siteD->AddPoint(0.2, 1.4);
+      siteD->AddPoint(0.3, 1.3);
+      siteD->AddPoint(0.4, 1.2);
+      siteD->AddPoint(0.5, 1.1);
+      siteD->AddPoint(0.6, 1.1);
+      m_ZeroPeriodSiteFactors[WSDOT_BDM].push_back(siteD);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteE->AddPoint(0.1,2.4);
-      siteE->AddPoint(0.2,1.9);
-      siteE->AddPoint(0.3,1.6);
-      siteE->AddPoint(0.4,1.4);
-      siteE->AddPoint(0.5,1.2);
-      siteE->AddPoint(0.6,1.1);
-      m_ZeroPeriodSiteFactors.push_back(siteE);
+      siteE->AddPoint(0.1, 2.4);
+      siteE->AddPoint(0.2, 1.9);
+      siteE->AddPoint(0.3, 1.6);
+      siteE->AddPoint(0.4, 1.4);
+      siteE->AddPoint(0.5, 1.2);
+      siteE->AddPoint(0.6, 1.1);
+      m_ZeroPeriodSiteFactors[WSDOT_BDM].push_back(siteE);
    }
 
    {
-      // Short Period Site Factors (Fa for 0.2 sec period spectral acceleration) - Table 3.4.2.3-1 (BDM Table 3.4.2.3-1B)
+      // Short Period Site Factors (Fa for 0.2 sec period spectral acceleration) - BDM Table 3.4.2.3-1B
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteA->AddPoint(0.25,0.8);
+      siteA->AddPoint(0.25, 0.8);
       // all points are the same so we don't actually need to add them
       //siteA->AddPoint(0.50,0.8);
       //siteA->AddPoint(0.75,0.8);
       //siteA->AddPoint(1.00,0.8);
       //siteA->AddPoint(1.25,0.8);
       //siteA->AddPoint(1.50,0.8);
-      m_ShortPeriodSiteFactors.push_back(siteA);
+      m_ShortPeriodSiteFactors[WSDOT_BDM].push_back(siteA);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteB->AddPoint(0.25,0.9);
+      siteB->AddPoint(0.25, 0.9);
       // all points are the same so we don't actually need to add them
       //siteB->AddPoint(0.50,0.9);
       //siteB->AddPoint(0.75,0.9);
       //siteB->AddPoint(0.90,0.9);
       //siteB->AddPoint(1.25,0.9);
       //siteB->AddPoint(1.50,0.9);
-      m_ShortPeriodSiteFactors.push_back(siteB);
+      m_ShortPeriodSiteFactors[WSDOT_BDM].push_back(siteB);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteC->AddPoint(0.25,1.3);
-      siteC->AddPoint(0.50,1.3);
-      siteC->AddPoint(0.75,1.2);
-      siteC->AddPoint(1.00,1.2);
-      siteC->AddPoint(1.25,1.2);
-      siteC->AddPoint(1.50,1.2);
-      m_ShortPeriodSiteFactors.push_back(siteC);
+      siteC->AddPoint(0.25, 1.3);
+      siteC->AddPoint(0.50, 1.3);
+      siteC->AddPoint(0.75, 1.2);
+      siteC->AddPoint(1.00, 1.2);
+      siteC->AddPoint(1.25, 1.2);
+      siteC->AddPoint(1.50, 1.2);
+      m_ShortPeriodSiteFactors[WSDOT_BDM].push_back(siteC);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteD->AddPoint(0.25,1.6);
-      siteD->AddPoint(0.50,1.4);
-      siteD->AddPoint(0.75,1.2);
-      siteD->AddPoint(1.00,1.1);
-      siteD->AddPoint(1.25,1.0);
-      siteD->AddPoint(1.50,1.0);
-      m_ShortPeriodSiteFactors.push_back(siteD);
+      siteD->AddPoint(0.25, 1.6);
+      siteD->AddPoint(0.50, 1.4);
+      siteD->AddPoint(0.75, 1.2);
+      siteD->AddPoint(1.00, 1.1);
+      siteD->AddPoint(1.25, 1.0);
+      siteD->AddPoint(1.50, 1.0);
+      m_ShortPeriodSiteFactors[WSDOT_BDM].push_back(siteD);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteE->AddPoint(0.25,2.4);
-      siteE->AddPoint(0.50,1.7);
-      siteE->AddPoint(0.75,1.3);
-      siteE->AddPoint(1.00,1.0);
-      siteE->AddPoint(1.25,0.9);
-      siteE->AddPoint(1.50,0.9);
-      m_ShortPeriodSiteFactors.push_back(siteE);
+      siteE->AddPoint(0.25, 2.4);
+      siteE->AddPoint(0.50, 1.7);
+      siteE->AddPoint(0.75, 1.3);
+      siteE->AddPoint(1.00, 1.0);
+      siteE->AddPoint(1.25, 0.9);
+      siteE->AddPoint(1.50, 0.9);
+      m_ShortPeriodSiteFactors[WSDOT_BDM].push_back(siteE);
    }
 
    {
-      // Long Period Site Factors (Fv for 1.0 sec period spectral acceleration) - Table 3.10.3.2-3 (BDM Table 3.4.2.3.2)
+      // Long Period Site Factors (Fv for 1.0 sec period spectral acceleration) - BDM Table 3.4.2.3.2
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteA->AddPoint(0.1,0.8);
+      siteA->AddPoint(0.1, 0.8);
       // all points are the same so we don't actually need to add them
       //siteA->AddPoint(0.2,0.8);
       //siteA->AddPoint(0.3,0.8);
       //siteA->AddPoint(0.4,0.8);
       //siteA->AddPoint(0.5,0.8);
       //siteA->AddPoint(0.6,0.8);
-      m_LongPeriodSiteFactors.push_back(siteA);
+      m_LongPeriodSiteFactors[WSDOT_BDM].push_back(siteA);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteB->AddPoint(0.1,0.8);
+      siteB->AddPoint(0.1, 0.8);
       // all points are the same so we don't actually need to add them
       //siteB->AddPoint(0.2,0.8);
       //siteB->AddPoint(0.3,0.8);
       //siteB->AddPoint(0.4,0.8);
       //siteB->AddPoint(0.5,0.8);
       //siteB->AddPoint(0.6,0.8);
-      m_LongPeriodSiteFactors.push_back(siteB);
+      m_LongPeriodSiteFactors[WSDOT_BDM].push_back(siteB);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteC->AddPoint(0.1,1.5);
+      siteC->AddPoint(0.1, 1.5);
       //siteC->AddPoint(0.2,1.5);
       //siteC->AddPoint(0.3,1.5);
       //siteC->AddPoint(0.4,1.5);
-      siteC->AddPoint(0.5,1.5);
-      siteC->AddPoint(0.6,1.4);
-      m_LongPeriodSiteFactors.push_back(siteC);
+      siteC->AddPoint(0.5, 1.5);
+      siteC->AddPoint(0.6, 1.4);
+      m_LongPeriodSiteFactors[WSDOT_BDM].push_back(siteC);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteD->AddPoint(0.1,2.4);
-      siteD->AddPoint(0.2,2.2);
-      siteD->AddPoint(0.3,2.0);
-      siteD->AddPoint(0.4,1.9);
-      siteD->AddPoint(0.5,1.8);
-      siteD->AddPoint(0.6,1.7);
-      m_LongPeriodSiteFactors.push_back(siteD);
+      siteD->AddPoint(0.1, 2.4);
+      siteD->AddPoint(0.2, 2.2);
+      siteD->AddPoint(0.3, 2.0);
+      siteD->AddPoint(0.4, 1.9);
+      siteD->AddPoint(0.5, 1.8);
+      siteD->AddPoint(0.6, 1.7);
+      m_LongPeriodSiteFactors[WSDOT_BDM].push_back(siteD);
 
       std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
-      siteE->AddPoint(0.1,4.2);
-      siteE->AddPoint(0.2,3.3);
-      siteE->AddPoint(0.3,2.8);
-      siteE->AddPoint(0.4,2.4);
-      siteE->AddPoint(0.5,2.2);
-      siteE->AddPoint(0.6,2.0);
-      m_LongPeriodSiteFactors.push_back(siteE);
+      siteE->AddPoint(0.1, 4.2);
+      siteE->AddPoint(0.2, 3.3);
+      siteE->AddPoint(0.3, 2.8);
+      siteE->AddPoint(0.4, 2.4);
+      siteE->AddPoint(0.5, 2.2);
+      siteE->AddPoint(0.6, 2.0);
+      m_LongPeriodSiteFactors[WSDOT_BDM].push_back(siteE);
+   }
+}
+
+void CSpectraDoc::InitLRFD()
+{
+   // Zero Period Site Factors (Fpga) - Table 3.4.2.3-1
+   {
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteA->AddPoint(0.1, 0.8);
+      // all points are the same so we don't actually need to add them
+      //siteA->AddPoint(0.2,0.8);
+      //siteA->AddPoint(0.3,0.8);
+      //siteA->AddPoint(0.4,0.8);
+      //siteA->AddPoint(0.5,0.8);
+      m_ZeroPeriodSiteFactors[AASHTO_LRFD].push_back(siteA);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteB->AddPoint(0.1, 1.0);
+      // all points are the same so we don't actually need to add them
+      //siteB->AddPoint(0.2,1.0);
+      //siteB->AddPoint(0.3,1.0);
+      //siteB->AddPoint(0.4,1.0);
+      //siteB->AddPoint(0.5,1.0);
+      m_ZeroPeriodSiteFactors[AASHTO_LRFD].push_back(siteB);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteC->AddPoint(0.1, 1.2);
+      siteC->AddPoint(0.2, 1.2);
+      siteC->AddPoint(0.3, 1.1);
+      siteC->AddPoint(0.4, 1.0);
+      siteC->AddPoint(0.5, 1.0);
+      m_ZeroPeriodSiteFactors[AASHTO_LRFD].push_back(siteC);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteD->AddPoint(0.1, 1.6);
+      siteD->AddPoint(0.2, 1.4);
+      siteD->AddPoint(0.3, 1.2);
+      siteD->AddPoint(0.4, 1.1);
+      siteD->AddPoint(0.5, 1.0);
+      m_ZeroPeriodSiteFactors[AASHTO_LRFD].push_back(siteD);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteE->AddPoint(0.1, 2.5);
+      siteE->AddPoint(0.2, 1.7);
+      siteE->AddPoint(0.3, 1.2);
+      siteE->AddPoint(0.4, 0.9);
+      siteE->AddPoint(0.5, 0.9);
+      m_ZeroPeriodSiteFactors[AASHTO_LRFD].push_back(siteE);
    }
 
-   return TRUE;
+   {
+      // Short Period Site Factors (Fa for 0.2 sec period spectral acceleration) - Table 3.4.2.3-1
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteA->AddPoint(0.25, 0.8);
+      // all points are the same so we don't actually need to add them
+      //siteA->AddPoint(0.50,0.8);
+      //siteA->AddPoint(0.75,0.8);
+      //siteA->AddPoint(1.00,0.8);
+      //siteA->AddPoint(1.25,0.8);
+      m_ShortPeriodSiteFactors[AASHTO_LRFD].push_back(siteA);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteB->AddPoint(0.25, 1.0);
+      // all points are the same so we don't actually need to add them
+      //siteB->AddPoint(0.50,1.0);
+      //siteB->AddPoint(0.75,1.0);
+      //siteB->AddPoint(0.90,1.0);
+      //siteB->AddPoint(1.25,1.0);
+      m_ShortPeriodSiteFactors[AASHTO_LRFD].push_back(siteB);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteC->AddPoint(0.25, 1.2);
+      siteC->AddPoint(0.50, 1.2);
+      siteC->AddPoint(0.75, 1.1);
+      siteC->AddPoint(1.00, 1.0);
+      siteC->AddPoint(1.25, 1.0);
+      m_ShortPeriodSiteFactors[AASHTO_LRFD].push_back(siteC);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteD->AddPoint(0.25, 1.6);
+      siteD->AddPoint(0.50, 1.4);
+      siteD->AddPoint(0.75, 1.2);
+      siteD->AddPoint(1.00, 1.1);
+      siteD->AddPoint(1.25, 1.0);
+      m_ShortPeriodSiteFactors[AASHTO_LRFD].push_back(siteD);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteE->AddPoint(0.25, 2.5);
+      siteE->AddPoint(0.50, 1.7);
+      siteE->AddPoint(0.75, 1.2);
+      siteE->AddPoint(1.00, 0.9);
+      siteE->AddPoint(1.25, 0.9);
+      m_ShortPeriodSiteFactors[AASHTO_LRFD].push_back(siteE);
+   }
+
+   {
+      // Long Period Site Factors (Fv for 1.0 sec period spectral acceleration) - Table 3.10.3.2-3
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteA->AddPoint(0.1, 0.8);
+      // all points are the same so we don't actually need to add them
+      //siteA->AddPoint(0.2,0.8);
+      //siteA->AddPoint(0.3,0.8);
+      //siteA->AddPoint(0.4,0.8);
+      //siteA->AddPoint(0.5,0.8);
+      m_LongPeriodSiteFactors[AASHTO_LRFD].push_back(siteA);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteB->AddPoint(0.1, 1.0);
+      // all points are the same so we don't actually need to add them
+      //siteB->AddPoint(0.2,1.0;
+      //siteB->AddPoint(0.3,1.0);
+      //siteB->AddPoint(0.4,1.0);
+      //siteB->AddPoint(0.5,1.0);
+      m_LongPeriodSiteFactors[AASHTO_LRFD].push_back(siteB);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteC->AddPoint(0.1,1.7);
+      siteC->AddPoint(0.2,1.6);
+      siteC->AddPoint(0.3,1.5);
+      siteC->AddPoint(0.4,1.4);
+      siteC->AddPoint(0.5,1.3);
+      m_LongPeriodSiteFactors[AASHTO_LRFD].push_back(siteC);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteD->AddPoint(0.1, 2.4);
+      siteD->AddPoint(0.2, 2.0);
+      siteD->AddPoint(0.3, 1.8);
+      siteD->AddPoint(0.4, 1.6);
+      siteD->AddPoint(0.5, 1.5);
+      m_LongPeriodSiteFactors[AASHTO_LRFD].push_back(siteD);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteE->AddPoint(0.1, 3.5);
+      siteE->AddPoint(0.2, 3.2);
+      siteE->AddPoint(0.3, 2.8);
+      siteE->AddPoint(0.4, 2.4);
+      siteE->AddPoint(0.5, 2.4);
+      m_LongPeriodSiteFactors[AASHTO_LRFD].push_back(siteE);
+   }
+}
+
+void CSpectraDoc::InitGuideSpec()
+{
+   // Zero Period Site Factors (Fpga) - Table 3.4.2.3-1
+   {
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteA->AddPoint(0.1, 0.8);
+      // all points are the same so we don't actually need to add them
+      //siteA->AddPoint(0.2,0.8);
+      //siteA->AddPoint(0.3,0.8);
+      //siteA->AddPoint(0.4,0.8);
+      //siteA->AddPoint(0.5,0.8);
+      m_ZeroPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteA);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteB->AddPoint(0.1, 1.0);
+      // all points are the same so we don't actually need to add them
+      //siteB->AddPoint(0.2,1.0);
+      //siteB->AddPoint(0.3,1.0);
+      //siteB->AddPoint(0.4,1.0);
+      //siteB->AddPoint(0.5,1.0);
+      m_ZeroPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteB);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteC->AddPoint(0.1, 1.2);
+      siteC->AddPoint(0.2, 1.2);
+      siteC->AddPoint(0.3, 1.1);
+      siteC->AddPoint(0.4, 1.0);
+      siteC->AddPoint(0.5, 1.0);
+      m_ZeroPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteC);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteD->AddPoint(0.1, 1.6);
+      siteD->AddPoint(0.2, 1.4);
+      siteD->AddPoint(0.3, 1.2);
+      siteD->AddPoint(0.4, 1.1);
+      siteD->AddPoint(0.5, 1.0);
+      m_ZeroPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteD);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteE->AddPoint(0.1, 2.5);
+      siteE->AddPoint(0.2, 1.7);
+      siteE->AddPoint(0.3, 1.2);
+      siteE->AddPoint(0.4, 0.9);
+      siteE->AddPoint(0.5, 0.9);
+      m_ZeroPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteE);
+   }
+
+   {
+      // Short Period Site Factors (Fa for 0.2 sec period spectral acceleration) - Table 3.4.2.3-1
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteA->AddPoint(0.25, 0.8);
+      // all points are the same so we don't actually need to add them
+      //siteA->AddPoint(0.50,0.8);
+      //siteA->AddPoint(0.75,0.8);
+      //siteA->AddPoint(1.00,0.8);
+      //siteA->AddPoint(1.25,0.8);
+      m_ShortPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteA);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteB->AddPoint(0.25, 1.0);
+      // all points are the same so we don't actually need to add them
+      //siteB->AddPoint(0.50,1.0);
+      //siteB->AddPoint(0.75,1.0);
+      //siteB->AddPoint(0.90,1.0);
+      //siteB->AddPoint(1.25,1.0);
+      m_ShortPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteB);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteC->AddPoint(0.25, 1.2);
+      siteC->AddPoint(0.50, 1.2);
+      siteC->AddPoint(0.75, 1.1);
+      siteC->AddPoint(1.00, 1.0);
+      siteC->AddPoint(1.25, 1.0);
+      m_ShortPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteC);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteD->AddPoint(0.25, 1.6);
+      siteD->AddPoint(0.50, 1.4);
+      siteD->AddPoint(0.75, 1.2);
+      siteD->AddPoint(1.00, 1.1);
+      siteD->AddPoint(1.25, 1.0);
+      m_ShortPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteD);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteE->AddPoint(0.25, 2.5);
+      siteE->AddPoint(0.50, 1.7);
+      siteE->AddPoint(0.75, 1.2);
+      siteE->AddPoint(1.00, 0.9);
+      siteE->AddPoint(1.25, 0.9);
+      m_ShortPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteE);
+   }
+
+   {
+      // Long Period Site Factors (Fv for 1.0 sec period spectral acceleration) - Table 3.4.2.3-2
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteA(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteA->AddPoint(0.1, 0.8);
+      // all points are the same so we don't actually need to add them
+      //siteA->AddPoint(0.2,0.8);
+      //siteA->AddPoint(0.3,0.8);
+      //siteA->AddPoint(0.4,0.8);
+      //siteA->AddPoint(0.5,0.8);
+      m_LongPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteA);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteB(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteB->AddPoint(0.1, 1.0);
+      // all points are the same so we don't actually need to add them
+      //siteB->AddPoint(0.2,1.0;
+      //siteB->AddPoint(0.3,1.0);
+      //siteB->AddPoint(0.4,1.0);
+      //siteB->AddPoint(0.5,1.0);
+      m_LongPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteB);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteC(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteC->AddPoint(0.1, 1.7);
+      siteC->AddPoint(0.2, 1.6);
+      siteC->AddPoint(0.3, 1.5);
+      siteC->AddPoint(0.4, 1.4);
+      siteC->AddPoint(0.5, 1.3);
+      m_LongPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteC);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteD(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteD->AddPoint(0.1, 2.4);
+      siteD->AddPoint(0.2, 2.0);
+      siteD->AddPoint(0.3, 1.8);
+      siteD->AddPoint(0.4, 1.6);
+      siteD->AddPoint(0.5, 1.5);
+      m_LongPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteD);
+
+      std::shared_ptr<mathPwLinearFunction2dUsingPoints> siteE(std::make_shared<mathPwLinearFunction2dUsingPoints>());
+      siteE->AddPoint(0.1, 3.5);
+      siteE->AddPoint(0.2, 3.2);
+      siteE->AddPoint(0.3, 2.8);
+      siteE->AddPoint(0.4, 2.4);
+      siteE->AddPoint(0.5, 2.4);
+      m_LongPeriodSiteFactors[AASHTO_SEISMIC].push_back(siteE);
+   }
 }
 
 void CSpectraDoc::OnCloseDocument()
@@ -277,13 +562,19 @@ void CSpectraDoc::OnCloseDocument()
 
 HRESULT CSpectraDoc::WriteTheDocument(IStructuredSave* pStrSave)
 {
-   HRESULT hr = pStrSave->BeginUnit(_T("Spectra"),1.0);
+   HRESULT hr = pStrSave->BeginUnit(_T("Spectra"),2.0);
    if ( FAILED(hr) )
       return hr;
 
    Float64 lat,lng;
    GetLocation(&lat,&lng);
    SiteClass siteClass = GetSiteClass();
+   SpecificationType specType = GetSpecification();
+
+   // added in version 2
+   hr = pStrSave->put_Property(_T("Specification"), CComVariant(specType));
+   if (FAILED(hr))
+      return hr;
 
    hr = pStrSave->put_Property(_T("Latitude"),CComVariant(lat));
    if ( FAILED(hr) )
@@ -310,7 +601,20 @@ HRESULT CSpectraDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    if ( FAILED(hr) )
       return hr;
 
+   Float64 version;
+   pStrLoad->get_Version(&version);
+
    CComVariant var;
+
+   if (1 < version)
+   {
+      // added in version 2
+      var.vt = VT_I4;
+      hr = pStrLoad->get_Property(_T("Specification"), &var);
+      if (FAILED(hr))
+         return hr;
+      m_SpecType = (SpecificationType)(var.lVal);
+   }
 
    var.vt = VT_R8;
    hr = pStrLoad->get_Property(_T("Latitude"),&var);
@@ -398,6 +702,21 @@ bool CSpectraDoc::LoadSpectralData()
    return true;
 }
 
+void CSpectraDoc::SetSpecification(SpecificationType specType)
+{
+   if (m_SpecType != specType)
+   {
+      m_SpecType = specType;
+      UpdateAllViews(nullptr);
+      SetModifiedFlag();
+   }
+}
+
+SpecificationType CSpectraDoc::GetSpecification() const
+{
+   return m_SpecType;
+}
+
 void CSpectraDoc::SetLocation(Float64 lat,Float64 lng)
 {
    if ( m_Lat != lat || m_Lng != lng )
@@ -409,7 +728,7 @@ void CSpectraDoc::SetLocation(Float64 lat,Float64 lng)
    }
 }
 
-void CSpectraDoc::GetLocation(Float64* pLat,Float64* pLng)
+void CSpectraDoc::GetLocation(Float64* pLat,Float64* pLng) const
 {
    *pLat = m_Lat;
    *pLng = m_Lng;
@@ -425,12 +744,28 @@ void CSpectraDoc::SetSiteClass(SiteClass siteClass)
    }
 }
 
-SiteClass CSpectraDoc::GetSiteClass()
+SiteClass CSpectraDoc::GetSiteClass() const
 {
    return m_SiteClass;
 }
 
-LPCTSTR CSpectraDoc::GetSiteClassDescription(SiteClass siteClass)
+LPCTSTR CSpectraDoc::GetSpecificationDescription(SpecificationType specType) const
+{
+   switch (specType)
+   {
+   case WSDOT_BDM:
+      return _T("WSDOT Bridge Design Manual");
+   case AASHTO_LRFD:
+      return _T("AASHTO LRFD Bridge Design Specifications, 8th Edition");
+   case AASHTO_SEISMIC:
+      return _T("AASHTO Guide Specifications for LRFD Seismic Bridge Design, 2nd Edition");
+   default:
+      ATLASSERT(false); // should never get here
+      return _T("Unknown");
+   }
+}
+
+LPCTSTR CSpectraDoc::GetSiteClassDescription(SiteClass siteClass) const
 {
    switch(siteClass)
    {
@@ -447,12 +782,17 @@ LPCTSTR CSpectraDoc::GetSiteClassDescription(SiteClass siteClass)
       return _T("Stiff Soil");
 
    case scE:
+      return _T("Soft Clay Soil");
+
+   case scF:
+      return _T("Site Specific");
+
    default:
       return _T("Soft Clay Soil");
    }
 }
 
-LPCTSTR CSpectraDoc::GetSpectraResultExplaination(Uint32 result)
+LPCTSTR CSpectraDoc::GetSpectraResultExplaination(Uint32 result) const
 {
    if ( result == SPECTRA_INVALID_LOCATION )
       return _T("Site Coordinates are invalid.");
@@ -462,7 +802,7 @@ LPCTSTR CSpectraDoc::GetSpectraResultExplaination(Uint32 result)
       return _T("OK");
 }
 
-Uint32 CSpectraDoc::GetResponseSpectra(Float64 lat,Float64 lng,SiteClass siteClass,CResponseSpectra* pSpectra)
+Uint32 CSpectraDoc::GetResponseSpectra(SpecificationType specType,Float64 lat,Float64 lng,SiteClass siteClass,CResponseSpectra* pSpectra) const
 {
    if ( (lat < MIN_LATITUDE || MAX_LATITUDE < lat) || (lng < MIN_LONGITUDE || MAX_LONGITUDE < lng) )
       return SPECTRA_INVALID_LOCATION;
@@ -471,7 +811,7 @@ Uint32 CSpectraDoc::GetResponseSpectra(Float64 lat,Float64 lng,SiteClass siteCla
    GetSpectralValues(lat,lng,&S1,&Ss,&PGA);
 
    Float64 Fa,Fv,Fpga;
-   Uint32 result = GetSiteFactors(S1,Ss,PGA,siteClass,&Fa,&Fv,&Fpga);
+   Uint32 result = GetSiteFactors(specType,S1,Ss,PGA,siteClass,&Fa,&Fv,&Fpga);
    if ( result != SPECTRA_OK )
       return result;
 
@@ -480,19 +820,34 @@ Uint32 CSpectraDoc::GetResponseSpectra(Float64 lat,Float64 lng,SiteClass siteCla
    return SPECTRA_OK;
 }
 
-void CSpectraDoc::GetSpectralValues(Float64 lat,Float64 lng,Float64* pS1,Float64* pSs,Float64* pPGA)
+void CSpectraDoc::GetSpectralValues(Float64 lat,Float64 lng,Float64* pS1,Float64* pSs,Float64* pPGA) const
 {
    ::GetSpectralValues(lat,lng,m_pValues,pS1,pSs,pPGA);
 }
 
-Uint32 CSpectraDoc::GetSiteFactors(Float64 S1,Float64 Ss,Float64 PGA,SiteClass siteClass,Float64* pFa,Float64* pFv,Float64* pFpga)
+Uint32 CSpectraDoc::GetSiteFactors(SpecificationType specType, Float64 S1,Float64 Ss,Float64 PGA,SiteClass siteClass,Float64* pFa,Float64* pFv,Float64* pFpga) const
 {
-   if ( siteClass == scE && 0.75 < Ss )
+   if ( siteClass == scF && 0.75 < Ss )
       return SPECTRA_SITE_SPECIFIC;
 
-   *pFpga = m_ZeroPeriodSiteFactors[siteClass]->Evaluate(PGA);
-   *pFa   = m_ShortPeriodSiteFactors[siteClass]->Evaluate(Ss);
-   *pFv   = m_LongPeriodSiteFactors[siteClass]->Evaluate(S1);
+   *pFpga = m_ZeroPeriodSiteFactors[specType][siteClass]->Evaluate(PGA);
+   *pFa   = m_ShortPeriodSiteFactors[specType][siteClass]->Evaluate(Ss);
+   *pFv   = m_LongPeriodSiteFactors[specType][siteClass]->Evaluate(S1);
 
    return SPECTRA_OK;
+}
+
+const mathPwLinearFunction2dUsingPoints* CSpectraDoc::GetZeroPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const
+{
+   return m_ZeroPeriodSiteFactors[specType][siteClass].get();
+}
+
+const mathPwLinearFunction2dUsingPoints* CSpectraDoc::GetShortPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const
+{
+   return m_ShortPeriodSiteFactors[specType][siteClass].get();
+}
+
+const mathPwLinearFunction2dUsingPoints* CSpectraDoc::GetLongPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const
+{
+   return m_LongPeriodSiteFactors[specType][siteClass].get();
 }

@@ -67,12 +67,14 @@ void CSpectraDialogBar::DoDataExchange(CDataExchange* pDX)
 
    Float64 lat,lng;
    SiteClass siteClass;
+   SpecificationType specType;
 
    if ( !pDX->m_bSaveAndValidate )
    {
       pDoc->GetLocation(&lat,&lng);
+      lng *= -1; // change sign because we are west
       siteClass = pDoc->GetSiteClass();
-      lng *= -1;
+      specType = pDoc->GetSpecification();
    }
 
    DDX_Text(pDX,IDC_LATITUDE,lat);
@@ -80,11 +82,14 @@ void CSpectraDialogBar::DoDataExchange(CDataExchange* pDX)
 
    DDX_CBEnum(pDX,IDC_SITE_CLASS,siteClass);
 
+   DDX_CBEnum(pDX, IDC_SPECIFICATION, specType);
+
    if ( pDX->m_bSaveAndValidate )
    {
       lng *= -1;
       pDoc->SetLocation(lat,lng);
       pDoc->SetSiteClass(siteClass);
+      pDoc->SetSpecification(specType);
    }
 
    if ( !pDX->m_bSaveAndValidate )
@@ -129,8 +134,16 @@ BOOL CSpectraDialogBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, 
    pcbSiteClass->AddString(_T("C"));
    pcbSiteClass->AddString(_T("D"));
    pcbSiteClass->AddString(_T("E"));
+   pcbSiteClass->AddString(_T("F"));
 
    pcbSiteClass->SetCurSel(1);
+
+   CComboBox* pcbSpecification = (CComboBox*)GetDlgItem(IDC_SPECIFICATION);
+   pcbSpecification->AddString(_T("WSDOT Bridge Design Manual"));
+   pcbSpecification->AddString(_T("AASHTO LRFD Bridge Design Specifications"));
+   pcbSpecification->AddString(_T("AASHTO Guide Specifications for LRFD Seismic Bridge Design"));
+   pcbSpecification->SetCurSel(0);
+
 
    return TRUE;
 }
