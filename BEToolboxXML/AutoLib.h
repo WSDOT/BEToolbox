@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolboxXML
-// Copyright © 1999-2018  Washington State Department of Transportation
+// Copyright © 1999-2019  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -27,6 +27,8 @@
 #define BETOOLBOXXML_AUTOLIBNAME "BEToolboxXML.lib"
 
 #pragma comment(lib,BETOOLBOXXML_AUTOLIBNAME)
+#if defined AUTOLIB
 #pragma message("Linking with " BETOOLBOXXML_AUTOLIBNAME )
+#endif // AUTOLIB
 
 #endif // BUILDBETOOLBOXXMLLIB

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2018  Washington State Department of Transportation
+// Copyright © 1999-2019  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -25,40 +25,40 @@
 #include "resource.h"
 #include "ToolImpl.h"
 
-#include "BoxGdrDocTemplate.h"
-#include "BoxGdrDoc.h"
-#include "BoxGdrRptView.h"
-#include "BoxGdrChildFrame.h"
+#include ".\BoxGdr\BoxGdrDocTemplate.h"
+#include ".\BoxGdr\BoxGdrDoc.h"
+#include ".\BoxGdr\BoxGdrRptView.h"
+#include ".\BoxGdr\BoxGdrChildFrame.h"
 
-#include "GenCompDocTemplate.h"
-#include "GenCompDoc.h"
-#include "GenCompRptView.h"
-#include "GenCompChildFrame.h"
+#include ".\GenComp\GenCompDocTemplate.h"
+#include ".\GenComp\GenCompDoc.h"
+#include ".\GenComp\GenCompRptView.h"
+#include ".\GenComp\GenCompChildFrame.h"
 
-#include "GirCompDocTemplate.h"
-#include "GirCompDoc.h"
-#include "GirCompRptView.h"
-#include "GirCompChildFrame.h"
+#include ".\GirComp\GirCompDocTemplate.h"
+#include ".\GirComp\GirCompDoc.h"
+#include ".\GirComp\GirCompRptView.h"
+#include ".\GirComp\GirCompChildFrame.h"
 
-#include "UltColDocTemplate.h"
-#include "UltColDoc.h"
-#include "UltColView.h"
-#include "UltColChildFrame.h"
+#include ".\UltCol\UltColDocTemplate.h"
+#include ".\UltCol\UltColDoc.h"
+#include ".\UltCol\UltColView.h"
+#include ".\UltCol\UltColChildFrame.h"
 
-#include "CurvelDocTemplate.h"
-#include "CurvelDoc.h"
-#include "CurvelRptView.h"
-#include "CurvelChildFrame.h"
+#include ".\Curvel\CurvelDocTemplate.h"
+#include ".\Curvel\CurvelDoc.h"
+#include ".\Curvel\CurvelRptView.h"
+#include ".\Curvel\CurvelChildFrame.h"
 
-#include "PGStableDocTemplate.h"
-#include "PGStableDoc.h"
-#include "PGStableTabView.h"
-#include "PGStableChildFrame.h"
+#include ".\PGStable\PGStableDocTemplate.h"
+#include ".\PGStable\PGStableDoc.h"
+#include ".\PGStable\PGStableTabView.h"
+#include ".\PGStable\PGStableChildFrame.h"
 
-#include "SpectraDocTemplate.h"
-#include "SpectraDoc.h"
-#include "SpectraRptView.h"
-#include "SpectraChildFrame.h"
+#include ".\Spectra\SpectraDocTemplate.h"
+#include ".\Spectra\SpectraDoc.h"
+#include ".\Spectra\SpectraRptView.h"
+#include ".\Spectra\SpectraChildFrame.h"
 
 // {4C9C743B-199E-43C8-AF13-F1D16669ACC9}
 DEFINE_GUID(CLSID_BoxGdrTool,

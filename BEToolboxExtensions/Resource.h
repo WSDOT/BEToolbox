@@ -1,3 +1,5 @@
+#include <EAF\EAFResources.h>
+
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
 // Used by BEToolboxToolExtensions.rc

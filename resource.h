@@ -22,7 +22,6 @@
 #define IDD_PGSTABLEGIRDERVIEW          109
 #define IDD_PGSTABLELIFTINGVIEW         110
 #define IDD_PGSTABLEHAULINGVIEW         111
-#define IDD_PGSTABLECRITERIAVIEW        112
 #define IDD_PGSTABLEEFFECTIVEPRESTRESSDLG 113
 #define IDR_PGSTABLEEXPORTER            114
 #define IDD_SPECTRA                     115
@@ -84,12 +83,19 @@
 #define IDC_RIGHT_SLOPE_UNIT_2          248
 #define IDC_STATION_LABEL_3             249
 #define IDC_STATION_3                   250
+#define IDR_ULTCOLTOOL                  250
 #define IDC_LEFT_SLOPE_3                251
+#define IDR_BOXGDRTOOL                  251
 #define IDC_LEFT_SLOPE_UNIT_3           252
+#define IDR_GENCOMPTOOL                 252
 #define IDC_RIGHT_SLOPE_LABEL_3         253
+#define IDR_GIRCOMPTOOL                 253
 #define IDC_RIGHT_SLOPE_3               254
+#define IDR_CURVELTOOL                  254
 #define IDC_RIGHT_SLOPE_UNIT_3          255
+#define IDR_PGSTABLETOOL                255
 #define IDC_LEFT_SLOPE_LABEL_1          256
+#define IDR_SPECTRATOOL                 256
 #define IDC_LEFT_SLOPE_LABEL_2          257
 #define IDC_LEFT_SLOPE_LABEL_3          258
 #define IDC_INDIVIDUAL_STATIONS         259
@@ -206,12 +212,8 @@
 #define IDC_WIND_PRESSURE_UNIT          344
 #define IDC_YRA                         345
 #define IDC_YRA_UNIT                    346
-#define IDC_CAMBER1                     347
-#define IDC_CAMBER_OFFSET               348
-#define IDC_CAMBER2                     349
 #define IDC_CAMBER                      350
 #define IDC_CAMBER_UNIT                 351
-#define IDC_CAMBER_OFFSET_UNIT          352
 #define IDC_LEFT_BUNK                   353
 #define IDC_LEFT_BUNK_UNIT              354
 #define IDC_RIGHT_BUNK                  355
@@ -329,6 +331,20 @@
 #define IDC_LATERAL_CAMBER              461
 #define IDC_LATERAL_CAMBER_UNIT         462
 #define IDC_EX_LABEL                    463
+#define IDC_EDIT1                       465
+#define IDC_LIFTING_PEAK_COMPRESSION    465
+#define IDC_LIFTING_GLOBAL_COMPRESSION  466
+#define IDC_LIFTING_GLOBAL_COMPRESSION_UNIT 467
+#define IDC_LIFTING_PEAK_COMPRESSION_UNIT 468
+#define IDC_HAULING_GLOBAL_COMPRESSION  468
+#define IDC_HAULING_GLOBAL_COMPRESSION_UNIT 469
+#define IDC_HAULING_PEAK_COMPRESSION    470
+#define IDC_HAULING_GLOBAL_COMPRESSION_UNIT2 471
+#define IDC_HAULING_PEAK_COMPRESSION_UNIT 471
+#define IDC_SWEEP_GROWTH                472
+#define IDC_SWEEP_GROWTH_UNIT           473
+#define IDC_COMBO2                      473
+#define IDC_SPECIFICATION               473
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -340,12 +356,10 @@
 #define IDC_APPICON                     1005
 #define IDC_LIFTING_COMPRESSION         1126
 #define IDC_LIFTING_TENSION             1127
-#define IDC_HAULING_COMPRESSION         1128
 #define IDC_CHECK_LIFTING_TENSION_MAX   1129
 #define IDC_LIFTING_TENSION_MAX         1130
 #define IDC_LIFTING_TENSION_MAX_UNIT    1131
 #define IDC_LIFTING_COMPRESSION_UNIT    1132
-#define IDC_HAULING_COMPRESSION_UNIT    1133
 #define IDC_HAULING_TENSION             1134
 #define IDC_LIFTING_TENSION_WITH_REBAR  1135
 #define IDC_HAULING_TENSION_SUPER       1135
@@ -370,30 +384,23 @@
 #define IDC_STATIC_ACSSB                1291
 #define IDC_STATIC_ACSCS2               1292
 #define IDC_STATIC_ACSTS2               1293
+#define IDC_STATIC_ACSCS3               1293
 #define IDC_STATIC_ACSSB2               1294
 #define IDC_STATIC_ACSSB3               1295
 #define IDC_STATIC_ACSTS3               1296
-#define IDC_STRESSES                    1554
 #define IDC_WSDOT                       1666
 #define IDC_TXDOT                       1668
 #define IDC_GIRDER                      1781
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
-#define IDR_ULTCOLTOOL                  250
-#define IDR_BOXGDRTOOL                  251
-#define IDR_GENCOMPTOOL                 252
-#define IDR_GIRCOMPTOOL                 253
-#define IDR_CURVELTOOL                  254
-#define IDR_PGSTABLETOOL                255
-#define IDR_SPECTRATOOL                 256
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        224
+#define _APS_NEXT_RESOURCE_VALUE        225
 #define _APS_NEXT_COMMAND_VALUE         36871
-#define _APS_NEXT_CONTROL_VALUE         465
+#define _APS_NEXT_CONTROL_VALUE         474
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

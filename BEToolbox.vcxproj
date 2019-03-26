@@ -30,6 +30,7 @@
     <ProjectGuid>{3282AC39-1BEB-4C8E-8FA0-2E3F4CC1BB45}</ProjectGuid>
     <RootNamespace>BEToolbox</RootNamespace>
     <Keyword>AtlProj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="Configuration">
@@ -82,51 +83,51 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\BridgeLink\ObjectiveGrid.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
     <Import Project="..\BridgeLink\BridgeLink.props" />
     <Import Project="..\WBFL\WBFL.props" />
+    <Import Project="..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\BridgeLink\ObjectiveGrid.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
     <Import Project="..\BridgeLink\BridgeLink.props" />
     <Import Project="..\WBFL\WBFL.props" />
+    <Import Project="..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\BridgeLink\ObjectiveGrid.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
     <Import Project="..\BridgeLink\BridgeLink.props" />
     <Import Project="..\WBFL\WBFL.props" />
+    <Import Project="..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\BridgeLink\ObjectiveGrid.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
     <Import Project="..\BridgeLink\BridgeLink.props" />
     <Import Project="..\WBFL\WBFL.props" />
+    <Import Project="..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\BridgeLink\ObjectiveGrid.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
     <Import Project="..\BridgeLink\BridgeLink.props" />
     <Import Project="..\WBFL\WBFL.props" />
+    <Import Project="..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\BridgeLink\ObjectiveGrid.props" />
-    <Import Project="..\BridgeLink\XSD.props" />
     <Import Project="..\BridgeLink\BridgeLink.props" />
     <Import Project="..\WBFL\WBFL.props" />
+    <Import Project="..\WBFL\XSD.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
@@ -135,7 +136,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
@@ -144,7 +145,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -153,7 +154,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -162,8 +163,8 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
-    <OutDir>$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -171,7 +172,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -189,7 +190,6 @@
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -202,7 +202,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -219,10 +219,9 @@
       <AdditionalIncludeDirectories>$(IntDir);\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -230,7 +229,8 @@
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -248,7 +248,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>X64</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -260,7 +259,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -277,10 +276,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <AdditionalIncludeDirectories>$(IntDir);\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -288,7 +286,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -306,7 +305,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -318,7 +316,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <ValidateAllParameters>true</ValidateAllParameters>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -333,10 +331,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <AdditionalIncludeDirectories>$(IntDir);\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -345,7 +342,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -363,7 +361,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>X64</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -374,7 +371,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <ProxyFileName>BEToolbox_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -389,10 +386,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <AdditionalIncludeDirectories>$(IntDir);\ARP\PGSuper\Include;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -401,7 +397,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -419,7 +416,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -432,7 +428,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -450,7 +446,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -459,7 +455,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -474,7 +471,6 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>\ARP\WBFL\Include;\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\PGSuper\Include\Plugins;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>X64</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -486,7 +482,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Midl>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;\ARP\BridgeLink\Include;\ARP\BridgeLink\Include\$(Platform);\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;.\Documentation;\ARP\PGSuper\Include;\ARP\PGSuper\Include\Plugins;\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(BRIDGELINKDIR)\Include;$(BRIDGELINKDIR)\Include\$(Platform);$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema;.\Documentation;$(PGSUPERDIR)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -504,7 +500,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <RegisterOutput>true</RegisterOutput>
       <AdditionalDependencies>
       </AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -514,7 +510,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
-      <Command>xcopy /y/d $(ProjectDir)Images\*.png \ARP\BridgeLink\Images\
+      <Command>mkdir $(BRIDGELINKDIR)\Images
+xcopy /y/d $(ProjectDir)Images\*.png $(BRIDGELINKDIR)\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
@@ -547,31 +544,31 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       </PrecompiledHeader>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="BoxGdrChapterBuilder.cpp" />
-    <ClCompile Include="BoxGdrChildFrame.cpp" />
-    <ClCompile Include="BoxGdrDimensionGrid.cpp" />
-    <ClCompile Include="BoxGdrDlgBar.cpp" />
-    <ClCompile Include="BoxGdrDoc.cpp" />
-    <ClCompile Include="BoxGdrDocTemplate.cpp" />
-    <ClCompile Include="BoxGdrRptView.cpp" />
-    <ClCompile Include="BoxGdrTitlePageBuilder.cpp" />
-    <ClCompile Include="CurvelChapterBuilder.cpp" />
-    <ClCompile Include="CurvelChildFrame.cpp" />
-    <ClCompile Include="CurvelDoc.cpp" />
-    <ClCompile Include="CurvelDocTemplate.cpp" />
-    <ClCompile Include="CurvelExporter.cpp" />
-    <ClCompile Include="CurvelImporter.cpp" />
-    <ClCompile Include="CurvelIndividualStationGrid.cpp" />
-    <ClCompile Include="CurvelReportSpecification.cpp" />
-    <ClCompile Include="CurvelReportSpecificationBuilder.cpp" />
-    <ClCompile Include="CurvelReportWizard.cpp" />
-    <ClCompile Include="CurvelReportWizardStep1.cpp" />
-    <ClCompile Include="CurvelReportWizardStep2.cpp" />
-    <ClCompile Include="CurvelReportWizardStep3.cpp" />
-    <ClCompile Include="CurvelRptView.cpp" />
-    <ClCompile Include="CurvelSkewLineGrid.cpp" />
-    <ClCompile Include="CurvelStationRangeGrid.cpp" />
-    <ClCompile Include="CurvelTitlePageBuilder.cpp" />
+    <ClCompile Include=".\BoxGdr\BoxGdrChapterBuilder.cpp" />
+    <ClCompile Include=".\BoxGdr\BoxGdrChildFrame.cpp" />
+    <ClCompile Include=".\BoxGdr\BoxGdrDimensionGrid.cpp" />
+    <ClCompile Include=".\BoxGdr\BoxGdrDlgBar.cpp" />
+    <ClCompile Include=".\BoxGdr\BoxGdrDoc.cpp" />
+    <ClCompile Include=".\BoxGdr\BoxGdrDocTemplate.cpp" />
+    <ClCompile Include=".\BoxGdr\BoxGdrRptView.cpp" />
+    <ClCompile Include=".\BoxGdr\BoxGdrTitlePageBuilder.cpp" />
+    <ClCompile Include=".\Curvel\CurvelChapterBuilder.cpp" />
+    <ClCompile Include=".\Curvel\CurvelChildFrame.cpp" />
+    <ClCompile Include=".\Curvel\CurvelDoc.cpp" />
+    <ClCompile Include=".\Curvel\CurvelDocTemplate.cpp" />
+    <ClCompile Include=".\Curvel\CurvelExporter.cpp" />
+    <ClCompile Include=".\Curvel\CurvelImporter.cpp" />
+    <ClCompile Include=".\Curvel\CurvelIndividualStationGrid.cpp" />
+    <ClCompile Include=".\Curvel\CurvelReportSpecification.cpp" />
+    <ClCompile Include=".\Curvel\CurvelReportSpecificationBuilder.cpp" />
+    <ClCompile Include=".\Curvel\CurvelReportWizard.cpp" />
+    <ClCompile Include=".\Curvel\CurvelReportWizardStep1.cpp" />
+    <ClCompile Include=".\Curvel\CurvelReportWizardStep2.cpp" />
+    <ClCompile Include=".\Curvel\CurvelReportWizardStep3.cpp" />
+    <ClCompile Include=".\Curvel\CurvelRptView.cpp" />
+    <ClCompile Include=".\Curvel\CurvelSkewLineGrid.cpp" />
+    <ClCompile Include=".\Curvel\CurvelStationRangeGrid.cpp" />
+    <ClCompile Include=".\Curvel\CurvelTitlePageBuilder.cpp" />
     <ClCompile Include="dllmain.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -592,58 +589,58 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       </PrecompiledHeader>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="GenCompChapterBuilder.cpp" />
-    <ClCompile Include="GenCompChildFrame.cpp" />
-    <ClCompile Include="GenCompDimensionGrid.cpp" />
-    <ClCompile Include="GenCompDlgBar.cpp" />
-    <ClCompile Include="GenCompDoc.cpp" />
-    <ClCompile Include="GenCompDocTemplate.cpp" />
-    <ClCompile Include="GenCompExporter.cpp" />
-    <ClCompile Include="GenCompRptView.cpp" />
-    <ClCompile Include="GenCompTitlePageBuilder.cpp" />
-    <ClCompile Include="GirCompChapterBuilder.cpp" />
-    <ClCompile Include="GirCompChildFrame.cpp" />
-    <ClCompile Include="GirCompDimensionGrid.cpp" />
-    <ClCompile Include="GirCompDlgBar.cpp" />
-    <ClCompile Include="GirCompDoc.cpp" />
-    <ClCompile Include="GirCompDocTemplate.cpp" />
-    <ClCompile Include="GirCompRptView.cpp" />
-    <ClCompile Include="GirCompTitlePageBuilder.cpp" />
-    <ClCompile Include="PGStableChildFrame.cpp" />
-    <ClCompile Include="PGStableDoc.cpp" />
-    <ClCompile Include="PGStableDocTemplate.cpp" />
-    <ClCompile Include="PGStableEffectivePrestressDlg.cpp" />
-    <ClCompile Include="PGStableExporter.cpp" />
-    <ClCompile Include="PGStableFormView.cpp" />
-    <ClCompile Include="PGStableFpeGrid.cpp" />
-    <ClCompile Include="PGStableGirderControl.cpp" />
-    <ClCompile Include="PGStableGirderSectionGrid.cpp" />
-    <ClCompile Include="PGStableGirderView.cpp" />
-    <ClCompile Include="PGStableHaulingCriteria.cpp" />
-    <ClCompile Include="PGStableHaulingDetailsChapterBuilder.cpp" />
-    <ClCompile Include="PGStableHaulingSummaryChapterBuilder.cpp" />
-    <ClCompile Include="PGStableHaulingView.cpp" />
-    <ClCompile Include="PGStableLiftingCriteria.cpp" />
-    <ClCompile Include="PGStableLiftingDetailsChapterBuilder.cpp" />
-    <ClCompile Include="PGStableLiftingSummaryChapterBuilder.cpp" />
-    <ClCompile Include="PGStableLiftingView.cpp" />
-    <ClCompile Include="PGStableModel.cpp" />
-    <ClCompile Include="PGStableNonprismaticGirder.cpp" />
-    <ClCompile Include="PGStablePointLoadGrid.cpp" />
-    <ClCompile Include="PGStablePrismaticGirder.cpp" />
-    <ClCompile Include="PGStableStrands.cpp" />
-    <ClCompile Include="PGStableStressPointGrid.cpp" />
-    <ClCompile Include="PGStableTabView.cpp" />
-    <ClCompile Include="PGStableTitlePageBuilder.cpp" />
-    <ClCompile Include="ResponseSpectra.cpp" />
-    <ClCompile Include="SpectraBuilder\SpectraValues.cpp" />
-    <ClCompile Include="SpectraChapterBuilder.cpp" />
-    <ClCompile Include="SpectraChildFrame.cpp" />
-    <ClCompile Include="SpectraDlgBar.cpp" />
-    <ClCompile Include="SpectraDoc.cpp" />
-    <ClCompile Include="SpectraDocTemplate.cpp" />
-    <ClCompile Include="SpectraRptView.cpp" />
-    <ClCompile Include="SpectraTitlePageBuilder.cpp" />
+    <ClCompile Include=".\GenComp\GenCompChapterBuilder.cpp" />
+    <ClCompile Include=".\GenComp\GenCompChildFrame.cpp" />
+    <ClCompile Include=".\GenComp\GenCompDimensionGrid.cpp" />
+    <ClCompile Include=".\GenComp\GenCompDlgBar.cpp" />
+    <ClCompile Include=".\GenComp\GenCompDoc.cpp" />
+    <ClCompile Include=".\GenComp\GenCompDocTemplate.cpp" />
+    <ClCompile Include=".\GenComp\GenCompExporter.cpp" />
+    <ClCompile Include=".\GenComp\GenCompRptView.cpp" />
+    <ClCompile Include=".\GenComp\GenCompTitlePageBuilder.cpp" />
+    <ClCompile Include=".\GirComp\GirCompChapterBuilder.cpp" />
+    <ClCompile Include=".\GirComp\GirCompChildFrame.cpp" />
+    <ClCompile Include=".\GirComp\GirCompDimensionGrid.cpp" />
+    <ClCompile Include=".\GirComp\GirCompDlgBar.cpp" />
+    <ClCompile Include=".\GirComp\GirCompDoc.cpp" />
+    <ClCompile Include=".\GirComp\GirCompDocTemplate.cpp" />
+    <ClCompile Include=".\GirComp\GirCompRptView.cpp" />
+    <ClCompile Include=".\GirComp\GirCompTitlePageBuilder.cpp" />
+    <ClCompile Include=".\PGStable\PGStableChildFrame.cpp" />
+    <ClCompile Include=".\PGStable\PGStableDoc.cpp" />
+    <ClCompile Include=".\PGStable\PGStableDocTemplate.cpp" />
+    <ClCompile Include=".\PGStable\PGStableEffectivePrestressDlg.cpp" />
+    <ClCompile Include=".\PGStable\PGStableExporter.cpp" />
+    <ClCompile Include=".\PGStable\PGStableFormView.cpp" />
+    <ClCompile Include=".\PGStable\PGStableFpeGrid.cpp" />
+    <ClCompile Include=".\PGStable\PGStableGirderControl.cpp" />
+    <ClCompile Include=".\PGStable\PGStableGirderSectionGrid.cpp" />
+    <ClCompile Include=".\PGStable\PGStableGirderView.cpp" />
+    <ClCompile Include=".\PGStable\PGStableHaulingCriteria.cpp" />
+    <ClCompile Include=".\PGStable\PGStableHaulingDetailsChapterBuilder.cpp" />
+    <ClCompile Include=".\PGStable\PGStableHaulingSummaryChapterBuilder.cpp" />
+    <ClCompile Include=".\PGStable\PGStableHaulingView.cpp" />
+    <ClCompile Include=".\PGStable\PGStableLiftingCriteria.cpp" />
+    <ClCompile Include=".\PGStable\PGStableLiftingDetailsChapterBuilder.cpp" />
+    <ClCompile Include=".\PGStable\PGStableLiftingSummaryChapterBuilder.cpp" />
+    <ClCompile Include=".\PGStable\PGStableLiftingView.cpp" />
+    <ClCompile Include=".\PGStable\PGStableModel.cpp" />
+    <ClCompile Include=".\PGStable\PGStableNonprismaticGirder.cpp" />
+    <ClCompile Include=".\PGStable\PGStablePointLoadGrid.cpp" />
+    <ClCompile Include=".\PGStable\PGStablePrismaticGirder.cpp" />
+    <ClCompile Include=".\PGStable\PGStableStrands.cpp" />
+    <ClCompile Include=".\PGStable\PGStableStressPointGrid.cpp" />
+    <ClCompile Include=".\PGStable\PGStableTabView.cpp" />
+    <ClCompile Include=".\PGStable\PGStableTitlePageBuilder.cpp" />
+    <ClCompile Include=".\Spectra\ResponseSpectra.cpp" />
+    <ClCompile Include=".\SpectraBuilder\SpectraValues.cpp" />
+    <ClCompile Include=".\Spectra\SpectraChapterBuilder.cpp" />
+    <ClCompile Include=".\Spectra\SpectraChildFrame.cpp" />
+    <ClCompile Include=".\Spectra\SpectraDlgBar.cpp" />
+    <ClCompile Include=".\Spectra\SpectraDoc.cpp" />
+    <ClCompile Include=".\Spectra\SpectraDocTemplate.cpp" />
+    <ClCompile Include=".\Spectra\SpectraRptView.cpp" />
+    <ClCompile Include=".\Spectra\SpectraTitlePageBuilder.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -652,13 +649,13 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UltColChapterBuilder.cpp" />
-    <ClCompile Include="UltColChildFrame.cpp" />
-    <ClCompile Include="UltColDlgBar.cpp" />
-    <ClCompile Include="UltColDoc.cpp" />
-    <ClCompile Include="UltColDocTemplate.cpp" />
-    <ClCompile Include="UltColTitlePageBuilder.cpp" />
-    <ClCompile Include="UltColView.cpp" />
+    <ClCompile Include=".\UltCol\UltColChapterBuilder.cpp" />
+    <ClCompile Include=".\UltCol\UltColChildFrame.cpp" />
+    <ClCompile Include=".\UltCol\UltColDlgBar.cpp" />
+    <ClCompile Include=".\UltCol\UltColDoc.cpp" />
+    <ClCompile Include=".\UltCol\UltColDocTemplate.cpp" />
+    <ClCompile Include=".\UltCol\UltColTitlePageBuilder.cpp" />
+    <ClCompile Include=".\UltCol\UltColView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BEToolbox.def" />
@@ -666,23 +663,23 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <None Include="BEToolbox.tip" />
     <None Include="BEToolboxComponentInfo.rgs" />
     <None Include="BEToolboxPlugin.rgs" />
-    <None Include="BoxGdrTool.rgs" />
-    <None Include="CurvelExporter.rgs" />
-    <None Include="CurvelImporter.rgs" />
-    <None Include="CurvelTool.rgs" />
-    <None Include="GenCompExporter.rgs" />
-    <None Include="GenCompTool.rgs" />
-    <None Include="GirCompTool.rgs" />
-    <None Include="PGStableExporter.rgs" />
-    <None Include="PGStableTool.rgs" />
+    <None Include=".\BoxGdr\BoxGdrTool.rgs" />
+    <None Include=".\Curvel\CurvelExporter.rgs" />
+    <None Include=".\Curvel\CurvelImporter.rgs" />
+    <None Include=".\Curvel\CurvelTool.rgs" />
+    <None Include=".\GenComp\GenCompExporter.rgs" />
+    <None Include=".\GenComp\GenCompTool.rgs" />
+    <None Include=".\GirComp\GirCompTool.rgs" />
+    <None Include=".\PGStable\PGStableExporter.rgs" />
+    <None Include=".\PGStable\PGStableTool.rgs" />
     <None Include="res\BoxGdr.emf" />
     <None Include="res\GirComp.emf" />
     <None Include="res\PrismaticStrandLayout.emf" />
     <None Include="res\StrandLayout.emf" />
     <None Include="res\Superelevation.emf" />
     <None Include="res\VertCurve.emf" />
-    <None Include="SpectraTool.rgs" />
-    <None Include="UltColTool.rgs" />
+    <None Include=".\Spectra\SpectraTool.rgs" />
+    <None Include=".\UltCol\UltColTool.rgs" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="BEToolbox.idl" />
@@ -703,97 +700,97 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include="BEToolboxVersion.h" />
     <ClInclude Include="BEToolbox_i.h" />
     <ClInclude Include="BETResources.h" />
-    <ClInclude Include="BoxGdrChapterBuilder.h" />
-    <ClInclude Include="BoxGdrChildFrame.h" />
-    <ClInclude Include="BoxGdrDimensionGrid.h" />
-    <ClInclude Include="BoxGdrDlgBar.h" />
-    <ClInclude Include="BoxGdrDoc.h" />
-    <ClInclude Include="BoxGdrDocTemplate.h" />
-    <ClInclude Include="BoxGdrRptView.h" />
-    <ClInclude Include="BoxGdrTitlePageBuilder.h" />
-    <ClInclude Include="CurvelChapterBuilder.h" />
-    <ClInclude Include="CurvelChildFrame.h" />
-    <ClInclude Include="CurvelDoc.h" />
-    <ClInclude Include="CurvelDocTemplate.h" />
-    <ClInclude Include="CurvelExporter.h" />
-    <ClInclude Include="CurvelImporter.h" />
-    <ClInclude Include="CurvelIndividualStationGrid.h" />
-    <ClInclude Include="CurvelReportSpecification.h" />
-    <ClInclude Include="CurvelReportSpecificationBuilder.h" />
-    <ClInclude Include="CurvelReportWizard.h" />
-    <ClInclude Include="CurvelReportWizardStep1.h" />
-    <ClInclude Include="CurvelReportWizardStep2.h" />
-    <ClInclude Include="CurvelReportWizardStep3.h" />
-    <ClInclude Include="CurvelRptView.h" />
-    <ClInclude Include="CurvelSkewLineGrid.h" />
-    <ClInclude Include="CurvelStationRangeGrid.h" />
-    <ClInclude Include="CurvelTitlePageBuilder.h" />
+    <ClInclude Include=".\BoxGdr\BoxGdrChapterBuilder.h" />
+    <ClInclude Include=".\BoxGdr\BoxGdrChildFrame.h" />
+    <ClInclude Include=".\BoxGdr\BoxGdrDimensionGrid.h" />
+    <ClInclude Include=".\BoxGdr\BoxGdrDlgBar.h" />
+    <ClInclude Include=".\BoxGdr\BoxGdrDoc.h" />
+    <ClInclude Include=".\BoxGdr\BoxGdrDocTemplate.h" />
+    <ClInclude Include=".\BoxGdr\BoxGdrRptView.h" />
+    <ClInclude Include=".\BoxGdr\BoxGdrTitlePageBuilder.h" />
+    <ClInclude Include=".\Curvel\CurvelChapterBuilder.h" />
+    <ClInclude Include=".\Curvel\CurvelChildFrame.h" />
+    <ClInclude Include=".\Curvel\CurvelDoc.h" />
+    <ClInclude Include=".\Curvel\CurvelDocTemplate.h" />
+    <ClInclude Include=".\Curvel\CurvelExporter.h" />
+    <ClInclude Include=".\Curvel\CurvelImporter.h" />
+    <ClInclude Include=".\Curvel\CurvelIndividualStationGrid.h" />
+    <ClInclude Include=".\Curvel\CurvelReportSpecification.h" />
+    <ClInclude Include=".\Curvel\CurvelReportSpecificationBuilder.h" />
+    <ClInclude Include=".\Curvel\CurvelReportWizard.h" />
+    <ClInclude Include=".\Curvel\CurvelReportWizardStep1.h" />
+    <ClInclude Include=".\Curvel\CurvelReportWizardStep2.h" />
+    <ClInclude Include=".\Curvel\CurvelReportWizardStep3.h" />
+    <ClInclude Include=".\Curvel\CurvelRptView.h" />
+    <ClInclude Include=".\Curvel\CurvelSkewLineGrid.h" />
+    <ClInclude Include=".\Curvel\CurvelStationRangeGrid.h" />
+    <ClInclude Include=".\Curvel\CurvelTitlePageBuilder.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="Documentation\BEToolbox.hh" />
-    <ClInclude Include="GenCompChapterBuilder.h" />
-    <ClInclude Include="GenCompChildFrame.h" />
-    <ClInclude Include="GenCompDimensionGrid.h" />
-    <ClInclude Include="GenCompDlgBar.h" />
-    <ClInclude Include="GenCompDoc.h" />
-    <ClInclude Include="GenCompDocTemplate.h" />
-    <ClInclude Include="GenCompExporter.h" />
-    <ClInclude Include="GenCompRptView.h" />
-    <ClInclude Include="GenCompTitlePageBuilder.h" />
-    <ClInclude Include="GirCompChapterBuilder.h" />
-    <ClInclude Include="GirCompChildFrame.h" />
-    <ClInclude Include="GirCompDimensionGrid.h" />
-    <ClInclude Include="GirCompDlgBar.h" />
-    <ClInclude Include="GirCompDoc.h" />
-    <ClInclude Include="GirCompDocTemplate.h" />
-    <ClInclude Include="GirCompRptView.h" />
-    <ClInclude Include="GirCompTitlePageBuilder.h" />
-    <ClInclude Include="PGStableChildFrame.h" />
-    <ClInclude Include="PGStableDoc.h" />
-    <ClInclude Include="PGStableDocTemplate.h" />
-    <ClInclude Include="PGStableEffectivePrestressDlg.h" />
-    <ClInclude Include="PGStableExporter.h" />
-    <ClInclude Include="PGStableFormView.h" />
-    <ClInclude Include="PGStableFpeGrid.h" />
-    <ClInclude Include="PGStableGirderControl.h" />
-    <ClInclude Include="PGStableGirderSectionGrid.h" />
-    <ClInclude Include="PGStableGirderView.h" />
-    <ClInclude Include="PGStableHaulingCriteria.h" />
-    <ClInclude Include="PGStableHaulingDetailsChapterBuilder.h" />
-    <ClInclude Include="PGStableHaulingSummaryChapterBuilder.h" />
-    <ClInclude Include="PGStableHaulingView.h" />
-    <ClInclude Include="PGStableLiftingCriteria.h" />
-    <ClInclude Include="PGStableLiftingDetailsChapterBuilder.h" />
-    <ClInclude Include="PGStableLiftingSummaryChapterBuilder.h" />
-    <ClInclude Include="PGStableLiftingView.h" />
-    <ClInclude Include="PGStableModel.h" />
-    <ClInclude Include="PGStableNonprismaticGirder.h" />
-    <ClInclude Include="PGStablePluginCATID.h" />
-    <ClInclude Include="PGStablePointLoadGrid.h" />
-    <ClInclude Include="PGStablePrismaticGirder.h" />
-    <ClInclude Include="PGStableStrands.h" />
-    <ClInclude Include="PGStableStressPointGrid.h" />
-    <ClInclude Include="PGStableTabView.h" />
-    <ClInclude Include="PGStableTitlePageBuilder.h" />
+    <ClInclude Include=".\GenComp\GenCompChapterBuilder.h" />
+    <ClInclude Include=".\GenComp\GenCompChildFrame.h" />
+    <ClInclude Include=".\GenComp\GenCompDimensionGrid.h" />
+    <ClInclude Include=".\GenComp\GenCompDlgBar.h" />
+    <ClInclude Include=".\GenComp\GenCompDoc.h" />
+    <ClInclude Include=".\GenComp\GenCompDocTemplate.h" />
+    <ClInclude Include=".\GenComp\GenCompExporter.h" />
+    <ClInclude Include=".\GenComp\GenCompRptView.h" />
+    <ClInclude Include=".\GenComp\GenCompTitlePageBuilder.h" />
+    <ClInclude Include=".\GirComp\GirCompChapterBuilder.h" />
+    <ClInclude Include=".\GirComp\GirCompChildFrame.h" />
+    <ClInclude Include=".\GirComp\GirCompDimensionGrid.h" />
+    <ClInclude Include=".\GirComp\GirCompDlgBar.h" />
+    <ClInclude Include=".\GirComp\GirCompDoc.h" />
+    <ClInclude Include=".\GirComp\GirCompDocTemplate.h" />
+    <ClInclude Include=".\GirComp\GirCompRptView.h" />
+    <ClInclude Include=".\GirComp\GirCompTitlePageBuilder.h" />
+    <ClInclude Include=".\PGStable\PGStableChildFrame.h" />
+    <ClInclude Include=".\PGStable\PGStableDoc.h" />
+    <ClInclude Include=".\PGStable\PGStableDocTemplate.h" />
+    <ClInclude Include=".\PGStable\PGStableEffectivePrestressDlg.h" />
+    <ClInclude Include=".\PGStable\PGStableExporter.h" />
+    <ClInclude Include=".\PGStable\PGStableFormView.h" />
+    <ClInclude Include=".\PGStable\PGStableFpeGrid.h" />
+    <ClInclude Include=".\PGStable\PGStableGirderControl.h" />
+    <ClInclude Include=".\PGStable\PGStableGirderSectionGrid.h" />
+    <ClInclude Include=".\PGStable\PGStableGirderView.h" />
+    <ClInclude Include=".\PGStable\PGStableHaulingCriteria.h" />
+    <ClInclude Include=".\PGStable\PGStableHaulingDetailsChapterBuilder.h" />
+    <ClInclude Include=".\PGStable\PGStableHaulingSummaryChapterBuilder.h" />
+    <ClInclude Include=".\PGStable\PGStableHaulingView.h" />
+    <ClInclude Include=".\PGStable\PGStableLiftingCriteria.h" />
+    <ClInclude Include=".\PGStable\PGStableLiftingDetailsChapterBuilder.h" />
+    <ClInclude Include=".\PGStable\PGStableLiftingSummaryChapterBuilder.h" />
+    <ClInclude Include=".\PGStable\PGStableLiftingView.h" />
+    <ClInclude Include=".\PGStable\PGStableModel.h" />
+    <ClInclude Include=".\PGStable\PGStableNonprismaticGirder.h" />
+    <ClInclude Include=".\PGStable\PGStablePluginCATID.h" />
+    <ClInclude Include=".\PGStable\PGStablePointLoadGrid.h" />
+    <ClInclude Include=".\PGStable\PGStablePrismaticGirder.h" />
+    <ClInclude Include=".\PGStable\PGStableStrands.h" />
+    <ClInclude Include=".\PGStable\PGStableStressPointGrid.h" />
+    <ClInclude Include=".\PGStable\PGStableTabView.h" />
+    <ClInclude Include=".\PGStable\PGStableTitlePageBuilder.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="ResponseSpectra.h" />
-    <ClInclude Include="SpectraBuilder\SpectraValues.h" />
-    <ClInclude Include="SpectraChapterBuilder.h" />
-    <ClInclude Include="SpectraChildFrame.h" />
-    <ClInclude Include="SpectraDlgBar.h" />
-    <ClInclude Include="SpectraDoc.h" />
-    <ClInclude Include="SpectraDocTemplate.h" />
-    <ClInclude Include="SpectraRptView.h" />
-    <ClInclude Include="SpectraTitlePageBuilder.h" />
+    <ClInclude Include=".\Spectra\ResponseSpectra.h" />
+    <ClInclude Include=".\SpectraBuilder\SpectraValues.h" />
+    <ClInclude Include=".\Spectra\SpectraChapterBuilder.h" />
+    <ClInclude Include=".\Spectra\SpectraChildFrame.h" />
+    <ClInclude Include=".\Spectra\SpectraDlgBar.h" />
+    <ClInclude Include=".\Spectra\SpectraDoc.h" />
+    <ClInclude Include=".\Spectra\SpectraDocTemplate.h" />
+    <ClInclude Include=".\Spectra\SpectraRptView.h" />
+    <ClInclude Include=".\Spectra\SpectraTitlePageBuilder.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="ToolImpl.h" />
     <ClInclude Include="Tools.h" />
-    <ClInclude Include="UltColChapterBuilder.h" />
-    <ClInclude Include="UltColChildFrame.h" />
-    <ClInclude Include="UltColDlgBar.h" />
-    <ClInclude Include="UltColDoc.h" />
-    <ClInclude Include="UltColDocTemplate.h" />
-    <ClInclude Include="UltColTitlePageBuilder.h" />
-    <ClInclude Include="UltColView.h" />
+    <ClInclude Include=".\UltCol\UltColChapterBuilder.h" />
+    <ClInclude Include=".\UltCol\UltColChildFrame.h" />
+    <ClInclude Include=".\UltCol\UltColDlgBar.h" />
+    <ClInclude Include=".\UltCol\UltColDoc.h" />
+    <ClInclude Include=".\UltCol\UltColDocTemplate.h" />
+    <ClInclude Include=".\UltCol\UltColTitlePageBuilder.h" />
+    <ClInclude Include=".\UltCol\UltColView.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\BEToolbox.ico" />

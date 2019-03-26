@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // SpectraBuilder
-// Copyright © 1999-2018  Washington State Department of Transportation
+// Copyright © 1999-2019  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -41,13 +41,23 @@
 #define SPECTRUM_STEP_SIZE  0.2 // report spectrum data step size
 
 
+typedef enum SpecificationType
+{
+   WSDOT_BDM = 0, // WSDOT Bridge Design Manual
+   AASHTO_LRFD = 1, // AASHTO LRFD Bridge Design Specifications, 8th Edition
+   AASHTO_SEISMIC = 2, // AASHTO Guide Specifications for LRFD Seismic Bridge Design, 2nd Edition, 2011
+   nSpecTypes = 3  // this is always last
+} SpecificationType;
+
 typedef enum SiteClass
 {
    scA,
    scB,
    scC,
    scD,
-   scE
+   scE,
+   scF,
+   nSiteClasses
 } SiteClass;
 
 typedef struct SpectralValues

@@ -9,6 +9,7 @@ Input Parameters
 
 Item | Description
 -----|------------
+Specification | Select the applicable specification for your project.
 Site Coordinates | Enter that location of the site with decimal values of latitude and longitude. Site coordinates are limited to 24.6&deg; - 50.0&deg; N and 65&deg; - 125&deg; W.
 Site Soil Classification | Use the drop down list to select the site soil classification.
 [Update] | Press to update the design response spectrum.

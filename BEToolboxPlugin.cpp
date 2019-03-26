@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2018  Washington State Department of Transportation
+// Copyright © 1999-2019  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 
 #include "stdafx.h"
 #include "BEToolboxPlugin.h"
-#include "PGStablePluginCATID.h"
+#include ".\PGStable\PGStablePluginCATID.h"
 #include <EAF\EAFApp.h>
 
 #include <MFCTools\VersionInfo.h>

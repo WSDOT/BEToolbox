@@ -30,6 +30,7 @@
     <ProjectGuid>{3004A4E6-3542-40B1-9B15-331862819988}</ProjectGuid>
     <RootNamespace>BEToolboxXML</RootNamespace>
     <Keyword>MFCDLLProj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="Configuration">
@@ -82,46 +83,46 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\XSD.props" />
     <Import Project="..\..\BridgeLink\BridgeLink.props" />
     <Import Project="..\..\WBFL\WBFL.props" />
+    <Import Project="..\..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\XSD.props" />
     <Import Project="..\..\BridgeLink\BridgeLink.props" />
     <Import Project="..\..\WBFL\WBFL.props" />
+    <Import Project="..\..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\XSD.props" />
     <Import Project="..\..\BridgeLink\BridgeLink.props" />
     <Import Project="..\..\WBFL\WBFL.props" />
+    <Import Project="..\..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\XSD.props" />
     <Import Project="..\..\BridgeLink\BridgeLink.props" />
     <Import Project="..\..\WBFL\WBFL.props" />
+    <Import Project="..\..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\XSD.props" />
     <Import Project="..\..\BridgeLink\BridgeLink.props" />
     <Import Project="..\..\WBFL\WBFL.props" />
+    <Import Project="..\..\WBFL\XSD.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\XSD.props" />
     <Import Project="..\..\BridgeLink\BridgeLink.props" />
     <Import Project="..\..\WBFL\WBFL.props" />
+    <Import Project="..\..\WBFL\XSD.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -129,7 +130,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -137,7 +138,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -145,7 +146,7 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -153,15 +154,15 @@
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
-    <OutDir>$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules />
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
-    <OutDir>\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -171,7 +172,10 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep>
       <Message />
-      <Command />
+      <Command>xcopy /y /d .\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1D.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\</Command>
+      <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11D.dll</Outputs>
     </CustomBuildStep>
     <CXX_Tree_Mapping_Rule>
       <AdditionalOptions> --hxx-prologue "#include \"BEToolboxXML.h\"" --cxx-prologue "#include \"stdafx.h\""</AdditionalOptions>
@@ -181,8 +185,8 @@
     </CXX_Tree_Mapping_Rule>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -191,8 +195,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xalan-C_1D.lib;xerces-c_3D.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>.\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1D.lib;.\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -204,7 +208,10 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CustomBuildStep>
       <Message />
-      <Command />
+      <Command>xcopy /y /d .\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1D.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\</Command>
+      <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11D.dll</Outputs>
     </CustomBuildStep>
     <CXX_Tree_Mapping_Rule>
       <AdditionalOptions> --hxx-prologue "#include \"BEToolboxXML.h\"" --cxx-prologue "#include \"stdafx.h\""</AdditionalOptions>
@@ -217,15 +224,15 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xalan-C_1D.lib;xerces-c_3D.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>.\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1D.lib;.\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -238,7 +245,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
       <Message />
-      <Command />
+      <Command>xcopy /y /d .\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+</Command>
+      <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11.dll</Outputs>
     </CustomBuildStep>
     <CXX_Tree_Mapping_Rule>
       <AdditionalOptions> --hxx-prologue "#include \"BEToolboxXML.h\"" --cxx-prologue "#include \"stdafx.h\""</AdditionalOptions>
@@ -247,8 +258,8 @@
       <ExportSymbol>BETOOLBOXXMLCLASS</ExportSymbol>
     </CXX_Tree_Mapping_Rule>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -256,8 +267,8 @@
       <DebugInformationFormat />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>.\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1.lib;.\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -269,7 +280,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CustomBuildStep>
       <Message />
-      <Command />
+      <Command>xcopy /y /d .\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+</Command>
+      <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11.dll</Outputs>
     </CustomBuildStep>
     <CXX_Tree_Mapping_Rule>
       <AdditionalOptions> --hxx-prologue "#include \"BEToolboxXML.h\"" --cxx-prologue "#include \"stdafx.h\""</AdditionalOptions>
@@ -281,8 +296,8 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -290,8 +305,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>.\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1.lib;.\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
       <ShowProgress>NotSet</ShowProgress>
@@ -315,8 +330,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -324,8 +339,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X86-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X86-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -350,8 +365,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;\ARP\WBFL\Include;\ARP\WBFL\Include\$(Platform);\ARP\OpenBridgeML\Include;\ARP\OpenBridgeML\Schema;\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -359,8 +374,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;OpenBridgeML.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>\ARP\WBFL\RegFreeCOM\$(Platform)\$(Configuration);\ARP\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);\Apache\xalan-builds\XALANCPKG-11-31-X64-VC100\lib;\Apache\xalan-builds\XERCESCPKG-31-X64-VC100\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -414,6 +429,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\CodeSynthesis XSD 3.3\etc\vc-10.0\xsd-cxx-tree.targets" />
+    <Import Project="$(XSDDIR)\etc\vc-10.0\xsd-cxx-tree.targets" />
   </ImportGroup>
 </Project>

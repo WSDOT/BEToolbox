@@ -31,14 +31,14 @@ Wind Loading | Select the wind loading type and enter the loading parameters. Fo
 Centrifugal Force | Select the centrifugal force type; Favorable or Adverse. Favorable forces act away from the center of the turning movement while Adverse forces act inwards.
 Speed | Enter the turning speed
 Turning Radius | Enter the turning radius
-Camber | Select the method for accounting for camber. For the offset method, the center of gravity of the girder is adusted by a percentage to allow for camber. For the direct method, an actual camber is input and a camber multiplier can be specified
+Vertical Camber | Enter the camber and a camber multiplier, if applicable.
 Lateral Camber | Asymmetric girders can have lateral deflections due to the geometry of the section. Prestressing that is not symmetric with respect to the vertical axis of the girder can also have lateral deflection. Enter the lateral camber if applicable.
 Haul Truck | Select a haul truck from the drop down list or select "Define haul truck" to input the haul truck parameters
 Height of girder bottom above roadway | Enter the location of the bottom of the girder from the roadway surface directly above the roll center
 Height of roll axis above roadway | Enter the location of the roll axis above the roadway surface
 Truck Roll Stiffness | Enter the roll stiffness of the haul truck
 Truck Width | Enter the center to center width of the truck wheels
-Sweep Tolerance | Enter the girder lateral sweep tolerance
+Sweep Tolerance | Enter the girder lateral sweep tolerance. Lateral sweep is added to lateral camber.
 Support Placement Tolerance | Enter the lateral tolerance for placement of the bunking devices.
 
 > NOTE: Centrifugal forces are only applied to the Max. Superelevation case
@@ -50,7 +50,7 @@ Item | Description
 -----|----------
 Factors of Safety | Enter the factors of safety against cracking and failure
 Evaluate stresses | Select the method for computing and evaluating stresses in the girder. Stresses computed for a plumb girder do not account for the tilt of the girder into its equilibrium position. Stresses computed for a tilted girder account for the girder tilting into its equilibrium position.
-Compression | Enter the coefficient for computing allowable compression
+Compression | Enter the coefficients for computing allowable compression. The general compression limit is used for compression stress in the general bending condition (girder weight plus prestress). The lateral bending compression limit is used for peak stresses at the section extremities when lateral bending due to girder tilt, wind, and centrifugal force are considered.
 Tension | Enter the coefficients for computing allowable tension with and without sufficient bonded reinforcement. There are allowable tension limits for the Normal Crown Slope and Maximum Superelevation cases
 Max. distance between bunk points | Enter the maximum permissible distance between bunk points
 Max. leading overhang | Enter the maximum leading overhanging
