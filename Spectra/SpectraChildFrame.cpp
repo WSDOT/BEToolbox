@@ -64,6 +64,7 @@ BEGIN_MESSAGE_MAP(CSpectraChildFrame, CEAFChildFrame)
    ON_BN_CLICKED(IDC_EXPORT, OnExport)
 	ON_MESSAGE(WM_HELP, OnCommandHelp)
    ON_CBN_SELCHANGE(IDC_SITE_CLASS, OnSiteClassChanged)
+   ON_CBN_SELCHANGE(IDC_SPECIFICATION, OnSpecificationChanged)
    ON_EN_CHANGE(IDC_LATITUDE, OnLatitudeChanged)
    ON_EN_CHANGE(IDC_LONGITUDE, OnLongitudeChanged)
 END_MESSAGE_MAP()
@@ -131,9 +132,10 @@ void CSpectraChildFrame::OnExport()
    Float64 lat,lng;
    pDoc->GetLocation(&lat,&lng);
    SiteClass siteClass = pDoc->GetSiteClass();
+   SpecificationType specType = pDoc->GetSpecification();
 
    CResponseSpectra spectra;
-   Uint32 result = pDoc->GetResponseSpectra(lat,lng,siteClass,&spectra);
+   Uint32 result = pDoc->GetResponseSpectra(specType,lat,lng,siteClass,&spectra);
    if ( result != SPECTRA_OK )
    {
       AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -226,6 +228,11 @@ void CSpectraChildFrame::OnLatitudeChanged()
 }
 
 void CSpectraChildFrame::OnLongitudeChanged()
+{
+   OnUpdate();
+}
+
+void CSpectraChildFrame::OnSpecificationChanged()
 {
    OnUpdate();
 }

@@ -39,6 +39,7 @@ protected:
 
    afx_msg void OnUpdate();
    afx_msg void OnExport();
+   afx_msg void OnSpecificationChanged();
    afx_msg void OnSiteClassChanged();
    afx_msg void OnLatitudeChanged();
    afx_msg void OnLongitudeChanged();
