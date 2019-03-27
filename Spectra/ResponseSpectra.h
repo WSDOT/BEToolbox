@@ -46,7 +46,7 @@ public:
    Float64 GetAs() const;
    Float64 GetSds() const;
    Float64 GetSd1() const;
-   const TCHAR* GetSDC() const;
+   LPCTSTR GetSDC(SpecificationType specType) const;
    Float64 GetSa(Float64 time) const;
    std::vector<std::pair<Float64,Float64>> GetSpectraValues(Float64 Tmax,Float64 tStep);
 
