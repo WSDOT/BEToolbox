@@ -111,24 +111,24 @@ Float64 CResponseSpectra::GetSd1() const
    return m_Fv*m_S1;
 }
 
-const TCHAR* CResponseSpectra::GetSDC() const
+LPCTSTR CResponseSpectra::GetSDC(SpecificationType specType) const
 {
    Float64 Sd1 = GetSd1();
    if ( Sd1 < 0.15 )
    {
-      return _T("A");
+      return specType == AASHTO_LRFD ? _T("1") : _T("A");
    }
    else if ( 0.15 <= Sd1 && Sd1 < 0.30 )
    {
-      return _T("B");
+      return specType == AASHTO_LRFD ? _T("2") : _T("B");
    }
    else if ( 0.30 <= Sd1 && Sd1 < 0.50 )
    {
-      return _T("C");
+      return specType == AASHTO_LRFD ? _T("3") : _T("C");
    }
    else
    {
-      return _T("D");
+      return specType == AASHTO_LRFD ? _T("4") : _T("D");
    }
 }
 

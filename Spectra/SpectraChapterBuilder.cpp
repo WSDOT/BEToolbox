@@ -294,40 +294,63 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
 
    (*pPara) << pTable << rptNewLine;
    (*pTable)(0,0) << Sub2(_T("S"),_T("D1"));
-   (*pTable)(0,1) << _T("SDC");
+   if (specType == AASHTO_LRFD)
+   {
+      (*pTable)(0, 1) << _T("Zone");
+   }
+   else
+   {
+      (*pTable)(0, 1) << _T("SDC");
+   }
 
    (*pTable)(1,0) << Sub2(_T("S"),_T("D1")) << _T(" < 0.15");
    if (specType == AASHTO_LRFD)
+   {
       (*pTable)(1, 1) << _T("1");
+   }
    else
+   {
       (*pTable)(1, 1) << _T("A");
+   }
 
 
    (*pTable)(2,0) << _T("0.15 ") << symbol(LTE) << _T(" ") << Sub2(_T("S"),_T("D1")) << _T(" < 0.30");
    if (specType == AASHTO_LRFD)
-      (*pTable)(2, 1) << _T("2");
-   else
-      (*pTable)(2, 1) << _T("B");
-
-   (*pTable)(3,0) << _T("0.30 ") << symbol(LTE) << _T(" ") << Sub2(_T("S"),_T("D1")) << _T(" < 0.50");
-   if (specType == AASHTO_LRFD)
-      (*pTable)(3, 1) << _T("3");
-   else
-      (*pTable)(3, 1) << _T("C");
-
-   (*pTable)(4,0) << _T("0.50 ") << symbol(LTE) << _T(" ") << Sub2(_T("S"),_T("D1"));
-   if (specType == AASHTO_LRFD)
-      (*pTable)(4, 1) << _T("4");
-   else
-      (*pTable)(4, 1) << _T("D");
-
-   if (specType == AASHTO_LRFD)
    {
-      (*pPara) << _T("Seismic Performance Zone = ") << spectra.GetSDC() << rptNewLine;
+      (*pTable)(2, 1) << _T("2");
    }
    else
    {
-      (*pPara) << _T("Seismic Design Category (SDC) = ") << spectra.GetSDC() << rptNewLine;
+      (*pTable)(2, 1) << _T("B");
+   }
+
+   (*pTable)(3,0) << _T("0.30 ") << symbol(LTE) << _T(" ") << Sub2(_T("S"),_T("D1")) << _T(" < 0.50");
+   if (specType == AASHTO_LRFD)
+   {
+      (*pTable)(3, 1) << _T("3");
+   }
+   else
+   {
+      (*pTable)(3, 1) << _T("C");
+   }
+
+   (*pTable)(4,0) << _T("0.50 ") << symbol(LTE) << _T(" ") << Sub2(_T("S"),_T("D1"));
+   if (specType == AASHTO_LRFD)
+   {
+      (*pTable)(4, 1) << _T("4");
+   }
+   else
+   {
+      (*pTable)(4, 1) << _T("D");
+   }
+
+   if (specType == AASHTO_LRFD)
+   {
+      (*pPara) << _T("Seismic Performance Zone = ") << spectra.GetSDC(specType) << rptNewLine;
+   }
+   else
+   {
+      (*pPara) << _T("Seismic Design Category (SDC) = ") << spectra.GetSDC(specType) << rptNewLine;
    }
 
    (*pPara) << rptNewLine;
