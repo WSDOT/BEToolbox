@@ -17,6 +17,8 @@ BEToolbox tools have a plug-in architecture. This makes it easy for third-partie
 ## Getting Started
 BEToolbox extends the capabilities of the [BridgeLink](https://github.com/WSDOT/BridgeLink) application. BridgeLink must be installed on your machine to use the BEToolbox.
 
+BEToolbox extends the capabilities of the [BridgeLink](https://github.com/WSDOT/BridgeLink) bridge engineering suite of tools by adding light weight engineering tools. This repository holds the source code for the BEToolbox application. If you are looking to download and use BEToolbox, download and install the BridgeLink bridge engineering suite from [WSDOT](http://www.wsdot.wa.gov) at [http://www.wsdot.wa.gov/eesc/bridge/software](http://www.wsdot.wa.gov/eesc/bridge/software).
+
 
 ## Authors
 
