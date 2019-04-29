@@ -53,11 +53,11 @@ END_COM_MAP()
 
 // IPGSDataImporter
 public:
-   STDMETHOD(Init)(UINT nCmdID);
-   STDMETHOD(GetMenuText)(/*[out,retval]*/BSTR*  bstrText) const;
-   STDMETHOD(GetBitmapHandle)(/*[out]*/HBITMAP* phBmp) const;
-   STDMETHOD(GetCommandHintText)(BSTR*  bstrText) const;
-   STDMETHOD(Import)(/*[in]*/IBroker* pBroker);
+   STDMETHOD(Init)(UINT nCmdID) override;
+   STDMETHOD(GetMenuText)(/*[out,retval]*/BSTR*  bstrText) const override;
+   STDMETHOD(GetBitmapHandle)(/*[out]*/HBITMAP* phBmp) const override;
+   STDMETHOD(GetCommandHintText)(BSTR*  bstrText) const override;
+   STDMETHOD(Import)(/*[in]*/IBroker* pBroker) override;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(CurvelImporter), CCurvelImporter)
