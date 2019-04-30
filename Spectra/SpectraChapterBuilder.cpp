@@ -96,7 +96,15 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << _T("Site Coordinates (Latitude,Longitude): ") << lat << _T("° N, ") << -lng << _T("° W") << rptNewLine;
    (*pPara) << _T("Site Soil Classification: ") << _T("Site Class ") << strSiteClass[siteClass] << _T(" - ") << m_pDoc->GetSiteClassDescription(siteClass) << rptNewLine;
    (*pPara) << rptNewLine;
-   (*pPara) << _T("Seismic hazard maps are for Site Class B. Adjustments for other Site Classes are made as needed.") << rptNewLine;
+
+   if (specType == WSDOT_BDM)
+   {
+      (*pPara) << _T("Seismic hazard maps are for sites at the boundary of Site Classes B and C, which is ") << Sub2(Overline(_T("v")),_T("s")) << _T(" = 2500 ft/s (760 m/s). Adjustments for other Site Classes are made as needed.") << rptNewLine;
+   }
+   else
+   {
+      (*pPara) << _T("Seismic hazard maps are for Site Class B. Adjustments for other Site Classes are made as needed.") << rptNewLine;
+   }
 
    rptRcTable* pTable = rptStyleManager::CreateDefaultTable(3);
    (*pPara) << pTable << rptNewLine;
@@ -108,16 +116,28 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pTable)(row,0) << _T("0.0");
    (*pTable)(row,1) << scalar.SetValue(spectra.GetPGA());
    (*pTable)(row,2) << _T("PGA - Site Class B");
+   if (specType == WSDOT_BDM)
+   {
+      (*pTable)(row, 2) << _T("/C Boundary");
+   }
    row++;
 
    (*pTable)(row,0) << _T("0.2");
    (*pTable)(row,1) << scalar.SetValue(spectra.GetSs());
    (*pTable)(row,2) << Sub2(_T("S"),_T("s")) << _T(" - Site Class B");
+   if (specType == WSDOT_BDM)
+   {
+      (*pTable)(row, 2) << _T("/C Boundary");
+   }
    row++;
 
    (*pTable)(row,0) << _T("1.0");
    (*pTable)(row,1) << scalar.SetValue(spectra.GetS1());
    (*pTable)(row,2) << Sub2(_T("S"),_T("1")) << _T(" - Site Class B");
+   if (specType == WSDOT_BDM)
+   {
+      (*pTable)(row, 2) << _T("/C Boundary");
+   }
    row++;
 
 
@@ -126,7 +146,13 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << _T("Values of Site Coefficient, ") << Sub2(_T("F"), _T("pga")) << _T(", for Peak Ground Acceleration") << rptNewLine;
    rptRcTable* pZeroPeriodTable = rptStyleManager::CreateDefaultTable(nColumns);
    (*pPara) << pZeroPeriodTable << rptNewLine;
-   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and PGA = ") << scalar.SetValue(spectra.GetPGA()) << _T(", ") << Sub2(_T("F"), _T("pga")) << _T(" = ") << scalar.SetValue(spectra.GetFpga()) << rptNewLine;
+   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass];
+   if (specType != WSDOT_BDM)
+   {
+      (*pPara) << _T(" and PGA = ") << scalar.SetValue(spectra.GetPGA());
+   }
+   (*pPara) << _T(", ") << Sub2(_T("F"), _T("pga")) << _T(" = ") << scalar.SetValue(spectra.GetFpga()) << rptNewLine;
+
    (*pPara) << rptNewLine;
 
    for ( ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++ )
@@ -162,7 +188,12 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << _T("Values for Site Coefficient, ") << Sub2(_T("F"), _T("a")) << _T(", for 0.2 sec Period Spectral Acceleration") << rptNewLine;
    rptRcTable* pShortPeriodTable = rptStyleManager::CreateDefaultTable(nColumns);
    (*pPara) << pShortPeriodTable << rptNewLine;
-   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and ") << Sub2(_T("S"), _T("s")) << _T(" = ") << scalar.SetValue(spectra.GetSs()) << _T(", ") << Sub2(_T("F"), _T("a")) << _T(" = ") << scalar.SetValue(spectra.GetFa()) << rptNewLine;
+   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass];
+   if (specType != WSDOT_BDM)
+   {
+      (*pPara) << _T(" and ") << Sub2(_T("S"), _T("s")) << _T(" = ") << scalar.SetValue(spectra.GetSs());
+   }
+   (*pPara) << _T(", ") << Sub2(_T("F"), _T("a")) << _T(" = ") << scalar.SetValue(spectra.GetFa()) << rptNewLine;
    (*pPara) << rptNewLine;
 
    for (ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++)
@@ -195,7 +226,12 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << _T("Values of Site Coefficient, ") << Sub2(_T("F"), _T("v")) << _T(", for 1.0 sec Period Spectral Acceleration") << rptNewLine;
    rptRcTable* pLongPeriodTable = rptStyleManager::CreateDefaultTable(nColumns);
    (*pPara) << pLongPeriodTable << rptNewLine;
-   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass] << _T(" and ") << Sub2(_T("S"), _T("1")) << _T(" = ") << scalar.SetValue(spectra.GetS1()) << _T(", ") << Sub2(_T("F"), _T("v")) << _T(" = ") << scalar.SetValue(spectra.GetFv()) << rptNewLine;
+   (*pPara) << _T("For Site Class ") << strSiteClass[siteClass];
+   if (specType != WSDOT_BDM)
+   {
+      (*pPara) << _T(" and ") << Sub2(_T("S"), _T("1")) << _T(" = ") << scalar.SetValue(spectra.GetS1());
+   }
+   (*pPara) << _T(", ") << Sub2(_T("F"), _T("v")) << _T(" = ") << scalar.SetValue(spectra.GetFv()) << rptNewLine;
    (*pPara) << rptNewLine;
 
    for (ColumnIndexType colIdx = 0; colIdx < nColumns; colIdx++)
@@ -246,14 +282,14 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
       col = 0;
       const mathPwLinearFunction2dUsingPoints* pShortPeriodSiteFactors = m_pDoc->GetShortPeriodSiteFactors(specType, thisSiteClass);
       (*pShortPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
-      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.1));
-      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.2));
-      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.3));
-      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.4));
-      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.5));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.25));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.50));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.75));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(1.00));
+      (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(1.25));
       if (specType == WSDOT_BDM)
       {
-         (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.6));
+         (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(1.50));
       }
 
       col = 0;
