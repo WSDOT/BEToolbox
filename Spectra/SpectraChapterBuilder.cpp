@@ -96,7 +96,15 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << _T("Site Coordinates (Latitude,Longitude): ") << lat << _T("° N, ") << -lng << _T("° W") << rptNewLine;
    (*pPara) << _T("Site Soil Classification: ") << _T("Site Class ") << strSiteClass[siteClass] << _T(" - ") << m_pDoc->GetSiteClassDescription(siteClass) << rptNewLine;
    (*pPara) << rptNewLine;
-   (*pPara) << _T("Seismic hazard maps are for Site Class B. Adjustments for other Site Classes are made as needed.") << rptNewLine;
+
+   if (specType == WSDOT_BDM)
+   {
+      (*pPara) << _T("Seismic hazard maps are for sites at the boundary of Site Classes B and C, which is ") << Sub2(Overline(_T("v")),_T("s")) << _T(" = 2500 ft/s (760 m/s). Adjustments for other Site Classes are made as needed.") << rptNewLine;
+   }
+   else
+   {
+      (*pPara) << _T("Seismic hazard maps are for Site Class B. Adjustments for other Site Classes are made as needed.") << rptNewLine;
+   }
 
    rptRcTable* pTable = rptStyleManager::CreateDefaultTable(3);
    (*pPara) << pTable << rptNewLine;
@@ -108,16 +116,28 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pTable)(row,0) << _T("0.0");
    (*pTable)(row,1) << scalar.SetValue(spectra.GetPGA());
    (*pTable)(row,2) << _T("PGA - Site Class B");
+   if (specType == WSDOT_BDM)
+   {
+      (*pTable)(row, 2) << _T("/C Boundary");
+   }
    row++;
 
    (*pTable)(row,0) << _T("0.2");
    (*pTable)(row,1) << scalar.SetValue(spectra.GetSs());
    (*pTable)(row,2) << Sub2(_T("S"),_T("s")) << _T(" - Site Class B");
+   if (specType == WSDOT_BDM)
+   {
+      (*pTable)(row, 2) << _T("/C Boundary");
+   }
    row++;
 
    (*pTable)(row,0) << _T("1.0");
    (*pTable)(row,1) << scalar.SetValue(spectra.GetS1());
    (*pTable)(row,2) << Sub2(_T("S"),_T("1")) << _T(" - Site Class B");
+   if (specType == WSDOT_BDM)
+   {
+      (*pTable)(row, 2) << _T("/C Boundary");
+   }
    row++;
 
 
