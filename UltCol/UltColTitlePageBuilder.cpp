@@ -71,24 +71,11 @@ rptChapter* CUltColTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>
    strAppName += _T(".dll");
    verInfo.Load(strAppName);
 
-   CString strVersion = verInfo.GetProductVersionAsString();
-
    bool bIncludeBuildNumber = false;
 #if defined _DEBUG || defined _BETA_VERSION
    bIncludeBuildNumber = true;
 #endif
-
-   if ( !bIncludeBuildNumber )
-   {
-      std::_tstring v(strVersion);
-      auto count = std::count(std::begin(v), std::end(v), _T('.'));
-
-      for (auto i = 0; i < count - 1; i++)
-      {
-         int pos = strVersion.ReverseFind(_T('.')); // find the last '.'
-         strVersion = strVersion.Left(pos);
-      }
-   }
+   CString strVersion = verInfo.GetProductVersionAsString(bIncludeBuildNumber);
 
    CString str(_T("Version "));
    str += strVersion;
