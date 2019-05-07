@@ -1,6 +1,6 @@
 # BEToolbox
 
-BEToolbox is a BridgeLink application consisting of a collection of bridge engineering utilities or tools. 
+BEToolbox is a [BridgeLink](https://github.com/WSDOT/BridgeLink) application consisting of a collection of bridge engineering utilities or tools. 
 
 The standard BEToolbox tools are:
 * BoxGdr - computes the geometric section properties of a box girder including cross sectional area, moment of inertia, and centroid
