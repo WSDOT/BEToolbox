@@ -133,9 +133,8 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
    if (fileDlg.DoModal() == IDOK)
    {
       GET_IFACE2(pBroker, IShapes, pShapes);
-      GET_IFACE2(pBroker, ISectionProperties, pSectProps);
       CComPtr<IShape> shape;
-      pShapes->GetSegmentShape(intervalIdx, poi, false, pgsTypes::scGirder,pSectProps->GetHaunchAnalysisSectionPropertiesType(), &shape);
+      pShapes->GetSegmentShape(intervalIdx, poi, false, pgsTypes::scGirder, &shape);
 
       CComPtr<IPoint2dCollection> primaryShapePoints;
       CComPtr<IPoint2dCollection> secondaryShapePoints;
