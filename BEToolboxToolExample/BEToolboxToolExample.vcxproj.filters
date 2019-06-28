@@ -17,6 +17,18 @@
       <UniqueIdentifier>{b231b241-74c2-44fd-85b9-cd5236d28b1c}</UniqueIdentifier>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="ExampleTool">
+      <UniqueIdentifier>{6e167e82-bcbc-4cff-9115-fa59c7338835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ExampleTool\Header Files">
+      <UniqueIdentifier>{c218bb70-9c6f-4d94-9491-ca97f84fa623}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ExampleTool\Resource Files">
+      <UniqueIdentifier>{c95c6cba-cdc3-494b-8764-cff12dbc4c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ExampleTool\Source Files">
+      <UniqueIdentifier>{5b8cf876-1740-4667-9d9c-ac9cf343e79f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -31,24 +43,21 @@
     <ClCompile Include="BEToolboxToolExample_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="ExampleToolChildFrame.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ExampleTool\ExampleToolChildFrame.cpp">
+      <Filter>ExampleTool\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ExampleToolDoc.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ExampleTool\ExampleToolDoc.cpp">
+      <Filter>ExampleTool\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ExampleToolDocTemplate.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ExampleTool\ExampleToolDocTemplate.cpp">
+      <Filter>ExampleTool\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ExampleToolView.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ExampleTool\ExampleToolView.cpp">
+      <Filter>ExampleTool\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -60,23 +69,23 @@
     <ClInclude Include="BEToolboxToolExample_i.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExampleToolChildFrame.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ExampleTool\ExampleTool.h">
+      <Filter>ExampleTool\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExampleToolDoc.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ExampleTool\ExampleTool.hh">
+      <Filter>ExampleTool\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExampleToolDocTemplate.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ExampleTool\ExampleToolChildFrame.h">
+      <Filter>ExampleTool\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExampleToolView.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ExampleTool\ExampleToolDoc.h">
+      <Filter>ExampleTool\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tools.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ExampleTool\ExampleToolDocTemplate.h">
+      <Filter>ExampleTool\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExampleTool.hh">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ExampleTool\ExampleToolView.h">
+      <Filter>ExampleTool\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -94,8 +103,8 @@
     <None Include="BEToolboxToolExample.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="ExampleTool.rgs">
-      <Filter>Resource Files</Filter>
+    <None Include="ExampleTool\ExampleTool.rgs">
+      <Filter>ExampleTool\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -104,17 +113,11 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\Example.ico">
-      <Filter>Resource Files</Filter>
+    <Image Include="res\ExampleTool.ico">
+      <Filter>ExampleTool\Resource Files</Filter>
     </Image>
-    <Image Include="res\M3C.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\m3ctoolbar.bmp">
-      <Filter>Resource Files</Filter>
+    <Image Include="res\ExampleToolToolbar.bmp">
+      <Filter>ExampleTool\Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

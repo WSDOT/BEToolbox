@@ -21,7 +21,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "resource.h"
+#include "..\resource.h"
 #include "ExampleToolDocTemplate.h"
 
 #ifdef _DEBUG

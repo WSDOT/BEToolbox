@@ -276,10 +276,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ExampleToolChildFrame.cpp" />
-    <ClCompile Include="ExampleToolDoc.cpp" />
-    <ClCompile Include="ExampleToolDocTemplate.cpp" />
-    <ClCompile Include="ExampleToolView.cpp" />
+    <ClCompile Include="ExampleTool\ExampleToolChildFrame.cpp" />
+    <ClCompile Include="ExampleTool\ExampleToolDoc.cpp" />
+    <ClCompile Include="ExampleTool\ExampleToolDocTemplate.cpp" />
+    <ClCompile Include="ExampleTool\ExampleToolView.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -290,15 +290,14 @@
   <ItemGroup>
     <ClInclude Include="BEToolboxToolExample_i.h" />
     <ClInclude Include="dllmain.h" />
-    <ClInclude Include="ExampleTool.hh" />
-    <ClInclude Include="ExampleToolChildFrame.h" />
-    <ClInclude Include="ExampleToolDoc.h" />
-    <ClInclude Include="ExampleToolDocTemplate.h" />
-    <ClInclude Include="ExampleToolView.h" />
+    <ClInclude Include="ExampleTool\ExampleTool.hh" />
+    <ClInclude Include="ExampleTool\ExampleToolChildFrame.h" />
+    <ClInclude Include="ExampleTool\ExampleToolDoc.h" />
+    <ClInclude Include="ExampleTool\ExampleToolDocTemplate.h" />
+    <ClInclude Include="ExampleTool\ExampleToolView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="Tools.h" />
+    <ClInclude Include="ExampleTool\ExampleTool.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BEToolboxToolExample.rc" />
@@ -309,16 +308,14 @@
   <ItemGroup>
     <None Include="BEToolboxToolExample.def" />
     <None Include="BEToolboxToolExample.rgs" />
-    <None Include="ExampleTool.rgs" />
+    <None Include="ExampleTool\ExampleTool.rgs" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="BEToolboxToolExample.idl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\Example.ico" />
-    <Image Include="res\M3C.ico" />
-    <Image Include="res\m3ctoolbar.bmp" />
-    <Image Include="res\toolbar.bmp" />
+    <Image Include="res\ExampleTool.ico" />
+    <Image Include="res\ExampleToolToolbar.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

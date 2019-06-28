@@ -21,7 +21,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include "resource.h"
+#include "..\resource.h"
 #include "ExampleToolChildFrame.h"
 #include "ExampleToolDoc.h"
 

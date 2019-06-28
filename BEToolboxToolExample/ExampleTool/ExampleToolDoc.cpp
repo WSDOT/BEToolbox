@@ -24,7 +24,7 @@
 //
 
 #include "stdafx.h"
-#include "resource.h"
+#include "..\resource.h"
 #include "ExampleToolDoc.h"
 #include "ExampleToolChildFrame.h"
 #include "BEToolboxStatusBar.h"

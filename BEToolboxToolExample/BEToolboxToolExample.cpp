@@ -2,7 +2,6 @@
 
 
 #include "stdafx.h"
-#include "resource.h"
 
 #include <initguid.h>
 
@@ -17,7 +16,7 @@
 
 #include <DManip\DManip.h>
 
-#include "Tools.h"
+#include "ExampleTool\ExampleTool.h"
 
 using namespace ATL;
 
