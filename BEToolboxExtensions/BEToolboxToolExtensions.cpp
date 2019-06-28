@@ -2,7 +2,7 @@
 
 
 #include "stdafx.h"
-#include "resource.h"
+//#include ".\resource.h"
 
 #include <initguid.h>
 
@@ -16,7 +16,7 @@
 
 #include <DManip\DManip.h>
 
-#include "Tools.h"
+#include "M3C\M3CTools.h"
 
 using namespace ATL;
 
@@ -39,15 +39,15 @@ HRESULT Register(bool bRegister)
 // Used to determine whether the DLL can be unloaded by OLE.
 STDAPI DllCanUnloadNow(void)
 {
-			AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	return (AfxDllCanUnloadNow()==S_OK && _AtlModule.GetLockCount()==0) ? S_OK : S_FALSE;
-	}
+}
 
 // Returns a class factory to create an object of the requested type.
 _Check_return_
 STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID* ppv)
 {
-		return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
+	return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
 }
 
 // DllRegisterServer - Adds entries to the system registry.
@@ -56,7 +56,7 @@ STDAPI DllRegisterServer(void)
 	// registers object, typelib and all interfaces in typelib
 	HRESULT hr = _AtlModule.DllRegisterServer(FALSE);
    Register(true);
-		return hr;
+	return hr;
 }
 
 // DllUnregisterServer - Removes entries from the system registry.

@@ -24,7 +24,7 @@
 //
 
 #include "stdafx.h"
-#include "resource.h"
+#include "..\resource.h"
 #include "M3CDoc.h"
 #include "M3CTitlePageBuilder.h"
 #include "M3CChapterBuilder.h"
@@ -79,6 +79,11 @@ CM3CDoc::CM3CDoc()
 
 CM3CDoc::~CM3CDoc()
 {
+}
+
+UINT CM3CDoc::GetToolbarID()
+{ 
+   return IDR_M3C; 
 }
 
 void CM3CDoc::LoadToolbarResource()

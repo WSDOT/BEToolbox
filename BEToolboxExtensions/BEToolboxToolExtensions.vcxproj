@@ -99,6 +99,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Configuration);$(WBFLDIR)\Include\$(Platform)</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -172,6 +173,7 @@
       <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Configuration);$(WBFLDIR)\Include\$(Platform)</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -258,24 +260,24 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="M3CAnalysisDetailsChapterBuilder.cpp" />
-    <ClCompile Include="M3CAnalysisDetailsReportSpecification.cpp" />
-    <ClCompile Include="M3CAnalysisDetailsReportSpecificationBuilder.cpp" />
-    <ClCompile Include="M3CChapterBuilder.cpp" />
-    <ClCompile Include="M3CChildFrame.cpp" />
-    <ClCompile Include="M3CDetailsChapterBuilder.cpp" />
-    <ClCompile Include="M3CDlgBar.cpp" />
-    <ClCompile Include="M3CDoc.cpp" />
-    <ClCompile Include="M3CDocTemplate.cpp" />
-    <ClCompile Include="M3CGraphView.cpp" />
-    <ClCompile Include="M3CMainView.cpp" />
-    <ClCompile Include="M3CPrintJob.cpp" />
-    <ClCompile Include="M3CProblemParameters.cpp" />
-    <ClCompile Include="M3CReportView.cpp" />
-    <ClCompile Include="M3CSectionView.cpp" />
-    <ClCompile Include="M3CTabView.cpp" />
-    <ClCompile Include="M3CTitlePageBuilder.cpp" />
-    <ClCompile Include="M3CView.cpp" />
+    <ClCompile Include="M3C\M3CAnalysisDetailsChapterBuilder.cpp" />
+    <ClCompile Include="M3C\M3CAnalysisDetailsReportSpecification.cpp" />
+    <ClCompile Include="M3C\M3CAnalysisDetailsReportSpecificationBuilder.cpp" />
+    <ClCompile Include="M3C\M3CChapterBuilder.cpp" />
+    <ClCompile Include="M3C\M3CChildFrame.cpp" />
+    <ClCompile Include="M3C\M3CDetailsChapterBuilder.cpp" />
+    <ClCompile Include="M3C\M3CDlgBar.cpp" />
+    <ClCompile Include="M3C\M3CDoc.cpp" />
+    <ClCompile Include="M3C\M3CDocTemplate.cpp" />
+    <ClCompile Include="M3C\M3CGraphView.cpp" />
+    <ClCompile Include="M3C\M3CMainView.cpp" />
+    <ClCompile Include="M3C\M3CPrintJob.cpp" />
+    <ClCompile Include="M3C\M3CProblemParameters.cpp" />
+    <ClCompile Include="M3C\M3CReportView.cpp" />
+    <ClCompile Include="M3C\M3CSectionView.cpp" />
+    <ClCompile Include="M3C\M3CTabView.cpp" />
+    <ClCompile Include="M3C\M3CTitlePageBuilder.cpp" />
+    <ClCompile Include="M3C\M3CView.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -286,29 +288,28 @@
   <ItemGroup>
     <ClInclude Include="BEToolboxToolExtensions_i.h" />
     <ClInclude Include="dllmain.h" />
-    <ClInclude Include="M3C.hh" />
-    <ClInclude Include="M3CAnalysisDetailsChapterBuilder.h" />
-    <ClInclude Include="M3CAnalysisDetailsReportSpecification.h" />
-    <ClInclude Include="M3CAnalysisDetailsReportSpecificationBuilder.h" />
-    <ClInclude Include="M3CChapterBuilder.h" />
-    <ClInclude Include="M3CChildFrame.h" />
-    <ClInclude Include="M3CDetailsChapterBuilder.h" />
-    <ClInclude Include="M3CDlgBar.h" />
-    <ClInclude Include="M3CDoc.h" />
-    <ClInclude Include="M3CDocTemplate.h" />
-    <ClInclude Include="M3CGraphView.h" />
-    <ClInclude Include="M3CMainView.h" />
-    <ClInclude Include="M3CPrintJob.h" />
-    <ClInclude Include="M3CProblemParameters.h" />
-    <ClInclude Include="M3CReportView.h" />
-    <ClInclude Include="M3CSectionView.h" />
-    <ClInclude Include="M3CTabView.h" />
-    <ClInclude Include="M3CTitlePageBuilder.h" />
-    <ClInclude Include="M3CView.h" />
+    <ClInclude Include="M3C\M3C.hh" />
+    <ClInclude Include="M3C\M3CAnalysisDetailsChapterBuilder.h" />
+    <ClInclude Include="M3C\M3CAnalysisDetailsReportSpecification.h" />
+    <ClInclude Include="M3C\M3CAnalysisDetailsReportSpecificationBuilder.h" />
+    <ClInclude Include="M3C\M3CChapterBuilder.h" />
+    <ClInclude Include="M3C\M3CChildFrame.h" />
+    <ClInclude Include="M3C\M3CDetailsChapterBuilder.h" />
+    <ClInclude Include="M3C\M3CDlgBar.h" />
+    <ClInclude Include="M3C\M3CDoc.h" />
+    <ClInclude Include="M3C\M3CDocTemplate.h" />
+    <ClInclude Include="M3C\M3CGraphView.h" />
+    <ClInclude Include="M3C\M3CMainView.h" />
+    <ClInclude Include="M3C\M3CPrintJob.h" />
+    <ClInclude Include="M3C\M3CProblemParameters.h" />
+    <ClInclude Include="M3C\M3CReportView.h" />
+    <ClInclude Include="M3C\M3CSectionView.h" />
+    <ClInclude Include="M3C\M3CTabView.h" />
+    <ClInclude Include="M3C\M3CTitlePageBuilder.h" />
+    <ClInclude Include="M3C\M3CView.h" />
+    <ClInclude Include="M3C\MC3Tools.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="Tools.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BEToolboxToolExtensions.rc" />
@@ -319,7 +320,7 @@
   <ItemGroup>
     <None Include="BEToolboxToolExtensions.def" />
     <None Include="BEToolboxToolExtensions.rgs" />
-    <None Include="M3CTool.rgs" />
+    <None Include="M3C\M3CTool.rgs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\M3C.ico" />

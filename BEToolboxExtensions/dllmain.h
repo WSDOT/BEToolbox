@@ -1,5 +1,5 @@
 // dllmain.h : Declaration of module class.
-
+#include "Resource.h"
 class CBEToolboxExtensionsModule : public ATL::CAtlDllModuleT< CBEToolboxExtensionsModule >
 {
 public :

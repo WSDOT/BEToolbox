@@ -85,7 +85,7 @@ public:
 
    CReportBuilderManager m_RptMgr;
 protected:
-   virtual UINT GetToolbarID() override { return IDR_M3C; }
+   virtual UINT GetToolbarID() override;
    virtual void LoadToolbarResource() override;
 
 private:

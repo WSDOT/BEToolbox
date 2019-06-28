@@ -21,7 +21,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "resource.h"
+#include "..\resource.h"
 #include "M3CDoc.h"
 #include "M3CTabView.h"
 #include "M3CChildFrame.h"

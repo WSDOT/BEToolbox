@@ -24,7 +24,7 @@
 //
 
 #include "stdafx.h"
-#include "resource.h"
+#include "..\resource.h"
 #include <EAF\EAFApp.h>
 #include "M3CDlgBar.h"
 #include <MFCTools\CustomDDX.h>
