@@ -284,6 +284,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SVT\FDMeshGenerator.cpp" />
+    <ClCompile Include="SVT\Helpers.cpp" />
+    <ClCompile Include="SVT\PrandtlMembrane.cpp" />
+    <ClCompile Include="SVT\SVTDlgBar.cpp" />
+    <ClCompile Include="SVT\SVTToolChildFrame.cpp" />
+    <ClCompile Include="SVT\SVTToolDoc.cpp" />
+    <ClCompile Include="SVT\SVTToolDocTemplate.cpp" />
+    <ClCompile Include="SVT\SVTToolView.cpp" />
+    <ClCompile Include="SVT\UniformFDMesh.cpp" />
+    <ClCompile Include="SVT\UnsymmetricBandedMatrix..cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BEToolboxToolExtensions_i.h" />
@@ -310,6 +320,20 @@
     <ClInclude Include="M3C\MC3Tools.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SVT\FDMeshGenerator.h" />
+    <ClInclude Include="SVT\Helpers.h" />
+    <ClInclude Include="SVT\PrandtlMembrane.h" />
+    <ClInclude Include="SVT\SVT.h" />
+    <ClInclude Include="SVT\SVT.hh" />
+    <ClInclude Include="SVT\SVTDlgBar.h" />
+    <ClInclude Include="SVT\SVTTools.h" />
+    <ClInclude Include="SVT\SVTTool.hh" />
+    <ClInclude Include="SVT\SVTToolChildFrame.h" />
+    <ClInclude Include="SVT\SVTToolDoc.h" />
+    <ClInclude Include="SVT\SVTToolDocTemplate.h" />
+    <ClInclude Include="SVT\SVTToolView.h" />
+    <ClInclude Include="SVT\UniformFDMesh.h" />
+    <ClInclude Include="SVT\UnsymmetricBandedMatrix.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BEToolboxToolExtensions.rc" />
@@ -321,10 +345,14 @@
     <None Include="BEToolboxToolExtensions.def" />
     <None Include="BEToolboxToolExtensions.rgs" />
     <None Include="M3C\M3CTool.rgs" />
+    <None Include="SVT\SVT.rgs" />
+    <None Include="SVT\SVTTool.rgs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\M3C.ico" />
     <Image Include="res\m3ctoolbar.bmp" />
+    <Image Include="res\SVTTool.ico" />
+    <Image Include="res\SVTToolbar.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

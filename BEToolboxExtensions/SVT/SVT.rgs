@@ -1,0 +1,25 @@
+HKCR
+{
+	BEToolbox.SVTTool.1 = s 'SVTTool'
+	{
+		CLSID = s '{888B471B-44EA-45C4-B793-C601FD282069}'
+	}
+	BEToolbox.SVTTool = s 'SVTTool'
+	{
+		CLSID = s '{888B471B-44EA-45C4-B793-C601FD282069}'
+		CurVer = s 'BEToolbox.SVTTool.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {888B471B-44EA-45C4-B793-C601FD282069} = s 'SVTTool'
+		{
+			ProgID = s 'BEToolbox.SVTTool.1'
+			VersionIndependentProgID = s 'BEToolbox.SVTTool'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{}'
+		}
+	}
+}
