@@ -336,3 +336,4 @@ Documentation/doc/
 *.hxx
 *.bak
 *.dm
+/BEToolboxExtensions/SVT/docs/build

@@ -1,3 +1,25 @@
+///////////////////////////////////////////////////////////////////////
+// BEToolbox
+// Copyright © 1999-2019  Washington State Department of Transportation
+//                        Bridge and Structures Office
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Alternate Route Open Source License as 
+// published by the Washington State Department of Transportation, 
+// Bridge and Structures Office.
+//
+// This program is distributed in the hope that it will be useful, but 
+// distribution is AS IS, WITHOUT ANY WARRANTY; without even the implied 
+// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See 
+// the Alternate Route Open Source License for more details.
+//
+// You should have received a copy of the Alternate Route Open Source 
+// License along with this program; if not, write to the Washington 
+// State Department of Transportation, Bridge and Structures Office, 
+// P.O. Box  47340, Olympia, WA 98503, USA or e-mail 
+// Bridge_Support@wsdot.wa.gov
+///////////////////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "PrandtlMembrane.h"
 #include "Helpers.h"
@@ -187,9 +209,15 @@ Float64 PrandtlMembrane::ComputeVolume(IndexType startElementIdx, IndexType endE
             nInteriorNodes++;
          }
       }
-      Float64 avg_value = sum_values / nInteriorNodes;
-      Float64 dV = area_factor[nInteriorNodes] * area * avg_value;
-      V += dV;
+
+      // if there are no interior nodes, all nodes are on the boundary and
+      // there values are zero so no contribution to the volume under the membrane
+      if (nInteriorNodes != 0)
+      {
+         Float64 avg_value = sum_values / nInteriorNodes;
+         Float64 dV = area_factor[nInteriorNodes] * area * avg_value;
+         V += dV;
+      }
    }
    return V;
 }

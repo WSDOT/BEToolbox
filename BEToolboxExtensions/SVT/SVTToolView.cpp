@@ -121,6 +121,7 @@ void CSVTToolView::OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint)
    CComPtr<iShapeDrawStrategy> shape_draw_strategy;
    shape_draw_strategy.CoCreateInstance(CLSID_ShapeDrawStrategy);
    shape_draw_strategy->SetShape(pShape);
+   shape_draw_strategy->SetSolidLineColor(BLUE);
    compound_strategy->AddStrategy(shape_draw_strategy);
 
    // the finite difference grid
