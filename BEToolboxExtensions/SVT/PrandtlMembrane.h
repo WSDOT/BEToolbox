@@ -25,11 +25,16 @@
 #include "UniformFDMesh.h"
 #include "UnsymmetricBandedMatrix.h"
 
+/////////////////////////////////////////
+/// Test documentation
+/////////////////////////////////////////
 class PrandtlMembrane
 {
 public:
    PrandtlMembrane();
    ~PrandtlMembrane();
+
+   //! Computes J
    Float64 ComputeJ(const UniformFDMesh& mesh,Float64** ppValues=nullptr) const;
 
 private:
