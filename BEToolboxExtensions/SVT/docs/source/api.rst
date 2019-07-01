@@ -4,5 +4,7 @@ C++ API
 
 This is the API
 
-class PrandtlMembrane
-Making a change in the documentation to see if it will autogenerate the documentation
+.. cpp:class:: PrandtlMembrane
+.. cpp:function:: Float64 ComputeJ(UniformFDMesh& mesh)
+
+   Given a mesh computes and returns the torsional constant.
