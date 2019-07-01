@@ -40,16 +40,12 @@ PrandtlMembrane::~PrandtlMembrane()
 {
 }
 
-Float64 PrandtlMembrane::ComputeJ(const UniformFDMesh& mesh) const
+Float64 PrandtlMembrane::ComputeJ(const UniformFDMesh& mesh,Float64** ppValues) const
 {
    IndexType nInteriorNodes = mesh.GetInteriorNodeCount();
    IndexType bw = 2 * mesh.GetMaxIntriorNodesPerRow() + 1;
    mathUnsymmetricBandedMatrix matrix(nInteriorNodes, bw);
    BuildMatrix(mesh, matrix);
-
-   //matrix.Dump(std::cout, true);
-   //std::cout << std::endl;
-   //matrix.Dump(std::cout, false);
 
    Float64* meshValues = matrix.Solve();
 
@@ -78,7 +74,15 @@ Float64 PrandtlMembrane::ComputeJ(const UniformFDMesh& mesh) const
       V *= 2;
    }
 
-   delete[] meshValues;
+
+   if (ppValues)
+   {
+      *ppValues = meshValues;
+   }
+   else
+   {
+      delete[] meshValues;
+   }
 
    return V;
 }
@@ -220,9 +224,4 @@ Float64 PrandtlMembrane::ComputeVolume(IndexType startElementIdx, IndexType endE
       }
    }
    return V;
-}
-
-void PrandtlMembrane::GetThreadParameters(IndexType nElements, IndexType& nWorkerThreads, IndexType& nElementsPerThread) const
-{
-   ::GetThreadParameters(nElements, nWorkerThreads, nElementsPerThread);
 }
