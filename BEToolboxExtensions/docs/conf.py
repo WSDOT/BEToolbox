@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# ReadTheDocs-Breathe documentation build configuration file, created by
+# SVT documentation build configuration file, created by
 # sphinx-quickstart on Mon Feb 10 20:03:57 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -21,13 +21,24 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
-# hack for readthedocs to cause it to run doxygen first
-# https://github.com/rtfd/readthedocs.org/issues/388
+# -- Before Sphinx runs (RAB) -----------------------------------------------
+# This is custom code to generate API docuementation using Doxygen
+# and make it part of the overall documentation set.
+#
+# There are two key elements to making this work
+# 1) Before Sphinx runs, generate API documentation with Doxygen
+# 2) Copy the documentation into the sphinx output so it is hosted on RtD.
+#    This is accomplished with the html_extra_path option below
+#
+# There is one problem... everything in html_extra_path is copied into the
+# sphinx output. Doxygen generates and index.html file and it replaces the
+# index.html file we want to key. To fix this problem, rename html\index.html
+# to html\api.html. When the contents of html_extra_path is copied, our placeholder
+# api.hml file is replaced
 import subprocess
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
-  subprocess.call('doxygen', shell=True)
-  subprocess.call('cd html; mv index.html api2.html',shell=True)
+	subprocess.call('doxygen; mv html\index.html html\api.html', shell=True)
 
 # -- General configuration ------------------------------------------------
 
@@ -40,15 +51,8 @@ if on_rtd:
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
-    'sphinx.ext.viewcode',
-    'breathe'
+    'sphinx.ext.viewcode'
 ]
-
-# Breathe extension variables
-breathe_projects = { "BET Extensions": "xml/" }
-breathe_default_project = "BET Extensions"
-#breathe_default_members = ('members', 'protected-members', 'private-members') # this sets the default on what to show
-breathe_default_members = ('members',) # this sets the default on what to show
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
