@@ -27,8 +27,11 @@
 
 /////////////////////////////////////////
 /// Computes the St. Venant torisional constant using the Prandtl membrane analogy
+///
 /// \f$ f(x) = a + b \f$
+///
 /// Some other text
+///
 /// @f[
 /// \int_a^b f(x) dx = F(b) - F(a)
 /// @f]
