@@ -26,6 +26,7 @@ import os
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
   from subprocess import call 
+  print('running doxygen')
   call('doxygen')
 
 # -- General configuration ------------------------------------------------
