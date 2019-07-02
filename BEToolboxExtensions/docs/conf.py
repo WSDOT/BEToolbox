@@ -23,11 +23,10 @@ import os
 
 # hack for readthedocs to cause it to run doxygen first
 # https://github.com/rtfd/readthedocs.org/issues/388
+import subprocess
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
-  from subprocess import call 
-  print('running doxygen')
-  call('doxygen')
+  subprocess.call('doxygen', shell=True)
 
 # -- General configuration ------------------------------------------------
 
