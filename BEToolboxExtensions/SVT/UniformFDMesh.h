@@ -25,42 +25,75 @@
 #include <vector>
 #include <memory>
 
+/// An element in a UniformFDMesh
 typedef struct FDMeshElement
 {
    // access array with Corner enum
    enum Corner { TopLeft, TopRight, BottomRight, BottomLeft };
+
+   /// Indicies of the nodes of the mesh element. Use the Corner enum to access the array. 
+   /// Indicies are INVALID_INDEX when the node attached to a boundary or the index of
+   /// and internal node
    std::array<IndexType, 4> Node{ INVALID_INDEX,INVALID_INDEX,INVALID_INDEX,INVALID_INDEX };
 } FDMeshElement;
 
+/// A finite difference mesh of uniformly sized mesh elements
 class UniformFDMesh
 {
 public:
-   UniformFDMesh();
-   UniformFDMesh(Float64 dx, Float64 dy);
+   UniformFDMesh(); ///< Default constructor. Call SetElementSize() before using this mesh
+   UniformFDMesh(Float64 dx, Float64 dy); ///< Creates a mesh with dx by dy size elements
    virtual ~UniformFDMesh();
 
-   void HasSymmetry(bool bSymmetric);
-   bool HasSymmetry() const;
+   void HasSymmetry(bool bSymmetric); ///< Indicates if the mesh has a vertical axis of symmetry on its right hand boundary
+   bool HasSymmetry() const; ///< Returns true if the mesh is symmetric
 
-   void AllocateElementRows(IndexType nRows);
-   void SetElementSize(Float64 dx, Float64 dy);
-   void GetElementSize(Float64* pdx, Float64* pdy) const;
-   Float64 GetElementArea() const;
+   void AllocateElementRows(IndexType nRows); ///< Allocates element rows for the mesh. This must be called prior to calling AddElements()
+   void SetElementSize(Float64 dx, Float64 dy); ///< Sets the size of the mesh elements
+   void GetElementSize(Float64* pdx, Float64* pdy) const; ///< Gets the size of the mesh elements
+   Float64 GetElementArea() const; ///< Returns the cross sectional area of a mesh element
 
-   void AddElements(IndexType gridRowIdx, IndexType gridRowStartIdx, IndexType nElements);
-   void AddElementRow(IndexType gridRowStartIdx, IndexType nElements);
-   IndexType GetElementRowCount() const;
-   void GetElementRange(IndexType elementRowIdx, IndexType* pGridRowStartIdx, IndexType* pFirstElementIdx, IndexType* pLastElementIdx) const;
-   IndexType GetElementCount() const;
-   IndexType GetInteriorNodeCount() const;
-   IndexType GetMaxIntriorNodesPerRow() const;
-   const FDMeshElement* GetElement(IndexType elementIdx) const;
-   const FDMeshElement* GetElementAbove(IndexType gridRowIdx, IndexType elementIdx) const;
-   const FDMeshElement* GetElementBelow(IndexType gridRowIdx, IndexType elementIdx) const;
+   /// Adds elements to a previously allocated mesh row
+   void AddElements(IndexType gridRowIdx, /**< index of the grid row where elements are being added */
+                    IndexType gridRowStartIdx, /**< index within the grid row where the first element is located */
+                    IndexType nElements/**< number of elements to add */
+   );
 
-   void GetGridSize(IndexType* pNx, IndexType* pNy) const;
+   /// Adds a new row of mesh elements at the bottom of the mesh
+   void AddElementRow(IndexType gridRowStartIdx, /**< index within the grid row where the first elemetn is located */
+                      IndexType nElements/**< number of elements to add */
+   );
 
-   void Dump(std::ostream& os) const;
+   IndexType GetElementRowCount() const; ///< Returns the number of element rows in the mesh
+
+
+   /// Gets the range of element indices in an element row
+   void GetElementRange(IndexType elementRowIdx, /**<[in] element row for which to get the element range*/ 
+                        IndexType* pGridRowStartIdx, /**<[out] index within the grid row where the first element is located */ 
+                        IndexType* pFirstElementIdx, /**<[out] global index of the first element in the row */ 
+                        IndexType* pLastElementIdx/**<[out] global index of the last element in the row */ 
+   ) const;
+
+   IndexType GetElementCount() const; ///< Returns the total number of elements in the mesh
+   IndexType GetInteriorNodeCount() const; ///< Returns the number of interior nodes
+   IndexType GetMaxIntriorNodesPerRow() const; ///< Returns the maximum number of interior nodes per row
+   
+   /// Returns the specified mesh element
+   const FDMeshElement* GetElement(IndexType elementIdx /**< global index of the desired element*/) const;
+   
+   /// Returns the mesh element directly above the specified element
+   const FDMeshElement* GetElementAbove(IndexType gridRowIdx /**< row where the element is located*/, 
+                                        IndexType elementIdx /**< index of the element within the row, starting from the left edge of the mesh*/
+   ) const;
+
+   /// Returns the mesh element directly below the specified element
+   const FDMeshElement* GetElementBelow(IndexType gridRowIdx /**< row where the element is located*/,
+                                        IndexType elementIdx /**< index of the element within the row, starting from the left edge of the mesh*/
+   ) const;
+
+   void GetGridSize(IndexType* pNx, IndexType* pNy) const; ///< Returns the size of the overall mesh.
+
+   void Dump(std::ostream& os) const; ///< Dumps the mesh information to an output stream
 
 protected:
    Float64 m_Dx, m_Dy; // element dimensions

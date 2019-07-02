@@ -26,15 +26,9 @@
 #include "UnsymmetricBandedMatrix.h"
 
 /////////////////////////////////////////
-/// Computes the St. Venant torisional constant using the Prandtl membrane analogy
+/// Computes the St Venant torisional constant using the Prandtl membrane analogy
 ///
-/// \f$ f(x) = a + b \f$
-///
-/// Some other text
-///
-/// @f[
-/// \int_a^b f(x) dx = F(b) - F(a)
-/// @f]
+/// \f$ \frac{\partial ^2 z}{\partial x^2} + \frac{\partial ^2 z}{\partial y^2} = -\frac{q}{S} \f$
 /////////////////////////////////////////
 class PrandtlMembrane
 {

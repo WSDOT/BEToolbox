@@ -18,6 +18,7 @@ Contents:
    
    gui
    api
+   api2
 
 
 Indices and tables

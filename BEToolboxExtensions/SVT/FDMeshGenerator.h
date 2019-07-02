@@ -26,13 +26,16 @@
 
 interface IShape;
 
+//////////////////////////////////////////////////
+/// Generates a finite difference mesh for a shape
+//////////////////////////////////////////////////
 class FDMeshGenerator
 {
 public:
-   FDMeshGenerator();
-   FDMeshGenerator(Float64 dxMax, Float64 dyMax);
-   void Initialize(Float64 dxMax, Float64 dyMax);
-   void GenerateMesh(IShape* pShape, UniformFDMesh& mesh, bool bIgnoreSymmetry = false) const;
+   FDMeshGenerator(); ///< Default constructor. Call Initialize() before calling GenerateMesh()
+   FDMeshGenerator(Float64 dxMax, Float64 dyMax); ///< Initializes the mesh generator with the maximum element dimensions
+   void Initialize(Float64 dxMax, Float64 dyMax); ///< Initializes the mesh generator with the maximum element dimensions
+   void GenerateMesh(IShape* pShape, UniformFDMesh& mesh, bool bIgnoreSymmetry = false) const; ///< Generates a finite difference mesh, taking advantage of a vertical axis of symmetry if present
 
 private:
    Float64 m_DxMax, m_DyMax;

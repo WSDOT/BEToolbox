@@ -51,6 +51,7 @@ CSVTToolView::~CSVTToolView()
 
 BEGIN_MESSAGE_MAP(CSVTToolView, CDisplayView)
    //ON_COMMAND(ID_FILE_PRINT_DIRECT,&CSVTToolView::OnFilePrint)
+   ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 // CSVTToolView diagnostics
@@ -140,5 +141,26 @@ void CSVTToolView::OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint)
 
    display_list->AddDisplayObject(dispObj);
 
+   ScaleToFit();
+}
+
+
+void CSVTToolView::OnSize(UINT nType, int cx, int cy)
+{
+   CDisplayView::OnSize(nType, cx, cy);
+
+   CRect rect;
+   GetClientRect(&rect);
+   rect.DeflateRect(5, 5, 5, 5);
+
+   CSize size = rect.Size();
+   size.cx = Max(0L, size.cx);
+   size.cy = Max(0L, size.cy);
+
+   SetLogicalViewRect(MM_TEXT, rect);
+
+   SetScrollSizes(MM_TEXT, size, CScrollView::sizeDefault, CScrollView::sizeDefault);
+
+   CDManipClientDC dc(this);
    ScaleToFit();
 }

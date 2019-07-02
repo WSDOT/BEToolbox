@@ -341,5 +341,4 @@ Documentation/doc/
 /BEToolboxExtensions/docs/_build
 /BEToolboxExtensions/docs/xml
 /BEToolboxExtensions/docs/_static
-
-
+/BEToolboxExtensions/docs/html

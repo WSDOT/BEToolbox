@@ -46,6 +46,10 @@ void FDMeshGenerator::Initialize(Float64 dxMax, Float64 dyMax)
    m_DyMax = dyMax;
 }
 
+//////////////////////////////////////////
+/// \param[in] pShape the shape to generate the mesh for
+/// \param[in] mesh the mesh to be generated
+/// \param[in] bIgnoreSymmetry if true, symmetry of the shape is ignored and a full mesh is generated
 void FDMeshGenerator::GenerateMesh(IShape* pShape, UniformFDMesh& mesh, bool bIgnoreSymmetry) const
 {
    CComPtr<IRect2d> bbox;

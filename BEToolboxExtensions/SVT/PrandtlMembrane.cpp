@@ -42,8 +42,8 @@ PrandtlMembrane::~PrandtlMembrane()
 
 /////////////////////////////////////////////////////
 /// \param[in] mesh a finite difference mesh
-/// \param[out] ppValues the finite difference solution
-/// \return returns J
+/// \param[out] ppValues the finite difference solution. The caller is responsible for deleting the memory allocation with delete[]
+/// \return Torsional constant, J
 /////////////////////////////////////////////////////
 Float64 PrandtlMembrane::ComputeJ(const UniformFDMesh& mesh,Float64** ppValues) const
 {
@@ -92,6 +92,11 @@ Float64 PrandtlMembrane::ComputeJ(const UniformFDMesh& mesh,Float64** ppValues) 
    return V;
 }
 
+/////////////////////////////////////////////////////////
+/// Builds the finite difference equations.
+/// \param[in] mesh the finite differnce mesh
+/// \param[in,out] matrix the finite difference equations
+/////////////////////////////////////////////////////////
 void PrandtlMembrane::BuildMatrix(const UniformFDMesh& mesh, mathUnsymmetricBandedMatrix& matrix) const
 {
    auto nElements = mesh.GetElementRowCount(); // this is the number of rows of elements
@@ -119,8 +124,17 @@ void PrandtlMembrane::BuildMatrix(const UniformFDMesh& mesh, mathUnsymmetricBand
    }
 }
 
+/////////////////////////////////////////////////////////////
+/// Creates the finite difference equations for the specified range of rows
+/// and stores the coefficients in the matrix
+/// \param[in] startMeshRowIdx index of the first mesh row to be processed
+/// \param[in] endMeshRowIdx index of the last mesh row to be processed
+/// \param[in] mesh the mesh for which the finite difference equations are being generated
+/// \param[in] matrix the augmented coefficient matrix for the finite difference equations
+/////////////////////////////////////////////////////////////
 void PrandtlMembrane::BuildMatrixRow(IndexType startMeshRowIdx, IndexType endMeshRowIdx, const UniformFDMesh& mesh, mathUnsymmetricBandedMatrix& matrix)
 {
+   // compute constants that are the same for all rows
    Float64 Dx, Dy;
    mesh.GetElementSize(&Dx, &Dy);
    Float64 R2 = pow(Dy / Dx, 2);

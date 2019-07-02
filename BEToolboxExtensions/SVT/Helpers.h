@@ -22,5 +22,8 @@
 
 #pragma once
 
-void GetThreadParameters(IndexType nElements, IndexType& nWorkerThreads, IndexType& nElementsPerThread);
+/// Gets parameters for sharing the processing of many items over multiple threads
+void GetThreadParameters(IndexType nItems, /**< [in] total number of items to be processed*/
+                         IndexType& nWorkerThreads, /**< [out] number of worker threads to spawn*/
+                         IndexType& nItemsPerThread /**< [out] number of items to process per thread*/);
 
