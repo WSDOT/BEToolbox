@@ -27,7 +27,7 @@ import subprocess
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
   subprocess.call('doxygen', shell=True)
-  subprocess.call('cd html; rename index.html api2.html',shell=True)
+  subprocess.call('cd html; mv index.html api2.html',shell=True)
 
 # -- General configuration ------------------------------------------------
 
