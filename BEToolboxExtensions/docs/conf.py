@@ -46,6 +46,7 @@ extensions = [
 # Breathe extension variables
 breathe_projects = { "BET Extensions": "xml/" }
 breathe_default_project = "BET Extensions"
+breathe_default_members = {'members', 'protected-members', 'private-members'} # this sets the default on what to show
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

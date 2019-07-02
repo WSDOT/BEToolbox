@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright   1999-2019  Washington State Department of Transportation
+// Copyright © 1999-2019  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -40,11 +40,11 @@ PrandtlMembrane::~PrandtlMembrane()
 {
 }
 
-///
-/// /param[in] mesh a finite difference mesh
-/// /param[out] ppValues the finite difference slout
-/// /return returns J
-///
+/////////////////////////////////////////////////////
+/// \param[in] mesh a finite difference mesh
+/// \param[out] ppValues the finite difference solution
+/// \return returns J
+/////////////////////////////////////////////////////
 Float64 PrandtlMembrane::ComputeJ(const UniformFDMesh& mesh,Float64** ppValues) const
 {
    IndexType nInteriorNodes = mesh.GetInteriorNodeCount();
@@ -200,7 +200,14 @@ void PrandtlMembrane::BuildMatrixRow(IndexType startMeshRowIdx, IndexType endMes
    }
 }
 
-Float64 PrandtlMembrane::ComputeVolume(IndexType startElementIdx, IndexType endElementIdx, const UniformFDMesh& mesh, Float64* meshValues)
+////////////////////////////////////////////////
+/// \param[in] startElementIdx index of the first element for which to compute the volume
+/// \param[in] endElementIdx index of the last element for which to compute the volume
+/// \param[in] mesh the finite difference mesh
+/// \param[in] meshValues the solution to the finite difference equations
+/// \return the volume under the membrane for the specified range of elements
+////////////////////////////////////////////////
+Float64 PrandtlMembrane::ComputeVolume(IndexType startElementIdx, IndexType endElementIdx, const UniformFDMesh& mesh, const Float64* meshValues)
 {
    Float64 V = 0;
    Float64 area = mesh.GetElementArea();
