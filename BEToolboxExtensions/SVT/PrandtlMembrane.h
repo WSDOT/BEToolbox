@@ -26,7 +26,7 @@
 #include "UnsymmetricBandedMatrix.h"
 
 /////////////////////////////////////////
-/// Test documentation
+/// Computes the St. Venant torisional constant using the Prandtl membrane analogy
 /////////////////////////////////////////
 class PrandtlMembrane
 {
@@ -34,7 +34,7 @@ public:
    PrandtlMembrane();
    ~PrandtlMembrane();
 
-   //! Computes J
+   //! Computes the torsional constant, J
    Float64 ComputeJ(const UniformFDMesh& mesh,Float64** ppValues=nullptr) const;
 
 private:

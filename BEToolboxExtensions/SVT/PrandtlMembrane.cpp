@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2019  Washington State Department of Transportation
+// Copyright   1999-2019  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -40,6 +40,11 @@ PrandtlMembrane::~PrandtlMembrane()
 {
 }
 
+///
+/// /param[in] mesh a finite difference mesh
+/// /param[out] ppValues the finite difference slout
+/// /return returns J
+///
 Float64 PrandtlMembrane::ComputeJ(const UniformFDMesh& mesh,Float64** ppValues) const
 {
    IndexType nInteriorNodes = mesh.GetInteriorNodeCount();
