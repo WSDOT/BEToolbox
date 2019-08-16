@@ -234,7 +234,10 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
       }
       else
       {
-         EcDeck = pMaterials->GetDeckEc(intervalIdx);
+         GET_IFACE2(pBroker, IPointOfInterest, pPoi);
+         IndexType deckCastingRegionIdx = pPoi->GetDeckCastingRegion(poi);
+         ATLASSERT(deckCastingRegionIdx != INVALID_INDEX);
+         EcDeck = pMaterials->GetDeckEc(deckCastingRegionIdx,intervalIdx);
       }
 
       std::unique_ptr<GenComp> genCompXML( CreateGenCompModel() );
