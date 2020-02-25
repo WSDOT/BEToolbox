@@ -336,3 +336,9 @@ Documentation/doc/
 *.hxx
 *.bak
 *.dm
+
+# Experimental document with Sphinx and RtD
+/BEToolboxExtensions/docs/_build
+/BEToolboxExtensions/docs/xml
+/BEToolboxExtensions/docs/_static
+/BEToolboxExtensions/docs/html

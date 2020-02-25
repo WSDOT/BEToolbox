@@ -1,5 +1,7 @@
 // dllmain.h : Declaration of module class.
 
+#include "resource.h"
+
 class CBEToolboxToolExampleModule : public ATL::CAtlDllModuleT< CBEToolboxToolExampleModule >
 {
 public :

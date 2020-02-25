@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2019  Washington State Department of Transportation
+// Copyright © 1999-2020  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -326,12 +326,26 @@ void CPGStableModel::ResolveSimplifedLiftingStrandLocations() const
    Float64 FpeStraight = m_Strands[m_GirderType][LIFTING].FpeStraight;
    Float64 FpeHarped   = m_Strands[m_GirderType][LIFTING].FpeHarped;
    Float64 FpeTemp     = m_Strands[m_GirderType][LIFTING].FpeTemp;
-   m_LiftingStabilityProblem.AddFpe(0,   FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh1, FpeTemp, XpsTemp, YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(Xh1, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh1, FpeTemp, XpsTemp, YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(Xh2, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh2, FpeTemp, XpsTemp, YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(Xh3, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh3, FpeTemp, XpsTemp, YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(Xh4, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh4, FpeTemp, XpsTemp, YpsTemp);
-   m_LiftingStabilityProblem.AddFpe(L,   FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh4, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(_T("Straight"), 0,   FpeStraight, XpsStraight, YpsStraight);
+   m_LiftingStabilityProblem.AddFpe(_T("Straight"), Xh1, FpeStraight, XpsStraight, YpsStraight);
+   m_LiftingStabilityProblem.AddFpe(_T("Straight"), Xh2, FpeStraight, XpsStraight, YpsStraight);
+   m_LiftingStabilityProblem.AddFpe(_T("Straight"), Xh3, FpeStraight, XpsStraight, YpsStraight);
+   m_LiftingStabilityProblem.AddFpe(_T("Straight"), Xh4, FpeStraight, XpsStraight, YpsStraight);
+   m_LiftingStabilityProblem.AddFpe(_T("Straight"), L,   FpeStraight, XpsStraight, YpsStraight);
+
+   m_LiftingStabilityProblem.AddFpe(_T("Harped"), 0,   FpeHarped, XpsHarped, Yh1);
+   m_LiftingStabilityProblem.AddFpe(_T("Harped"), Xh1, FpeHarped, XpsHarped, Yh1);
+   m_LiftingStabilityProblem.AddFpe(_T("Harped"), Xh2, FpeHarped, XpsHarped, Yh2);
+   m_LiftingStabilityProblem.AddFpe(_T("Harped"), Xh3, FpeHarped, XpsHarped, Yh3);
+   m_LiftingStabilityProblem.AddFpe(_T("Harped"), Xh4, FpeHarped, XpsHarped, Yh4);
+   m_LiftingStabilityProblem.AddFpe(_T("Harped"), L,   FpeHarped, XpsHarped, Yh4);
+
+   m_LiftingStabilityProblem.AddFpe(_T("Temporary"), 0,   FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(_T("Temporary"), Xh1, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(_T("Temporary"), Xh2, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(_T("Temporary"), Xh3, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(_T("Temporary"), Xh4, FpeTemp, XpsTemp, YpsTemp);
+   m_LiftingStabilityProblem.AddFpe(_T("Temporary"), L,   FpeTemp, XpsTemp, YpsTemp);
 }
 
 void CPGStableModel::ResolveExactLiftingStrandLocations() const
@@ -344,7 +358,9 @@ void CPGStableModel::ResolveExactLiftingStrandLocations() const
       {
          Float64 Xs,Ys,Xh,Yh,Xt,Yt;
          GetStrandLocations(fpe,&m_Girder[m_GirderType],&Xs,&Ys,&Xh,&Yh,&Xt,&Yt);
-         m_LiftingStabilityProblem.AddFpe(fpe.X,fpe.FpeStraight,Xs,Ys,fpe.FpeHarped,Xh,Yh,fpe.FpeTemp,Xt,Yt);
+         m_LiftingStabilityProblem.AddFpe(_T("Straight"),  fpe.X, fpe.FpeStraight, Xs, Ys);
+         m_LiftingStabilityProblem.AddFpe(_T("Harped"),    fpe.X, fpe.FpeHarped,   Xh, Yh);
+         m_LiftingStabilityProblem.AddFpe(_T("Temporary"), fpe.X, fpe.FpeTemp,     Xt, Yt);
       }
    }
 }
@@ -375,12 +391,27 @@ void CPGStableModel::ResolveSimplifedHaulingStrandLocations() const
    Float64 FpeStraight = m_Strands[m_GirderType][HAULING].FpeStraight;
    Float64 FpeHarped   = m_Strands[m_GirderType][HAULING].FpeHarped;
    Float64 FpeTemp     = m_Strands[m_GirderType][HAULING].FpeTemp;
-   m_HaulingStabilityProblem.AddFpe(0,   FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh1, FpeTemp, XpsTemp, YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(Xh1, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh1, FpeTemp, XpsTemp, YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(Xh2, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh2, FpeTemp, XpsTemp, YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(Xh3, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh3, FpeTemp, XpsTemp, YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(Xh4, FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh4, FpeTemp, XpsTemp, YpsTemp);
-   m_HaulingStabilityProblem.AddFpe(L,   FpeStraight, XpsStraight, YpsStraight, FpeHarped, XpsHarped, Yh4, FpeTemp, XpsTemp, YpsTemp);
+
+   m_HaulingStabilityProblem.AddFpe(_T("Straight"), 0, FpeStraight, XpsStraight, YpsStraight);
+   m_HaulingStabilityProblem.AddFpe(_T("Straight"), Xh1, FpeStraight, XpsStraight, YpsStraight);
+   m_HaulingStabilityProblem.AddFpe(_T("Straight"), Xh2, FpeStraight, XpsStraight, YpsStraight);
+   m_HaulingStabilityProblem.AddFpe(_T("Straight"), Xh3, FpeStraight, XpsStraight, YpsStraight);
+   m_HaulingStabilityProblem.AddFpe(_T("Straight"), Xh4, FpeStraight, XpsStraight, YpsStraight);
+   m_HaulingStabilityProblem.AddFpe(_T("Straight"), L, FpeStraight, XpsStraight, YpsStraight);
+
+   m_HaulingStabilityProblem.AddFpe(_T("Harped"), 0, FpeHarped, XpsHarped, Yh1);
+   m_HaulingStabilityProblem.AddFpe(_T("Harped"), Xh1, FpeHarped, XpsHarped, Yh1);
+   m_HaulingStabilityProblem.AddFpe(_T("Harped"), Xh2, FpeHarped, XpsHarped, Yh2);
+   m_HaulingStabilityProblem.AddFpe(_T("Harped"), Xh3, FpeHarped, XpsHarped, Yh3);
+   m_HaulingStabilityProblem.AddFpe(_T("Harped"), Xh4, FpeHarped, XpsHarped, Yh4);
+   m_HaulingStabilityProblem.AddFpe(_T("Harped"), L, FpeHarped, XpsHarped, Yh4);
+
+   m_HaulingStabilityProblem.AddFpe(_T("Temporary"), 0, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(_T("Temporary"), Xh1, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(_T("Temporary"), Xh2, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(_T("Temporary"), Xh3, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(_T("Temporary"), Xh4, FpeTemp, XpsTemp, YpsTemp);
+   m_HaulingStabilityProblem.AddFpe(_T("Temporary"), L, FpeTemp, XpsTemp, YpsTemp);
 }
 
 void CPGStableModel::ResolveExactHaulingStrandLocations() const
@@ -393,7 +424,9 @@ void CPGStableModel::ResolveExactHaulingStrandLocations() const
       {
          Float64 Xs, Ys, Xh, Yh, Xt, Yt;
          GetStrandLocations(fpe, &m_Girder[m_GirderType], &Xs, &Ys, &Xh, &Yh, &Xt, &Yt);
-         m_HaulingStabilityProblem.AddFpe(fpe.X, fpe.FpeStraight, Xs, Ys, fpe.FpeHarped, Xh, Yh, fpe.FpeTemp, Xt, Yt);
+         m_HaulingStabilityProblem.AddFpe(_T("Straight"), fpe.X, fpe.FpeStraight, Xs, Ys);
+         m_HaulingStabilityProblem.AddFpe(_T("Harped"), fpe.X, fpe.FpeHarped, Xh, Yh);
+         m_HaulingStabilityProblem.AddFpe(_T("Temporary"), fpe.X, fpe.FpeTemp, Xt, Yt);
       }
    }
 }

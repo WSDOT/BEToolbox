@@ -172,9 +172,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CustomBuildStep>
       <Message />
-      <Command>xcopy /y /d .\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1D.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\</Command>
+      <Command>xcopy /y /d $(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1D.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\</Command>
       <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11D.dll</Outputs>
     </CustomBuildStep>
     <CXX_Tree_Mapping_Rule>
@@ -185,7 +185,7 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BR
     </CXX_Tree_Mapping_Rule>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -195,7 +195,7 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BR
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>.\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1D.lib;.\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1D.lib;$(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -208,9 +208,9 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BR
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CustomBuildStep>
       <Message />
-      <Command>xcopy /y /d .\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1D.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\</Command>
+      <Command>xcopy /y /d $(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1D.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\</Command>
       <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11D.dll</Outputs>
     </CustomBuildStep>
     <CXX_Tree_Mapping_Rule>
@@ -224,14 +224,14 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BR
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>.\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1D.lib;.\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1D.lib;$(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -245,9 +245,9 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BR
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
       <Message />
-      <Command>xcopy /y /d .\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+      <Command>xcopy /y /d $(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
 </Command>
       <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11.dll</Outputs>
     </CustomBuildStep>
@@ -258,7 +258,7 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRI
       <ExportSymbol>BETOOLBOXXMLCLASS</ExportSymbol>
     </CXX_Tree_Mapping_Rule>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -267,7 +267,7 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRI
       <DebugInformationFormat />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>.\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1.lib;.\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1.lib;$(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -280,9 +280,9 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRI
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CustomBuildStep>
       <Message />
-      <Command>xcopy /y /d .\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+      <Command>xcopy /y /d $(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
+xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
 </Command>
       <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11.dll</Outputs>
     </CustomBuildStep>
@@ -296,7 +296,7 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRI
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -305,7 +305,7 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRI
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>.\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1.lib;.\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1.lib;$(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -330,7 +330,7 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRI
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -365,7 +365,7 @@ xcopy /y /d .\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRI
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;.\Apache\XALANCPKG-11-31-X64-VC100\Include;.\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

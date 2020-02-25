@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2019  Washington State Department of Transportation
+// Copyright © 1999-2020  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -211,6 +211,16 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
 
 bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segmentKey,CPGStableModel& model)
 {
+   GET_IFACE2(pBroker, ISegmentTendonGeometry, pSegmentTendonGeometry);
+   DuctIndexType nSegmentDucts = pSegmentTendonGeometry->GetDuctCount(segmentKey);
+   if (0 < nSegmentDucts)
+   {
+      if (AfxMessageBox(_T("Plant installed segment post-tensioning cannot be exported into the PGStable model. Would you like to proceed?"), MB_ICONINFORMATION | MB_YESNO) == IDNO)
+      {
+         return false;
+      }
+   }
+
    GET_IFACE2(pBroker,IProgress,pProgress);
    CEAFAutoProgress ap(pProgress);
    pProgress->UpdateMessage(_T("Exporting PGStable model"));

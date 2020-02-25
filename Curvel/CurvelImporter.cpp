@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2019  Washington State Department of Transportation
+// Copyright © 1999-2020  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -111,19 +111,52 @@ STDMETHODIMP CCurvelImporter::Import(IBroker* pBroker)
       {
          Float64 cpo = super->ProfileGradeOffset();
 
+         if (IsZero(cpo))
+         {
+            sectionData.NumberOfSegmentsPerSection = 2;
+            sectionData.ControllingRidgePointIdx = 1;
+         }
+         else if (cpo > 0.0) 
+         {
+            sectionData.NumberOfSegmentsPerSection = 3;
+            sectionData.ControllingRidgePointIdx = 1;
+         }
+         else // (cpo < 0.0) 
+         {
+            sectionData.NumberOfSegmentsPerSection = 3;
+            sectionData.ControllingRidgePointIdx = 2;
+         }
+
          for ( int i = 0; i < 3; i++ )
          {
             CrownSlopeType& crownSlope = super->CrownSlope();
             CrownSlopeType::SuperelevationProfilePoint_sequence& superPP = crownSlope.SuperelevationProfilePoint();
             ATLASSERT(superPP.size() == 3);
 
-            CrownData2 crown;
+            RoadwaySectionTemplate crown;
             crown.Station  = superPP[i].Station();
-            crown.Left     = superPP[i].LeftSlope();
-            crown.Right    = superPP[i].RightSlope();
-            crown.CrownPointOffset = cpo;
+            crown.LeftSlope     = superPP[i].LeftSlope();
+            crown.RightSlope    = superPP[i].RightSlope();
 
-            sectionData.Superelevations.push_back(crown);
+            // add extra segments for crown point offset
+            if (!IsZero(cpo))
+            {
+               RoadwaySegmentData seg;
+               if (cpo > 0.0)
+               {
+                  seg.Length = cpo;
+                  seg.Slope = crown.LeftSlope;
+               }
+               else
+               {
+                  seg.Length = -cpo;
+                  seg.Slope = crown.RightSlope;
+               }
+
+               crown.SegmentDataVec.push_back(seg);
+            }
+
+            sectionData.RoadwaySectionTemplates.push_back(crown);
          }
       }
 

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2019  Washington State Department of Transportation
+// Copyright © 1999-2020  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -133,9 +133,8 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
    if (fileDlg.DoModal() == IDOK)
    {
       GET_IFACE2(pBroker, IShapes, pShapes);
-      GET_IFACE2(pBroker, ISectionProperties, pSectProps);
       CComPtr<IShape> shape;
-      pShapes->GetSegmentShape(intervalIdx, poi, false, pgsTypes::scGirder,pSectProps->GetHaunchAnalysisSectionPropertiesType(), &shape);
+      pShapes->GetSegmentShape(intervalIdx, poi, false, pgsTypes::scGirder, &shape);
 
       CComPtr<IPoint2dCollection> primaryShapePoints;
       CComPtr<IPoint2dCollection> secondaryShapePoints;
@@ -235,7 +234,10 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
       }
       else
       {
-         EcDeck = pMaterials->GetDeckEc(intervalIdx);
+         GET_IFACE2(pBroker, IPointOfInterest, pPoi);
+         IndexType deckCastingRegionIdx = pPoi->GetDeckCastingRegion(poi);
+         ATLASSERT(deckCastingRegionIdx != INVALID_INDEX);
+         EcDeck = pMaterials->GetDeckEc(deckCastingRegionIdx,intervalIdx);
       }
 
       std::unique_ptr<GenComp> genCompXML( CreateGenCompModel() );

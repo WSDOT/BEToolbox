@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2019  Washington State Department of Transportation
+// Copyright © 1999-2020  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -56,33 +56,6 @@ END_MESSAGE_MAP()
 
 void CPGStableFpeGrid::DoDataExchange(CDataExchange* pDX)
 {
-   //CBoxGdrDoc* pDoc = (CBoxGdrDoc*)EAFGetDocument();
-   //if ( pDX->m_bSaveAndValidate )
-   //{
-   //   std::vector<BOXGDRDIMENSIONS> problems;
-   //   ROWCOL nRows = GetRowCount();
-   //   for ( ROWCOL row = 0; row < nRows; row++ )
-   //   {
-   //      BOXGDRDIMENSIONS dimensions;
-   //      GetProblemData(row+1,dimensions);
-   //      problems.push_back(dimensions);
-   //   }
-
-   //   pDoc->ClearProblems();
-   //   pDoc->AddProblems(problems);
-   //}
-   //else
-   //{
-   //   if ( 0 < GetRowCount() )
-   //      RemoveRows(1,GetRowCount());
-
-   //   IndexType nProblems = pDoc->GetProblemCount();
-   //   for ( IndexType idx = 0; idx < nProblems; idx++ )
-   //   {
-   //      const BOXGDRDIMENSIONS& problem = pDoc->GetProblem(idx);
-   //      InsertRow(problem);
-   //   }
-   //}
 }
 
 /////////////////////////////////////////////////////////////////////////////

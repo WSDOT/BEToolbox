@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2019  Washington State Department of Transportation
+// Copyright © 1999-2020  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -371,35 +371,22 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
       CrownSlopeType::SuperelevationProfilePoint_sequence& superelevationPointsXML(crownXML.SuperelevationProfilePoint());
 
       const RoadwaySectionData& sectionData = pRoadway->GetRoadwaySectionData();
-      std::size_t nSections = sectionData.Superelevations.size();
+      if ( sectionData.NumberOfSegmentsPerSection > 2 )
+      {
+         CString strMsg;
+         strMsg.Format(_T("Curvel is limited to a single crown point. Only the two exterior crown slopes will be exported. In addtion, crown point offsets are not considered."));
+         AfxMessageBox(strMsg,MB_OK | MB_ICONINFORMATION);
+      }
+
+      std::size_t nSections = sectionData.RoadwaySectionTemplates.size();
       if ( nSections <= 3 )
       {
-         Float64 crownPointOffset;
-         bool bNotifyCrownPointOffset = false;
+         Float64 crownPointOffset = 0.0;
          for ( std::size_t i = 0; i < nSections; i++ )
          {
-            const auto& crown = sectionData.Superelevations[i];
-            if ( i == 0 )
-            {
-               crownPointOffset = crown.CrownPointOffset;
-            }
-            else
-            {
-               if ( !IsEqual(crownPointOffset,crown.CrownPointOffset) )
-               {
-                  bNotifyCrownPointOffset = true;
-               }
-            }
+            const auto& crown = sectionData.RoadwaySectionTemplates[i];
 
-            superelevationPointsXML.push_back(SuperelevationProfilePointType(crown.Station,crown.Left,crown.Right));
-         }
-
-         if ( bNotifyCrownPointOffset )
-         {
-            GET_IFACE2(pBroker,IEAFDisplayUnits,pDisplayUnits);
-            CString strMsg;
-            strMsg.Format(_T("Curvel is limited to a single crown point offset. The exported crown point offset is %s."),::FormatOffset(crownPointOffset,pDisplayUnits->GetAlignmentLengthUnit(),false));
-            AfxMessageBox(strMsg,MB_OK | MB_ICONINFORMATION);
+            superelevationPointsXML.push_back(SuperelevationProfilePointType(crown.Station,crown.LeftSlope,crown.RightSlope));
          }
 
          if ( nSections < 3 )
@@ -421,12 +408,12 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
          GET_IFACE2(pBroker,IEAFDisplayUnits,pDisplayUnits);
          for ( std::size_t i = 0; i < nSections; i++ )
          {
-            const auto& crown = sectionData.Superelevations[i];
+            const auto& crown = sectionData.RoadwaySectionTemplates[i];
             CString str;
             str.Format(_T("Section %d: Station %s, Left Slope: %s, Right Slope %s"), i+1,
                        ::FormatStation(pDisplayUnits->GetStationFormat(),crown.Station),
-                       ::FormatScalar(crown.Left,pDisplayUnits->GetScalarFormat()),
-                       ::FormatScalar(crown.Right,pDisplayUnits->GetScalarFormat()));
+                       ::FormatScalar(crown.LeftSlope,pDisplayUnits->GetScalarFormat()),
+                       ::FormatScalar(crown.RightSlope,pDisplayUnits->GetScalarFormat()));
             strOptions += str + _T("\n");
          }
          std::vector<int> choices;
@@ -443,34 +430,15 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
          ATLASSERT(choices.size()==3);
          std::vector<int>::iterator iter(choices.begin());
          std::vector<int>::iterator end(choices.end());
-         Float64 crownPointOffset;
+         Float64 crownPointOffset=0.0;
          bool bNotifyCrownPointOffset = false;
          int i = 0;
          for ( ; iter != end; iter++, i++ )
          {
-            const auto& crown = sectionData.Superelevations[*iter];
-            if ( i == 0 )
-            {
-               crownPointOffset = crown.CrownPointOffset;
-            }
-            else
-            {
-               if ( !IsEqual(crownPointOffset,crown.CrownPointOffset) )
-               {
-                  bNotifyCrownPointOffset = true;
-               }
-            }
-
-            superelevationPointsXML.push_back(SuperelevationProfilePointType(crown.Station,crown.Left,crown.Right));
+            const auto& crown = sectionData.RoadwaySectionTemplates[*iter];
+            superelevationPointsXML.push_back(SuperelevationProfilePointType(crown.Station,crown.LeftSlope,crown.RightSlope));
             SuperelevationDataType superelevationXML(crownPointOffset,crownXML);
             curvelXML->SuperelevationData(superelevationXML);
-         }
-
-         if ( bNotifyCrownPointOffset )
-         {
-            CString strMsg;
-            strMsg.Format(_T("Curvel is limited to a single crown point offset. The exported crown point offset is %s."),::FormatOffset(crownPointOffset,pDisplayUnits->GetAlignmentLengthUnit(),false));
-            AfxMessageBox(strMsg,MB_OK | MB_ICONINFORMATION);
          }
       }
 
