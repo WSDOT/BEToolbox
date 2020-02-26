@@ -39,7 +39,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 
    // Load the spectral values in binary format
    SpectralValues* pValues = new SpectralValues[SPECTRAL_VALUE_COUNT];
-   std::_tstring strResourceFile = _T("\\ARP\\BridgeLinkBEToolbox\\USGS\\2014\\us_hazard_7pc75.2014.bin");
+   std::_tstring strResourceFile = _T("\\ARP\\BEToolbox\\USGS\\2014\\us_hazard_7pc75.2014.bin");
    std::ifstream resourceFile(strResourceFile.c_str(),std::ios::binary);
    if ( resourceFile.bad() || resourceFile.fail() )
    {
