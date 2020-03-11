@@ -57,7 +57,7 @@ CPGStableModel::CPGStableModel()
    matConcreteEx liftingConcrete, haulingConcrete;
 
    Float64 density = ::ConvertToSysUnits(0.155,unitMeasure::KipPerFeet3); // without rebar (used to compute Ec)
-   Float64 densityWithRebar = ::ConvertToSysUnits(0.160,unitMeasure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
+   Float64 densityWithRebar = ::ConvertToSysUnits(0.165,unitMeasure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
    liftingConcrete.SetDensity(density);
    haulingConcrete.SetDensity(density);
    liftingConcrete.SetDensityForWeight(densityWithRebar);
@@ -76,8 +76,8 @@ CPGStableModel::CPGStableModel()
    liftingConcrete.SetFc(fci);
    haulingConcrete.SetFc(fc);
 
-   Float64 Eci = ::lrfdConcreteUtil::ModE(fci,density,false/*ignore LRFD range checks*/);
-   Float64 Ec  = ::lrfdConcreteUtil::ModE(fc, density,false/*ignore LRFD range checks*/);
+   Float64 Eci = ::lrfdConcreteUtil::ModE(liftingConcrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
+   Float64 Ec  = ::lrfdConcreteUtil::ModE(liftingConcrete.GetType(), fc, density,false/*ignore LRFD range checks*/);
 
    liftingConcrete.SetE(Eci);
    haulingConcrete.SetE(Ec);
@@ -159,7 +159,7 @@ stbLiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
    if ( m_bComputeEci )
    {
       Float64 density = concrete.GetDensity();
-      Float64 Ec = lrfdConcreteUtil::ModE(fci,density,false/*ignore LRFD range checks*/);
+      Float64 Ec = lrfdConcreteUtil::ModE(concrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
       if ( lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion() )
       {
          Ec *= m_K1*m_K2;
@@ -170,7 +170,7 @@ stbLiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
    Float64 fr = ::lrfdConcreteUtil::ModRupture(fci,m_LiftingFrCoefficient);
    concrete.SetFlexureFr(fr);
 
-   concrete.SetLambda(lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(matConcrete::Normal,concrete.GetDensity(),false,0,0));
+   concrete.SetLambda(lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(),concrete.GetDensity(),false,0,0));
 
    m_LiftingStabilityProblem.SetConcrete(concrete);
 
@@ -237,7 +237,7 @@ stbHaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
    if ( m_bComputeEc )
    {
       Float64 density = concrete.GetDensity();
-      Float64 Ec = ::lrfdConcreteUtil::ModE(fc,density,false/*ignore LRFD range checks*/);
+      Float64 Ec = ::lrfdConcreteUtil::ModE(concrete.GetType(),fc,density,false/*ignore LRFD range checks*/);
       if ( lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion() )
       {
          Ec *= m_K1*m_K2;
@@ -249,7 +249,7 @@ stbHaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
    Float64 fr = ::lrfdConcreteUtil::ModRupture(fc,m_HaulingFrCoefficient);
    concrete.SetFlexureFr(fr);
 
-   concrete.SetLambda(lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(matConcrete::Normal,concrete.GetDensity(),false,0,0));
+   concrete.SetLambda(lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(),concrete.GetDensity(),false,0,0));
 
    m_HaulingStabilityProblem.SetConcrete(concrete);
 
@@ -578,6 +578,22 @@ Float64 CPGStableModel::GetHarpedStrandLocation(Float64 X,Float64 X1,Float64 Y1,
    {
       return Y4;
    }
+}
+
+bool CPGStableModel::SetConcreteType(matConcrete::Type type)
+{
+   if (m_LiftingStabilityProblem.GetConcrete().GetType() != type)
+   {
+      m_LiftingStabilityProblem.GetConcrete().SetType(type);
+      m_HaulingStabilityProblem.GetConcrete().SetType(type);
+      return true;
+   }
+   return false;
+}
+
+matConcrete::Type CPGStableModel::GetConcreteType() const
+{
+   return m_LiftingStabilityProblem.GetConcrete().GetType();
 }
 
 bool CPGStableModel::SetDensity(Float64 density)

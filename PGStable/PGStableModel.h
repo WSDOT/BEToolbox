@@ -54,6 +54,9 @@ public:
 
    // NOTE: For all the "Get" methods.... returns true if the value changed and false if it didn't
 
+   bool SetConcreteType(matConcrete::Type type);
+   matConcrete::Type GetConcreteType() const;
+
    bool SetDensity(Float64 density);
    Float64 GetDensity() const;
 

@@ -739,7 +739,7 @@ CString CPGStableDoc::UpdateEc(const CString& strFc,const CString& strDensity,co
          fc       = ::ConvertToSysUnits(fc,      stress_unit);
          density  = ::ConvertToSysUnits(density, density_unit);
 
-         ec = k1*k2*lrfdConcreteUtil::ModE(fc,density,false);
+         ec = k1*k2*lrfdConcreteUtil::ModE(m_Model.GetConcreteType(),fc,density,false);
 
          strEc.Format(_T("%s"),FormatDimension(ec,pDispUnits->ModE,false));
    }
