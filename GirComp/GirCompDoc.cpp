@@ -79,7 +79,7 @@ CGirCompDoc::CGirCompDoc()
 
    m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
-   UIHints(FALSE); // not using UIHints feature
+   EnableUIHints(FALSE); // not using UIHints feature
 }
 
 CGirCompDoc::~CGirCompDoc()

@@ -57,7 +57,7 @@ CBoxGdrDoc::CBoxGdrDoc()
 
    m_RptMgr.AddReportBuilder(pRptBuilder);
 
-   UIHints(FALSE); // not using UIHints feature
+   EnableUIHints(FALSE); // not using UIHints feature
 }
 
 CBoxGdrDoc::~CBoxGdrDoc()

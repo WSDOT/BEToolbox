@@ -72,7 +72,7 @@ CGenCompDoc::CGenCompDoc()
 
    m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
-   UIHints(FALSE); // not using UIHints feature
+   EnableUIHints(FALSE); // not using UIHints feature
 }
 
 CGenCompDoc::~CGenCompDoc()

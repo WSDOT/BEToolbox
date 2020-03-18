@@ -75,7 +75,7 @@ CPGStableDoc::CPGStableDoc()
    m_strHaulTruck = gs_strHaulTruck;
    m_strGirder = gs_strGirder;
 
-   UIHints(FALSE); // not using UIHints feature
+   EnableUIHints(FALSE); // not using UIHints feature
 }
 
 CPGStableDoc::~CPGStableDoc()

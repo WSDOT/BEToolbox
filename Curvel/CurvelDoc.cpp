@@ -87,7 +87,7 @@ CCurvelDoc::CCurvelDoc()
 
    m_pDefaultRptSpec = pCurvelRptSpec;
 
-   UIHints(FALSE); // not using UIHints feature
+   EnableUIHints(FALSE); // not using UIHints feature
 }
 
 CCurvelDoc::~CCurvelDoc()
