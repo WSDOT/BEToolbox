@@ -149,10 +149,11 @@ void CPGStableDoc::LoadPGSLibrary()
       strURL = strMasterLibaryFile;
    }
 
-   CString strServer = pApp->GetProfileString(_T("Options"),_T("CatalogServer2"));
+   CString strPublisher = pApp->GetProfileString(_T("Options"), _T("Publisher2"));
+   CString strServer = pApp->GetProfileString(_T("Options"), _T("CatalogServer2"));
 
    m_LibMgr.SetName( _T("PGSLibrary") );
-   m_LibMgr.SetMasterLibraryInfo(strServer,strURL);
+   m_LibMgr.SetMasterLibraryInfo(strPublisher,strServer,strURL);
 
    CComBSTR bpath(strMasterLibaryFile);
 
