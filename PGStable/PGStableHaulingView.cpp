@@ -270,13 +270,14 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetHaulingCriteria(m_HaulingCriteria);
 
-      if ( m_Strands.strandMethod == CPGStableStrands::Simplified )
+      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), HAULING);
+      if ( strands.strandMethod == CPGStableStrands::Simplified )
       {
-         m_Strands.FpeStraight = Fs;
-         m_Strands.FpeHarped   = Fh;
-         m_Strands.FpeTemp     = Ft;
+         strands.FpeStraight = Fs;
+         strands.FpeHarped   = Fh;
+         strands.FpeTemp     = Ft;
       }
-      pDoc->SetStrands(pDoc->GetGirderType(),HAULING,m_Strands);
+      pDoc->SetStrands(pDoc->GetGirderType(),HAULING, strands);
 
       pDoc->SetHaulTruck(strHaulTruck);
 
@@ -432,8 +433,6 @@ void CPGStableHaulingView::OnActivateView()
       m_ctrlEc.GetWindowText(m_strUserEc);
    }
 
-   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   m_Strands = pDoc->GetStrands(pDoc->GetGirderType(),HAULING);
    UpdateFpeControls();
    UpdateCriteriaControls();
    OnHaulTruckChanged();
@@ -506,7 +505,9 @@ void CPGStableHaulingView::OnChange()
 
 void CPGStableHaulingView::UpdateFpeControls()
 {
-   BOOL bEnable = (m_Strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), HAULING);
+   BOOL bEnable = (strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
    GetDlgItem(IDC_FPE_STRAIGHT)->EnableWindow(bEnable);
    GetDlgItem(IDC_FPE_HARPED)->EnableWindow(bEnable);
    GetDlgItem(IDC_FPE_TEMP)->EnableWindow(bEnable);
@@ -551,10 +552,11 @@ void CPGStableHaulingView::OnEditFpe()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    CPGStableEffectivePrestressDlg dlg;
-   dlg.m_Strands = m_Strands;
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), HAULING);
    if ( dlg.DoModal() == IDOK )
    {
-      m_Strands = dlg.m_Strands;
+      pDoc->SetStrands(pDoc->GetGirderType(), HAULING, dlg.m_Strands);
 
       Float64 Fs,Fh,Ft;
       GetMaxFpe(&Fs,&Fh,&Ft);
@@ -581,7 +583,6 @@ void CPGStableHaulingView::OnInitialUpdate()
       pcbHaulTruck->AddString(key.c_str());
    }
 
-   m_Strands = pDoc->GetStrands(pDoc->GetGirderType(),HAULING);
    m_HaulingCriteria = pDoc->GetHaulingCriteria();
 
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
@@ -621,18 +622,21 @@ void CPGStableHaulingView::OnInitialUpdate()
 
 void CPGStableHaulingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
 {
-   if ( m_Strands.strandMethod == CPGStableStrands::Simplified )
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), HAULING);
+
+   if (strands.strandMethod == CPGStableStrands::Simplified )
    {
-      *pFpeStraight = m_Strands.FpeStraight;
-      *pFpeHarped   = m_Strands.FpeHarped;
-      *pFpeTemp     = m_Strands.FpeTemp;
+      *pFpeStraight = strands.FpeStraight;
+      *pFpeHarped   = strands.FpeHarped;
+      *pFpeTemp     = strands.FpeTemp;
    }
    else
    {
       Float64 FpeStraight = 0;
       Float64 FpeHarped = 0;
       Float64 FpeTemporary = 0;
-      for (const auto& fpe : m_Strands.m_vFpe)
+      for (const auto& fpe : strands.m_vFpe)
       {
          FpeStraight  = Max(FpeStraight,fpe.FpeStraight);
          FpeHarped    = Max(FpeHarped,fpe.FpeHarped);
