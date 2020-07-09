@@ -49,7 +49,6 @@ protected:
 
    void GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp);
 
-   CPGStableStrands m_Strands;
    CPGStableHaulingCriteria m_HaulingCriteria;
 
 public:

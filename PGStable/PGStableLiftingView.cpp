@@ -218,13 +218,14 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetLiftingCriteria(m_LiftingCriteria);
 
-      if ( m_Strands.strandMethod == CPGStableStrands::Simplified )
+      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+      if (strands.strandMethod == CPGStableStrands::Simplified )
       {
-         m_Strands.FpeStraight = Fs;
-         m_Strands.FpeHarped   = Fh;
-         m_Strands.FpeTemp     = Ft;
+         strands.FpeStraight = Fs;
+         strands.FpeHarped   = Fh;
+         strands.FpeTemp     = Ft;
       }
-      pDoc->SetStrands(pDoc->GetGirderType(),LIFTING,m_Strands);
+      pDoc->SetStrands(pDoc->GetGirderType(),LIFTING, strands);
    }
 }
 
@@ -304,8 +305,6 @@ void CPGStableLiftingView::OnActivateView()
       m_ctrlEc.GetWindowText(m_strUserEc);
    }
 
-   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   m_Strands = pDoc->GetStrands(pDoc->GetGirderType(),LIFTING);
    UpdateFpeControls();
    UpdateCriteriaControls();
 
@@ -376,7 +375,10 @@ void CPGStableLiftingView::OnChange()
 
 void CPGStableLiftingView::UpdateFpeControls()
 {
-   BOOL bEnable = (m_Strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+
+   BOOL bEnable = (strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
    GetDlgItem(IDC_FPE_STRAIGHT)->EnableWindow(bEnable);
    GetDlgItem(IDC_FPE_HARPED)->EnableWindow(bEnable);
    GetDlgItem(IDC_FPE_TEMP)->EnableWindow(bEnable);
@@ -411,11 +413,13 @@ void CPGStableLiftingView::UpdateCriteriaControls()
 void CPGStableLiftingView::OnEditFpe()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
    CPGStableEffectivePrestressDlg dlg;
-   dlg.m_Strands = m_Strands;
+   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
    if ( dlg.DoModal() == IDOK )
    {
-      m_Strands = dlg.m_Strands;
+      pDoc->SetStrands(pDoc->GetGirderType(),LIFTING,dlg.m_Strands);
 
       Float64 Fs,Fh,Ft;
       GetMaxFpe(&Fs,&Fh,&Ft);
@@ -432,7 +436,6 @@ void CPGStableLiftingView::OnInitialUpdate()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
-   m_Strands = pDoc->GetStrands(pDoc->GetGirderType(),LIFTING);
    m_LiftingCriteria = pDoc->GetLiftingCriteria();
 
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
@@ -477,18 +480,21 @@ void CPGStableLiftingView::RefreshReport()
 
 void CPGStableLiftingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
 {
-   if ( m_Strands.strandMethod == CPGStableStrands::Simplified )
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+
+   if (strands.strandMethod == CPGStableStrands::Simplified )
    {
-      *pFpeStraight = m_Strands.FpeStraight;
-      *pFpeHarped   = m_Strands.FpeHarped;
-      *pFpeTemp     = m_Strands.FpeTemp;
+      *pFpeStraight = strands.FpeStraight;
+      *pFpeHarped   = strands.FpeHarped;
+      *pFpeTemp     = strands.FpeTemp;
    }
    else
    {
       Float64 FpeStraight = 0;
       Float64 FpeHarped = 0;
       Float64 FpeTemporary = 0;
-      for (const auto& fpe : m_Strands.m_vFpe)
+      for (const auto& fpe : strands.m_vFpe)
       {
          FpeStraight  = Max(FpeStraight,fpe.FpeStraight);
          FpeHarped    = Max(FpeHarped,fpe.FpeHarped);
