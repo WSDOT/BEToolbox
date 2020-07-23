@@ -179,7 +179,8 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_CBString(pDX,IDC_GIRDER_LIST,strGirder);
 
    stbGirder girder = pDoc->GetGirder(PRISMATIC);
-   CPGStableStrands strands = pDoc->GetStrands(PRISMATIC,LIFTING);
+   CPGStableStrands lifting_strands = pDoc->GetStrands(PRISMATIC, LIFTING);
+   CPGStableStrands hauling_strands = pDoc->GetStrands(PRISMATIC, HAULING);
 
 
    Float64 Cd = girder.GetDragCoefficient();
@@ -187,7 +188,8 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDV_GreaterThanZero(pDX,IDC_DRAG_COEFFICIENT,Cd);
 
    DDX_Girder(pDX,girder);
-   DDX_PrismaticGirderStrands(pDX,strands);
+   DDX_PrismaticGirderStrands(pDX, lifting_strands);
+   DDX_PrismaticGirderStrands(pDX, hauling_strands);
 
    int stressPointType = pDoc->GetStressPointType();
    DDX_Radio(pDX, IDC_COMPUTE_STRESS_POINTS, stressPointType);
@@ -232,8 +234,8 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
       }
 
       pDoc->SetGirder(PRISMATIC,girder);
-      pDoc->SetStrands(PRISMATIC,LIFTING,strands);
-      pDoc->SetStrands(PRISMATIC, HAULING, strands);
+      pDoc->SetStrands(PRISMATIC, LIFTING, lifting_strands);
+      pDoc->SetStrands(PRISMATIC, HAULING, hauling_strands);
 
       pDoc->SetDensity(density);
       pDoc->SetDensityWithRebar(densityWithRebar);
