@@ -510,9 +510,12 @@ void CPGStablePrismaticGirder::OnGirderChanged()
       CComPtr<IShapeProperties> shapeProperties;
       pShape->get_ShapeProperties(&shapeProperties);
 
-      Float64 Wtf, Wbf, Hg;
-      section->get_TopWidth(&Wtf);
-      section->get_BottomWidth(&Wbf);
+      Float64 wleft, wright;
+      section->get_TopWidth(&wleft, &wright);
+      Float64 Wtf = wleft + wright;
+      section->get_BottomWidth(&wleft, &wright);
+      Float64 Wbf = wleft + wright;
+      Float64 Hg;
       section->get_OverallHeight(&Hg);
 
       Float64 Xleft,Ytop, Ag, Ixx, Iyy, Ixy;
