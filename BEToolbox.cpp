@@ -39,6 +39,7 @@
 #include <WBFLCore_i.c>
 #include <WBFLTools_i.c>
 #include <Plugins\PGSuperIEPlugin.h>
+#include <Plugins\BeamFamilyCLSID.h>
 
 #include <EAF\EAFDocument.h>
 #include <EAF\EAFDisplayUnits.h>

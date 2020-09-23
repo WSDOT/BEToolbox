@@ -31,6 +31,7 @@
 #include <System\System.h>
 
 #include <IFace\BeamFactory.h>
+#include <Plugins\BeamFamilyCLSID.h>
 
 #include <memory>
 
@@ -838,6 +839,7 @@ bool CPGStableDoc::IsPermittedGirderEntry(const GirderLibraryEntry* pGirderEntry
    CComPtr<IBeamFactory> factory;
    pGirderEntry->GetBeamFactory(&factory);
 
-   CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be nullptr
-   return (splicedFactory == nullptr && factory->IsPrismatic(dimensions) ? true : false);
+   // Stabilty analysis is only applicable to I-Beam type girders
+   auto clsidFamily = factory->GetFamilyCLSID();
+   return ::IsEqualGUID(clsidFamily, CLSID_WFBeamFamily) || ::IsEqualGUID(clsidFamily, CLSID_DeckBulbTeeBeamFamily);
 }
