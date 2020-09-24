@@ -110,6 +110,7 @@ public:
 protected:
    int m_GirderType;
    int m_StressPointType;
+   int m_ConcreteType;
 
    CPGStableStrands m_Strands[2][2]; // array index [girderType][modelType]
    mutable stbGirder m_Girder[2];

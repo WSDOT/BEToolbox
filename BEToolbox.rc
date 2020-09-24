@@ -455,14 +455,14 @@ BEGIN
     LTEXT           "Tension",IDC_STATIC,23,465,26,8
     LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS,30,477,159,8
     EDITTEXT        IDC_LIFTING_TENSION,40,489,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_LIFTING_TENSION_UNIT,85,491,60,8
+    LTEXT           "(lambda)sqrt(f'ci (MPa))",IDC_LIFTING_TENSION_UNIT,85,491,93,8
     CONTROL         "But not greater than ",IDC_CHECK_LIFTING_TENSION_MAX,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,40,508,77,10
     EDITTEXT        IDC_LIFTING_TENSION_MAX,119,506,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "MPa",IDC_LIFTING_TENSION_MAX_UNIT,163,508,16,8
     LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB,28,524,159,8
     EDITTEXT        IDC_LIFTING_TENSION_WITH_REBAR,40,535,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_LIFTING_TENSION_WITH_REBAR_UNIT,85,537,60,8
+    LTEXT           "(lambda)sqrt(f'ci (MPa))",IDC_LIFTING_TENSION_WITH_REBAR_UNIT,85,537,103,8
     GROUPBOX        "Browser Placeholder",IDC_BROWSER,268,7,509,560,NOT WS_VISIBLE
 END
 
@@ -580,25 +580,25 @@ BEGIN
     LTEXT           "Tension for Normal Crown Slope Case",IDC_STATIC,24,604,121,8
     LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS2,28,614,159,8
     EDITTEXT        IDC_HAULING_TENSION_CROWN,24,625,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_CROWN_UNIT,68,628,90,8
+    LTEXT           "(lambda)sqrt(f'ci (MPa))",IDC_HAULING_TENSION_CROWN_UNIT,68,628,90,8
     CONTROL         "But not greater than ",IDC_CHECK_HAULING_TENSION_MAX_CROWN,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,645,77,10
     EDITTEXT        IDC_HAULING_TENSION_MAX_CROWN,106,643,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "MPa",IDC_HAULING_TENSION_MAX_CROWN_UNIT,150,646,24,8
     LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB2,28,658,159,8
     EDITTEXT        IDC_HAULING_TENSION_WITH_REBAR_CROWN,24,669,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,68,671,90,8
+    LTEXT           "(lambda)sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,68,671,90,8
     LTEXT           "Tension for the Max. Superelevation Case",IDC_STATIC,24,687,136,8
     LTEXT           "In areas without sufficient bonded reinforcement",IDC_STATIC_ACSTS3,28,697,159,8
     EDITTEXT        IDC_HAULING_TENSION_SUPER,24,708,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_SUPER_UNIT,68,711,90,8
+    LTEXT           "(lambda)sqrt(f'ci (MPa))",IDC_HAULING_TENSION_SUPER_UNIT,68,711,90,8
     CONTROL         "But not greater than ",IDC_CHECK_HAULING_TENSION_MAX_SUPER,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,26,726,77,10
     EDITTEXT        IDC_HAULING_TENSION_MAX_SUPER,106,724,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "MPa",IDC_HAULING_TENSION_MAX_SUPER_UNIT,150,726,24,8
     LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB3,28,739,159,8
     EDITTEXT        IDC_HAULING_TENSION_WITH_REBAR_SUPER,24,750,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,68,751,90,8
+    LTEXT           "(lambda)sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,68,751,90,8
     GROUPBOX        "Limitations",IDC_STATIC,17,775,233,57
     LTEXT           "Maximum distance between bunk points",IDC_STATIC,25,788,128,8
     EDITTEXT        IDC_MAX_BUNK,173,785,40,14,ES_RIGHT | ES_AUTOHSCROLL
@@ -692,16 +692,18 @@ BEGIN
                     "Static",SS_LEFTNOWORDWRAP | WS_GROUP,413,47,108,19
     EDITTEXT        IDC_DENSITY_WITH_REBAR,544,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,589,50,36,8
-    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,413,86,170,85
-    PUSHBUTTON      "+",IDC_ADD,586,86,18,14
-    PUSHBUTTON      "-",IDC_REMOVE,586,103,18,14
-    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,414,74,170,8
+    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,413,100,170,85
+    PUSHBUTTON      "+",IDC_ADD,586,100,18,14
+    PUSHBUTTON      "-",IDC_REMOVE,586,117,18,14
+    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,414,88,170,8
     GROUPBOX        "Wind Characteristics",IDC_STATIC,640,7,134,203
     LTEXT           "Drag Coefficient, Cd",IDC_STATIC,651,28,66,8
     EDITTEXT        IDC_DRAG_COEFFICIENT,724,26,40,14,ES_AUTOHSCROLL
     LTEXT           "ex",IDC_EX_LABEL,16,244,9,8
     EDITTEXT        IDC_EX,28,242,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_EX_UNIT,71,244,19,8
+    CONTROL         "Normalweight Concrete",IDC_NWC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,414,69,91,10
+    CONTROL         "Lightweight Concrete",IDC_LWC,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,507,68,84,10
 END
 
 IDD_NONPRISMATIC_GIRDER DIALOGEX 0, 0, 794, 387
@@ -771,13 +773,13 @@ BEGIN
     EDITTEXT        IDC_DENSITY,708,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_DENSITY_UNIT,751,26,29,8
     CONTROL         "Unit Weight with Reinforcement\n(used to compute dead load)",IDC_STATIC,
-                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,577,47,108,19
-    EDITTEXT        IDC_DENSITY_WITH_REBAR,708,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,751,50,29,8
-    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,577,86,170,63
-    PUSHBUTTON      "+",IDC_ADD_LOAD,750,86,18,14
-    PUSHBUTTON      "-",IDC_REMOVE_LOAD,750,103,18,14
-    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,578,74,170,8
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,577,43,108,19
+    EDITTEXT        IDC_DENSITY_WITH_REBAR,708,43,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,751,46,29,8
+    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,577,91,170,63
+    PUSHBUTTON      "+",IDC_ADD_LOAD,750,91,18,14
+    PUSHBUTTON      "-",IDC_REMOVE_LOAD,750,108,18,14
+    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,578,79,170,8
     CONTROL         "",IDC_GIRDER,"Static",SS_BLACKFRAME,256,233,460,140
     GROUPBOX        "Wind Characteristics",IDC_STATIC,566,162,221,40
     LTEXT           "Drag Coefficient, Cd",IDC_STATIC,573,180,66,8
@@ -789,6 +791,8 @@ BEGIN
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,19,19,139,10
     CONTROL         "Explicitly Define Stress Points",IDC_DEFINE_STRESS_POINTS,
                     "Button",BS_AUTORADIOBUTTON,159,19,109,10
+    CONTROL         "Normalweight Concrete",IDC_NWC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,578,65,91,10
+    CONTROL         "Lightweight Concrete",IDC_LWC,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,671,64,84,10
 END
 
 IDD_PGSTABLEEFFECTIVEPRESTRESSDLG DIALOGEX 0, 0, 785, 248

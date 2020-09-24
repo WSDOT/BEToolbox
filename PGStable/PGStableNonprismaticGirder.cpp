@@ -181,6 +181,9 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_DENSITY_WITH_REBAR,IDC_DENSITY_WITH_REBAR_UNIT,densityWithRebar,pDispUnits->Density);
    DDV_UnitValueGreaterThanZero(pDX,IDC_DENSITY_WITH_REBAR,densityWithRebar,pDispUnits->Density);
 
+   matConcrete::Type concrete_type = pDoc->GetConcreteType();
+   DDX_RadioEnum(pDX, IDC_NWC, concrete_type);
+
    std::vector<std::pair<Float64,Float64>> vLoads = girder.GetAdditionalLoads();
    DDX_PointLoadGrid(pDX,m_pPointLoadGrid,vLoads);
 
@@ -208,6 +211,8 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetDensity(density);
       pDoc->SetDensityWithRebar(densityWithRebar);
+
+      pDoc->SetConcreteType(concrete_type);
 
       pDoc->SetStrands(NONPRISMATIC,LIFTING,strands);
 

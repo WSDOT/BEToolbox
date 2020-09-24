@@ -205,9 +205,6 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    Float64 Ktheta = problem.GetTruckRotationalStiffness();
    DDX_UnitValueAndTag(pDX,IDC_KTHETA,IDC_KTHETA_UNIT,Ktheta,pDispUnits->MomentPerAngle);
 
-
-   CString strHaulingTag(pApp->GetUnitsMode() == eafTypes::umUS ? _T("sqrt(f'c (KSI))") : _T("sqrt(f'c (MPa))"));
-
    DDX_Text(pDX,IDC_HAULING_FS_CRACKING,m_HaulingCriteria.MinFScr);
    DDX_Text(pDX,IDC_HAULING_FS_FAILURE,m_HaulingCriteria.MinFSf);
    DDX_UnitValueAndTag(pDX,IDC_MAX_BUNK,IDC_MAX_BUNK_UNIT,m_HaulingCriteria.MaxClearSpan,pDispUnits->SpanLength);
@@ -217,18 +214,18 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX, IDC_HAULING_PEAK_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_PeakStress);
 
    DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN,m_HaulingCriteria.TensionCoefficient[stbTypes::CrownSlope],pDispUnits->SqrtPressure);
-   DDX_Text(pDX,IDC_HAULING_TENSION_CROWN_UNIT,strHaulingTag);
+   DDX_Text(pDX,IDC_HAULING_TENSION_CROWN_UNIT,tag);
    DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN,m_HaulingCriteria.bMaxTension[stbTypes::CrownSlope]);
    DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT,m_HaulingCriteria.MaxTension[stbTypes::CrownSlope],pDispUnits->Stress);
    DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN,m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::CrownSlope],pDispUnits->SqrtPressure);
-   DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,strHaulingTag);
+   DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,tag);
 
    DDX_UnitValue(pDX,IDC_HAULING_TENSION_SUPER,m_HaulingCriteria.TensionCoefficient[stbTypes::MaxSuper],pDispUnits->SqrtPressure);
-   DDX_Text(pDX,IDC_HAULING_TENSION_SUPER_UNIT,strHaulingTag);
+   DDX_Text(pDX,IDC_HAULING_TENSION_SUPER_UNIT,tag);
    DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_SUPER,m_HaulingCriteria.bMaxTension[stbTypes::MaxSuper]);
    DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT,m_HaulingCriteria.MaxTension[stbTypes::MaxSuper],pDispUnits->Stress);
    DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER,m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper],pDispUnits->SqrtPressure);
-   DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,strHaulingTag);
+   DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,tag);
 
    if ( pDX->m_bSaveAndValidate )
    {
@@ -426,6 +423,9 @@ BOOL CPGStableHaulingView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,
 
 void CPGStableHaulingView::OnActivateView()
 {
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   m_HaulingCriteria = pDoc->GetHaulingCriteria();
+
    UpdateData(FALSE);
 
    if ( m_strUserEc == _T("") )
@@ -582,8 +582,6 @@ void CPGStableHaulingView::OnInitialUpdate()
    {
       pcbHaulTruck->AddString(key.c_str());
    }
-
-   m_HaulingCriteria = pDoc->GetHaulingCriteria();
 
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
    pWnd->ShowWindow(SW_HIDE);
