@@ -43,6 +43,7 @@ Item | Description
 -----|----------------
 Unit Weight | Unit weight of concrete used to compute modulus of elasticity
 Unit Weight with Reinforcement | Unit weight of concrete and reinforcement. Used to compute dead load.
+Normalweight/Lightweight Concrete | Indicate the type of concrete used.
 
 ### Additional Dead Loads
 Additional dead loads are modeld as discrete point loads. These loads could represent the weight of cast in place diaphragms.

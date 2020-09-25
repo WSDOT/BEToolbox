@@ -82,7 +82,6 @@ CPGStableModel::CPGStableModel()
    liftingConcrete.SetE(Eci);
    haulingConcrete.SetE(Ec);
 
-#pragma Reminder("WORKING HERE - concrete type")
    liftingConcrete.SetFlexureFr(::ConvertToSysUnits(0.24*sqrt(fci),unitMeasure::KSI));
    haulingConcrete.SetFlexureFr(::ConvertToSysUnits(0.24*sqrt(fc),unitMeasure::KSI));
 
