@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <BridgeLinkVersion.h>
 #include <WBFLAll.h>
 
 #ifndef VC_EXTRALEAN

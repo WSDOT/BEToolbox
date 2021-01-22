@@ -54,6 +54,9 @@ public:
 
    // NOTE: For all the "Get" methods.... returns true if the value changed and false if it didn't
 
+   bool SetConcreteType(matConcrete::Type type);
+   matConcrete::Type GetConcreteType() const;
+
    bool SetDensity(Float64 density);
    Float64 GetDensity() const;
 
@@ -107,6 +110,7 @@ public:
 protected:
    int m_GirderType;
    int m_StressPointType;
+   int m_ConcreteType;
 
    CPGStableStrands m_Strands[2][2]; // array index [girderType][modelType]
    mutable stbGirder m_Girder[2];

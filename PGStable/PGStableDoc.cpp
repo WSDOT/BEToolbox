@@ -31,6 +31,7 @@
 #include <System\System.h>
 
 #include <IFace\BeamFactory.h>
+#include <Plugins\BeamFamilyCLSID.h>
 
 #include <memory>
 
@@ -75,7 +76,7 @@ CPGStableDoc::CPGStableDoc()
    m_strHaulTruck = gs_strHaulTruck;
    m_strGirder = gs_strGirder;
 
-   UIHints(FALSE); // not using UIHints feature
+   EnableUIHints(FALSE); // not using UIHints feature
 }
 
 CPGStableDoc::~CPGStableDoc()
@@ -149,10 +150,11 @@ void CPGStableDoc::LoadPGSLibrary()
       strURL = strMasterLibaryFile;
    }
 
-   CString strServer = pApp->GetProfileString(_T("Options"),_T("CatalogServer2"));
+   CString strPublisher = pApp->GetProfileString(_T("Options"), _T("Publisher2"));
+   CString strServer = pApp->GetProfileString(_T("Options"), _T("CatalogServer2"));
 
    m_LibMgr.SetName( _T("PGSLibrary") );
-   m_LibMgr.SetMasterLibraryInfo(strServer,strURL);
+   m_LibMgr.SetMasterLibraryInfo(strPublisher,strServer,strURL);
 
    CComBSTR bpath(strMasterLibaryFile);
 
@@ -380,77 +382,74 @@ const CString& CPGStableDoc::GetCriteria() const
 
 void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
 {
-   if ( m_strProjectCriteria != lpszCriteria )
+   m_strProjectCriteria = lpszCriteria;
+
+   if ( m_strProjectCriteria != gs_strCriteria )
    {
-      m_strProjectCriteria = lpszCriteria;
+      // update input parameters to match library
+      const SpecLibraryEntry* pSpec = GetSpecLibraryEntry();
 
-      if ( m_strProjectCriteria != gs_strCriteria )
-      {
-         // update input parameters to match library
-         const SpecLibraryEntry* pSpec = GetSpecLibraryEntry();
+      stbLiftingStabilityProblem liftingProblem = GetLiftingStabilityProblem();
+      liftingProblem.SetImpact(pSpec->GetLiftingUpwardImpactFactor(),pSpec->GetLiftingDownwardImpactFactor());
 
-         stbLiftingStabilityProblem liftingProblem = GetLiftingStabilityProblem();
-         liftingProblem.SetImpact(pSpec->GetLiftingUpwardImpactFactor(),pSpec->GetLiftingDownwardImpactFactor());
+      liftingProblem.SetSupportPlacementTolerance(pSpec->GetLiftingLoopTolerance());
+      liftingProblem.SetLiftAngle(pSpec->GetMinCableInclination());
+      liftingProblem.SetSweepTolerance(pSpec->GetLiftingMaximumGirderSweepTolerance());
+      liftingProblem.SetSweepGrowth(0); // no sweep growth for initial lifting problem
+      liftingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetLiftingWindType(),pSpec->GetLiftingWindLoad());
+      liftingProblem.SetYRollAxis(pSpec->GetPickPointHeight());
+      SetLiftingStabilityProblem(liftingProblem);
 
-         liftingProblem.SetSupportPlacementTolerance(pSpec->GetLiftingLoopTolerance());
-         liftingProblem.SetLiftAngle(pSpec->GetMinCableInclination());
-         liftingProblem.SetSweepTolerance(pSpec->GetLiftingMaximumGirderSweepTolerance());
-         liftingProblem.SetSweepGrowth(0); // no sweep growth for initial lifting problem
-         liftingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetLiftingWindType(),pSpec->GetLiftingWindLoad());
-         liftingProblem.SetYRollAxis(pSpec->GetPickPointHeight());
-         SetLiftingStabilityProblem(liftingProblem);
-
-         CPGStableLiftingCriteria liftingCriteria = GetLiftingCriteria();
-         liftingCriteria.MinFSf = pSpec->GetLiftingFailureFOS();
-         liftingCriteria.MinFScr = pSpec->GetCrackingFOSLifting();
-         liftingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetLiftingCompressionGlobalStressFactor();
-         liftingCriteria.CompressionCoefficient_PeakStress = pSpec->GetLiftingCompressionPeakStressFactor();
-         liftingCriteria.AllowableTension = pSpec->GetLiftingTensionStressFactor();
-         pSpec->GetLiftingMaximumTensionStress(&liftingCriteria.bMaxTension,&liftingCriteria.MaxTension);
-         liftingCriteria.TensionCoefficientWithRebar = pSpec->GetLiftingTensionStressFactorWithRebar();
-         SetLiftingCriteria(liftingCriteria);
+      CPGStableLiftingCriteria liftingCriteria = GetLiftingCriteria();
+      liftingCriteria.MinFSf = pSpec->GetLiftingFailureFOS();
+      liftingCriteria.MinFScr = pSpec->GetCrackingFOSLifting();
+      liftingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetLiftingCompressionGlobalStressFactor();
+      liftingCriteria.CompressionCoefficient_PeakStress = pSpec->GetLiftingCompressionPeakStressFactor();
+      liftingCriteria.TensionCoefficient = pSpec->GetLiftingTensionStressFactor();
+      pSpec->GetLiftingMaximumTensionStress(&liftingCriteria.bMaxTension,&liftingCriteria.MaxTension);
+      liftingCriteria.TensionCoefficientWithRebar = pSpec->GetLiftingTensionStressFactorWithRebar();
+      SetLiftingCriteria(liftingCriteria);
 
 
-         Float64 Fc,FrCoefficient;
-         bool bComputeEc;
-         GetLiftingMaterials(&Fc,&bComputeEc,&FrCoefficient);
-         SetLiftingMaterials(Fc,bComputeEc,pSpec->GetLiftingModulusOfRuptureFactor(pgsTypes::Normal));
+      Float64 Fc,FrCoefficient;
+      bool bComputeEc;
+      GetLiftingMaterials(&Fc,&bComputeEc,&FrCoefficient);
+      SetLiftingMaterials(Fc,bComputeEc,pSpec->GetLiftingModulusOfRuptureFactor(pgsTypes::Normal));
 
 
-         stbHaulingStabilityProblem haulingProblem = GetHaulingStabilityProblem();
-         haulingProblem.SetImpactUsage((stbTypes::HaulingImpact)pSpec->GetHaulingImpactUsage());
-         haulingProblem.SetImpact(pSpec->GetHaulingUpwardImpactFactor(),pSpec->GetHaulingDownwardImpactFactor());
-         haulingProblem.SetCrownSlope(pSpec->GetRoadwayCrownSlope());
-         haulingProblem.SetSuperelevation(pSpec->GetRoadwaySuperelevation());
+      stbHaulingStabilityProblem haulingProblem = GetHaulingStabilityProblem();
+      haulingProblem.SetImpactUsage((stbTypes::HaulingImpact)pSpec->GetHaulingImpactUsage());
+      haulingProblem.SetImpact(pSpec->GetHaulingUpwardImpactFactor(),pSpec->GetHaulingDownwardImpactFactor());
+      haulingProblem.SetCrownSlope(pSpec->GetRoadwayCrownSlope());
+      haulingProblem.SetSuperelevation(pSpec->GetRoadwaySuperelevation());
 
-         haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
-         haulingProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
-         haulingProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
-         haulingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
-         haulingProblem.SetCentrifugalForceType((stbTypes::CFType)pSpec->GetCentrifugalForceType());
-         haulingProblem.SetVelocity(pSpec->GetHaulingSpeed());
-         haulingProblem.SetTurningRadius(pSpec->GetTurningRadius());
-         SetHaulingStabilityProblem(haulingProblem);
+      haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
+      haulingProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
+      haulingProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
+      haulingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
+      haulingProblem.SetCentrifugalForceType((stbTypes::CFType)pSpec->GetCentrifugalForceType());
+      haulingProblem.SetVelocity(pSpec->GetHaulingSpeed());
+      haulingProblem.SetTurningRadius(pSpec->GetTurningRadius());
+      SetHaulingStabilityProblem(haulingProblem);
 
-         CPGStableHaulingCriteria haulingCriteria = GetHaulingCriteria();
-         haulingCriteria.MinFSf = pSpec->GetHaulingFailureFOS();
-         haulingCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
-         haulingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
-         haulingCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
-         haulingCriteria.AllowableTension[stbTypes::CrownSlope] = pSpec->GetHaulingTensionStressFactorNormalCrown();
-         pSpec->GetHaulingMaximumTensionStressNormalCrown(&haulingCriteria.bMaxTension[stbTypes::CrownSlope],&haulingCriteria.MaxTension[stbTypes::CrownSlope]);
-         haulingCriteria.TensionCoefficientWithRebar[stbTypes::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebarNormalCrown();
-         haulingCriteria.AllowableTension[stbTypes::MaxSuper] = pSpec->GetHaulingTensionStressFactorMaxSuper();
-         pSpec->GetHaulingMaximumTensionStressMaxSuper(&haulingCriteria.bMaxTension[stbTypes::MaxSuper],&haulingCriteria.MaxTension[stbTypes::MaxSuper]);
-         haulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper] = pSpec->GetHaulingTensionStressFactorWithRebarMaxSuper();
-         SetHaulingCriteria(haulingCriteria);
+      CPGStableHaulingCriteria haulingCriteria = GetHaulingCriteria();
+      haulingCriteria.MinFSf = pSpec->GetHaulingFailureFOS();
+      haulingCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
+      haulingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
+      haulingCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
+      haulingCriteria.TensionCoefficient[stbTypes::CrownSlope] = pSpec->GetHaulingTensionStressFactorNormalCrown();
+      pSpec->GetHaulingMaximumTensionStressNormalCrown(&haulingCriteria.bMaxTension[stbTypes::CrownSlope],&haulingCriteria.MaxTension[stbTypes::CrownSlope]);
+      haulingCriteria.TensionCoefficientWithRebar[stbTypes::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebarNormalCrown();
+      haulingCriteria.TensionCoefficient[stbTypes::MaxSuper] = pSpec->GetHaulingTensionStressFactorMaxSuper();
+      pSpec->GetHaulingMaximumTensionStressMaxSuper(&haulingCriteria.bMaxTension[stbTypes::MaxSuper],&haulingCriteria.MaxTension[stbTypes::MaxSuper]);
+      haulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper] = pSpec->GetHaulingTensionStressFactorWithRebarMaxSuper();
+      SetHaulingCriteria(haulingCriteria);
 
-         GetHaulingMaterials(&Fc,&bComputeEc,&FrCoefficient);
-         SetHaulingMaterials(Fc,bComputeEc,pSpec->GetHaulingModulusOfRuptureFactor(pgsTypes::Normal));
-      }
-
-      SetModifiedFlag();
+      GetHaulingMaterials(&Fc,&bComputeEc,&FrCoefficient);
+      SetHaulingMaterials(Fc,bComputeEc,pSpec->GetHaulingModulusOfRuptureFactor(pgsTypes::Normal));
    }
+
+   SetModifiedFlag();
 }
 
 const CString& CPGStableDoc::GetHaulTruck() const
@@ -653,6 +652,19 @@ void CPGStableDoc::SetDensityWithRebar(Float64 density)
    }
 }
 
+matConcrete::Type CPGStableDoc::GetConcreteType() const
+{
+   return m_Model.GetConcreteType();
+}
+
+void CPGStableDoc::SetConcreteType(matConcrete::Type type)
+{
+   if (m_Model.SetConcreteType(type))
+   {
+      SetModifiedFlag();
+   }
+}
+
 Float64 CPGStableDoc::GetK1() const
 {
    return m_Model.GetK1();
@@ -739,7 +751,7 @@ CString CPGStableDoc::UpdateEc(const CString& strFc,const CString& strDensity,co
          fc       = ::ConvertToSysUnits(fc,      stress_unit);
          density  = ::ConvertToSysUnits(density, density_unit);
 
-         ec = k1*k2*lrfdConcreteUtil::ModE(fc,density,false);
+         ec = k1*k2*lrfdConcreteUtil::ModE(m_Model.GetConcreteType(),fc,density,false);
 
          strEc.Format(_T("%s"),FormatDimension(ec,pDispUnits->ModE,false));
    }
@@ -837,6 +849,7 @@ bool CPGStableDoc::IsPermittedGirderEntry(const GirderLibraryEntry* pGirderEntry
    CComPtr<IBeamFactory> factory;
    pGirderEntry->GetBeamFactory(&factory);
 
-   CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be nullptr
-   return (splicedFactory == nullptr && factory->IsPrismatic(dimensions) ? true : false);
+   // Stabilty analysis is only applicable to I-Beam type girders
+   auto clsidFamily = factory->GetFamilyCLSID();
+   return ::IsEqualGUID(clsidFamily, CLSID_WFBeamFamily) || ::IsEqualGUID(clsidFamily, CLSID_DeckBulbTeeBeamFamily);
 }

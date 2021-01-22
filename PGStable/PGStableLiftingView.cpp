@@ -172,8 +172,6 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    }
    DDX_Text(pDX,IDC_FR_COEFFICIENT_UNIT,tag);
 
-   CString strLiftingTag(pApp->GetUnitsMode() == eafTypes::umUS ? _T("sqrt(f'ci (KSI))") : _T("sqrt(f'ci (MPa))"));
-
    DDX_Text(pDX,IDC_LIFTING_FS_CRACKING,m_LiftingCriteria.MinFScr);
    DDX_Text(pDX,IDC_LIFTING_FS_FAILURE,m_LiftingCriteria.MinFSf);
    
@@ -181,11 +179,11 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX, IDC_LIFTING_PEAK_COMPRESSION, m_LiftingCriteria.CompressionCoefficient_PeakStress);
 
    DDX_UnitValue(pDX,IDC_LIFTING_TENSION,m_LiftingCriteria.TensionCoefficient,pDispUnits->SqrtPressure);
-   DDX_Text(pDX,IDC_LIFTING_TENSION_UNIT,strLiftingTag);
+   DDX_Text(pDX,IDC_LIFTING_TENSION_UNIT,tag);
    DDX_Check_Bool(pDX,IDC_CHECK_LIFTING_TENSION_MAX,m_LiftingCriteria.bMaxTension);
    DDX_UnitValueAndTag(pDX,IDC_LIFTING_TENSION_MAX,IDC_LIFTING_TENSION_MAX_UNIT,m_LiftingCriteria.MaxTension,pDispUnits->Stress);
    DDX_UnitValue(pDX,IDC_LIFTING_TENSION_WITH_REBAR,m_LiftingCriteria.TensionCoefficientWithRebar,pDispUnits->SqrtPressure);
-   DDX_Text(pDX,IDC_LIFTING_TENSION_WITH_REBAR_UNIT,strLiftingTag);
+   DDX_Text(pDX,IDC_LIFTING_TENSION_WITH_REBAR_UNIT,tag);
 
    if ( pDX->m_bSaveAndValidate )
    {
@@ -298,6 +296,9 @@ BOOL CPGStableLiftingView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,
 
 void CPGStableLiftingView::OnActivateView()
 {
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   m_LiftingCriteria = pDoc->GetLiftingCriteria();
+
    UpdateData(FALSE);
 
    if ( m_strUserEc == _T("") )
@@ -435,8 +436,6 @@ void CPGStableLiftingView::OnEditFpe()
 void CPGStableLiftingView::OnInitialUpdate()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-
-   m_LiftingCriteria = pDoc->GetLiftingCriteria();
 
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
    pWnd->ShowWindow(SW_HIDE);

@@ -79,7 +79,7 @@ CGirCompDoc::CGirCompDoc()
 
    m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
-   UIHints(FALSE); // not using UIHints feature
+   EnableUIHints(FALSE); // not using UIHints feature
 }
 
 CGirCompDoc::~CGirCompDoc()
@@ -532,13 +532,13 @@ void CGirCompDoc::GetBuiltUpGirder(IndexType idx,IPlateGirder** ppGirder)
    girder.CoCreateInstance(CLSID_PlateGirder);
 
    girder->put_TopFlangeWidth(dimensions.wTopFlange);
-   girder->put_TopFlangeThick(dimensions.tTopFlange);
+   girder->put_TopFlangeThickness(dimensions.tTopFlange);
 
    girder->put_BottomFlangeWidth(dimensions.wBotFlange);
-   girder->put_BottomFlangeThick(dimensions.tBotFlange);
+   girder->put_BottomFlangeThickness(dimensions.tBotFlange);
 
    girder->put_WebHeight(dimensions.D);
-   girder->put_WebThick(dimensions.tWeb);
+   girder->put_WebWidth(dimensions.tWeb);
 
    girder.CopyTo(ppGirder);
 }

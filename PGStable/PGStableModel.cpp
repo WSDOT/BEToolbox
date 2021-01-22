@@ -57,7 +57,7 @@ CPGStableModel::CPGStableModel()
    matConcreteEx liftingConcrete, haulingConcrete;
 
    Float64 density = ::ConvertToSysUnits(0.155,unitMeasure::KipPerFeet3); // without rebar (used to compute Ec)
-   Float64 densityWithRebar = ::ConvertToSysUnits(0.160,unitMeasure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
+   Float64 densityWithRebar = ::ConvertToSysUnits(0.165,unitMeasure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
    liftingConcrete.SetDensity(density);
    haulingConcrete.SetDensity(density);
    liftingConcrete.SetDensityForWeight(densityWithRebar);
@@ -76,8 +76,8 @@ CPGStableModel::CPGStableModel()
    liftingConcrete.SetFc(fci);
    haulingConcrete.SetFc(fc);
 
-   Float64 Eci = ::lrfdConcreteUtil::ModE(fci,density,false/*ignore LRFD range checks*/);
-   Float64 Ec  = ::lrfdConcreteUtil::ModE(fc, density,false/*ignore LRFD range checks*/);
+   Float64 Eci = ::lrfdConcreteUtil::ModE(liftingConcrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
+   Float64 Ec  = ::lrfdConcreteUtil::ModE(liftingConcrete.GetType(), fc, density,false/*ignore LRFD range checks*/);
 
    liftingConcrete.SetE(Eci);
    haulingConcrete.SetE(Ec);
@@ -159,7 +159,7 @@ stbLiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
    if ( m_bComputeEci )
    {
       Float64 density = concrete.GetDensity();
-      Float64 Ec = lrfdConcreteUtil::ModE(fci,density,false/*ignore LRFD range checks*/);
+      Float64 Ec = lrfdConcreteUtil::ModE(concrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
       if ( lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion() )
       {
          Ec *= m_K1*m_K2;
@@ -167,10 +167,12 @@ stbLiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
       concrete.SetE(Ec);
    }
 
-   Float64 fr = ::lrfdConcreteUtil::ModRupture(fci,m_LiftingFrCoefficient);
-   concrete.SetFlexureFr(fr);
+   Float64 lambda = lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
+   concrete.SetLambda(lambda);
 
-   concrete.SetLambda(lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(matConcrete::Normal,concrete.GetDensity(),false,0,0));
+   Float64 fr = ::lrfdConcreteUtil::ModRupture(fci,m_LiftingFrCoefficient);
+   concrete.SetFlexureFr(lambda*fr);
+
 
    m_LiftingStabilityProblem.SetConcrete(concrete);
 
@@ -237,7 +239,7 @@ stbHaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
    if ( m_bComputeEc )
    {
       Float64 density = concrete.GetDensity();
-      Float64 Ec = ::lrfdConcreteUtil::ModE(fc,density,false/*ignore LRFD range checks*/);
+      Float64 Ec = ::lrfdConcreteUtil::ModE(concrete.GetType(),fc,density,false/*ignore LRFD range checks*/);
       if ( lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion() )
       {
          Ec *= m_K1*m_K2;
@@ -246,10 +248,12 @@ stbHaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
       concrete.SetE(Ec);
    }
 
-   Float64 fr = ::lrfdConcreteUtil::ModRupture(fc,m_HaulingFrCoefficient);
-   concrete.SetFlexureFr(fr);
+   Float64 lambda = lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
+   concrete.SetLambda(lambda);
 
-   concrete.SetLambda(lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(matConcrete::Normal,concrete.GetDensity(),false,0,0));
+   Float64 fr = ::lrfdConcreteUtil::ModRupture(fc,m_HaulingFrCoefficient);
+   concrete.SetFlexureFr(lambda*fr);
+
 
    m_HaulingStabilityProblem.SetConcrete(concrete);
 
@@ -578,6 +582,22 @@ Float64 CPGStableModel::GetHarpedStrandLocation(Float64 X,Float64 X1,Float64 Y1,
    {
       return Y4;
    }
+}
+
+bool CPGStableModel::SetConcreteType(matConcrete::Type type)
+{
+   if (m_LiftingStabilityProblem.GetConcrete().GetType() != type)
+   {
+      m_LiftingStabilityProblem.GetConcrete().SetType(type);
+      m_HaulingStabilityProblem.GetConcrete().SetType(type);
+      return true;
+   }
+   return false;
+}
+
+matConcrete::Type CPGStableModel::GetConcreteType() const
+{
+   return m_LiftingStabilityProblem.GetConcrete().GetType();
 }
 
 bool CPGStableModel::SetDensity(Float64 density)
@@ -942,7 +962,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->put_Property(_T("DragCoefficient"),CComVariant(m_Girder[m_GirderType].GetDragCoefficient()));
    pStrSave->put_Property(_T("Precamber"), CComVariant(m_Girder[m_GirderType].GetPrecamber())); // added in version 2
 
-   pStrSave->BeginUnit(_T("Girder"),1.0);
+   pStrSave->BeginUnit(_T("Girder"),2.0);
    pStrSave->BeginUnit(_T("Sections"),1.0);
    IndexType nSections = m_Girder[m_GirderType].GetSectionCount();
    for ( IndexType sectIdx = 0; sectIdx < nSections; sectIdx++ )
@@ -1049,6 +1069,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->put_Property(_T("Density"),CComVariant(GetDensity()));
    pStrSave->put_Property(_T("K1"),CComVariant(m_K1));
    pStrSave->put_Property(_T("K2"),CComVariant(m_K2));
+   pStrSave->put_Property(_T("ConcreteType"), CComVariant((long)GetConcreteType())); // added in version 2 of Girder datablock
 
    std::vector<std::pair<Float64,Float64>> vLoads = m_Girder[m_GirderType].GetAdditionalLoads();
    if ( 0 < vLoads.size() )
@@ -1263,6 +1284,9 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       }
 
       hr = pStrLoad->BeginUnit(_T("Girder"));
+      Float64 girder_datablock_version;
+      pStrLoad->get_Version(&girder_datablock_version);
+
       hr = pStrLoad->BeginUnit(_T("Sections"));
       m_Girder[m_GirderType].ClearSections();
       while (SUCCEEDED(pStrLoad->BeginUnit(_T("Section"))) )
@@ -1509,6 +1533,14 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       hr = pStrLoad->get_Property(_T("K2"),&var);
       m_K2 = var.dblVal;
+
+      if (1 < girder_datablock_version) // added in version 2
+      {
+         CComVariant concrete_var;
+         concrete_var.vt = VT_I8;
+         hr = pStrLoad->get_Property(_T("ConcreteType"), &concrete_var);
+         SetConcreteType((matConcrete::Type)concrete_var.lVal);
+      }
 
       m_Girder[m_GirderType].ClearPointLoads();
       HRESULT hrAdditionalLoads = pStrLoad->BeginUnit(_T("AdditionalLoads"));

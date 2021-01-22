@@ -47,7 +47,7 @@ CPGStableHaulingCriteria::CPGStableHaulingCriteria()
    TensionCoefficient[stbTypes::MaxSuper] = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
    bMaxTension[stbTypes::MaxSuper] = false;
    MaxTension[stbTypes::MaxSuper] = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
-   TensionCoefficientWithRebar[stbTypes::MaxSuper] = ::ConvertToSysUnits(0.1900,unitMeasure::SqrtKSI);
+   TensionCoefficientWithRebar[stbTypes::MaxSuper] = ::ConvertToSysUnits(0.24,unitMeasure::SqrtKSI);
 
    MaxClearSpan = ::ConvertToSysUnits(130.0,unitMeasure::Feet);
    MaxLeadingOverhang = ::ConvertToSysUnits(15,unitMeasure::Feet);

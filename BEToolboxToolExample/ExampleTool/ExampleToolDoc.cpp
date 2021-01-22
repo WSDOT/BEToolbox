@@ -47,7 +47,7 @@ IMPLEMENT_DYNCREATE(CExampleToolDoc, CBEToolboxDoc)
 
 CExampleToolDoc::CExampleToolDoc()
 {
-   UIHints(FALSE); // not using UIHints feature
+   EnableUIHints(FALSE); // not using UIHints feature
 }
 
 CExampleToolDoc::~CExampleToolDoc()

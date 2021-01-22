@@ -130,7 +130,7 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
    CString strDefaultFileName;
    if ( pDocType->IsPGSuperDocument() )
    {
-      strDefaultFileName.Format(_T("%s%s_Span_%d_Girder_%s.%s"),
+      strDefaultFileName.Format(_T("%s%s_Span_%s_Girder_%s.%s"),
          pDoc->GetFileRoot(), // path to file
          pDoc->GetFileTitle(), // the file name without path or extension
          LABEL_SPAN(segmentKey.groupIndex),
@@ -139,7 +139,7 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
    }
    else
    {
-      strDefaultFileName.Format(_T("%s%s_Group_%d_Girder_%s_Segment_%d.%s"),
+      strDefaultFileName.Format(_T("%s%s_Group_%s_Girder_%s_Segment_%d.%s"),
          pDoc->GetFileRoot(), // path to file
          pDoc->GetFileTitle(), // the file name without path or extension
          LABEL_SPAN(segmentKey.groupIndex),
