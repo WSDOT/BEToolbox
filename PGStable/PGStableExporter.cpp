@@ -269,21 +269,19 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       Float64 Ytop = pSectProps->GetY(releaseIntervalIdx, poi, pgsTypes::TopGirder);
       Float64 Xleft = pSectProps->GetXleft(releaseIntervalIdx, poi);
 
-      Float64 Ns;
-      Float64 esx, esy;
-      pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight, &Ns, &esx, &esy);
-      Float64 Xs = Xleft - esx;
-      Float64 Ys = Ytop + esy;
+      gpPoint2d es = pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight);
+      Float64 Xs = Xleft - es.X();
+      Float64 Ys = Ytop + es.Y();
 
-      pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped, &Ns, &esx, &esy);
-      Float64 Xh = Xleft - esx;
-      Float64 Yh = Ytop + esy;
+      gpPoint2d eh = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped);
+      Float64 Xh = Xleft - eh.X();
+      Float64 Yh = Ytop + eh.Y();
 
-      pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary, &Ns, &esx, &esy);
-      Float64 Xt = Xleft - esx;
-      Float64 Yt = Ytop + esy;
+      gpPoint2d et = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary);
+      Float64 Xt = Xleft - et.X();
+      Float64 Yt = Ytop + et.Y();
 
-      if ( IsZero(Ns) )
+      if ( pStrandGeom->GetStrandCount(segmentKey,pgsTypes::Temporary) == 0 )
       {
          // if there aren't any temporary strands, Yt is zero. This value doesn't
          // work well in PGStable so make it 2"
