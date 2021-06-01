@@ -395,13 +395,15 @@
 #define IDC_GIRDER                      1781
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
+#define ID_OPTIONS_AUTOSAVE             36871
+#define EAFID_OPTIONS_AUTOSAVE          36872
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        225
-#define _APS_NEXT_COMMAND_VALUE         36871
+#define _APS_NEXT_COMMAND_VALUE         36873
 #define _APS_NEXT_CONTROL_VALUE         476
 #define _APS_NEXT_SYMED_VALUE           114
 #endif

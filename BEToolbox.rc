@@ -833,6 +833,10 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&Help Topics",                ID_HELP_FINDER
@@ -860,6 +864,10 @@ BEGIN
         MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
     END
     POPUP "&Help"
     BEGIN
@@ -889,6 +897,10 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&Help Topics",                ID_HELP_FINDER
@@ -916,6 +928,10 @@ BEGIN
         MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
     END
     POPUP "&Help"
     BEGIN
@@ -945,6 +961,10 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&Help Topics",                ID_HELP_FINDER
@@ -973,6 +993,10 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&Help Topics",                ID_HELP_FINDER
@@ -1000,6 +1024,10 @@ BEGIN
         MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
     END
     POPUP "&Help"
     BEGIN
