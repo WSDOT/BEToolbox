@@ -450,8 +450,8 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
       // Create a skew line reporting point for each horizontal curve
       // This is the best way to export the horizontal curve information
       const AlignmentData2& alignmentData = pRoadway->GetAlignmentData2();
-      auto iter(alignmentData.HorzCurves.cbegin());
-      auto end(alignmentData.HorzCurves.cend());
+      auto iter(alignmentData.CompoundCurves.cbegin());
+      auto end(alignmentData.CompoundCurves.cend());
       bool bSpiral = false;
       bool bCurves = false;
       SkewLinesType skewLines;

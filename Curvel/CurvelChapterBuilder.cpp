@@ -722,8 +722,8 @@ void CCurvelChapterBuilder::UpdateAlignment(const SkewLine& skewLine) const
       return; // no need for horizontal curve objects if there is no radius
    }
 
-   CComPtr<IHorzCurve> hc;
-   hc.CoCreateInstance(CLSID_HorzCurve);
+   CComPtr<ICompoundCurve> hc;
+   hc.CoCreateInstance(CLSID_CompoundCurve);
 
    CComPtr<IPoint2d> PBT, PFT, PI;
    hc->get_PBT(&PBT);
