@@ -1,25 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Profile|Win32">
-      <Configuration>Profile</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Profile|x64">
-      <Configuration>Profile</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -33,35 +17,6 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>Dynamic</UseOfMfc>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>Dynamic</UseOfMfc>
-    <UseOfAtl>Dynamic</UseOfAtl>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>Dynamic</UseOfMfc>
-    <UseOfAtl>Dynamic</UseOfAtl>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>Dynamic</UseOfMfc>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
@@ -81,30 +36,6 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="..\..\..\CodeSynthesis XSD 3.3\etc\vc-10.0\xsd-cxx-tree.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\..\WBFL\WBFL.props" />
-    <Import Project="..\..\WBFL\XSD.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\..\WBFL\WBFL.props" />
-    <Import Project="..\..\WBFL\XSD.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\..\WBFL\WBFL.props" />
-    <Import Project="..\..\WBFL\XSD.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\BridgeLink\BridgeLink.props" />
-    <Import Project="..\..\WBFL\WBFL.props" />
-    <Import Project="..\..\WBFL\XSD.props" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\BridgeLink\BridgeLink.props" />
@@ -121,23 +52,7 @@
   <PropertyGroup>
     <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <LinkIncremental>true</LinkIncremental>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules />
-    <CodeAnalysisRuleAssemblies />
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules />
-    <CodeAnalysisRuleAssemblies />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
@@ -153,57 +68,6 @@
     <CodeAnalysisRules />
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
-    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules />
-    <CodeAnalysisRuleAssemblies />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
-    <OutDir>$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules />
-    <CodeAnalysisRuleAssemblies />
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <CustomBuildStep>
-      <Message />
-      <Command>xcopy /y /d $(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1D.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\</Command>
-      <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11D.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11D.dll</Outputs>
-    </CustomBuildStep>
-    <CXX_Tree_Mapping_Rule>
-      <AdditionalOptions> --hxx-prologue "#include \"BEToolboxXML.h\"" --cxx-prologue "#include \"stdafx.h\""</AdditionalOptions>
-      <CharType>1</CharType>
-      <GenSerialization>true</GenSerialization>
-      <ExportSymbol>BETOOLBOXXMLCLASS</ExportSymbol>
-    </CXX_Tree_Mapping_Rule>
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1D.lib;$(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-    <Manifest>
-      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
-    </Manifest>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CustomBuildStep>
       <Message />
@@ -236,41 +100,6 @@ xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11D.
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
       <ShowProgress>NotSet</ShowProgress>
-    </Link>
-    <Manifest>
-      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
-    </Manifest>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <CustomBuildStep>
-      <Message />
-      <Command>xcopy /y /d $(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\bin\xerces-c_3_1.dll $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\Xalan-C_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.dll  $(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
-</Command>
-      <Outputs>$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c_3_1.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_11.dll;$(BRIDGELINKDIR)\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_11.dll</Outputs>
-    </CustomBuildStep>
-    <CXX_Tree_Mapping_Rule>
-      <AdditionalOptions> --hxx-prologue "#include \"BEToolboxXML.h\"" --cxx-prologue "#include \"stdafx.h\""</AdditionalOptions>
-      <CharType>1</CharType>
-      <GenSerialization>true</GenSerialization>
-      <ExportSymbol>BETOOLBOXXMLCLASS</ExportSymbol>
-    </CXX_Tree_Mapping_Rule>
-    <ClCompile>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat />
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\lib\Xalan-C_1.lib;$(WBFLDIR)\Apache\XERCESCPKG-31-X64-VC100\lib\xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
-      <TargetMachine>MachineX86</TargetMachine>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -315,74 +144,6 @@ xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.d
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
-    <CustomBuildStep>
-      <Message />
-      <Command />
-    </CustomBuildStep>
-    <CXX_Tree_Mapping_Rule>
-      <AdditionalOptions> --hxx-prologue "#include \"BEToolboxXML.h\"" --cxx-prologue "#include \"stdafx.h\""</AdditionalOptions>
-      <CharType>1</CharType>
-      <GenSerialization>true</GenSerialization>
-      <ExportSymbol>BETOOLBOXXMLCLASS</ExportSymbol>
-    </CXX_Tree_Mapping_Rule>
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
-    <CustomBuildStep>
-      <Message />
-      <Command />
-    </CustomBuildStep>
-    <CXX_Tree_Mapping_Rule>
-      <AdditionalOptions> --hxx-prologue "#include \"BEToolboxXML.h\"" --cxx-prologue "#include \"stdafx.h\""</AdditionalOptions>
-      <CharType>1</CharType>
-      <GenSerialization>true</GenSerialization>
-      <ExportSymbol>BETOOLBOXXMLCLASS</ExportSymbol>
-    </CXX_Tree_Mapping_Rule>
-    <Midl>
-      <TargetEnvironment>X64</TargetEnvironment>
-    </Midl>
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;$(WBFLDIR)\Include;$(WBFLDIR)\Include\$(Platform);$(WBFLDIR)\UnitServer\Schema\;$(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\Include;$(WBFLDIR)\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>Xalan-C_1.lib;xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WBFLDIR)\RegFreeCOM\$(Platform)\$(Configuration);$(BRIDGELINKDIR)\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <TargetMachine>MachineX64</TargetMachine>
-      <Profile>true</Profile>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BEToolboxXML.cpp" />
     <ClCompile Include="Curvel.cpp" />
@@ -391,11 +152,7 @@ xcopy /y /d $(WBFLDIR)\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_11.d
     <ClCompile Include="GenComp_Version_2.0.cxx" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
