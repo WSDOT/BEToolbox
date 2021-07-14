@@ -47,10 +47,10 @@ public:
 	CPGStableModel();
 	virtual ~CPGStableModel();
 
-   stbLiftingCheckArtifact GetLiftingCheckArtifact() const;
-   stbHaulingCheckArtifact GetHaulingCheckArtifact() const;
-   stbLiftingResults GetLiftingResults() const;
-   stbHaulingResults GetHaulingResults() const;
+   WBFL::Stability::LiftingCheckArtifact GetLiftingCheckArtifact() const;
+   WBFL::Stability::HaulingCheckArtifact GetHaulingCheckArtifact() const;
+   WBFL::Stability::LiftingResults GetLiftingResults() const;
+   WBFL::Stability::HaulingResults GetHaulingResults() const;
 
    // NOTE: For all the "Get" methods.... returns true if the value changed and false if it didn't
 
@@ -72,14 +72,14 @@ public:
    bool SetStrands(int girderType,int modelType,const CPGStableStrands& strands);
    const CPGStableStrands& GetStrands(int girderType,int modelType) const;
 
-   bool SetGirder(int girderType,const stbGirder& girder);
-   const stbGirder& GetGirder(int girderType) const;
+   bool SetGirder(int girderType,const WBFL::Stability::Girder& girder);
+   const WBFL::Stability::Girder& GetGirder(int girderType) const;
 
-   bool SetLiftingStabilityProblem(const stbLiftingStabilityProblem& problem);
-   const stbLiftingStabilityProblem& GetLiftingStabilityProblem() const;
+   bool SetLiftingStabilityProblem(const WBFL::Stability::LiftingStabilityProblem& problem);
+   const WBFL::Stability::LiftingStabilityProblem& GetLiftingStabilityProblem() const;
 
-   bool SetHaulingStabilityProblem(const stbHaulingStabilityProblem& problem);
-   const stbHaulingStabilityProblem& GetHaulingStabilityProblem() const;
+   bool SetHaulingStabilityProblem(const WBFL::Stability::HaulingStabilityProblem& problem);
+   const WBFL::Stability::HaulingStabilityProblem& GetHaulingStabilityProblem() const;
 
    bool SetLiftingCriteria(const CPGStableLiftingCriteria& criteria);
    const CPGStableLiftingCriteria& GetLiftingCriteria() const;
@@ -101,8 +101,8 @@ public:
    Float64 GetHeightOfGirderBottomAboveRoadway() const;
    bool SetHeightOfGirderBottomAboveRoadway(Float64 Hgb);
 
-   void ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt);
-   void GetStrandProfiles(const CPGStableStrands& strands,const stbGirder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const;
+   void ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt);
+   void GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const;
 
    HRESULT Save(IStructuredSave* pStrSave);
    HRESULT Load(IStructuredLoad* pStrLoad);
@@ -113,10 +113,10 @@ protected:
    int m_ConcreteType;
 
    CPGStableStrands m_Strands[2][2]; // array index [girderType][modelType]
-   mutable stbGirder m_Girder[2];
+   mutable WBFL::Stability::Girder m_Girder[2];
 
-   mutable stbLiftingStabilityProblem m_LiftingStabilityProblem;
-   mutable stbHaulingStabilityProblem m_HaulingStabilityProblem;
+   mutable WBFL::Stability::LiftingStabilityProblem m_LiftingStabilityProblem;
+   mutable WBFL::Stability::HaulingStabilityProblem m_HaulingStabilityProblem;
 
    mutable CPGStableLiftingCriteria m_LiftingCriteria;
    mutable CPGStableHaulingCriteria m_HaulingCriteria;
@@ -143,7 +143,7 @@ protected:
    void ResolveSimplifedHaulingStrandLocations() const;
    void ResolveExactHaulingStrandLocations() const;
    void MapSimplifiedToExactStrandLocations(CPGStableStrands* pStrands);
-   void GetSimplifiedStrandLocations(const CPGStableStrands* pStrands,const stbGirder* pGirder,Float64* pXpsStraight,Float64* pYpsStraight,Float64* pXpsHarped,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXpsTemp,Float64* pYpsTemp) const;
-   void GetStrandLocations(const CPGStableFpe& fpe,const stbGirder* pGirder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pYh,Float64* pXt,Float64* pYt) const;
+   void GetSimplifiedStrandLocations(const CPGStableStrands* pStrands,const WBFL::Stability::Girder* pGirder,Float64* pXpsStraight,Float64* pYpsStraight,Float64* pXpsHarped,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXpsTemp,Float64* pYpsTemp) const;
+   void GetStrandLocations(const CPGStableFpe& fpe,const WBFL::Stability::Girder* pGirder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pYh,Float64* pXt,Float64* pYt) const;
 
 };

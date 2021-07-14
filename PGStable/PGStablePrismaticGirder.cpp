@@ -39,7 +39,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-void DDX_Girder(CDataExchange* pDX,stbGirder& girder)
+void DDX_Girder(CDataExchange* pDX,WBFL::Stability::Girder& girder)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -47,7 +47,7 @@ void DDX_Girder(CDataExchange* pDX,stbGirder& girder)
    ATLASSERT(girder.GetSectionCount() == 1); // prismatic girders have only one section
    IndexType sectIdx = 0;
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   girder.GetSectionProperties(sectIdx,stbTypes::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   girder.GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 L = girder.GetSectionLength(sectIdx);
 
@@ -178,7 +178,7 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    CString strGirder = pDoc->GetGirder();
    DDX_CBString(pDX,IDC_GIRDER_LIST,strGirder);
 
-   stbGirder girder = pDoc->GetGirder(PRISMATIC);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(PRISMATIC);
    CPGStableStrands lifting_strands = pDoc->GetStrands(PRISMATIC, LIFTING);
    CPGStableStrands hauling_strands = pDoc->GetStrands(PRISMATIC, HAULING);
 
@@ -316,10 +316,10 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
       }
    }
 
-   const stbGirder& girder = pDoc->GetGirder(PRISMATIC);
+   const WBFL::Stability::Girder& girder = pDoc->GetGirder(PRISMATIC);
    IndexType sectIdx = 0;
    Float64 Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtf, Wbf;
-   girder.GetSectionProperties(sectIdx, stbTypes::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf);
+   girder.GetSectionProperties(sectIdx, WBFL::Stability::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf);
    Ytop *= -1; //this is in girder section coordinates, convert to Y positive down coordinates
 
    if (pDoc->GetStressPointType() == COMPUTE_STRESS_POINTS)
@@ -328,7 +328,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    }
    else
    {
-      girder.GetStressPoints(sectIdx, stbTypes::Start, &m_pntTL, &m_pntTR, &m_pntBL, &m_pntBR);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Start, &m_pntTL, &m_pntTR, &m_pntBL, &m_pntBR);
    }
    m_pntTLCache = m_pntTL;
    m_pntTRCache = m_pntTR;
@@ -441,12 +441,12 @@ std::vector<std::pair<Float64,Float64>> CPGStablePrismaticGirder::GetGirderProfi
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   stbGirder girder = pDoc->GetGirder(PRISMATIC);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(PRISMATIC);
    DDX_Girder(&dx,girder);
 
    IndexType sectIdx = 0;
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   girder.GetSectionProperties(sectIdx,stbTypes::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   girder.GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 Lg = girder.GetGirderLength();
    vProfile.emplace_back(0,0);
@@ -465,7 +465,7 @@ void CPGStablePrismaticGirder::GetStrandProfiles(std::vector<std::pair<Float64,F
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   stbGirder girder = pDoc->GetGirder(PRISMATIC);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(PRISMATIC);
    DDX_Girder(&dx,girder);
 
    CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);

@@ -389,14 +389,14 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
       // update input parameters to match library
       const SpecLibraryEntry* pSpec = GetSpecLibraryEntry();
 
-      stbLiftingStabilityProblem liftingProblem = GetLiftingStabilityProblem();
+      WBFL::Stability::LiftingStabilityProblem liftingProblem = GetLiftingStabilityProblem();
       liftingProblem.SetImpact(pSpec->GetLiftingUpwardImpactFactor(),pSpec->GetLiftingDownwardImpactFactor());
 
       liftingProblem.SetSupportPlacementTolerance(pSpec->GetLiftingLoopTolerance());
       liftingProblem.SetLiftAngle(pSpec->GetMinCableInclination());
       liftingProblem.SetSweepTolerance(pSpec->GetLiftingMaximumGirderSweepTolerance());
       liftingProblem.SetSweepGrowth(0); // no sweep growth for initial lifting problem
-      liftingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetLiftingWindType(),pSpec->GetLiftingWindLoad());
+      liftingProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetLiftingWindType(),pSpec->GetLiftingWindLoad());
       liftingProblem.SetYRollAxis(pSpec->GetPickPointHeight());
       SetLiftingStabilityProblem(liftingProblem);
 
@@ -417,8 +417,8 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
       SetLiftingMaterials(Fc,bComputeEc,pSpec->GetLiftingModulusOfRuptureFactor(pgsTypes::Normal));
 
 
-      stbHaulingStabilityProblem haulingProblem = GetHaulingStabilityProblem();
-      haulingProblem.SetImpactUsage((stbTypes::HaulingImpact)pSpec->GetHaulingImpactUsage());
+      WBFL::Stability::HaulingStabilityProblem haulingProblem = GetHaulingStabilityProblem();
+      haulingProblem.SetImpactUsage((WBFL::Stability::HaulingImpact)pSpec->GetHaulingImpactUsage());
       haulingProblem.SetImpact(pSpec->GetHaulingUpwardImpactFactor(),pSpec->GetHaulingDownwardImpactFactor());
       haulingProblem.SetCrownSlope(pSpec->GetRoadwayCrownSlope());
       haulingProblem.SetSuperelevation(pSpec->GetRoadwaySuperelevation());
@@ -426,8 +426,8 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
       haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
       haulingProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
       haulingProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
-      haulingProblem.SetWindLoading((stbTypes::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
-      haulingProblem.SetCentrifugalForceType((stbTypes::CFType)pSpec->GetCentrifugalForceType());
+      haulingProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
+      haulingProblem.SetCentrifugalForceType((WBFL::Stability::CFType)pSpec->GetCentrifugalForceType());
       haulingProblem.SetVelocity(pSpec->GetHaulingSpeed());
       haulingProblem.SetTurningRadius(pSpec->GetTurningRadius());
       SetHaulingStabilityProblem(haulingProblem);
@@ -437,12 +437,12 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
       haulingCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
       haulingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
       haulingCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
-      haulingCriteria.TensionCoefficient[stbTypes::CrownSlope] = pSpec->GetHaulingTensionStressFactorNormalCrown();
-      pSpec->GetHaulingMaximumTensionStressNormalCrown(&haulingCriteria.bMaxTension[stbTypes::CrownSlope],&haulingCriteria.MaxTension[stbTypes::CrownSlope]);
-      haulingCriteria.TensionCoefficientWithRebar[stbTypes::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebarNormalCrown();
-      haulingCriteria.TensionCoefficient[stbTypes::MaxSuper] = pSpec->GetHaulingTensionStressFactorMaxSuper();
-      pSpec->GetHaulingMaximumTensionStressMaxSuper(&haulingCriteria.bMaxTension[stbTypes::MaxSuper],&haulingCriteria.MaxTension[stbTypes::MaxSuper]);
-      haulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper] = pSpec->GetHaulingTensionStressFactorWithRebarMaxSuper();
+      haulingCriteria.TensionCoefficient[WBFL::Stability::CrownSlope] = pSpec->GetHaulingTensionStressFactorNormalCrown();
+      pSpec->GetHaulingMaximumTensionStressNormalCrown(&haulingCriteria.bMaxTension[WBFL::Stability::CrownSlope],&haulingCriteria.MaxTension[WBFL::Stability::CrownSlope]);
+      haulingCriteria.TensionCoefficientWithRebar[WBFL::Stability::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebarNormalCrown();
+      haulingCriteria.TensionCoefficient[WBFL::Stability::MaxSuper] = pSpec->GetHaulingTensionStressFactorMaxSuper();
+      pSpec->GetHaulingMaximumTensionStressMaxSuper(&haulingCriteria.bMaxTension[WBFL::Stability::MaxSuper],&haulingCriteria.MaxTension[WBFL::Stability::MaxSuper]);
+      haulingCriteria.TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = pSpec->GetHaulingTensionStressFactorWithRebarMaxSuper();
       SetHaulingCriteria(haulingCriteria);
 
       GetHaulingMaterials(&Fc,&bComputeEc,&FrCoefficient);
@@ -535,7 +535,7 @@ int CPGStableDoc::GetGirderType() const
    return m_Model.GetGirderType();
 }
 
-const stbGirder& CPGStableDoc::GetGirder(int girderType) const
+const WBFL::Stability::Girder& CPGStableDoc::GetGirder(int girderType) const
 {
    return m_Model.GetGirder(girderType);
 }
@@ -553,7 +553,7 @@ int CPGStableDoc::GetStressPointType() const
    return m_Model.GetStressPointType();
 }
 
-void CPGStableDoc::SetGirder(int girderType,const stbGirder& girder)
+void CPGStableDoc::SetGirder(int girderType,const WBFL::Stability::Girder& girder)
 {
    if ( m_Model.SetGirder(girderType,girder) )
    {
@@ -574,12 +574,12 @@ void CPGStableDoc::SetStrands(int girderType,int modelType,const CPGStableStrand
    }
 }
 
-const stbLiftingStabilityProblem& CPGStableDoc::GetLiftingStabilityProblem() const
+const WBFL::Stability::LiftingStabilityProblem& CPGStableDoc::GetLiftingStabilityProblem() const
 {
    return m_Model.GetLiftingStabilityProblem();
 }
 
-void CPGStableDoc::SetLiftingStabilityProblem(const stbLiftingStabilityProblem& liftingStability)
+void CPGStableDoc::SetLiftingStabilityProblem(const WBFL::Stability::LiftingStabilityProblem& liftingStability)
 {
    if ( m_Model.SetLiftingStabilityProblem(liftingStability) )
    {
@@ -587,12 +587,12 @@ void CPGStableDoc::SetLiftingStabilityProblem(const stbLiftingStabilityProblem& 
    }
 }
 
-const stbHaulingStabilityProblem& CPGStableDoc::GetHaulingStabilityProblem() const
+const WBFL::Stability::HaulingStabilityProblem& CPGStableDoc::GetHaulingStabilityProblem() const
 {
    return m_Model.GetHaulingStabilityProblem();
 }
 
-void CPGStableDoc::SetHaulingStabilityProblem(const stbHaulingStabilityProblem& HaulingStability)
+void CPGStableDoc::SetHaulingStabilityProblem(const WBFL::Stability::HaulingStabilityProblem& HaulingStability)
 {
    if ( m_Model.SetHaulingStabilityProblem(HaulingStability) )
    {
@@ -759,32 +759,32 @@ CString CPGStableDoc::UpdateEc(const CString& strFc,const CString& strDensity,co
    return strEc;
 }
 
-void CPGStableDoc::ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt)
+void CPGStableDoc::ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt)
 {
    m_Model.ResolveStrandLocations(strands,girder,pXs,pYs,pXh,pXh1,pYh1,pXh2,pYh2,pXh3,pYh3,pXh4,pYh4,pXt,pYt);
 }
 
-void CPGStableDoc::GetStrandProfiles(const CPGStableStrands& strands,const stbGirder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp)
+void CPGStableDoc::GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp)
 {
    m_Model.GetStrandProfiles(strands,girder,pvStraight,pvHarped,pvTemp);
 }
 
-stbLiftingResults CPGStableDoc::GetLiftingResults() const
+WBFL::Stability::LiftingResults CPGStableDoc::GetLiftingResults() const
 {
    return m_Model.GetLiftingResults();
 }
 
-stbHaulingResults CPGStableDoc::GetHaulingResults() const
+WBFL::Stability::HaulingResults CPGStableDoc::GetHaulingResults() const
 {
    return m_Model.GetHaulingResults();
 }
 
-stbLiftingCheckArtifact CPGStableDoc::GetLiftingCheckArtifact() const
+WBFL::Stability::LiftingCheckArtifact CPGStableDoc::GetLiftingCheckArtifact() const
 {
    return m_Model.GetLiftingCheckArtifact();
 }
 
-stbHaulingCheckArtifact CPGStableDoc::GetHaulingCheckArtifact() const
+WBFL::Stability::HaulingCheckArtifact CPGStableDoc::GetHaulingCheckArtifact() const
 {
    return m_Model.GetHaulingCheckArtifact();
 }

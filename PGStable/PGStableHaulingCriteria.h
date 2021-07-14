@@ -25,14 +25,14 @@
 
 // CPGStableHaulingCriteria document
 
-class BETCLASS CPGStableHaulingCriteria : public stbHaulingCriteria
+class BETCLASS CPGStableHaulingCriteria : public WBFL::Stability::HaulingCriteria
 {
 public:
 	CPGStableHaulingCriteria();
 	virtual ~CPGStableHaulingCriteria();
    bool operator==(const CPGStableHaulingCriteria& other) const;
    bool operator!=(const CPGStableHaulingCriteria& other) const;
-   void operator=(const stbHaulingCriteria& other);
+   void operator=(const WBFL::Stability::HaulingCriteria& other);
 
    HRESULT Save(IStructuredSave* pStrSave);
    HRESULT Load(IStructuredLoad* pStrLoad);

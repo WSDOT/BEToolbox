@@ -93,8 +93,8 @@ public:
    void RemoveSelectedGirderSections();
    BOOL AreGirderSectionsSelected();
 
-   void FillGrid(const stbGirder& girder);
-   void GetGirderSections(stbGirder& girder);
+   void FillGrid(const WBFL::Stability::Girder& girder);
+   void GetGirderSections(WBFL::Stability::Girder& girder);
 
    Float64 GetGirderLength();
 

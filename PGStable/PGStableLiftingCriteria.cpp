@@ -83,9 +83,9 @@ bool CPGStableLiftingCriteria::operator!=(const CPGStableLiftingCriteria& other)
    return !(*this == other);
 }
 
-void CPGStableLiftingCriteria::operator=(const stbLiftingCriteria& other)
+void CPGStableLiftingCriteria::operator=(const WBFL::Stability::LiftingCriteria& other)
 {
-   *((stbLiftingCriteria*)this) = other;
+   *((WBFL::Stability::LiftingCriteria*)this) = other;
 }
 
 HRESULT CPGStableLiftingCriteria::Save(IStructuredSave* pStrSave)

@@ -39,7 +39,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-void DDX_GirderSectionGrid(CDataExchange* pDX,CPGStableGirderSectionGrid* pGrid,stbGirder& girder)
+void DDX_GirderSectionGrid(CDataExchange* pDX,CPGStableGirderSectionGrid* pGrid,WBFL::Stability::Girder& girder)
 {
    if ( pDX->m_bSaveAndValidate )
    {
@@ -157,7 +157,7 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   stbGirder girder = pDoc->GetGirder(NONPRISMATIC);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(NONPRISMATIC);
    CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);
 
    DDX_GirderSectionGrid(pDX,m_pGirderSectionGrid,girder);
@@ -202,7 +202,7 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
          IndexType sectIdx = 0;
          for (const auto& sp : vStressPoints)
          {
-            girder.SetStressPoints(sectIdx, sp.pntTL[stbTypes::Start], sp.pntTR[stbTypes::Start], sp.pntBL[stbTypes::Start], sp.pntBR[stbTypes::Start], sp.pntTL[stbTypes::End], sp.pntTR[stbTypes::End], sp.pntBL[stbTypes::End], sp.pntBR[stbTypes::End]);
+            girder.SetStressPoints(sectIdx, sp.pntTL[WBFL::Stability::Start], sp.pntTR[WBFL::Stability::Start], sp.pntBL[WBFL::Stability::Start], sp.pntBR[WBFL::Stability::Start], sp.pntTL[WBFL::Stability::End], sp.pntTR[WBFL::Stability::End], sp.pntBL[WBFL::Stability::End], sp.pntBR[WBFL::Stability::End]);
             sectIdx++;
          }
       }
@@ -319,7 +319,7 @@ BOOL CPGStableNonprismaticGirder::OnInitDialog()
 
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
-   const stbGirder& girder = pDoc->GetGirder(NONPRISMATIC);
+   const WBFL::Stability::Girder& girder = pDoc->GetGirder(NONPRISMATIC);
    InitStressPointCache(girder);
 
    CDialog::OnInitDialog();
@@ -435,7 +435,7 @@ void CPGStableNonprismaticGirder::GetStrandProfiles(std::vector<std::pair<Float6
    std::vector<std::pair<Float64,Float64>> vProfile;
 
    CDataExchange dx(this,TRUE);
-   stbGirder girder;
+   WBFL::Stability::Girder girder;
    DDX_GirderSectionGrid(&dx,m_pGirderSectionGrid,girder);
 
    CView* pParent = (CView*)GetParent();
@@ -531,15 +531,15 @@ void CPGStableNonprismaticGirder::OnPSMethodChanged()
    GetDlgItem(IDC_EX_UNIT)->ShowWindow(show);
 }
 
-void CPGStableNonprismaticGirder::InitStressPointCache(const stbGirder& girder)
+void CPGStableNonprismaticGirder::InitStressPointCache(const WBFL::Stability::Girder& girder)
 {
    m_StressPointCache.clear();
    IndexType nSections = girder.GetSectionCount();
    for (IndexType sectIdx = 0; sectIdx < nSections; sectIdx++)
    {
       StressPoints sp;
-      girder.GetStressPoints(sectIdx, stbTypes::Start, &sp.pntTL[stbTypes::Start], &sp.pntTR[stbTypes::Start], &sp.pntBL[stbTypes::Start], &sp.pntBR[stbTypes::Start]);
-      girder.GetStressPoints(sectIdx, stbTypes::End,   &sp.pntTL[stbTypes::End],   &sp.pntTR[stbTypes::End],   &sp.pntBL[stbTypes::End],   &sp.pntBR[stbTypes::End]);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Start, &sp.pntTL[WBFL::Stability::Start], &sp.pntTR[WBFL::Stability::Start], &sp.pntBL[WBFL::Stability::Start], &sp.pntBR[WBFL::Stability::Start]);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::End,   &sp.pntTL[WBFL::Stability::End],   &sp.pntTR[WBFL::Stability::End],   &sp.pntBL[WBFL::Stability::End],   &sp.pntBR[WBFL::Stability::End]);
       m_StressPointCache.push_back(sp);
    }
 }

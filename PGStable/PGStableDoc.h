@@ -66,17 +66,17 @@ public:
    void SetStressPointType(int stressPointType);
    int GetStressPointType() const;
 
-   const stbGirder& GetGirder(int type) const;
-   void SetGirder(int type,const stbGirder& girder);
+   const WBFL::Stability::Girder& GetGirder(int type) const;
+   void SetGirder(int type,const WBFL::Stability::Girder& girder);
 
    const CPGStableStrands& GetStrands(int girderType,int modelType) const;
    void SetStrands(int girderType,int modelType,const CPGStableStrands& strands);
 
-   const stbLiftingStabilityProblem& GetLiftingStabilityProblem() const;
-   void SetLiftingStabilityProblem(const stbLiftingStabilityProblem& stabilityProblem);
+   const WBFL::Stability::LiftingStabilityProblem& GetLiftingStabilityProblem() const;
+   void SetLiftingStabilityProblem(const WBFL::Stability::LiftingStabilityProblem& stabilityProblem);
 
-   const stbHaulingStabilityProblem& GetHaulingStabilityProblem() const;
-   void SetHaulingStabilityProblem(const stbHaulingStabilityProblem& stabilityProblem);
+   const WBFL::Stability::HaulingStabilityProblem& GetHaulingStabilityProblem() const;
+   void SetHaulingStabilityProblem(const WBFL::Stability::HaulingStabilityProblem& stabilityProblem);
 
    const CPGStableLiftingCriteria& GetLiftingCriteria() const;
    void SetLiftingCriteria(const CPGStableLiftingCriteria& criteria);
@@ -110,14 +110,14 @@ public:
 
    CString UpdateEc(const CString& strFc,const CString& strDensity,const CString& strK1,const CString& strK2);
 
-   void ResolveStrandLocations(const CPGStableStrands& strands,const stbGirder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt);
-   void GetStrandProfiles(const CPGStableStrands& strands,const stbGirder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
+   void ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt);
+   void GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
 
-   stbLiftingResults GetLiftingResults() const;
-   stbHaulingResults GetHaulingResults() const;
+   WBFL::Stability::LiftingResults GetLiftingResults() const;
+   WBFL::Stability::HaulingResults GetHaulingResults() const;
 
-   stbLiftingCheckArtifact GetLiftingCheckArtifact() const;
-   stbHaulingCheckArtifact GetHaulingCheckArtifact() const;
+   WBFL::Stability::LiftingCheckArtifact GetLiftingCheckArtifact() const;
+   WBFL::Stability::HaulingCheckArtifact GetHaulingCheckArtifact() const;
 
    const SpecLibrary* GetSpecLibrary() const;
    const SpecLibraryEntry* GetSpecLibraryEntry() const;

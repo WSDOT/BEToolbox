@@ -56,12 +56,12 @@ Uint16 CPGStableHaulingSummaryChapterBuilder::GetMaxLevel() const
 rptChapter* CPGStableHaulingSummaryChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
 {
    int girderType = m_pDoc->GetGirderType();
-   stbGirder girder = m_pDoc->GetGirder(girderType);
-   stbHaulingCheckArtifact artifact = m_pDoc->GetHaulingCheckArtifact();
-   const stbHaulingStabilityProblem& problem = m_pDoc->GetHaulingStabilityProblem();
+   WBFL::Stability::Girder girder = m_pDoc->GetGirder(girderType);
+   WBFL::Stability::HaulingCheckArtifact artifact = m_pDoc->GetHaulingCheckArtifact();
+   const WBFL::Stability::HaulingStabilityProblem& problem = m_pDoc->GetHaulingStabilityProblem();
 
    rptChapter* pChapter = new rptChapter;
-   stbHaulingStabilityReporter reporter;
+   WBFL::Stability::HaulingStabilityReporter reporter;
    reporter.BuildSpecCheckChapter(&girder,&problem,&artifact,pChapter);
 
    return pChapter;

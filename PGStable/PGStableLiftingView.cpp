@@ -65,13 +65,13 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
-   stbLiftingStabilityProblem problem = pDoc->GetLiftingStabilityProblem();
+   WBFL::Stability::LiftingStabilityProblem problem = pDoc->GetLiftingStabilityProblem();
 
-   stbTypes::WindType windLoadType;
+   WBFL::Stability::WindType windLoadType;
    Float64 windLoad;
    problem.GetWindLoading(&windLoadType,&windLoad);
    DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
-   if ( windLoadType == stbTypes::Speed )
+   if ( windLoadType == WBFL::Stability::Speed )
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
    }
@@ -452,8 +452,8 @@ void CPGStableLiftingView::OnInitialUpdate()
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)stbTypes::Speed);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)stbTypes::Pressure);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::Pressure);
 
    CPGStableFormView::OnInitialUpdate();
 
@@ -624,11 +624,11 @@ void CPGStableLiftingView::OnWindTypeChanged()
 {
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    int curSel = pcbWindType->GetCurSel();
-   stbTypes::WindType windType = (stbTypes::WindType)pcbWindType->GetItemData(curSel);
+   WBFL::Stability::WindType windType = (WBFL::Stability::WindType)pcbWindType->GetItemData(curSel);
    CDataExchange dx(this,false);
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   if ( windType == stbTypes::Speed )
+   if ( windType == WBFL::Stability::Speed )
    {
       DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
    }

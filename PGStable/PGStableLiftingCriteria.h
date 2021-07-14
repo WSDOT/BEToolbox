@@ -25,14 +25,14 @@
 
 // CPGStableLiftingCriteria document
 
-class BETCLASS CPGStableLiftingCriteria : public stbLiftingCriteria
+class BETCLASS CPGStableLiftingCriteria : public WBFL::Stability::LiftingCriteria
 {
 public:
 	CPGStableLiftingCriteria();
 	virtual ~CPGStableLiftingCriteria();
    bool operator==(const CPGStableLiftingCriteria& other) const;
    bool operator!=(const CPGStableLiftingCriteria& other) const;
-   void operator=(const stbLiftingCriteria& other);
+   void operator=(const WBFL::Stability::LiftingCriteria& other);
 
    HRESULT Save(IStructuredSave* pStrSave);
    HRESULT Load(IStructuredLoad* pStrLoad);

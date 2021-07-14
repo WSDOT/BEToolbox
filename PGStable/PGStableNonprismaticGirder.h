@@ -53,7 +53,7 @@ protected:
    CPGStableGirderControl m_ctrlGirder;
 
    std::vector<StressPoints> m_StressPointCache;
-   void InitStressPointCache(const stbGirder& girder);
+   void InitStressPointCache(const WBFL::Stability::Girder& girder);
 
 	DECLARE_MESSAGE_MAP()
 
