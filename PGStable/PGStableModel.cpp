@@ -1090,7 +1090,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 
 
    {
-   pStrSave->BeginUnit(_T("LiftingProblem"),5.0);
+   pStrSave->BeginUnit(_T("LiftingProblem"),6.0);
    const WBFL::Stability::LiftingStabilityProblem& liftingProblem = GetLiftingStabilityProblem();
    m_Strands[m_GirderType][LIFTING].Save(pStrSave);
 
@@ -1137,6 +1137,12 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->put_Property(_T("WindLoadType"),CComVariant(windLoadType));
    pStrSave->put_Property(_T("WindLoad"),CComVariant(windLoad));
 
+   // added in version 6 of this datablock
+   Float64 eb, wb;
+   liftingProblem.GetAppurtenanceLoading(&eb, &wb);
+   pStrSave->put_Property(_T("BracketEccentricity"), CComVariant(eb));
+   pStrSave->put_Property(_T("BracketWeight"), CComVariant(wb));
+
    Float64 liftAngle = liftingProblem.GetLiftAngle();
    pStrSave->put_Property(_T("LiftAngle"),CComVariant(liftAngle));
 
@@ -1149,7 +1155,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    }
 
    {
-   pStrSave->BeginUnit(_T("HaulingProblem"),5.0);
+   pStrSave->BeginUnit(_T("HaulingProblem"),6.0);
    m_Strands[m_GirderType][HAULING].Save(pStrSave);
 
    const WBFL::Stability::HaulingStabilityProblem& haulingProblem = GetHaulingStabilityProblem();
@@ -1195,6 +1201,12 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    haulingProblem.GetWindLoading(&windLoadType,&windLoad);
    pStrSave->put_Property(_T("WindLoadType"),CComVariant(windLoadType));
    pStrSave->put_Property(_T("WindLoad"),CComVariant(windLoad));
+
+   // added in version 6 of this datablock
+   Float64 eb, wb;
+   haulingProblem.GetAppurtenanceLoading(&eb, &wb);
+   pStrSave->put_Property(_T("BracketEccentricity"), CComVariant(eb));
+   pStrSave->put_Property(_T("BracketWeight"), CComVariant(wb));
 
    Float64 Ktheta = haulingProblem.GetTruckRotationalStiffness();
    pStrSave->put_Property(_T("Ktheta"),CComVariant(Ktheta));
@@ -1647,6 +1659,17 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       Float64 windLoad = var.dblVal;
       m_LiftingStabilityProblem.SetWindLoading(windLoadType,windLoad);
 
+      if (5 < version)
+      {
+         // added in version 6 of this datablock
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("BracketEccentricity"), &var);
+         Float64 eb = var.dblVal;
+         hr = pStrLoad->get_Property(_T("BracketWeight"), &var);
+         Float64 wb = var.dblVal;
+         m_LiftingStabilityProblem.SetAppurtenanceLoading(eb, wb);
+      }
+
       hr = pStrLoad->get_Property(_T("LiftAngle"),&var);
       m_LiftingStabilityProblem.SetLiftAngle(var.dblVal);
 
@@ -1753,6 +1776,17 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->get_Property(_T("WindLoad"),&var);
       Float64 windLoad = var.dblVal;
       m_HaulingStabilityProblem.SetWindLoading(windLoadType,windLoad);
+
+      if (5 < version)
+      {
+         // added in version 6 of this datablock
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("BracketEccentricity"), &var);
+         Float64 eb = var.dblVal;
+         hr = pStrLoad->get_Property(_T("BracketWeight"), &var);
+         Float64 wb = var.dblVal;
+         m_HaulingStabilityProblem.SetAppurtenanceLoading(eb, wb);
+      }
 
       hr = pStrLoad->get_Property(_T("Ktheta"),&var);
       m_HaulingStabilityProblem.SetTruckRotationalStiffness(var.dblVal);

@@ -89,6 +89,11 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->WindPressure);
    }
 
+   Float64 eb, Wb;
+   problem.GetAppurtenanceLoading(&eb, &Wb);
+   DDX_UnitValueAndTag(pDX, IDC_BRACKET_WEIGHT, IDC_BRACKET_WEIGHT_UNIT, Wb, pDispUnits->ForcePerLength);
+   DDX_UnitValueAndTag(pDX, IDC_BRACKET_ECCENTRICITY, IDC_BRACKET_ECCENTRICITY_UNIT, eb, pDispUnits->ComponentDim);
+
    Float64 Ll,Lr;
    problem.GetSupportLocations(&Ll,&Lr);
 
@@ -244,6 +249,8 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
       problem.SetWindLoading(windLoadType,windLoad);
 
+      problem.SetAppurtenanceLoading(eb, Wb);
+
       problem.SetVelocity(velocity);
       problem.SetTurningRadius(radius);
       problem.SetCentrifugalForceType(cfType);
@@ -298,6 +305,8 @@ BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_CROWN_SLOPE, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_SUPERELEVATION, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_WIND_PRESSURE, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_BRACKET_WEIGHT, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_BRACKET_ECCENTRICITY, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_VELOCITY, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_RADIUS, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_CAMBER, &CPGStableHaulingView::OnChange)

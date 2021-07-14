@@ -403,7 +403,7 @@ BEGIN
     LTEXT           "Lift Point",IDC_STATIC,16,176,29,8
     EDITTEXT        IDC_LIFT,46,173,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_LIFT_UNIT,91,174,19,8
-    LTEXT           "Impact Up",IDC_STATIC,15,195,34,8
+    LTEXT           "Impact Up",IDC_STATIC,16,195,34,8
     EDITTEXT        IDC_IMPACT_UP,50,192,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "%",IDC_IMPACT_UP_UNIT,94,195,8,8
     LTEXT           "Impact Down",IDC_STATIC,107,194,43,8
@@ -412,30 +412,37 @@ BEGIN
     LTEXT           "Lift Angle from Horizontal",IDC_STATIC,16,213,82,8
     EDITTEXT        IDC_LIFT_ANGLE,104,209,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_LIFT_ANGLE_UNIT,146,212,19,8
-    LTEXT           "Wind Loading",IDC_STATIC,17,233,44,8
+    LTEXT           "Wind Loading",IDC_STATIC,16,233,44,8
     COMBOBOX        IDC_WIND_TYPE,92,231,84,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_WIND_PRESSURE,180,231,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_WIND_PRESSURE_UNIT,226,234,19,8
-    LTEXT           "Vertical Camber",IDC_STATIC,19,269,51,8
+    LTEXT           "Overhang Bracket",IDC_STATIC,16,251,59,8
+    LTEXT           "W",IDC_STATIC,85,252,8,8
+    EDITTEXT        IDC_BRACKET_WEIGHT,95,249,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_BRACKET_WEIGHT_UNIT,138,252,19,8
+    LTEXT           "e",IDC_STATIC,172,252,8,8
+    EDITTEXT        IDC_BRACKET_ECCENTRICITY,181,249,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_BRACKET_ECCENTRICITY_UNIT,224,253,19,8
+    LTEXT           "Vertical Camber",IDC_STATIC,16,269,51,8
     EDITTEXT        IDC_CAMBER,72,268,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_CAMBER_UNIT,116,271,19,8
     LTEXT           "with a",IDC_STATIC,143,271,20,8
     EDITTEXT        IDC_CAMBER_MULTIPLIER,165,268,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "multiplier",IDC_STATIC,209,271,29,8
-    LTEXT           "Lateral Camber",IDC_STATIC,19,291,50,8
+    LTEXT           "Lateral Camber",IDC_STATIC,16,291,50,8
     EDITTEXT        IDC_LATERAL_CAMBER,71,287,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_LATERAL_CAMBER_UNIT,117,290,19,8
-    LTEXT           "Distance to roll axis above Top of Girder",IDC_STATIC,20,312,128,8
+    LTEXT           "Distance to roll axis above Top of Girder",IDC_STATIC,16,312,128,8
     EDITTEXT        IDC_YRA,151,308,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_YRA_UNIT,193,310,19,8
-    LTEXT           "Sweep Tolerance",IDC_STATIC,20,328,56,8
+    LTEXT           "Sweep Tolerance",IDC_STATIC,16,328,56,8
     RTEXT           "1/",IDC_SWEEP_TOLERANCE_LABEL,142,327,8,8
     EDITTEXT        IDC_SWEEP_TOLERANCE,151,325,15,14,ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SWEEP_TOLERANCE_UNIT,171,328,27,8
     LTEXT           "+",IDC_STATIC,201,328,8,8
     EDITTEXT        IDC_SWEEP_GROWTH,209,325,26,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SWEEP_GROWTH_UNIT,237,328,13,8
-    LTEXT           "Support Placement Tolerance",IDC_STATIC,20,345,125,8
+    LTEXT           "Support Placement Tolerance",IDC_STATIC,16,345,125,8
     EDITTEXT        IDC_SUPPORT_PLACEMENT_TOLERANCE,151,342,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SUPPORT_PLACEMENT_TOLERANCE_UNIT,193,345,19,8
     GROUPBOX        "Criteria",IDC_STATIC,7,362,249,205
@@ -477,10 +484,10 @@ BEGIN
     LTEXT           "Harp Strands",IDC_STATIC,15,47,43,8
     EDITTEXT        IDC_FPE_HARPED,79,46,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_FPE_HARPED_UNIT,125,47,19,8
-    PUSHBUTTON      "Edit Fpe",IDC_EDIT_FPE,156,43,50,14
     LTEXT           "Temporary Strands",IDC_STATIC,15,64,62,8
     EDITTEXT        IDC_FPE_TEMP,79,63,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_FPE_TEMP_UNIT,125,64,19,8
+    PUSHBUTTON      "Edit Fpe",IDC_EDIT_FPE,156,43,50,14
     GROUPBOX        "Material",IDC_STATIC,7,84,249,73
     LTEXT           "f'c",IDC_STATIC,25,100,8,8
     EDITTEXT        IDC_FC,39,98,40,14,ES_RIGHT | ES_AUTOHSCROLL
@@ -510,17 +517,17 @@ BEGIN
     LTEXT           "%",IDC_IMPACT_DOWN_UNIT,199,196,8,8
     LTEXT           "Use impact for",IDC_STATIC,17,213,47,8
     COMBOBOX        IDC_IMPACT_USAGE,71,211,180,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Normal Crown Slope",IDC_STATIC,18,230,65,8
+    LTEXT           "Normal Crown Slope",IDC_STATIC,17,230,65,8
     EDITTEXT        IDC_CROWN_SLOPE,87,227,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_CROWN_SLOPE_UNIT,133,230,19,8
     LTEXT           "(No centrifugal force)",IDC_STATIC,159,230,93,8
-    LTEXT           "Max. Superelevation",IDC_STATIC,18,247,67,8
+    LTEXT           "Max. Superelevation",IDC_STATIC,17,247,67,8
     EDITTEXT        IDC_SUPERELEVATION,87,245,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SUPERELEVATION_UNIT,133,248,19,8
     LTEXT           "(Includes centrifugal force)",IDC_STATIC,159,248,93,8
-    LTEXT           "Centrifugal force is",IDC_STATIC,18,268,62,8
+    LTEXT           "Centrifugal force is",IDC_STATIC,17,268,62,8
     COMBOBOX        IDC_CF_TYPE,84,266,77,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Speed",IDC_STATIC,18,285,21,8
+    LTEXT           "Speed",IDC_STATIC,17,285,21,8
     EDITTEXT        IDC_VELOCITY,42,282,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_VELOCITY_UNIT,85,285,19,8
     LTEXT           "Turning Radius",IDC_STATIC,109,285,48,8
@@ -530,37 +537,44 @@ BEGIN
     COMBOBOX        IDC_WIND_TYPE,67,302,104,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_WIND_PRESSURE,175,300,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_WIND_PRESSURE_UNIT,221,303,19,8
-    LTEXT           "Vertical",IDC_STATIC,19,338,24,8
+    LTEXT           "Overhang Bracket",IDC_STATIC,17,321,59,8
+    LTEXT           "W",IDC_STATIC,85,322,8,8
+    EDITTEXT        IDC_BRACKET_WEIGHT,95,319,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_BRACKET_WEIGHT_UNIT,138,322,19,8
+    LTEXT           "e",IDC_STATIC,172,322,8,8
+    EDITTEXT        IDC_BRACKET_ECCENTRICITY,181,319,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_BRACKET_ECCENTRICITY_UNIT,224,323,19,8
+    LTEXT           "Vertical",IDC_STATIC,17,338,24,8
     EDITTEXT        IDC_CAMBER,70,336,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_CAMBER_UNIT,114,339,19,8
     LTEXT           "with a",IDC_STATIC,139,339,20,8
     EDITTEXT        IDC_CAMBER_MULTIPLIER,161,336,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "multiplier",IDC_STATIC,205,339,29,8
-    LTEXT           "Lateral Camber",IDC_STATIC,18,360,50,8
+    LTEXT           "Lateral Camber",IDC_STATIC,17,360,50,8
     EDITTEXT        IDC_LATERAL_CAMBER,70,356,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_LATERAL_CAMBER_UNIT,116,359,19,8
-    LTEXT           "Haul Truck",IDC_STATIC,16,379,34,8
+    LTEXT           "Haul Truck",IDC_STATIC,17,379,34,8
     COMBOBOX        IDC_HAUL_TRUCK,59,376,112,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Height of girder bottom above roadway",IDC_STATIC,18,398,128,8
+    LTEXT           "Height of girder bottom above roadway",IDC_STATIC,17,398,128,8
     EDITTEXT        IDC_HGB,150,395,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_HGB_UNIT,193,398,19,8
-    LTEXT           "Height of roll axis above roadway",IDC_STATIC,18,413,108,8
+    LTEXT           "Height of roll axis above roadway",IDC_STATIC,17,413,108,8
     EDITTEXT        IDC_HRC,150,411,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_HRC_UNIT,193,413,19,8
-    LTEXT           "Truck Roll Stiffness",IDC_STATIC,18,430,62,8
+    LTEXT           "Truck Roll Stiffness",IDC_STATIC,17,430,62,8
     EDITTEXT        IDC_KTHETA,150,427,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_KTHETA_UNIT,193,430,46,8
-    LTEXT           "Truck Width\n(C-C distance between dual tires)",IDC_STATIC,18,442,111,20
+    LTEXT           "Truck Width\n(C-C distance between dual tires)",IDC_STATIC,17,442,111,20
     EDITTEXT        IDC_WCC,150,443,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_WCC_UNIT,193,447,19,8
-    LTEXT           "Sweep Tolerance",IDC_STATIC,18,463,56,8
+    LTEXT           "Sweep Tolerance",IDC_STATIC,17,463,56,8
     RTEXT           "1/",IDC_SWEEP_TOLERANCE_LABEL,134,461,12,8
     EDITTEXT        IDC_SWEEP_TOLERANCE,150,459,15,14,ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SWEEP_TOLERANCE_UNIT,168,462,27,8
     LTEXT           "+",IDC_STATIC,200,462,8,8
     EDITTEXT        IDC_SWEEP_GROWTH,210,459,26,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SWEEP_GROWTH_UNIT,237,462,13,8
-    LTEXT           "Support Placement Tolerance",IDC_STATIC,18,478,94,8
+    LTEXT           "Support Placement Tolerance",IDC_STATIC,17,478,94,8
     EDITTEXT        IDC_SUPPORT_PLACEMENT_TOLERANCE,150,475,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_SUPPORT_PLACEMENT_TOLERANCE_UNIT,193,478,19,8
     GROUPBOX        "Criteria",IDC_STATIC,7,500,249,339
@@ -606,7 +620,7 @@ BEGIN
     LTEXT           "Maximum leading overhang (closest to cab)",IDC_STATIC,25,801,139,8
     EDITTEXT        IDC_LEADING_OVERHANG,173,800,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_LEADING_OVERHANG_UNIT,217,803,19,8
-    LTEXT           "Maximum girder weight",IDC_STATIC,27,815,74,8
+    LTEXT           "Maximum girder weight",IDC_STATIC,25,815,74,8
     EDITTEXT        IDC_MAX_GIRDER_WEIGHT,173,815,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_MAX_GIRDER_WEIGHT_UNIT,217,815,19,8
     GROUPBOX        "Browser Placeholder",IDC_BROWSER,263,7,487,877,NOT WS_VISIBLE
@@ -645,7 +659,7 @@ BEGIN
     LTEXT           "Xleft",IDC_STATIC,19,162,16,8
     EDITTEXT        IDC_XLEFT,47,159,51,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_XLEFT_UNIT,101,162,19,8
-    LTEXT           "Precamber",IDC_STATIC,10,179,35,8
+    LTEXT           "Precamber",IDC_STATIC,10,177,35,8
     EDITTEXT        IDC_PRECAMBER,47,175,51,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_PRECAMBER_UNIT,102,178,19,8
     LTEXT           "L",IDC_STATIC,19,195,8,8
@@ -656,6 +670,33 @@ BEGIN
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,147,21,96,10
     CONTROL         "Explicitly Define",IDC_DEFINE_STRESS_POINTS,"Button",BS_AUTORADIOBUTTON,147,35,66,10
     CONTROL         "Custom1",IDC_STRESS_POINT_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,147,53,228,118
+    GROUPBOX        "Dead Loads",IDC_STATIC,407,7,223,203
+    CONTROL         "Unit Weight\n(used to compute modulus of elasticity)",IDC_STATIC,
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,413,23,128,18
+    EDITTEXT        IDC_DENSITY,544,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_UNIT,589,26,36,8
+    CONTROL         "Unit Weight with Reinforcement\n(used to compute dead load)",IDC_STATIC,
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,413,47,108,19
+    EDITTEXT        IDC_DENSITY_WITH_REBAR,544,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,589,50,36,8
+    CONTROL         "Normalweight Concrete",IDC_NWC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,414,69,91,10
+    CONTROL         "Lightweight Concrete",IDC_LWC,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,507,68,84,10
+    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,414,84,170,8
+    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,413,96,170,54
+    PUSHBUTTON      "+",IDC_ADD,586,96,18,14
+    PUSHBUTTON      "-",IDC_REMOVE,586,113,18,14
+    LTEXT           "Attachments (such as overhang brackets)",IDC_STATIC,413,161,135,8
+    LTEXT           "Weight",IDC_STATIC,417,175,24,8
+    EDITTEXT        IDC_ATTACHMENT_WEIGHT,457,171,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_ATTACHMENT_WEIGHT_UNIT,501,174,19,8
+    CONTROL         "Lifting",IDC_LIFTING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,540,174,35,10
+    LTEXT           "Eccentricity",IDC_STATIC,417,191,38,8
+    EDITTEXT        IDC_ECCENTRICITY,457,187,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_ECCENTRICITY_UNIT,502,189,19,8
+    CONTROL         "Hauling",IDC_HAULING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,540,187,39,10
+    GROUPBOX        "Wind Characteristics",IDC_STATIC,640,7,134,203
+    LTEXT           "Drag Coefficient, Cd",IDC_STATIC,651,28,66,8
+    EDITTEXT        IDC_DRAG_COEFFICIENT,724,26,40,14,ES_AUTOHSCROLL
     GROUPBOX        "Prestress Arrangement",IDC_STATIC,7,214,767,180
     LTEXT           "Prestress Definition",IDC_STATIC,15,228,63,8
     COMBOBOX        IDC_PS_METHOD,88,226,91,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
@@ -683,27 +724,9 @@ BEGIN
     LTEXT           "NOTE: Effective Prestress Force (Fpe) is entered on the Lifting and Hauling tabs",IDC_FPE_NOTE,205,228,389,8
     CONTROL         "",IDC_STRAND_LAYOUT,"Static",SS_ENHMETAFILE,117,260,642,124
     CONTROL         "",IDC_GIRDER,"Static",SS_BLACKFRAME,117,260,642,124
-    GROUPBOX        "Dead Loads",IDC_STATIC,407,7,223,203
-    CONTROL         "Unit Weight\n(used to compute modulus of elasticity)",IDC_STATIC,
-                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,413,23,128,18
-    EDITTEXT        IDC_DENSITY,544,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_DENSITY_UNIT,589,26,36,8
-    CONTROL         "Unit Weight with Reinforcement\n(used to compute dead load)",IDC_STATIC,
-                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,413,47,108,19
-    EDITTEXT        IDC_DENSITY_WITH_REBAR,544,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,589,50,36,8
-    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,413,100,170,85
-    PUSHBUTTON      "+",IDC_ADD,586,100,18,14
-    PUSHBUTTON      "-",IDC_REMOVE,586,117,18,14
-    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,414,88,170,8
-    GROUPBOX        "Wind Characteristics",IDC_STATIC,640,7,134,203
-    LTEXT           "Drag Coefficient, Cd",IDC_STATIC,651,28,66,8
-    EDITTEXT        IDC_DRAG_COEFFICIENT,724,26,40,14,ES_AUTOHSCROLL
     LTEXT           "ex",IDC_EX_LABEL,16,244,9,8
     EDITTEXT        IDC_EX,28,242,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_EX_UNIT,71,244,19,8
-    CONTROL         "Normalweight Concrete",IDC_NWC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,414,69,91,10
-    CONTROL         "Lightweight Concrete",IDC_LWC,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,507,68,84,10
 END
 
 IDD_NONPRISMATIC_GIRDER DIALOGEX 0, 0, 794, 387
@@ -767,21 +790,21 @@ BEGIN
     LTEXT           "Face",IDC_YT_MEASURE_LABEL,102,363,16,8
     COMBOBOX        IDC_YT_MEASURE,125,361,48,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     LTEXT           "NOTE: Effective Prestress Force (Fpe) is entered on the Lifting and Hauling tabs",IDC_FPE_NOTE,209,214,468,8
-    GROUPBOX        "Dead Loads",IDC_STATIC,566,7,221,153
+    GROUPBOX        "Dead Loads",IDC_STATIC,566,7,221,161
     CONTROL         "Unit Weight\n(used to compute modulus of elasticity)",IDC_STATIC,
-                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,577,23,128,18
-    EDITTEXT        IDC_DENSITY,708,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_DENSITY_UNIT,751,26,29,8
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,577,19,128,18
+    EDITTEXT        IDC_DENSITY,708,19,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_UNIT,751,22,29,8
     CONTROL         "Unit Weight with Reinforcement\n(used to compute dead load)",IDC_STATIC,
-                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,577,43,108,19
-    EDITTEXT        IDC_DENSITY_WITH_REBAR,708,43,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,751,46,29,8
-    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,577,91,170,63
-    PUSHBUTTON      "+",IDC_ADD_LOAD,750,91,18,14
-    PUSHBUTTON      "-",IDC_REMOVE_LOAD,750,108,18,14
-    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,578,79,170,8
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,577,39,108,19
+    EDITTEXT        IDC_DENSITY_WITH_REBAR,708,39,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,751,42,29,8
+    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,577,87,170,35
+    PUSHBUTTON      "+",IDC_ADD_LOAD,750,87,18,14
+    PUSHBUTTON      "-",IDC_REMOVE_LOAD,750,104,18,14
+    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,578,75,170,8
     CONTROL         "",IDC_GIRDER,"Static",SS_BLACKFRAME,256,233,460,140
-    GROUPBOX        "Wind Characteristics",IDC_STATIC,566,162,221,40
+    GROUPBOX        "Wind Characteristics",IDC_STATIC,566,168,221,30
     LTEXT           "Drag Coefficient, Cd",IDC_STATIC,573,180,66,8
     EDITTEXT        IDC_DRAG_COEFFICIENT,646,178,40,14,ES_AUTOHSCROLL
     LTEXT           "ex",IDC_EX_LABEL,16,230,9,8
@@ -791,8 +814,17 @@ BEGIN
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,19,19,139,10
     CONTROL         "Explicitly Define Stress Points",IDC_DEFINE_STRESS_POINTS,
                     "Button",BS_AUTORADIOBUTTON,159,19,109,10
-    CONTROL         "Normalweight Concrete",IDC_NWC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,578,65,91,10
-    CONTROL         "Lightweight Concrete",IDC_LWC,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,671,64,84,10
+    CONTROL         "Normalweight Concrete",IDC_NWC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,578,61,91,10
+    CONTROL         "Lightweight Concrete",IDC_LWC,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,671,60,84,10
+    LTEXT           "Attachments (such as overhang brackets)",IDC_STATIC,577,126,135,8
+    LTEXT           "Weight",IDC_STATIC,581,140,24,8
+    EDITTEXT        IDC_ATTACHMENT_WEIGHT,621,136,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_ATTACHMENT_WEIGHT_UNIT,665,139,19,8
+    CONTROL         "Lifting",IDC_LIFTING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,704,139,35,10
+    LTEXT           "Eccentricity",IDC_STATIC,581,156,38,8
+    EDITTEXT        IDC_ECCENTRICITY,621,152,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_ECCENTRICITY_UNIT,666,154,19,8
+    CONTROL         "Hauling",IDC_HAULING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,704,152,39,10
 END
 
 IDD_PGSTABLEEFFECTIVEPRESTRESSDLG DIALOGEX 0, 0, 785, 248

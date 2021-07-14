@@ -254,6 +254,7 @@
 #define IDC_HGB                         379
 #define IDC_HGB_UNIT                    380
 #define IDC_USE_PGS_CRITERIA            381
+#define IDC_BRACKET_ECCENTRICITY        381
 #define IDC_PROJECT_CRITERIA            382
 #define IDC_LIFTING_FS_FAILURE          383
 #define IDC_HAULING_FS_FAILURE          385
@@ -268,6 +269,7 @@
 #define IDC_XFER_LENGTH_UNIT            395
 #define IDC_CHECK1                      396
 #define IDC_RESTRICT_IMPACT             396
+#define IDC_LIFTING                     396
 #define IDC_MAX_BUNK                    398
 #define IDC_MAX_BUNK_UNIT               399
 #define IDC_LEADING_OVERHANG            400
@@ -333,6 +335,7 @@
 #define IDC_EX_LABEL                    463
 #define IDC_EDIT1                       465
 #define IDC_LIFTING_PEAK_COMPRESSION    465
+#define IDC_ATTACHMENT_WEIGHT           465
 #define IDC_LIFTING_GLOBAL_COMPRESSION  466
 #define IDC_LIFTING_GLOBAL_COMPRESSION_UNIT 467
 #define IDC_LIFTING_PEAK_COMPRESSION_UNIT 468
@@ -347,6 +350,13 @@
 #define IDC_SPECIFICATION               473
 #define IDC_NWC                         474
 #define IDC_LWC                         475
+#define IDC_ATTACHMENT_WEIGHT_UNIT      476
+#define IDC_ECCENTRICITY                477
+#define IDC_ECCENTRICITY_UNIT           478
+#define IDC_HAULING                     479
+#define IDC_BRACKET_WEIGHT              480
+#define IDC_BRACKET_WEIGHT_UNIT         481
+#define IDC_BRACKET_ECCENTRICITY_UNIT   482
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -396,7 +406,6 @@
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
 #define ID_OPTIONS_AUTOSAVE             36871
-#define EAFID_OPTIONS_AUTOSAVE          36872
 
 // Next default values for new objects
 // 
@@ -404,7 +413,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        225
 #define _APS_NEXT_COMMAND_VALUE         36873
-#define _APS_NEXT_CONTROL_VALUE         476
+#define _APS_NEXT_CONTROL_VALUE         483
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

@@ -28,6 +28,7 @@ Impact Up/Down | Dynamic load allowance (impact). Select how the impact loading 
 Normal Crown Slope | Enter the normal crown slope
 Max. Superelevation | Enter the maximum expectied superelevation to be encountered during the haul
 Wind Loading | Select the wind loading type and enter the loading parameters. For Wind Speed, enter the wind velocity and wind pressure will be comptued according to LRFD 3.8.1.2. For Wind Pressure, enter a pressure loading applied to the vertical surface of the girder.
+Overhang Bracket | Deck form overhang brackets may be attached to the girder prior to transport to facilitate on site construction. Enter an equivalent weight per unit length and eccentricity of the resultant overhang bracket weight from the centerline of the girder. Positive value for weight is in the direction of gravity (downwards). Positive values for eccentricity is in the direction of sweep.
 Centrifugal Force | Select the centrifugal force type; Favorable or Adverse. Favorable forces act away from the center of the turning movement while Adverse forces act inwards.
 Speed | Enter the turning speed
 Turning Radius | Enter the turning radius
