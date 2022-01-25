@@ -405,9 +405,12 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
       liftingCriteria.MinFScr = pSpec->GetCrackingFOSLifting();
       liftingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetLiftingCompressionGlobalStressFactor();
       liftingCriteria.CompressionCoefficient_PeakStress = pSpec->GetLiftingCompressionPeakStressFactor();
-      liftingCriteria.TensionCoefficient = pSpec->GetLiftingTensionStressFactor();
-      pSpec->GetLiftingMaximumTensionStress(&liftingCriteria.bMaxTension,&liftingCriteria.MaxTension);
-      liftingCriteria.TensionCoefficientWithRebar = pSpec->GetLiftingTensionStressFactorWithRebar();
+
+      auto* pLiftingTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(liftingCriteria.TensionStressLimit.get());
+
+      pLiftingTensionStressLimit->TensionCoefficient = pSpec->GetLiftingTensionStressFactor();
+      pSpec->GetLiftingMaximumTensionStress(&pLiftingTensionStressLimit->bMaxTension,&pLiftingTensionStressLimit->MaxTension);
+      pLiftingTensionStressLimit->TensionCoefficientWithRebar = pSpec->GetLiftingTensionStressFactorWithRebar();
       SetLiftingCriteria(liftingCriteria);
 
 
@@ -437,12 +440,18 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
       haulingCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
       haulingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
       haulingCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
-      haulingCriteria.TensionCoefficient[WBFL::Stability::CrownSlope] = pSpec->GetHaulingTensionStressFactorNormalCrown();
-      pSpec->GetHaulingMaximumTensionStressNormalCrown(&haulingCriteria.bMaxTension[WBFL::Stability::CrownSlope],&haulingCriteria.MaxTension[WBFL::Stability::CrownSlope]);
-      haulingCriteria.TensionCoefficientWithRebar[WBFL::Stability::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebarNormalCrown();
-      haulingCriteria.TensionCoefficient[WBFL::Stability::MaxSuper] = pSpec->GetHaulingTensionStressFactorMaxSuper();
-      pSpec->GetHaulingMaximumTensionStressMaxSuper(&haulingCriteria.bMaxTension[WBFL::Stability::MaxSuper],&haulingCriteria.MaxTension[WBFL::Stability::MaxSuper]);
-      haulingCriteria.TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = pSpec->GetHaulingTensionStressFactorWithRebarMaxSuper();
+      
+      auto* pHaulingTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(haulingCriteria.TensionStressLimit.get());
+
+      pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope] = pSpec->GetHaulingTensionStressFactor(pgsTypes::CrownSlope);
+
+
+      pSpec->GetHaulingMaximumTensionStress(pgsTypes::CrownSlope, &pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope],&pHaulingTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope]);
+      pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::CrownSlope);
+      pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::Superelevation] = pSpec->GetHaulingTensionStressFactor(pgsTypes::Superelevation);
+      
+      pSpec->GetHaulingMaximumTensionStress(pgsTypes::Superelevation, &pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::Superelevation],&pHaulingTensionStressLimit->MaxTension[WBFL::Stability::Superelevation]);
+      pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::Superelevation] = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::Superelevation);
       SetHaulingCriteria(haulingCriteria);
 
       GetHaulingMaterials(&Fc,&bComputeEc,&FrCoefficient);

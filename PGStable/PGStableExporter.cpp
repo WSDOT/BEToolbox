@@ -125,6 +125,13 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
       }
    }
 
+   GET_IFACE2(pBroker, IMaterials, pMaterials);
+   if (pMaterials->GetSegmentConcreteType(segmentKey) == pgsTypes::PCI_UHPC)
+   {
+      AfxMessageBox(_T("Cannot export. PGStable does not support PCI UHPC concrete."));
+      return S_FALSE;
+   }
+
    GET_IFACE2(pBroker,IEAFDocument,pDoc);
    CString strExtension(_T("PGStable"));
    CString strDefaultFileName;

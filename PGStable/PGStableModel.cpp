@@ -120,8 +120,13 @@ CPGStableModel::CPGStableModel()
 
    m_Hgb = ::ConvertToSysUnits(72.0,unitMeasure::Inch);
 
-   m_LiftingCriteria.bMaxTension = true;
+   auto* pLiftingTensionStressLimit = new WBFL::Stability::CCLiftingTensionStressLimit;
+   m_LiftingCriteria.TensionStressLimit.reset(pLiftingTensionStressLimit);
+   pLiftingTensionStressLimit->bMaxTension = true;
 
+   auto* pHaulingTensionStressLimit = new WBFL::Stability::CCHaulingTensionStressLimit;
+   m_HaulingCriteria.TensionStressLimit.reset(pHaulingTensionStressLimit);
+   pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope] = true;
 
    m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
    m_DocUnitServer->SetBaseUnits(CComBSTR(unitSysUnitsMgr::GetMassUnit().UnitTag().c_str()),
@@ -170,6 +175,9 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
    Float64 lambda = lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
    concrete.SetLambda(lambda);
 
+   auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(m_LiftingCriteria.TensionStressLimit.get());
+   pTensionStressLimit->Lambda = concrete.GetLambda();
+
    Float64 fr = ::lrfdConcreteUtil::ModRupture(fci,m_LiftingFrCoefficient);
    concrete.SetFlexureFr(lambda*fr);
 
@@ -213,13 +221,12 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
    // criteria
    m_LiftingCriteria.AllowableCompression_GlobalStress = -m_LiftingCriteria.CompressionCoefficient_GlobalStress*fci;
    m_LiftingCriteria.AllowableCompression_PeakStress   = -m_LiftingCriteria.CompressionCoefficient_PeakStress*fci;
-   m_LiftingCriteria.AllowableTension = m_LiftingCriteria.TensionCoefficient*sqrt(fci);
-   if ( m_LiftingCriteria.bMaxTension )
+   pTensionStressLimit->AllowableTension = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficient*sqrt(fci);
+   if (pTensionStressLimit->bMaxTension )
    {
-      m_LiftingCriteria.AllowableTension = Min(m_LiftingCriteria.AllowableTension,m_LiftingCriteria.MaxTension);
+      pTensionStressLimit->AllowableTension = Min(pTensionStressLimit->AllowableTension, pTensionStressLimit->MaxTension);
    }
-   m_LiftingCriteria.AllowableTensionWithRebar = m_LiftingCriteria.TensionCoefficientWithRebar*sqrt(fci);
-   m_LiftingCriteria.Lambda = concrete.GetLambda();
+   pTensionStressLimit->AllowableTensionWithRebar = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficientWithRebar*sqrt(fci);
 
    WBFL::Stability::StabilityEngineer stabilityEngineer;
    WBFL::Stability::LiftingCheckArtifact artifact = stabilityEngineer.CheckLifting(pGirder,&m_LiftingStabilityProblem,m_LiftingCriteria);
@@ -250,6 +257,9 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
 
    Float64 lambda = lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
    concrete.SetLambda(lambda);
+
+   auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(m_HaulingCriteria.TensionStressLimit.get());
+   pTensionStressLimit->Lambda = concrete.GetLambda();
 
    Float64 fr = ::lrfdConcreteUtil::ModRupture(fc,m_HaulingFrCoefficient);
    concrete.SetFlexureFr(lambda*fr);
@@ -283,21 +293,19 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    m_HaulingCriteria.AllowableCompression_GlobalStress = -m_HaulingCriteria.CompressionCoefficient_GlobalStress*fc;
    m_HaulingCriteria.AllowableCompression_PeakStress = -m_HaulingCriteria.CompressionCoefficient_PeakStress*fc;
 
-   m_HaulingCriteria.AllowableTension[WBFL::Stability::CrownSlope] = m_HaulingCriteria.TensionCoefficient[WBFL::Stability::CrownSlope]*sqrt(fc);
-   if ( m_HaulingCriteria.bMaxTension[WBFL::Stability::CrownSlope] )
+   pTensionStressLimit->AllowableTension[WBFL::Stability::CrownSlope] = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope]*sqrt(fc);
+   if (pTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope] )
    {
-      m_HaulingCriteria.AllowableTension[WBFL::Stability::CrownSlope] = Min(m_HaulingCriteria.AllowableTension[WBFL::Stability::CrownSlope],m_HaulingCriteria.MaxTension[WBFL::Stability::CrownSlope]);
+      pTensionStressLimit->AllowableTension[WBFL::Stability::CrownSlope] = Min(pTensionStressLimit->AllowableTension[WBFL::Stability::CrownSlope], pTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope]);
    }
-   m_HaulingCriteria.AllowableTensionWithRebar[WBFL::Stability::CrownSlope] = m_HaulingCriteria.TensionCoefficientWithRebar[WBFL::Stability::CrownSlope]*sqrt(fc);
+   pTensionStressLimit->AllowableTensionWithRebar[WBFL::Stability::CrownSlope] = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope]*sqrt(fc);
 
 
-   m_HaulingCriteria.AllowableTension[WBFL::Stability::MaxSuper] = concrete.GetFlexureFr();
-   m_HaulingCriteria.TensionCoefficient[WBFL::Stability::MaxSuper] = m_HaulingFrCoefficient;
-   m_HaulingCriteria.bMaxTension[WBFL::Stability::MaxSuper] = false;
-   m_HaulingCriteria.AllowableTensionWithRebar[WBFL::Stability::MaxSuper] = concrete.GetFlexureFr();
-   m_HaulingCriteria.TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = m_HaulingFrCoefficient;
-
-   m_HaulingCriteria.Lambda = concrete.GetLambda();
+   pTensionStressLimit->AllowableTension[WBFL::Stability::MaxSuper] = concrete.GetFlexureFr();
+   pTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper] = m_HaulingFrCoefficient;
+   pTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper] = false;
+   pTensionStressLimit->AllowableTensionWithRebar[WBFL::Stability::MaxSuper] = concrete.GetFlexureFr();
+   pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = m_HaulingFrCoefficient;
 
    WBFL::Stability::StabilityEngineer stabilityEngineer;
    WBFL::Stability::HaulingCheckArtifact artifact = stabilityEngineer.CheckHauling(pGirder,&m_HaulingStabilityProblem,m_HaulingCriteria);

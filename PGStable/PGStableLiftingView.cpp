@@ -183,11 +183,13 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX, IDC_LIFTING_GLOBAL_COMPRESSION, m_LiftingCriteria.CompressionCoefficient_GlobalStress);
    DDX_Text(pDX, IDC_LIFTING_PEAK_COMPRESSION, m_LiftingCriteria.CompressionCoefficient_PeakStress);
 
-   DDX_UnitValue(pDX,IDC_LIFTING_TENSION,m_LiftingCriteria.TensionCoefficient,pDispUnits->SqrtPressure);
+   auto* pLiftingTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(m_LiftingCriteria.TensionStressLimit.get());
+
+   DDX_UnitValue(pDX,IDC_LIFTING_TENSION, pLiftingTensionStressLimit->TensionCoefficient,pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_LIFTING_TENSION_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_LIFTING_TENSION_MAX,m_LiftingCriteria.bMaxTension);
-   DDX_UnitValueAndTag(pDX,IDC_LIFTING_TENSION_MAX,IDC_LIFTING_TENSION_MAX_UNIT,m_LiftingCriteria.MaxTension,pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_LIFTING_TENSION_WITH_REBAR,m_LiftingCriteria.TensionCoefficientWithRebar,pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_LIFTING_TENSION_MAX, pLiftingTensionStressLimit->bMaxTension);
+   DDX_UnitValueAndTag(pDX,IDC_LIFTING_TENSION_MAX,IDC_LIFTING_TENSION_MAX_UNIT, pLiftingTensionStressLimit->MaxTension,pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_LIFTING_TENSION_WITH_REBAR, pLiftingTensionStressLimit->TensionCoefficientWithRebar,pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_LIFTING_TENSION_WITH_REBAR_UNIT,tag);
 
    if ( pDX->m_bSaveAndValidate )

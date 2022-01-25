@@ -218,18 +218,20 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX, IDC_HAULING_GLOBAL_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_GlobalStress);
    DDX_Text(pDX, IDC_HAULING_PEAK_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_PeakStress);
 
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN,m_HaulingCriteria.TensionCoefficient[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
+   auto* pHaulingTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(m_HaulingCriteria.TensionStressLimit.get());
+
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN, pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_CROWN_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN,m_HaulingCriteria.bMaxTension[WBFL::Stability::CrownSlope]);
-   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT,m_HaulingCriteria.MaxTension[WBFL::Stability::CrownSlope],pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN,m_HaulingCriteria.TensionCoefficientWithRebar[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN, pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope]);
+   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT, pHaulingTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope],pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN, pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,tag);
 
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_SUPER,m_HaulingCriteria.TensionCoefficient[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_SUPER, pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_SUPER_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_SUPER,m_HaulingCriteria.bMaxTension[WBFL::Stability::MaxSuper]);
-   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT,m_HaulingCriteria.MaxTension[WBFL::Stability::MaxSuper],pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER,m_HaulingCriteria.TensionCoefficientWithRebar[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_SUPER, pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper]);
+   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT, pHaulingTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper],pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER, pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,tag);
 
    if ( pDX->m_bSaveAndValidate )
