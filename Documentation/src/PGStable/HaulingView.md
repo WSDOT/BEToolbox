@@ -32,7 +32,7 @@ Overhang Bracket | Deck form overhang brackets may be attached to the girder pri
 Centrifugal Force | Select the centrifugal force type; Favorable or Adverse. Favorable forces act away from the center of the turning movement while Adverse forces act inwards.
 Speed | Enter the turning speed
 Turning Radius | Enter the turning radius
-Vertical Camber | Enter the camber and a camber multiplier, if applicable.
+Vertical Camber | Enter the camber and a camber multiplier, if applicable. This value should include formed camber when applicable.
 Lateral Camber | Asymmetric girders can have lateral deflections due to the geometry of the section. Prestressing that is not symmetric with respect to the vertical axis of the girder can also have lateral deflection. Enter the lateral camber if applicable.
 Haul Truck | Select a haul truck from the drop down list or select "Define haul truck" to input the haul truck parameters
 Height of girder bottom above roadway | Enter the location of the bottom of the girder from the roadway surface directly above the roll center
