@@ -26,8 +26,6 @@
 #include "..\resource.h"
 #include "PGStableGirderControl.h"
 
-#include <GeometricPrimitives\Primitives.h>
-
 #include <Colors.h>
 #define SEGMENT_BORDER_COLOR GREY50
 #define SEGMENT_FILL_COLOR   GREY70
@@ -104,7 +102,7 @@ void CPGStableGirderControl::OnPaint()
    // Set up coordinate mapping
    //
    std::vector<std::pair<Float64,Float64>> vProfile = pParent->GetGirderProfile();
-   gpRect2d box(DBL_MAX,DBL_MAX,-DBL_MAX,-DBL_MAX);
+   GraphRect box(DBL_MAX,DBL_MAX,-DBL_MAX,-DBL_MAX);
    std::vector<std::pair<Float64,Float64>>::iterator iter(vProfile.begin());
    std::vector<std::pair<Float64,Float64>>::iterator end(vProfile.end());
    for ( ; iter != end; iter++ )

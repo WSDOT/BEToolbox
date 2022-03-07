@@ -489,7 +489,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    {
       Float64 t = iter->first;
       Float64 csm = iter->second;
-      graph.AddPoint(series,gpPoint2d(t,csm));      
+      graph.AddPoint(series, GraphPoint(t,csm));
    }
 
    graph.UpdateGraphMetrics(pDC->GetSafeHdc());
