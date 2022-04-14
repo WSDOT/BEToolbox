@@ -27,10 +27,10 @@
 
 struct StressPoints
 {
-   gpPoint2d pntTL[2];
-   gpPoint2d pntTR[2];
-   gpPoint2d pntBL[2];
-   gpPoint2d pntBR[2];
+   WBFL::Stability::Point pntTL[2];
+   WBFL::Stability::Point pntTR[2];
+   WBFL::Stability::Point pntBL[2];
+   WBFL::Stability::Point pntBR[2];
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,8 +69,8 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-   void InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf,const gpPoint2d& pntTL,const gpPoint2d& pntTR,const gpPoint2d& pntBL,const gpPoint2d& pntBR);
-   void SetStressPoints(ROWCOL row, const gpPoint2d& pntTL, const gpPoint2d& pntTR, const gpPoint2d& pntBL, const gpPoint2d& pntBR);
+   void InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf,const WBFL::Stability::Point& pntTL,const WBFL::Stability::Point& pntTR,const WBFL::Stability::Point& pntBL,const WBFL::Stability::Point& pntBR);
+   void SetStressPoints(ROWCOL row, const WBFL::Stability::Point& pntTL, const WBFL::Stability::Point& pntTR, const WBFL::Stability::Point& pntBL, const WBFL::Stability::Point& pntBR);
 
    // virtual overrides for grid
    virtual BOOL OnValidateCell(ROWCOL nRow, ROWCOL nCol) override;
@@ -89,7 +89,7 @@ public:
    void CustomInit();
    void AddGirderSection();
 
-   void GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot,gpPoint2d* pntTL,gpPoint2d* pntTR,gpPoint2d* pntBL,gpPoint2d* pntBR);
+   void GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot, WBFL::Stability::Point* pntTL, WBFL::Stability::Point* pntTR, WBFL::Stability::Point* pntBL, WBFL::Stability::Point* pntBR);
    void RemoveSelectedGirderSections();
    BOOL AreGirderSectionsSelected();
 

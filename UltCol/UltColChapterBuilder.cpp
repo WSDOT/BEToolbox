@@ -24,7 +24,7 @@
 #include "UltColChapterBuilder.h"
 #include "..\BEToolboxColors.h"
 #include <Reporter\Reporter.h>
-#include <GraphicsLib\GraphicsLib.h>
+#include <Graphing/GraphXY.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -193,7 +193,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
 
    MomentTool momentTool(pDispUnits->Moment);
    AxialTool  axialTool(pDispUnits->GeneralForce);
-   grGraphXY graph(momentTool,axialTool);
+   WBFL::Graphing::GraphXY graph(momentTool,axialTool);
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
@@ -206,7 +206,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
    strMoment.Format(_T("Moment (%s)"),pDispUnits->Moment.UnitOfMeasure.UnitTag().c_str());
    graph.SetXAxisTitle(strMoment.LockBuffer());
    strMoment.UnlockBuffer();
-   graph.SetXAxisNiceRange(true);
+   graph.XAxisNiceRange(true);
    graph.SetXAxisNumberOfMinorTics(0);
    graph.SetXAxisNumberOfMajorTics(11);
    graph.SetXAxisLabelAngle(350); // 35 degrees
@@ -216,7 +216,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
    strAxial.Format(_T("Axial (%s)"),pDispUnits->GeneralForce.UnitOfMeasure.UnitTag().c_str());
    graph.SetYAxisTitle(strAxial.LockBuffer());
    strAxial.UnlockBuffer();
-   graph.SetYAxisNiceRange(true);
+   graph.YAxisNiceRange(true);
    graph.SetYAxisNumberOfMinorTics(5);
    graph.SetYAxisNumberOfMajorTics(21);
 
@@ -247,8 +247,8 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
       Mr = ::ConvertFromSysUnits(Mr,pDispUnits->Moment.UnitOfMeasure);
       Pr = ::ConvertFromSysUnits(Pr,pDispUnits->GeneralForce.UnitOfMeasure);
 
-      graph.AddPoint(series1, GraphPoint(Mn,-Pn));
-      graph.AddPoint(series2, GraphPoint(Mr,-Pr));
+      graph.AddPoint(series1, WBFL::Graphing::Point(Mn,-Pn));
+      graph.AddPoint(series2, WBFL::Graphing::Point(Mr,-Pr));
    }
 
    graph.UpdateGraphMetrics(pDC->GetSafeHdc());

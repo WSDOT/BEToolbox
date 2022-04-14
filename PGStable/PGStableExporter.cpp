@@ -279,15 +279,15 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       Float64 Ytop = pSectProps->GetY(releaseIntervalIdx, poi, pgsTypes::TopGirder);
       Float64 Xleft = pSectProps->GetXleft(releaseIntervalIdx, poi);
 
-      gpPoint2d es = pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight);
+      WBFL::Geometry::Point2d es = pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight);
       Float64 Xs = Xleft - es.X();
       Float64 Ys = Ytop + es.Y();
 
-      gpPoint2d eh = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped);
+      WBFL::Geometry::Point2d eh = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped);
       Float64 Xh = Xleft - eh.X();
       Float64 Yh = Ytop + eh.Y();
 
-      gpPoint2d et = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary);
+      WBFL::Geometry::Point2d et = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary);
       Float64 Xt = Xleft - et.X();
       Float64 Yt = Ytop + et.Y();
 

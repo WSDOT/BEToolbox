@@ -25,7 +25,8 @@
 #include "..\BEToolboxUtilities.h"
 #include <Reporter\Reporter.h>
 #include "..\BEToolboxColors.h"
-#include <GraphicsLib\GraphicsLib.h>
+
+#include <Graphing/GraphXY.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -127,7 +128,7 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pLayoutTable)(0,2) << Bold(_T("Basic Section Properties")) << rptNewLine;
    WriteSectionProperties((*pLayoutTable)(0,2),shapeProps);
 
-   CComPtr<ICompositeSection> compSection(m_pDoc->GetCompositeSection());
+   CComPtr<ICompositeSectionEx> compSection(m_pDoc->GetCompositeSection());
    CComQIPtr<ISection> section(compSection);
    CComQIPtr<IElasticProperties> elasticProperties;
    section->get_ElasticProperties(&elasticProperties);
@@ -200,14 +201,14 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    pDC->SelectObject(pOldBrush);
 
    LengthTool lengthTool(pDispUnits->ComponentDim);
-   grGraphXY graph(lengthTool,lengthTool);
+   WBFL::Graphing::GraphXY graph(lengthTool,lengthTool);
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
    graph.SetGridPenStyle(GRAPH_GRID_PEN_STYLE, GRAPH_GRID_PEN_WEIGHT, GRAPH_GRID_COLOR);
 
-   graph.SetIsotropicAxes(true);
-   graph.SetDoDrawGrid(true);
+   graph.IsotropicAxes(true);
+   graph.DrawGrid(true);
    graph.DrawLegend(false);
 
    //graph.SetTitle(_T("Interaction Diagram"));
@@ -217,7 +218,7 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    strXAxis.Format(_T("X (%s)"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
    graph.SetXAxisTitle(strXAxis.LockBuffer());
    strXAxis.UnlockBuffer();
-   graph.SetXAxisNiceRange(true);
+   graph.XAxisNiceRange(true);
    graph.SetXAxisNumberOfMinorTics(0);
    graph.SetXAxisNumberOfMajorTics(11);
    graph.SetXAxisLabelAngle(350); // 35 degrees
@@ -227,7 +228,7 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    strYAxis.Format(_T("Y (%s)"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
    graph.SetYAxisTitle(strYAxis.LockBuffer());
    strYAxis.UnlockBuffer();
-   graph.SetYAxisNiceRange(true);
+   graph.YAxisNiceRange(true);
    graph.SetYAxisNumberOfMinorTics(0);
    graph.SetYAxisNumberOfMajorTics(11);
 
@@ -239,13 +240,13 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    std::vector<std::pair<Float64,Float64>>::const_iterator end(primaryPoints.end());
    for (; iter != end; iter++)
    {
-      GraphPoint point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(primarySeries,point);
    }
 
    if ( 0 < primaryPoints.size() )
    {
-      GraphPoint point(::ConvertFromSysUnits(primaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(primaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(::ConvertFromSysUnits(primaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(primaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(primarySeries,point);
    }
 
@@ -254,13 +255,13 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    end = secondaryPoints.end();
    for (; iter != end; iter++)
    {
-      GraphPoint point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(secondarySeries,point);
    }
 
    if ( 0 < secondaryPoints.size() )
    {
-      GraphPoint point(::ConvertFromSysUnits(secondaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(secondaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(::ConvertFromSysUnits(secondaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(secondaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(secondarySeries,point);
    }
 

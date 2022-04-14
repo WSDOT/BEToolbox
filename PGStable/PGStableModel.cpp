@@ -1216,7 +1216,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
          // added in version 2
          pStrSave->BeginUnit(_T("StressPoints"), 1.0);
 
-         gpPoint2d pntTL, pntTR, pntBL, pntBR;
+         WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
          m_Girder[m_GirderType].GetStressPoints(sectIdx, WBFL::Stability::Start, &pntTL, &pntTR, &pntBL, &pntBR);
          pStrSave->BeginUnit(_T("TopLeft"), 1.0);
          pStrSave->put_Property(_T("X"), CComVariant(pntTL.X()));
@@ -1260,7 +1260,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
          // added in version 2
          pStrSave->BeginUnit(_T("StressPoints"), 1.0);
 
-         gpPoint2d pntTL, pntTR, pntBL, pntBR;
+         WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
          m_Girder[m_GirderType].GetStressPoints(sectIdx, WBFL::Stability::End, &pntTL, &pntTR, &pntBL, &pntBR);
          pStrSave->BeginUnit(_T("TopLeft"), 1.0);
          pStrSave->put_Property(_T("X"), CComVariant(pntTL.X()));
@@ -1609,7 +1609,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
          Float64 L = var.dblVal;
 
          Float64 Ag[2],Ixx[2],Iyy[2],Ixy[2],Xleft[2],Ytop[2],Hg[2],Wtf[2],Wbf[2];
-         gpPoint2d pntTL[2], pntTR[2], pntBL[2], pntBR[2];
+         WBFL::Stability::Point pntTL[2], pntTR[2], pntBL[2], pntBR[2];
 
          Ixy[0] = 0;
          Ixy[1] = 0;

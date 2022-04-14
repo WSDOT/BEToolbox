@@ -265,7 +265,7 @@ CComPtr<IPolyShape> CGenCompDoc::GetPrimaryShape()
    return polyShape;
 }
 
-CComPtr<ICompositeSection> CGenCompDoc::GetCompositeSection()
+CComPtr<ICompositeSectionEx> CGenCompDoc::GetCompositeSection()
 {
    CComPtr<IPolyShape> primaryShape(GetPrimaryShape());
    CComPtr<IPolyShape> secondaryShape;
@@ -279,14 +279,14 @@ CComPtr<ICompositeSection> CGenCompDoc::GetCompositeSection()
       secondaryShape->AddPoint(iter->X(),iter->Y());
    }
 
-   CComPtr<ICompositeSection> section;
-   section.CoCreateInstance(CLSID_CompositeSection);
+   CComPtr<ICompositeSectionEx> section;
+   section.CoCreateInstance(CLSID_CompositeSectionEx);
 
    CComQIPtr<IShape> shape1(primaryShape);
-   section->AddSection(shape1,1.0,1.0,VARIANT_FALSE,VARIANT_TRUE);
+   section->AddSection(shape1,1.0,1.0,0.0,0.0,VARIANT_TRUE);
 
    CComQIPtr<IShape> shape2(secondaryShape);
-   section->AddSection(shape2,m_GenCompXML->ModularRatio(),1.0,VARIANT_FALSE,VARIANT_TRUE);
+   section->AddSection(shape2,m_GenCompXML->ModularRatio(),1.0, 0.0, 0.0,VARIANT_TRUE);
 
    return section;
 }

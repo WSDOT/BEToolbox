@@ -63,7 +63,6 @@
 #include <WBFLRCCapacity.h>
 #include <WBFLTools.h>
 #include <WBFLUnitServer.h>
-#include <WBFLSections.h>
 #include <WBFLCogo.h>
 #include <WBFLAtlExt.h>
 

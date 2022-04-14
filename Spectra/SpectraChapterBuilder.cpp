@@ -23,8 +23,7 @@
 #include "stdafx.h"
 #include "SpectraChapterBuilder.h"
 #include <Reporter\Reporter.h>
-
-#include <GraphicsLib\GraphicsLib.h>
+#include <Graphing/GraphXY.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -458,7 +457,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
    TimeTool   TimeTool(pDispUnits->Time3);
    ScalarTool SaTool(pDispUnits->Scalar);
-   grGraphXY graph(TimeTool,SaTool);
+   WBFL::Graphing::GraphXY graph(TimeTool,SaTool);
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
@@ -470,7 +469,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    CString strPeriod(_T("Period, T (sec)"));
    graph.SetXAxisTitle(strPeriod.LockBuffer());
    strPeriod.UnlockBuffer();
-   graph.SetXAxisNiceRange(true);
+   graph.XAxisNiceRange(true);
    graph.SetXAxisNumberOfMinorTics(0);
    graph.SetXAxisNumberOfMajorTics(11);
 
@@ -479,7 +478,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    strCsm.Format(_T("Response Spectral Acceleration, Sa (g)"));
    graph.SetYAxisTitle(strCsm.LockBuffer());
    strCsm.UnlockBuffer();
-   graph.SetYAxisNiceRange(true);
+   graph.YAxisNiceRange(true);
 
    IndexType series = graph.CreateDataSeries(_T(""),PS_SOLID,1,BLUE);
 
@@ -489,7 +488,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    {
       Float64 t = iter->first;
       Float64 csm = iter->second;
-      graph.AddPoint(series, GraphPoint(t,csm));
+      graph.AddPoint(series, WBFL::Graphing::Point(t,csm));
    }
 
    graph.UpdateGraphMetrics(pDC->GetSafeHdc());

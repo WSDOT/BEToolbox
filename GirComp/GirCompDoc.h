@@ -26,7 +26,6 @@
 #include "..\BEToolboxDoc.h"
 #include <WBFLTools.h>
 #include <WBFLGeometry.h>
-#include <WBFLSections.h>
 #include <WBFLUnitServer.h>
 #include <ReportManager\ReportManager.h>
 

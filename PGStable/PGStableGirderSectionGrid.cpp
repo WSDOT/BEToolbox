@@ -159,7 +159,7 @@ void CPGStableGirderSectionGrid::CustomInit()
 void CPGStableGirderSectionGrid::AddGirderSection()
 {
    Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot;
-   gpPoint2d pntTL, pntTR, pntBL, pntBR;
+   WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
    GetGirderSection(GetRowCount(),&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtop,&Wbot,&pntTL,&pntTR,&pntBL,&pntBR);
 
    InsertGirderSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot,pntTL,pntTR,pntBL,pntBR);
@@ -170,7 +170,7 @@ void CPGStableGirderSectionGrid::AddGirderSection()
    pDlg->SetGirderLength(GetGirderLength());
 }
 
-void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot, gpPoint2d* pntTL, gpPoint2d* pntTR, gpPoint2d* pntBL, gpPoint2d* pntBR)
+void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot, WBFL::Stability::Point* pntTL, WBFL::Stability::Point* pntTR, WBFL::Stability::Point* pntBL, WBFL::Stability::Point* pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -252,7 +252,7 @@ void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64
    pntBR->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 }
 
-void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf, const gpPoint2d& pntTL, const gpPoint2d& pntTR, const gpPoint2d& pntBL, const gpPoint2d& pntBR)
+void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf, const WBFL::Stability::Point& pntTL, const WBFL::Stability::Point& pntTR, const WBFL::Stability::Point& pntBL, const WBFL::Stability::Point& pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -337,7 +337,7 @@ void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,F
    GetParam()->EnableUndo(TRUE);
 }
 
-void CPGStableGirderSectionGrid::SetStressPoints(ROWCOL row,const gpPoint2d& pntTL, const gpPoint2d& pntTR, const gpPoint2d& pntBL, const gpPoint2d& pntBR)
+void CPGStableGirderSectionGrid::SetStressPoints(ROWCOL row,const WBFL::Stability::Point& pntTL, const WBFL::Stability::Point& pntTR, const WBFL::Stability::Point& pntBL, const WBFL::Stability::Point& pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -687,7 +687,7 @@ void CPGStableGirderSectionGrid::FillGrid(const WBFL::Stability::Girder& girder)
    {
       Float64 L = girder.GetSectionLength(sectIdx);
       Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      gpPoint2d pntTL, pntTR, pntBL, pntBR;
+      WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
       for ( int s = 0; s < 2; s++ )
       {
          WBFL::Stability::Section section = (WBFL::Stability::Section)s;
@@ -715,7 +715,7 @@ void CPGStableGirderSectionGrid::GetGirderSections(WBFL::Stability::Girder& gird
    for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
       Float64 L[2],Ag[2],Ixx[2],Iyy[2],Ixy[2],Xleft[2],Ytop[2],Hg[2],Wtf[2],Wbf[2];
-      gpPoint2d pntTL[2], pntTR[2], pntBL[2], pntBR[2];
+      WBFL::Stability::Point pntTL[2], pntTR[2], pntBL[2], pntBR[2];
 
       GetGirderSection(row+1,&L[WBFL::Stability::Start], 
                              &Ag[WBFL::Stability::Start], 
@@ -780,7 +780,7 @@ Float64 CPGStableGirderSectionGrid::GetGirderLength()
    for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
       Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      gpPoint2d pntTL, pntTR, pntBL, pntBR;
+      WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
       GetGirderSection(row+1,&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf,&pntTL,&pntTR,&pntBL,&pntBR);
       Lg += L;
    }
@@ -795,7 +795,7 @@ std::vector<std::pair<Float64,Float64>> CPGStableGirderSectionGrid::GetGirderPro
    for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
       Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      gpPoint2d pntTL, pntTR, pntBL, pntBR;
+      WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
       GetGirderSection(row+1,&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf, &pntTL, &pntTR, &pntBL, &pntBR);
       vProfile.emplace_back(X,-Hg);
 

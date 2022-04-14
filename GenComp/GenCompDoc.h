@@ -53,7 +53,7 @@ public:
    const std::vector<std::pair<Float64,Float64>>& GetSecondaryPoints();
 
    CComPtr<IPolyShape> GetPrimaryShape();
-   CComPtr<ICompositeSection> GetCompositeSection();
+   CComPtr<ICompositeSectionEx> GetCompositeSection();
 
 
 #ifdef _DEBUG

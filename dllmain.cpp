@@ -36,8 +36,6 @@
 #include <WBFLUnitServer.h>
 #include <WBFLGeometry.h>
 #include <WBFLGeometry_i.c>
-#include <WBFLSections.h>
-#include <WBFLSections_i.c>
 #include <EAF\EAFComponentInfo.h>
 #include <WBFLRCCapacity.h>
 #include <WBFLRCCapacity_i.c>
