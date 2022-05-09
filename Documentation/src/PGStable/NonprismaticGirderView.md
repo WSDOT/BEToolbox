@@ -36,7 +36,7 @@ Bottom Right (X,Y) | Bottom right corner of the girder section
 
 Precamber is a camber that is constructed into the girder (this is not the natural camber caused be girder self-weight and prestressing)
 
-## Dead Loads
+## Materials & Dead Loads
 The self weight of the girder is computed from the section properties and the unit weight with reinforcement. Additional dead loads can be modeled.
 
 Item | Description
@@ -44,6 +44,8 @@ Item | Description
 Unit Weight | Unit weight of concrete used to compute modulus of elasticity
 Unit Weight with Reinforcement | Unit weight of concrete and reinforcement. Used to compute dead load.
 Normalweight/Lightweight Concrete | Indicate the type of concrete used.
+K1 | Averaging factor used when computing the modulus of elasticity
+K2 | Bounding factor used when computing the modulus of elasticity
 
 ### Additional Dead Loads
 Additional dead loads are modeld as discrete point loads. These loads could represent the weight of cast in place diaphragms.

@@ -157,8 +157,8 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   WBFL::Stability::Girder girder = pDoc->GetGirder(NONPRISMATIC);
-   CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(GirderType::Nonprismatic);
+   CPGStableStrands strands = pDoc->GetStrands(GirderType::Nonprismatic, ModelType::Lifting);
 
    DDX_GirderSectionGrid(pDX,m_pGirderSectionGrid,girder);
    DDX_Strands(pDX,strands);
@@ -184,6 +184,11 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    matConcrete::Type concrete_type = pDoc->GetConcreteType();
    DDX_RadioEnum(pDX, IDC_NWC, concrete_type);
 
+   Float64 K1 = pDoc->GetK1();
+   Float64 K2 = pDoc->GetK2();
+   DDX_Text(pDX, IDC_K1, K1);
+   DDX_Text(pDX, IDC_K2, K2);
+
    std::vector<std::pair<Float64,Float64>> vLoads = girder.GetAdditionalLoads();
    DDX_PointLoadGrid(pDX,m_pPointLoadGrid,vLoads);
 
@@ -207,16 +212,20 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
          }
       }
 
-      pDoc->SetGirder(NONPRISMATIC,girder);
+      pDoc->SetGirder(GirderType::Nonprismatic,girder);
 
       pDoc->SetDensity(density);
       pDoc->SetDensityWithRebar(densityWithRebar);
 
       pDoc->SetConcreteType(concrete_type);
 
-      pDoc->SetStrands(NONPRISMATIC,LIFTING,strands);
+      pDoc->SetK1(K1);
+      pDoc->SetK2(K2);
 
-      CPGStableStrands haulingStrands = pDoc->GetStrands(NONPRISMATIC,HAULING);
+
+      pDoc->SetStrands(GirderType::Nonprismatic, ModelType::Lifting,strands);
+
+      CPGStableStrands haulingStrands = pDoc->GetStrands(GirderType::Nonprismatic, ModelType::Hauling);
       haulingStrands.strandMethod = strands.strandMethod;
       if ( strands.strandMethod == CPGStableStrands::Simplified )
       {
@@ -238,7 +247,8 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
          haulingStrands.Yt = strands.Yt;
          haulingStrands.YtMeasure = strands.YtMeasure;
       }
-      pDoc->SetStrands(NONPRISMATIC,HAULING,haulingStrands);
+      pDoc->SetStrands(GirderType::Nonprismatic, ModelType::Hauling,haulingStrands);
+      pDoc->SetStrands(GirderType::Nonprismatic, ModelType::OneEndSeated, haulingStrands); // assume strands are the same for this condition
    }
 
    if ( !pDX->m_bSaveAndValidate )
@@ -319,7 +329,7 @@ BOOL CPGStableNonprismaticGirder::OnInitDialog()
 
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
-   const WBFL::Stability::Girder& girder = pDoc->GetGirder(NONPRISMATIC);
+   const WBFL::Stability::Girder& girder = pDoc->GetGirder(GirderType::Nonprismatic);
    InitStressPointCache(girder);
 
    CDialog::OnInitDialog();
@@ -441,7 +451,7 @@ void CPGStableNonprismaticGirder::GetStrandProfiles(std::vector<std::pair<Float6
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);
+   CPGStableStrands strands = pDoc->GetStrands(GirderType::Nonprismatic, ModelType::Lifting);
    DDX_Strands(&dx,strands);
 
    pDoc->GetStrandProfiles(strands,girder,pvStraight,pvHarped,pvTemp);

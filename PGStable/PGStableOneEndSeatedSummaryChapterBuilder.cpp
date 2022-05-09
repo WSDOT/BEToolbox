@@ -21,10 +21,8 @@
 ///////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "PGStableHaulingSummaryChapterBuilder.h"
+#include "PGStableOneEndSeatedSummaryChapterBuilder.h"
 #include <Reporter\Reporter.h>
-
-#include <GraphicsLib\GraphicsLib.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -34,40 +32,40 @@ static char THIS_FILE[] = __FILE__;
 
 
 //////////////////////////////////
-CPGStableHaulingSummaryChapterBuilder::CPGStableHaulingSummaryChapterBuilder(CPGStableDoc* pDoc)
+CPGStableOneEndSeatedSummaryChapterBuilder::CPGStableOneEndSeatedSummaryChapterBuilder(CPGStableDoc* pDoc)
 {
    m_pDoc = pDoc;
 }
 
-CPGStableHaulingSummaryChapterBuilder::~CPGStableHaulingSummaryChapterBuilder(void)
+CPGStableOneEndSeatedSummaryChapterBuilder::~CPGStableOneEndSeatedSummaryChapterBuilder(void)
 {
 }
 
-LPCTSTR CPGStableHaulingSummaryChapterBuilder::GetName() const
+LPCTSTR CPGStableOneEndSeatedSummaryChapterBuilder::GetName() const
 {
-   return _T("Hauling Summary");
+   return _T("One End Seated Summary");
 }
 
-Uint16 CPGStableHaulingSummaryChapterBuilder::GetMaxLevel() const
+Uint16 CPGStableOneEndSeatedSummaryChapterBuilder::GetMaxLevel() const
 {
    return 1;
 }
 
-rptChapter* CPGStableHaulingSummaryChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CPGStableOneEndSeatedSummaryChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
 {
    GirderType girderType = m_pDoc->GetGirderType();
    WBFL::Stability::Girder girder = m_pDoc->GetGirder(girderType);
-   WBFL::Stability::HaulingCheckArtifact artifact = m_pDoc->GetHaulingCheckArtifact();
-   const WBFL::Stability::HaulingStabilityProblem& problem = m_pDoc->GetHaulingStabilityProblem();
+   WBFL::Stability::OneEndSeatedCheckArtifact artifact = m_pDoc->GetOneEndSeatedCheckArtifact();
+   const WBFL::Stability::OneEndSeatedStabilityProblem& problem = m_pDoc->GetOneEndSeatedStabilityProblem();
 
    rptChapter* pChapter = new rptChapter;
-   WBFL::Stability::HaulingStabilityReporter reporter;
+   WBFL::Stability::OneEndSeatedStabilityReporter reporter;
    reporter.BuildSpecCheckChapter(&girder,&problem,&artifact,pChapter);
 
    return pChapter;
 }
 
-CChapterBuilder* CPGStableHaulingSummaryChapterBuilder::Clone() const
+CChapterBuilder* CPGStableOneEndSeatedSummaryChapterBuilder::Clone() const
 {
-   return new CPGStableHaulingSummaryChapterBuilder(m_pDoc);
+   return new CPGStableOneEndSeatedSummaryChapterBuilder(m_pDoc);
 }

@@ -57,8 +57,6 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
    DDX_Control(pDX, IDC_EC, m_ctrlEc);
    DDX_Control(pDX, IDC_FC, m_ctrlFc);
-   DDX_Control(pDX, IDC_K1, m_ctrlK1);
-   DDX_Control(pDX, IDC_K2, m_ctrlK2);
 
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -160,10 +158,6 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_FC,IDC_FC_UNIT,fci,pDispUnits->Stress);
    DDX_Check_Bool(pDX,IDC_COMPUTE_EC,bComputeEci);
    DDX_UnitValueAndTag(pDX,IDC_EC,IDC_EC_UNIT,Eci,pDispUnits->ModE);
-   Float64 K1 = pDoc->GetK1();
-   Float64 K2 = pDoc->GetK2();
-   DDX_Text(pDX,IDC_K1,K1);
-   DDX_Text(pDX,IDC_K2,K2);
 
    DDX_UnitValueAndTag(pDX,IDC_FR_COEFFICIENT,IDC_FR_COEFFICIENT_UNIT,frCoefficient,pDispUnits->SqrtPressure);
    CString tag;
@@ -195,8 +189,6 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    if ( pDX->m_bSaveAndValidate )
    {
       problem.GetConcrete().SetE(Eci);
-      pDoc->SetK1(K1);
-      pDoc->SetK2(K2);
 
       problem.SetSweepTolerance(sweepTolerance);
       problem.SetSweepGrowth(sweepGrowth);
@@ -225,22 +217,20 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetLiftingCriteria(m_LiftingCriteria);
 
-      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Lifting);
       if (strands.strandMethod == CPGStableStrands::Simplified )
       {
          strands.FpeStraight = Fs;
          strands.FpeHarped   = Fh;
          strands.FpeTemp     = Ft;
       }
-      pDoc->SetStrands(pDoc->GetGirderType(),LIFTING, strands);
+      pDoc->SetStrands(pDoc->GetGirderType(), ModelType::Lifting, strands);
    }
 }
 
 BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_BN_CLICKED(IDC_COMPUTE_EC, &CPGStableLiftingView::OnUserEc)
 	ON_EN_CHANGE(IDC_FC, &CPGStableLiftingView::OnChangeFc)
-   ON_EN_CHANGE(IDC_K1, &CPGStableLiftingView::OnChangeFc)
-   ON_EN_CHANGE(IDC_K2, &CPGStableLiftingView::OnChangeFc)
    ON_EN_CHANGE(IDC_FPE_STRAIGHT, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_FPE_HARPED, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_FPE_TEMP, &CPGStableLiftingView::OnChange)
@@ -335,8 +325,6 @@ void CPGStableLiftingView::OnUserEc()
    BOOL bEnable = ((CButton*)GetDlgItem(IDC_COMPUTE_EC))->GetCheck();
    GetDlgItem(IDC_EC)->EnableWindow(bEnable);
    GetDlgItem(IDC_EC_UNIT)->EnableWindow(bEnable);
-   GetDlgItem(IDC_K1)->EnableWindow(!bEnable);
-   GetDlgItem(IDC_K2)->EnableWindow(!bEnable);
 
    if (bEnable==FALSE)
    {
@@ -356,20 +344,12 @@ void CPGStableLiftingView::UpdateEc()
       return;
    }
 
-    // need to manually parse strength and density values
-   CString strFc, strDensity, strK1, strK2;
+    // need to manually parse strength
+   CString strFc;
    m_ctrlFc.GetWindowText(strFc);
-   m_ctrlK1.GetWindowText(strK1);
-   m_ctrlK2.GetWindowText(strK2);
-
-   CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-
-   strDensity.Format(_T("%s"),FormatDimension(pDoc->GetDensity(),pDispUnits->Density,false));
-
-   CString strEc = pDoc->UpdateEc(strFc,strDensity,strK1,strK2);
+   CString strEc = pDoc->UpdateEc(strFc);
    m_ctrlEc.SetWindowText(strEc);
 }
 
@@ -388,7 +368,7 @@ void CPGStableLiftingView::OnChange()
 void CPGStableLiftingView::UpdateFpeControls()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Lifting);
 
    BOOL bEnable = (strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
    GetDlgItem(IDC_FPE_STRAIGHT)->EnableWindow(bEnable);
@@ -428,10 +408,10 @@ void CPGStableLiftingView::OnEditFpe()
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
    CPGStableEffectivePrestressDlg dlg;
-   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Lifting);
    if ( dlg.DoModal() == IDOK )
    {
-      pDoc->SetStrands(pDoc->GetGirderType(),LIFTING,dlg.m_Strands);
+      pDoc->SetStrands(pDoc->GetGirderType(), ModelType::Lifting,dlg.m_Strands);
 
       Float64 Fs,Fh,Ft;
       GetMaxFpe(&Fs,&Fh,&Ft);
@@ -491,7 +471,7 @@ void CPGStableLiftingView::RefreshReport()
 void CPGStableLiftingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Lifting);
 
    if (strands.strandMethod == CPGStableStrands::Simplified )
    {
@@ -531,6 +511,7 @@ void CPGStableLiftingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /
          OnChange();
       }
    }
+   if (m_pBrowser) m_pBrowser->Refresh();
 }
 
 void CPGStableLiftingView::OnClickedLiftingTensionMax()

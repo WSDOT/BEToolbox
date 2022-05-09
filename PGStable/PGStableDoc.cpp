@@ -40,6 +40,8 @@
 #include "PGStableLiftingDetailsChapterBuilder.h"
 #include "PGStableHaulingSummaryChapterBuilder.h"
 #include "PGStableHaulingDetailsChapterBuilder.h"
+#include "PGStableOneEndSeatedSummaryChapterBuilder.h"
+#include "PGStableOneEndSeatedDetailsChapterBuilder.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -72,8 +74,18 @@ CPGStableDoc::CPGStableDoc()
 
    m_RptMgr.AddReportBuilder(pHaulingReportBuilder.release());
 
+   std::shared_ptr<CTitlePageBuilder> pOneEndSeatedTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
+
+   std::unique_ptr<CReportBuilder> pOneEndSeatedReportBuilder(std::make_unique<CReportBuilder>(_T("OneEndSeated")));
+   pOneEndSeatedReportBuilder->AddTitlePageBuilder(pOneEndSeatedTitlePageBuilder);
+   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableOneEndSeatedSummaryChapterBuilder>(this)));
+   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableOneEndSeatedDetailsChapterBuilder>(this)));
+
+   m_RptMgr.AddReportBuilder(pOneEndSeatedReportBuilder.release());
+
    m_strProjectCriteria = gs_strCriteria;
    m_strHaulTruck = gs_strHaulTruck;
+   m_strOneEndSeatedHaulTruck = gs_strHaulTruck;
    m_strGirder = gs_strGirder;
 
    EnableUIHints(FALSE); // not using UIHints feature
@@ -235,7 +247,7 @@ HRESULT CPGStableDoc::WriteTheDocument(IStructuredSave* pStrSave)
    pStrSave->put_Property(_T("Comments"),CComVariant(m_strComments));
    pStrSave->EndUnit(); // ProjectProperties
 
-   pStrSave->BeginUnit(_T("LibraryReferences"),1.0);
+   pStrSave->BeginUnit(_T("LibraryReferences"),3.0);
    if ( m_strProjectCriteria == gs_strCriteria )
    {
       pStrSave->put_Property(_T("ProjectCriteria"),CComVariant(_T("None")));
@@ -261,6 +273,16 @@ HRESULT CPGStableDoc::WriteTheDocument(IStructuredSave* pStrSave)
    else
    {
       pStrSave->put_Property(_T("HaulTruck"),CComVariant(m_strHaulTruck));
+   }
+
+   // added in version 2 of LibraryReferences data block
+   if (m_strOneEndSeatedHaulTruck == gs_strHaulTruck)
+   {
+      pStrSave->put_Property(_T("OneEndSeatedHaulTruck"), CComVariant(_T("None")));
+   }
+   else
+   {
+      pStrSave->put_Property(_T("OneEndSeatedHaulTruck"), CComVariant(m_strOneEndSeatedHaulTruck));
    }
 
    pStrSave->EndUnit(); // LibraryReferences
@@ -291,6 +313,9 @@ HRESULT CPGStableDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
       hr = pStrLoad->EndUnit(); // ProjectProperties
 
       hr = pStrLoad->BeginUnit(_T("LibraryReferences"));
+      Float64 lib_ref_version;
+      pStrLoad->get_Version(&lib_ref_version);
+
       var.vt = VT_BSTR;
       hr = pStrLoad->get_Property(_T("ProjectCriteria"),&var);
       if ( var.bstrVal == CComBSTR(_T("None")) )
@@ -335,6 +360,29 @@ HRESULT CPGStableDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
          {
             m_strHaulTruck = gs_strHaulTruck;
          }
+      }
+
+      if (1 < lib_ref_version)
+      {
+         // added in version 2
+         hr = pStrLoad->get_Property(_T("OneEndSeatedHaulTruck"), &var);
+         if (var.bstrVal == CComBSTR(_T("None")))
+         {
+            m_strOneEndSeatedHaulTruck = gs_strHaulTruck;
+         }
+         else
+         {
+            m_strOneEndSeatedHaulTruck = var.bstrVal;
+            const HaulTruckLibraryEntry* pTruck = GetOneEndSeatedHaulTruckLibraryEntry();
+            if (pTruck == nullptr)
+            {
+               m_strOneEndSeatedHaulTruck = gs_strHaulTruck;
+            }
+         }
+      }
+      else
+      {
+         m_strOneEndSeatedHaulTruck = m_strHaulTruck;
       }
 
       hr = pStrLoad->EndUnit(); // LibraryReferences
@@ -389,6 +437,7 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
       // update input parameters to match library
       const SpecLibraryEntry* pSpec = GetSpecLibraryEntry();
 
+      // lifting
       WBFL::Stability::LiftingStabilityProblem liftingProblem = GetLiftingStabilityProblem();
       liftingProblem.SetImpact(pSpec->GetLiftingUpwardImpactFactor(),pSpec->GetLiftingDownwardImpactFactor());
 
@@ -419,11 +468,11 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
       GetLiftingMaterials(&Fc,&bComputeEc,&FrCoefficient);
       SetLiftingMaterials(Fc,bComputeEc,pSpec->GetLiftingModulusOfRuptureFactor(pgsTypes::Normal));
 
-
+      // Hauling
       WBFL::Stability::HaulingStabilityProblem haulingProblem = GetHaulingStabilityProblem();
       haulingProblem.SetImpactUsage((WBFL::Stability::HaulingImpact)pSpec->GetHaulingImpactUsage());
       haulingProblem.SetImpact(pSpec->GetHaulingUpwardImpactFactor(),pSpec->GetHaulingDownwardImpactFactor());
-      haulingProblem.SetCrownSlope(pSpec->GetRoadwayCrownSlope());
+      haulingProblem.SetSupportSlope(pSpec->GetRoadwayCrownSlope());
       haulingProblem.SetSuperelevation(pSpec->GetRoadwaySuperelevation());
 
       haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
@@ -456,6 +505,36 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
 
       GetHaulingMaterials(&Fc,&bComputeEc,&FrCoefficient);
       SetHaulingMaterials(Fc,bComputeEc,pSpec->GetHaulingModulusOfRuptureFactor(pgsTypes::Normal));
+
+
+      // One end seated - PGSuper/PGSplice project spec criteria doesn't have values for one end seated analysis so we will use some of the hauling values
+      WBFL::Stability::OneEndSeatedStabilityProblem OneEndSeatedProblem = GetOneEndSeatedStabilityProblem();
+      OneEndSeatedProblem.SetImpact(0.0, 0.0);
+      OneEndSeatedProblem.SetSupportSlope(pSpec->GetRoadwayCrownSlope());
+
+      OneEndSeatedProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
+      OneEndSeatedProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
+      OneEndSeatedProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
+      OneEndSeatedProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetHaulingWindType(), pSpec->GetHaulingWindLoad());
+      SetOneEndSeatedStabilityProblem(OneEndSeatedProblem);
+
+      CPGStableOneEndSeatedCriteria OneEndSeatedCriteria = GetOneEndSeatedCriteria();
+      OneEndSeatedCriteria.MinFSf = pSpec->GetHaulingFailureFOS();
+      OneEndSeatedCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
+      OneEndSeatedCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
+      OneEndSeatedCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
+
+      auto* pOneEndSeatedTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(OneEndSeatedCriteria.TensionStressLimit.get());
+
+      pOneEndSeatedTensionStressLimit->TensionCoefficient = pSpec->GetHaulingTensionStressFactor(pgsTypes::CrownSlope);
+
+
+      pSpec->GetHaulingMaximumTensionStress(pgsTypes::CrownSlope, &pOneEndSeatedTensionStressLimit->bMaxTension, &pOneEndSeatedTensionStressLimit->MaxTension);
+      pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::CrownSlope);
+      SetOneEndSeatedCriteria(OneEndSeatedCriteria);
+
+      GetOneEndSeatedMaterials(&Fc, &bComputeEc, &FrCoefficient);
+      SetOneEndSeatedMaterials(Fc, bComputeEc, pSpec->GetHaulingModulusOfRuptureFactor(pgsTypes::Normal));
    }
 
    SetModifiedFlag();
@@ -471,6 +550,20 @@ void CPGStableDoc::SetHaulTruck(LPCTSTR lpszHaulTruck)
    if ( m_strHaulTruck != lpszHaulTruck )
    {
       m_strHaulTruck = lpszHaulTruck;
+      SetModifiedFlag();
+   }
+}
+
+const CString& CPGStableDoc::GetOneEndSeatedHaulTruck() const
+{
+   return m_strOneEndSeatedHaulTruck;
+}
+
+void CPGStableDoc::SetOneEndSeatedHaulTruck(LPCTSTR lpszHaulTruck)
+{
+   if (m_strOneEndSeatedHaulTruck != lpszHaulTruck)
+   {
+      m_strOneEndSeatedHaulTruck = lpszHaulTruck;
       SetModifiedFlag();
    }
 }
@@ -531,7 +624,7 @@ void CPGStableDoc::GetProjectProperties(CString* pstrEngineer,CString* pstrCompa
    *pstrComments = m_strComments;
 }
 
-void CPGStableDoc::SetGirderType(int girderType)
+void CPGStableDoc::SetGirderType(GirderType girderType)
 {
    if ( m_Model.SetGirderType(girderType) )
    {
@@ -539,12 +632,12 @@ void CPGStableDoc::SetGirderType(int girderType)
    }
 }
 
-int CPGStableDoc::GetGirderType() const
+GirderType CPGStableDoc::GetGirderType() const
 {
    return m_Model.GetGirderType();
 }
 
-const WBFL::Stability::Girder& CPGStableDoc::GetGirder(int girderType) const
+const WBFL::Stability::Girder& CPGStableDoc::GetGirder(GirderType girderType) const
 {
    return m_Model.GetGirder(girderType);
 }
@@ -562,7 +655,7 @@ int CPGStableDoc::GetStressPointType() const
    return m_Model.GetStressPointType();
 }
 
-void CPGStableDoc::SetGirder(int girderType,const WBFL::Stability::Girder& girder)
+void CPGStableDoc::SetGirder(GirderType girderType,const WBFL::Stability::Girder& girder)
 {
    if ( m_Model.SetGirder(girderType,girder) )
    {
@@ -570,12 +663,12 @@ void CPGStableDoc::SetGirder(int girderType,const WBFL::Stability::Girder& girde
    }
 }
 
-const CPGStableStrands& CPGStableDoc::GetStrands(int girderType,int modelType) const
+const CPGStableStrands& CPGStableDoc::GetStrands(GirderType girderType,ModelType modelType) const
 {
    return m_Model.GetStrands(girderType,modelType);
 }
 
-void CPGStableDoc::SetStrands(int girderType,int modelType,const CPGStableStrands& strands)
+void CPGStableDoc::SetStrands(GirderType girderType,ModelType modelType,const CPGStableStrands& strands)
 {
    if ( m_Model.SetStrands(girderType,modelType,strands) )
    {
@@ -588,9 +681,9 @@ const WBFL::Stability::LiftingStabilityProblem& CPGStableDoc::GetLiftingStabilit
    return m_Model.GetLiftingStabilityProblem();
 }
 
-void CPGStableDoc::SetLiftingStabilityProblem(const WBFL::Stability::LiftingStabilityProblem& liftingStability)
+void CPGStableDoc::SetLiftingStabilityProblem(const WBFL::Stability::LiftingStabilityProblem& stabilityProblem)
 {
-   if ( m_Model.SetLiftingStabilityProblem(liftingStability) )
+   if ( m_Model.SetLiftingStabilityProblem(stabilityProblem) )
    {
       SetModifiedFlag();
    }
@@ -601,9 +694,22 @@ const WBFL::Stability::HaulingStabilityProblem& CPGStableDoc::GetHaulingStabilit
    return m_Model.GetHaulingStabilityProblem();
 }
 
-void CPGStableDoc::SetHaulingStabilityProblem(const WBFL::Stability::HaulingStabilityProblem& HaulingStability)
+void CPGStableDoc::SetHaulingStabilityProblem(const WBFL::Stability::HaulingStabilityProblem& stabilityProblem)
 {
-   if ( m_Model.SetHaulingStabilityProblem(HaulingStability) )
+   if ( m_Model.SetHaulingStabilityProblem(stabilityProblem) )
+   {
+      SetModifiedFlag();
+   }
+}
+
+const WBFL::Stability::OneEndSeatedStabilityProblem& CPGStableDoc::GetOneEndSeatedStabilityProblem() const
+{
+   return m_Model.GetOneEndSeatedStabilityProblem();
+}
+
+void CPGStableDoc::SetOneEndSeatedStabilityProblem(const WBFL::Stability::OneEndSeatedStabilityProblem& stabilityProblem)
+{
+   if (m_Model.SetOneEndSeatedStabilityProblem(stabilityProblem))
    {
       SetModifiedFlag();
    }
@@ -630,6 +736,19 @@ const CPGStableHaulingCriteria& CPGStableDoc::GetHaulingCriteria() const
 void CPGStableDoc::SetHaulingCriteria(const CPGStableHaulingCriteria& criteria)
 {
    if ( m_Model.SetHaulingCriteria(criteria) )
+   {
+      SetModifiedFlag();
+   }
+}
+
+const CPGStableOneEndSeatedCriteria& CPGStableDoc::GetOneEndSeatedCriteria() const
+{
+   return m_Model.GetOneEndSeatedCriteria();
+}
+
+void CPGStableDoc::SetOneEndSeatedCriteria(const CPGStableOneEndSeatedCriteria& criteria)
+{
+   if (m_Model.SetOneEndSeatedCriteria(criteria))
    {
       SetModifiedFlag();
    }
@@ -726,6 +845,19 @@ void CPGStableDoc::SetHaulingMaterials(Float64 fc,bool bComputeEc,Float64 frCoef
    }
 }
 
+void CPGStableDoc::GetOneEndSeatedMaterials(Float64* pFc, bool* pbComputeEc, Float64* pFrCoefficient) const
+{
+   m_Model.GetOneEndSeatedMaterials(pFc, pbComputeEc, pFrCoefficient);
+}
+
+void CPGStableDoc::SetOneEndSeatedMaterials(Float64 fc, bool bComputeEc, Float64 frCoefficient)
+{
+   if (m_Model.SetOneEndSeatedMaterials(fc, bComputeEc, frCoefficient))
+   {
+      SetModifiedFlag();
+   }
+}
+
 Float64 CPGStableDoc::GetHeightOfGirderBottomAboveRoadway() const
 {
    return m_Model.GetHeightOfGirderBottomAboveRoadway();
@@ -739,28 +871,21 @@ void CPGStableDoc::SetHeightOfGirderBottomAboveRoadway(Float64 Hgb)
    }
 }
 
-CString CPGStableDoc::UpdateEc(const CString& strFc,const CString& strDensity,const CString& strK1,const CString& strK2)
+CString CPGStableDoc::UpdateEc(const CString& strFc)
 {
    CString strEc;
-   Float64 fc, density, k1,k2;
+   Float64 fc;
    Float64 ec = 0;
-   if (sysTokenizer::ParseDouble(strFc, &fc) && 
-       sysTokenizer::ParseDouble(strDensity,&density) &&
-       sysTokenizer::ParseDouble(strK1,&k1) &&
-       sysTokenizer::ParseDouble(strK2,&k2) &&
-       0 < density && 0 < fc && 0 < k1 && 0 < k2
-       )
+   if (sysTokenizer::ParseDouble(strFc, &fc) && 0 < fc)
    {
          CEAFApp* pApp = EAFGetApp();
          const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
          const unitPressure& stress_unit = pDispUnits->Stress.UnitOfMeasure;
-         const unitDensity& density_unit = pDispUnits->Density.UnitOfMeasure;
 
          fc       = ::ConvertToSysUnits(fc,      stress_unit);
-         density  = ::ConvertToSysUnits(density, density_unit);
 
-         ec = k1*k2*lrfdConcreteUtil::ModE(m_Model.GetConcreteType(),fc,density,false);
+         ec = m_Model.GetK1()*m_Model.GetK2()*lrfdConcreteUtil::ModE(m_Model.GetConcreteType(),fc,m_Model.GetDensity(),false);
 
          strEc.Format(_T("%s"),FormatDimension(ec,pDispUnits->ModE,false));
    }
@@ -788,6 +913,11 @@ WBFL::Stability::HaulingResults CPGStableDoc::GetHaulingResults() const
    return m_Model.GetHaulingResults();
 }
 
+WBFL::Stability::OneEndSeatedResults CPGStableDoc::GetOneEndSeatedResults() const
+{
+   return m_Model.GetOneEndSeatedResults();
+}
+
 WBFL::Stability::LiftingCheckArtifact CPGStableDoc::GetLiftingCheckArtifact() const
 {
    return m_Model.GetLiftingCheckArtifact();
@@ -796,6 +926,11 @@ WBFL::Stability::LiftingCheckArtifact CPGStableDoc::GetLiftingCheckArtifact() co
 WBFL::Stability::HaulingCheckArtifact CPGStableDoc::GetHaulingCheckArtifact() const
 {
    return m_Model.GetHaulingCheckArtifact();
+}
+
+WBFL::Stability::OneEndSeatedCheckArtifact CPGStableDoc::GetOneEndSeatedCheckArtifact() const
+{
+   return m_Model.GetOneEndSeatedCheckArtifact();
 }
 
 const SpecLibrary* CPGStableDoc::GetSpecLibrary() const
@@ -823,7 +958,7 @@ const HaulTruckLibrary* CPGStableDoc::GetHaulTruckLibrary() const
 
 const HaulTruckLibraryEntry* CPGStableDoc::GetHaulTruckLibraryEntry() const
 {
-   if ( m_strHaulTruck == gs_strHaulTruck )
+   if (m_strHaulTruck == gs_strHaulTruck)
    {
       return nullptr;
    }
@@ -831,6 +966,19 @@ const HaulTruckLibraryEntry* CPGStableDoc::GetHaulTruckLibraryEntry() const
    {
       const HaulTruckLibrary* pLib = GetHaulTruckLibrary();
       return (const HaulTruckLibraryEntry*)(pLib->GetEntry(m_strHaulTruck));
+   }
+}
+
+const HaulTruckLibraryEntry* CPGStableDoc::GetOneEndSeatedHaulTruckLibraryEntry() const
+{
+   if (m_strOneEndSeatedHaulTruck == gs_strHaulTruck)
+   {
+      return nullptr;
+   }
+   else
+   {
+      const HaulTruckLibrary* pLib = GetHaulTruckLibrary();
+      return (const HaulTruckLibraryEntry*)(pLib->GetEntry(m_strOneEndSeatedHaulTruck));
    }
 }
 

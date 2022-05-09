@@ -29,6 +29,7 @@
 #include "PGStableGirderView.h"
 #include "PGStableLiftingView.h"
 #include "PGStableHaulingView.h"
+#include "PGStableOneEndSeatedView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -91,7 +92,8 @@ int CPGStableTabView::OnCreate(LPCREATESTRUCT lpCreateStruct)
    // Doing so doesn't seem worth the effort.
    AddView(RUNTIME_CLASS(CPGStableGirderView),  _T("Girder")   );
    AddView(RUNTIME_CLASS(CPGStableLiftingView), _T("Lifting")  );
-   AddView(RUNTIME_CLASS(CPGStableHaulingView), _T("Hauling")  );
+   AddView(RUNTIME_CLASS(CPGStableHaulingView), _T("Hauling"));
+   AddView(RUNTIME_CLASS(CPGStableOneEndSeatedView), _T("Lifted from One End"));
 
    return result;
 }
@@ -116,11 +118,11 @@ void CPGStableTabView::OnActivateView(CView* pView)
    }
 }
 
-void CPGStableTabView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+void CPGStableTabView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
    // TODO: Add your specialized code here and/or call the base class
-   Invalidate();
-   UpdateWindow();
+   //Invalidate();
+   //UpdateWindow();
 
    CView* pView = GetActiveView();
    if ( pView )

@@ -27,6 +27,7 @@
 #include "..\resource.h"
 #include "PGStableGirderView.h"
 #include "PGStableDoc.h"
+#include <MfcTools/CustomDDX.h>
 
 
 #ifdef _DEBUG
@@ -67,8 +68,8 @@ void CPGStableGirderView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX,IDC_JOB,strJob);
    DDX_Text(pDX,IDC_COMMENTS,strComments);
 
-   int girderType = pDoc->GetGirderType();
-   DDX_Radio(pDX,IDC_PRISMATIC,girderType);
+   GirderType girderType = pDoc->GetGirderType();
+   DDX_RadioEnum(pDX,IDC_PRISMATIC,girderType);
    if ( pDX->m_bSaveAndValidate )
    {
       pDoc->SetProjectProperties(strEngineer,strCompany,strJob,strComments);
@@ -202,15 +203,15 @@ void CPGStableGirderView::OnInitialUpdate()
 
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-   int prismatic = pDoc->GetGirderType();
+   GirderType prismatic = pDoc->GetGirderType();
 
    VERIFY(m_Prismatic.Create(CPGStablePrismaticGirder::IDD, this));
    VERIFY(m_Prismatic.SetWindowPos( GetDlgItem(IDC_STATIC_BOUNDS), boxRect.left, boxRect.top, 0, 0, SWP_SHOWWINDOW|SWP_NOSIZE));
-   m_Prismatic.ShowWindow(prismatic == PRISMATIC ? SW_SHOW : SW_HIDE);
+   m_Prismatic.ShowWindow(prismatic == GirderType::Prismatic ? SW_SHOW : SW_HIDE);
 
    VERIFY(m_Nonprismatic.Create(CPGStableNonprismaticGirder::IDD, this));
    VERIFY(m_Nonprismatic.SetWindowPos( GetDlgItem(IDC_STATIC_BOUNDS), boxRect.left, boxRect.top, 0, 0, SWP_SHOWWINDOW|SWP_NOSIZE));
-   m_Nonprismatic.ShowWindow(prismatic == PRISMATIC ? SW_HIDE : SW_SHOW);
+   m_Nonprismatic.ShowWindow(prismatic == GirderType::Nonprismatic ? SW_SHOW : SW_HIDE);
 
    m_bViewInitialized = TRUE;
 }

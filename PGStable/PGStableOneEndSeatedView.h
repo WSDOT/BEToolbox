@@ -29,28 +29,30 @@
 
 
 
-// CPGStableHaulingView form view
+// CPGStableOneEndSeatedView form view
 
-class CPGStableHaulingView : public CPGStableFormView
+class CPGStableOneEndSeatedView : public CPGStableFormView
 {
-	DECLARE_DYNCREATE(CPGStableHaulingView)
+	DECLARE_DYNCREATE(CPGStableOneEndSeatedView)
 
 protected:
-	CPGStableHaulingView();           // protected constructor used by dynamic creation
-	virtual ~CPGStableHaulingView();
+	CPGStableOneEndSeatedView();           // protected constructor used by dynamic creation
+	virtual ~CPGStableOneEndSeatedView();
 
 	CEdit	   m_ctrlEc;
    CEdit    m_ctrlFc;
+   CEdit    m_ctrlK1;
+   CEdit    m_ctrlK2;
    CString m_strUserEc;
    void UpdateEc();
 
 
    void GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp);
 
-   CPGStableHaulingCriteria m_HaulingCriteria;
+   CPGStableOneEndSeatedCriteria m_OneEndSeatedCriteria;
 
 public:
-	enum { IDD = IDD_PGSTABLEHAULINGVIEW };
+	enum { IDD = IDD_PGSTABLEONEENDSEATEDVIEW };
 #ifdef _DEBUG
 	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
@@ -82,8 +84,7 @@ public:
    afx_msg void OnEditFpe();
    afx_msg void OnPrint();
    afx_msg void OnPrintDirect();
-   afx_msg void OnClickedHaulingTensionMaxCrown();
-   afx_msg void OnClickedHaulingTensionMaxSuper();
+   afx_msg void OnClickedOneEndSeatedTensionMaxCrown();
    afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
    afx_msg void OnCmenuSelected(UINT id);
    virtual void OnInitialUpdate() override;
@@ -94,6 +95,7 @@ public:
    afx_msg void OnSize(UINT nType, int cx, int cy);
    afx_msg void OnWindTypeChanged();
    afx_msg void OnHaulTruckChanged();
+   afx_msg void OnCopy();
 };
 
 

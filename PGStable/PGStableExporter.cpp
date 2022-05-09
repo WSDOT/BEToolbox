@@ -244,7 +244,7 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    GET_IFACE2(pBroker,IStrandGeometry,pStrandGeom);
    bool bHasDebonding = pStrandGeom->HasDebonding(segmentKey);
 
-   model.SetGirderType((bIsPrismatic ? PRISMATIC : NONPRISMATIC));
+   model.SetGirderType((bIsPrismatic ? GirderType::Prismatic : GirderType::Nonprismatic));
    model.SetGirder(model.GetGirderType(),*pGirder->GetSegmentLiftingStabilityModel(segmentKey));
    model.SetStressPointType(bIsPrismatic ? COMPUTE_STRESS_POINTS : DEFINE_STRESS_POINTS);
 
@@ -258,12 +258,15 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    PoiList vPoi;
    pPoi->GetPointsOfInterest(segmentKey, &vPoi);
 
-   CPGStableStrands liftingStrands = model.GetStrands(model.GetGirderType(),LIFTING);
-   CPGStableStrands haulingStrands = model.GetStrands(model.GetGirderType(),HAULING);
+   CPGStableStrands liftingStrands = model.GetStrands(model.GetGirderType(),ModelType::Lifting);
+   CPGStableStrands haulingStrands = model.GetStrands(model.GetGirderType(), ModelType::Hauling);
+   CPGStableStrands oneEndSeatedStrands = model.GetStrands(model.GetGirderType(), ModelType::OneEndSeated);
    liftingStrands.strandMethod = CPGStableStrands::Detailed;
    haulingStrands.strandMethod = CPGStableStrands::Detailed;
+   oneEndSeatedStrands.strandMethod = CPGStableStrands::Detailed;
    liftingStrands.m_vFpe.clear();
    haulingStrands.m_vFpe.clear();
+   oneEndSeatedStrands.m_vFpe.clear();
 
    for (const pgsPointOfInterest& poi : vPoi)
    {
@@ -306,13 +309,16 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start);
 
       haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
+      oneEndSeatedStrands.m_vFpe.insert(CPGStableFpe(X, Ps, Xs, Ys, TOP, Ph, Xh, Yh, TOP, Pt, Xt, Yt, TOP));
    }
 
-   model.SetStrands(model.GetGirderType(),LIFTING,liftingStrands);
-   model.SetStrands(model.GetGirderType(),HAULING,haulingStrands);
+   model.SetStrands(model.GetGirderType(),ModelType::Lifting,liftingStrands);
+   model.SetStrands(model.GetGirderType(), ModelType::Hauling, haulingStrands);
+   model.SetStrands(model.GetGirderType(), ModelType::OneEndSeated, oneEndSeatedStrands);
 
    model.SetLiftingStabilityProblem( *pGirder->GetSegmentLiftingStabilityProblem(segmentKey));
-   model.SetHaulingStabilityProblem( *pGirder->GetSegmentHaulingStabilityProblem(segmentKey));
+   model.SetHaulingStabilityProblem(*pGirder->GetSegmentHaulingStabilityProblem(segmentKey));
+   //model.SetOneEndSeatedStabilityProblem(*pGirder->GetSegmentOneEndSeatedStabilityProblem(segmentKey));
 
    GET_IFACE2(pBroker, IMaterials, pMaterial);
    model.SetK1(pMaterial->GetSegmentEccK1(segmentKey));
@@ -325,10 +331,13 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    liftingCriteria = pSegmentLiftingSpecCriteria->GetLiftingStabilityCriteria(segmentKey); 
    model.SetLiftingCriteria(liftingCriteria);
 
-
    CPGStableHaulingCriteria haulingCriteria;
    haulingCriteria = pSegmentHaulingSpecCriteria->GetHaulingStabilityCriteria(segmentKey);
    model.SetHaulingCriteria(haulingCriteria);
+
+   CPGStableOneEndSeatedCriteria oneEndSeatedCriteria;
+   //oneEndSeatedCriteria = pSegmentOneEndSeatedSpecCriteria->GetOneEndSeatedStabilityCriteria(segmentKey);
+   model.SetOneEndSeatedCriteria(oneEndSeatedCriteria);
 
    return true;
 }

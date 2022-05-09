@@ -20,13 +20,13 @@
 // Bridge_Support@wsdot.wa.gov
 ///////////////////////////////////////////////////////////////////////
 
-// PGStableHaulingView.cpp : implementation file
+// PGStableOneEndSeatedView.cpp : implementation file
 //
 
 #include "stdafx.h"
 #include "..\resource.h"
 #include "PGStableDoc.h"
-#include "PGStableHaulingView.h"
+#include "PGStableOneEndSeatedView.h"
 #include "PGStableEffectivePrestressDlg.h"
 #include <MFCTools\MFCTools.h>
 
@@ -36,20 +36,20 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-// CPGStableHaulingView
+// CPGStableOneEndSeatedView
 
-IMPLEMENT_DYNCREATE(CPGStableHaulingView, CPGStableFormView)
+IMPLEMENT_DYNCREATE(CPGStableOneEndSeatedView, CPGStableFormView)
 
-CPGStableHaulingView::CPGStableHaulingView()
-	: CPGStableFormView(CPGStableHaulingView::IDD)
+CPGStableOneEndSeatedView::CPGStableOneEndSeatedView()
+	: CPGStableFormView(CPGStableOneEndSeatedView::IDD)
 {
 }
 
-CPGStableHaulingView::~CPGStableHaulingView()
+CPGStableOneEndSeatedView::~CPGStableOneEndSeatedView()
 {
 }
 
-void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
+void CPGStableOneEndSeatedView::DoDataExchange(CDataExchange* pDX)
 {
 	CPGStableFormView::DoDataExchange(pDX);
 
@@ -61,18 +61,15 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
-   CString strHaulTruck = pDoc->GetHaulTruck();
+   CString strHaulTruck = pDoc->GetOneEndSeatedHaulTruck();
    DDX_CBString(pDX,IDC_HAUL_TRUCK,strHaulTruck);
 
    Float64 fc, frCoefficient;
    bool bComputeEc;
-   pDoc->GetHaulingMaterials(&fc,&bComputeEc,&frCoefficient);
+   pDoc->GetOneEndSeatedMaterials(&fc,&bComputeEc,&frCoefficient);
    bComputeEc = !bComputeEc;
 
-   WBFL::Stability::HaulingStabilityProblem problem = pDoc->GetHaulingStabilityProblem();
-
-   WBFL::Stability::HaulingImpact impactUsage = problem.GetImpactUsage();
-   DDX_CBItemData(pDX,IDC_IMPACT_USAGE,impactUsage);
+   WBFL::Stability::OneEndSeatedStabilityProblem problem = pDoc->GetOneEndSeatedStabilityProblem();
 
    WBFL::Stability::WindType windLoadType;
    Float64 windLoad;
@@ -91,9 +88,6 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    problem.GetAppurtenanceLoading(&eb, &Wb);
    DDX_UnitValueAndTag(pDX, IDC_BRACKET_WEIGHT, IDC_BRACKET_WEIGHT_UNIT, Wb, pDispUnits->ForcePerLength);
    DDX_UnitValueAndTag(pDX, IDC_BRACKET_ECCENTRICITY, IDC_BRACKET_ECCENTRICITY_UNIT, eb, pDispUnits->ComponentDim);
-
-   Float64 Ll,Lr;
-   problem.GetSupportLocations(&Ll,&Lr);
 
    Float64 Fs,Fh,Ft;
    GetMaxFpe(&Fs,&Fh,&Ft);
@@ -137,15 +131,16 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    }
    DDX_Text(pDX,IDC_FR_COEFFICIENT_UNIT,tag);
 
+   Float64 Ll, Lr;
+   problem.GetSupportLocations(&Ll, &Lr);
    DDX_UnitValueAndTag(pDX,IDC_LEFT_BUNK,IDC_LEFT_BUNK_UNIT,Ll,pDispUnits->SpanLength);
    DDX_UnitValueAndTag(pDX,IDC_RIGHT_BUNK,IDC_RIGHT_BUNK_UNIT,Lr,pDispUnits->SpanLength);
 
-   Float64 velocity = problem.GetVelocity();
-   Float64 radius = problem.GetTurningRadius();
-   WBFL::Stability::CFType cfType = problem.GetCentrifugalForceType();
-   DDX_UnitValueAndTag(pDX,IDC_VELOCITY,IDC_VELOCITY_UNIT,velocity,pDispUnits->Velocity);
-   DDX_UnitValueAndTag(pDX,IDC_RADIUS,IDC_RADIUS_UNIT,radius,pDispUnits->AlignmentLength);
-   DDX_CBEnum(pDX,IDC_CF_TYPE,cfType);
+   Float64 ylift = problem.GetYRollLiftEnd();
+   DDX_UnitValueAndTag(pDX, IDC_YLIFT, IDC_YLIFT_UNIT, ylift, pDispUnits->ComponentDim);
+
+   Float64 elift = problem.GetLiftPlacementTolerance();
+   DDX_UnitValueAndTag(pDX, IDC_LIFT_POINT_TOLERANCE, IDC_LIFT_POINT_TOLERANCE_UNIT, elift, pDispUnits->ComponentDim);
 
    if ( pApp->GetUnitsMode() == eafTypes::umSI )
    {
@@ -193,39 +188,28 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX,IDC_CROWN_SLOPE,crown_slope);
    DDX_Text(pDX,IDC_CROWN_SLOPE_UNIT,slope_unit);
 
-   Float64 superelevation = problem.GetSuperelevation();
-   DDX_Text(pDX,IDC_SUPERELEVATION,superelevation);
-   DDX_Text(pDX,IDC_SUPERELEVATION_UNIT,slope_unit);
-
    Float64 Wcc = problem.GetSupportWidth();
    DDX_UnitValueAndTag(pDX,IDC_WCC,IDC_WCC_UNIT,Wcc,pDispUnits->ComponentDim);
 
    Float64 Ktheta = problem.GetRotationalStiffness();
    DDX_UnitValueAndTag(pDX,IDC_KTHETA,IDC_KTHETA_UNIT,Ktheta,pDispUnits->MomentPerAngle);
 
-   DDX_Text(pDX,IDC_HAULING_FS_CRACKING,m_HaulingCriteria.MinFScr);
-   DDX_Text(pDX,IDC_HAULING_FS_FAILURE,m_HaulingCriteria.MinFSf);
-   DDX_UnitValueAndTag(pDX,IDC_MAX_BUNK,IDC_MAX_BUNK_UNIT,m_HaulingCriteria.MaxClearSpan,pDispUnits->SpanLength);
-   DDX_UnitValueAndTag(pDX,IDC_LEADING_OVERHANG,IDC_LEADING_OVERHANG_UNIT,m_HaulingCriteria.MaxLeadingOverhang,pDispUnits->SpanLength);
-   DDX_UnitValueAndTag(pDX,IDC_MAX_GIRDER_WEIGHT,IDC_MAX_GIRDER_WEIGHT_UNIT,m_HaulingCriteria.MaxGirderWeight,pDispUnits->GeneralForce);
-   DDX_Text(pDX, IDC_HAULING_GLOBAL_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_GlobalStress);
-   DDX_Text(pDX, IDC_HAULING_PEAK_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_PeakStress);
+   Float64 Kadjust = problem.GetRotationalStiffnessAdjustmentFactor();
+   DDX_Percentage(pDX, IDC_FRACTION_OF_ROLL_STIFFNESS, Kadjust);
 
-   auto* pHaulingTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(m_HaulingCriteria.TensionStressLimit.get());
+   DDX_Text(pDX,IDC_HAULING_FS_CRACKING,m_OneEndSeatedCriteria.MinFScr);
+   DDX_Text(pDX,IDC_HAULING_FS_FAILURE,m_OneEndSeatedCriteria.MinFSf);
+   DDX_Text(pDX, IDC_HAULING_GLOBAL_COMPRESSION, m_OneEndSeatedCriteria.CompressionCoefficient_GlobalStress);
+   DDX_Text(pDX, IDC_HAULING_PEAK_COMPRESSION, m_OneEndSeatedCriteria.CompressionCoefficient_PeakStress);
 
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN, pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
+   auto* pOneEndSeatedTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(m_OneEndSeatedCriteria.TensionStressLimit.get());
+
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN, pOneEndSeatedTensionStressLimit->TensionCoefficient,pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_CROWN_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN, pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope]);
-   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT, pHaulingTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope],pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN, pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN, pOneEndSeatedTensionStressLimit->bMaxTension);
+   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT, pOneEndSeatedTensionStressLimit->MaxTension,pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN, pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar,pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,tag);
-
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_SUPER, pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
-   DDX_Text(pDX,IDC_HAULING_TENSION_SUPER_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_SUPER, pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper]);
-   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT, pHaulingTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper],pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER, pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
-   DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,tag);
 
    if ( pDX->m_bSaveAndValidate )
    {
@@ -237,22 +221,20 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
       problem.SetSupportLocations(Ll,Lr);
 
+      problem.SetYRollLiftEnd(ylift);
+      problem.SetLiftPlacementTolerance(elift);
+
       problem.SetImpact(impactUp,impactDown);
-      problem.SetImpactUsage(impactUsage);
 
       problem.SetWindLoading(windLoadType,windLoad);
 
       problem.SetAppurtenanceLoading(eb, Wb);
 
-      problem.SetVelocity(velocity);
-      problem.SetTurningRadius(radius);
-      problem.SetCentrifugalForceType(cfType);
-
       problem.SetSupportSlope(crown_slope);
-      problem.SetSuperelevation(superelevation);
       problem.SetSupportWidth(Wcc);
       problem.SetRotationalStiffness(Ktheta);
       problem.SetHeightOfRollAxis(Hrc);
+      problem.SetRotationalStiffnessAdjustmentFactor(Kadjust);
 
       pDoc->SetHeightOfGirderBottomAboveRoadway(Hgb);
 
@@ -262,95 +244,92 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
       problem.SetLateralCamber(lateralCamber);
       problem.IncludeLateralRollAxisOffset(IsZero(lateralCamber) ? false : true);
 
-      pDoc->SetHaulingStabilityProblem(problem);
-      pDoc->SetHaulingMaterials(fc,!bComputeEc,frCoefficient);
+      pDoc->SetOneEndSeatedStabilityProblem(problem);
+      pDoc->SetOneEndSeatedMaterials(fc,!bComputeEc,frCoefficient);
 
-      pDoc->SetHaulingCriteria(m_HaulingCriteria);
+      pDoc->SetOneEndSeatedCriteria(m_OneEndSeatedCriteria);
 
-      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Hauling);
+      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::OneEndSeated);
       if ( strands.strandMethod == CPGStableStrands::Simplified )
       {
          strands.FpeStraight = Fs;
          strands.FpeHarped   = Fh;
          strands.FpeTemp     = Ft;
       }
-      pDoc->SetStrands(pDoc->GetGirderType(),ModelType::Hauling, strands);
+      pDoc->SetStrands(pDoc->GetGirderType(),ModelType::OneEndSeated, strands);
 
-      pDoc->SetHaulTruck(strHaulTruck);
+      pDoc->SetOneEndSeatedHaulTruck(strHaulTruck);
 
    }
 }
 
-BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
-   ON_BN_CLICKED(IDC_COMPUTE_EC, &CPGStableHaulingView::OnUserEc)
-	ON_EN_CHANGE(IDC_FC, &CPGStableHaulingView::OnChangeFc)
-   ON_EN_CHANGE(IDC_FPE_STRAIGHT, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_FPE_HARPED, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_FPE_TEMP, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_EC, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_FR_COEFFICIENT, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_LEFT_BUNK, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_RIGHT_BUNK, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_IMPACT_UP, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_IMPACT_DOWN, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_CROWN_SLOPE, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_SUPERELEVATION, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_WIND_PRESSURE, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_BRACKET_WEIGHT, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_BRACKET_ECCENTRICITY, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_VELOCITY, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_RADIUS, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_CAMBER, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_CAMBER_MULTIPLIER, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HGB, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HRC, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_KTHETA, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_WCC, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_SWEEP_TOLERANCE, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_SWEEP_GROWTH, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_LATERAL_SWEEP_INCREMENT, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_SUPPORT_PLACEMENT_TOLERANCE, &CPGStableHaulingView::OnChange)
-   ON_BN_CLICKED(IDC_EDIT_FPE, &CPGStableHaulingView::OnEditFpe)
-   ON_CBN_SELCHANGE(IDC_CF_TYPE,&CPGStableHaulingView::OnChange)
-   ON_COMMAND(ID_FILE_PRINT,&CPGStableHaulingView::OnPrint)
-   ON_COMMAND(ID_FILE_PRINT_DIRECT,&CPGStableHaulingView::OnPrintDirect)
-   ON_BN_CLICKED(IDC_CHECK_HAULING_TENSION_MAX_CROWN, &CPGStableHaulingView::OnClickedHaulingTensionMaxCrown)
-   ON_BN_CLICKED(IDC_CHECK_HAULING_TENSION_MAX_SUPER, &CPGStableHaulingView::OnClickedHaulingTensionMaxSuper)
+BEGIN_MESSAGE_MAP(CPGStableOneEndSeatedView, CPGStableFormView)
+   ON_BN_CLICKED(IDC_COMPUTE_EC, &CPGStableOneEndSeatedView::OnUserEc)
+	ON_EN_CHANGE(IDC_FC, &CPGStableOneEndSeatedView::OnChangeFc)
+   ON_EN_CHANGE(IDC_FPE_STRAIGHT, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_FPE_HARPED, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_FPE_TEMP, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_EC, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_FR_COEFFICIENT, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_LEFT_BUNK, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_RIGHT_BUNK, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_IMPACT_UP, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_IMPACT_DOWN, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_CROWN_SLOPE, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_SUPERELEVATION, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_WIND_PRESSURE, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_BRACKET_WEIGHT, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_BRACKET_ECCENTRICITY, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_VELOCITY, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_RADIUS, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_CAMBER, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_CAMBER_MULTIPLIER, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HGB, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HRC, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_KTHETA, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_WCC, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_SWEEP_TOLERANCE, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_SWEEP_GROWTH, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_LATERAL_SWEEP_INCREMENT, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_SUPPORT_PLACEMENT_TOLERANCE, &CPGStableOneEndSeatedView::OnChange)
+   
+   ON_EN_CHANGE(IDC_YLIFT, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_LIFT_POINT_TOLERANCE, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_LIFT_END_OFFSET, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_FRACTION_OF_ROLL_STIFFNESS, &CPGStableOneEndSeatedView::OnChange)
+
+   ON_BN_CLICKED(IDC_EDIT_FPE, &CPGStableOneEndSeatedView::OnEditFpe)
+   ON_CBN_SELCHANGE(IDC_CF_TYPE,&CPGStableOneEndSeatedView::OnChange)
+   ON_COMMAND(ID_FILE_PRINT,&CPGStableOneEndSeatedView::OnPrint)
+   ON_COMMAND(ID_FILE_PRINT_DIRECT,&CPGStableOneEndSeatedView::OnPrintDirect)
+   ON_BN_CLICKED(IDC_CHECK_HAULING_TENSION_MAX_CROWN, &CPGStableOneEndSeatedView::OnClickedOneEndSeatedTensionMaxCrown)
    ON_WM_SIZE()
-   ON_CBN_SELCHANGE(IDC_WIND_TYPE, &CPGStableHaulingView::OnWindTypeChanged)
-   ON_CBN_SELCHANGE(IDC_IMPACT_USAGE, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_CROWN,&CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_CROWN,&CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_CROWN,&CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_SUPER,&CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_SUPER,&CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_SUPER, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_LATERAL_CAMBER, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_FS_CRACKING, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_FS_FAILURE, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_GLOBAL_COMPRESSION, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_PEAK_COMPRESSION, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_CROWN, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_CROWN, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_CROWN, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_SUPER, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_SUPER, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_SUPER, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_MAX_BUNK, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_LEADING_OVERHANG, &CPGStableHaulingView::OnChange)
-   ON_EN_CHANGE(IDC_MAX_GIRDER_WEIGHT, &CPGStableHaulingView::OnChange)
+   ON_CBN_SELCHANGE(IDC_WIND_TYPE, &CPGStableOneEndSeatedView::OnWindTypeChanged)
+   ON_CBN_SELCHANGE(IDC_IMPACT_USAGE, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_CROWN,&CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_CROWN,&CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_CROWN,&CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_LATERAL_CAMBER, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_FS_CRACKING, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_FS_FAILURE, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_GLOBAL_COMPRESSION, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_PEAK_COMPRESSION, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_CROWN, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_MAX_CROWN, &CPGStableOneEndSeatedView::OnChange)
+   ON_EN_CHANGE(IDC_HAULING_TENSION_WITH_REBAR_CROWN, &CPGStableOneEndSeatedView::OnChange)
+   ON_BN_CLICKED(IDC_COPY, &CPGStableOneEndSeatedView::OnCopy)
    ON_MESSAGE(WM_HELP, OnCommandHelp)
-   ON_CBN_SELCHANGE(IDC_HAUL_TRUCK, &CPGStableHaulingView::OnHaulTruckChanged)
+   ON_CBN_SELCHANGE(IDC_HAUL_TRUCK, &CPGStableOneEndSeatedView::OnHaulTruckChanged)
    ON_COMMAND_RANGE(CCS_CMENU_BASE, CCS_CMENU_MAX, OnCmenuSelected)
 END_MESSAGE_MAP()
 
-LRESULT CPGStableHaulingView::OnCommandHelp(WPARAM, LPARAM lParam)
+LRESULT CPGStableOneEndSeatedView::OnCommandHelp(WPARAM, LPARAM lParam)
 {
-   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_PGSTABLE_HAULING_VIEW );
+   EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_PGSTABLE_ONEENDSEATED_VIEW );
    return TRUE;
 }
 
-void CPGStableHaulingView::OnCmenuSelected(UINT id)
+void CPGStableOneEndSeatedView::OnCmenuSelected(UINT id)
 {
   UINT cmd = id-CCS_CMENU_BASE ;
 
@@ -395,17 +374,17 @@ void CPGStableHaulingView::OnCmenuSelected(UINT id)
 }
 
 
-// CPGStableHaulingView diagnostics
+// CPGStableOneEndSeatedView diagnostics
 
 #ifdef _DEBUG
-void CPGStableHaulingView::AssertValid() const
+void CPGStableOneEndSeatedView::AssertValid() const
 {
    AFX_MANAGE_STATE(AfxGetAppModuleState());
 	CPGStableFormView::AssertValid();
 }
 
 #ifndef _WIN32_WCE
-void CPGStableHaulingView::Dump(CDumpContext& dc) const
+void CPGStableOneEndSeatedView::Dump(CDumpContext& dc) const
 {
 	CPGStableFormView::Dump(dc);
 }
@@ -413,18 +392,18 @@ void CPGStableHaulingView::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 
-// CPGStableHaulingView message handlers
+// CPGStableOneEndSeatedView message handlers
 
-BOOL CPGStableHaulingView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext)
+BOOL CPGStableOneEndSeatedView::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    return CPGStableFormView::Create(lpszClassName,lpszWindowName,dwRequestedStyle,rect,pParentWnd,nID,pContext);
 }
 
-void CPGStableHaulingView::OnActivateView()
+void CPGStableOneEndSeatedView::OnActivateView()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   m_HaulingCriteria = pDoc->GetHaulingCriteria();
+   m_OneEndSeatedCriteria = pDoc->GetOneEndSeatedCriteria();
 
    UpdateData(FALSE);
 
@@ -443,12 +422,12 @@ void CPGStableHaulingView::OnActivateView()
    RefreshReport();
 }
 
-void CPGStableHaulingView::OnDeactivateView()
+void CPGStableOneEndSeatedView::OnDeactivateView()
 {
    UpdateData();
 }
 
-void CPGStableHaulingView::OnUserEc()
+void CPGStableOneEndSeatedView::OnUserEc()
 {
    BOOL bEnable = ((CButton*)GetDlgItem(IDC_COMPUTE_EC))->GetCheck();
    GetDlgItem(IDC_EC)->EnableWindow(bEnable);
@@ -465,7 +444,7 @@ void CPGStableHaulingView::OnUserEc()
    }
 }
 
-void CPGStableHaulingView::UpdateEc()
+void CPGStableOneEndSeatedView::UpdateEc()
 {
    if ( IsDlgButtonChecked(IDC_COMPUTE_EC) )
    {
@@ -480,22 +459,22 @@ void CPGStableHaulingView::UpdateEc()
    m_ctrlEc.SetWindowText(strEc);
 }
 
-void CPGStableHaulingView::OnChangeFc() 
+void CPGStableOneEndSeatedView::OnChangeFc() 
 {
    UpdateEc();
    OnChange();
 }
 
-void CPGStableHaulingView::OnChange()
+void CPGStableOneEndSeatedView::OnChange()
 {
    UpdateData();
    RefreshReport();
 }
 
-void CPGStableHaulingView::UpdateFpeControls()
+void CPGStableOneEndSeatedView::UpdateFpeControls()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Hauling);
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::OneEndSeated);
    BOOL bEnable = (strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
    GetDlgItem(IDC_FPE_STRAIGHT)->EnableWindow(bEnable);
    GetDlgItem(IDC_FPE_HARPED)->EnableWindow(bEnable);
@@ -504,20 +483,15 @@ void CPGStableHaulingView::UpdateFpeControls()
    GetDlgItem(IDC_EDIT_FPE)->ShowWindow(bEnable ? SW_HIDE : SW_SHOW);
 }
 
-void CPGStableHaulingView::UpdateCriteriaControls()
+void CPGStableOneEndSeatedView::UpdateCriteriaControls()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
    BOOL bEnable = pDoc->GetCriteria() == gs_strCriteria ? TRUE : FALSE;
    GetDlgItem(IDC_IMPACT_UP)->EnableWindow(bEnable);
    GetDlgItem(IDC_IMPACT_DOWN)->EnableWindow(bEnable);
-   GetDlgItem(IDC_IMPACT_USAGE)->EnableWindow(bEnable);
    GetDlgItem(IDC_CROWN_SLOPE)->EnableWindow(bEnable);
-   GetDlgItem(IDC_SUPERELEVATION)->EnableWindow(bEnable);
    GetDlgItem(IDC_WIND_TYPE)->EnableWindow(bEnable);
    GetDlgItem(IDC_WIND_PRESSURE)->EnableWindow(bEnable);
-   GetDlgItem(IDC_CF_TYPE)->EnableWindow(bEnable);
-   GetDlgItem(IDC_VELOCITY)->EnableWindow(bEnable);
-   GetDlgItem(IDC_RADIUS)->EnableWindow(bEnable);
    GetDlgItem(IDC_CAMBER)->EnableWindow(TRUE); // if camber is a direct input value, always enable
    GetDlgItem(IDC_CAMBER_MULTIPLIER)->EnableWindow(bEnable);
    GetDlgItem(IDC_SWEEP_TOLERANCE)->EnableWindow(bEnable);
@@ -531,21 +505,17 @@ void CPGStableHaulingView::UpdateCriteriaControls()
    GetDlgItem(IDC_CHECK_HAULING_TENSION_MAX_CROWN)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_TENSION_MAX_CROWN)->EnableWindow(bEnable);
    GetDlgItem(IDC_HAULING_TENSION_WITH_REBAR_CROWN)->EnableWindow(bEnable);
-   GetDlgItem(IDC_HAULING_TENSION_SUPER)->EnableWindow(bEnable);
-   GetDlgItem(IDC_CHECK_HAULING_TENSION_MAX_SUPER)->EnableWindow(bEnable);
-   GetDlgItem(IDC_HAULING_TENSION_MAX_SUPER)->EnableWindow(bEnable);
-   GetDlgItem(IDC_HAULING_TENSION_WITH_REBAR_SUPER)->EnableWindow(bEnable);
 }
 
-void CPGStableHaulingView::OnEditFpe()
+void CPGStableOneEndSeatedView::OnEditFpe()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    CPGStableEffectivePrestressDlg dlg;
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Hauling);
+   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::OneEndSeated);
    if ( dlg.DoModal() == IDOK )
    {
-      pDoc->SetStrands(pDoc->GetGirderType(), ModelType::Hauling, dlg.m_Strands);
+      pDoc->SetStrands(pDoc->GetGirderType(), ModelType::OneEndSeated, dlg.m_Strands);
 
       Float64 Fs,Fh,Ft;
       GetMaxFpe(&Fs,&Fh,&Ft);
@@ -558,7 +528,7 @@ void CPGStableHaulingView::OnEditFpe()
    }
 }
 
-void CPGStableHaulingView::OnInitialUpdate()
+void CPGStableOneEndSeatedView::OnInitialUpdate()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
@@ -575,7 +545,7 @@ void CPGStableHaulingView::OnInitialUpdate()
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
    pWnd->ShowWindow(SW_HIDE);
 
-   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(_T("Hauling"));
+   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(_T("OneEndSeated"));
    CReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
    std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
@@ -585,32 +555,21 @@ void CPGStableHaulingView::OnInitialUpdate()
 
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
-   CComboBox* pcbImpactUsage = (CComboBox*)GetDlgItem(IDC_IMPACT_USAGE);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope and Max. Superelevation Cases")),(DWORD_PTR)WBFL::Stability::Both);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope Case Only")),(DWORD_PTR)WBFL::Stability::NormalCrown);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Max. Superelevation Case Only")),(DWORD_PTR)WBFL::Stability::MaxSuper);
-
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::Speed);
    pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::Pressure);
 
-   CComboBox* pcbCFType = (CComboBox*)GetDlgItem(IDC_CF_TYPE);
-   pcbCFType->SetItemData(pcbCFType->AddString(_T("Adverse")),(DWORD_PTR)WBFL::Stability::Adverse);
-   pcbCFType->SetItemData(pcbCFType->AddString(_T("Favorable")),(DWORD_PTR)WBFL::Stability::Favorable);
-
    CPGStableFormView::OnInitialUpdate();
 
    UpdateFpeControls();
-   OnHaulTruckChanged();
 
-   OnClickedHaulingTensionMaxCrown();
-   OnClickedHaulingTensionMaxSuper();
+   OnCopy();
 }
 
-void CPGStableHaulingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
+void CPGStableOneEndSeatedView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Hauling);
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::OneEndSeated);
 
    if (strands.strandMethod == CPGStableStrands::Simplified )
    {
@@ -636,7 +595,7 @@ void CPGStableHaulingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,F
    }
 }
 
-void CPGStableHaulingView::RefreshReport()
+void CPGStableOneEndSeatedView::RefreshReport()
 {
    if ( m_pRptSpec == nullptr )
       return;
@@ -651,7 +610,7 @@ void CPGStableHaulingView::RefreshReport()
 
 }
 
-void CPGStableHaulingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)
+void CPGStableOneEndSeatedView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
    if ( EAFGetActiveView() == this || lHint == HINT_UPDATE_DATA)
    {
@@ -668,21 +627,14 @@ void CPGStableHaulingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /
    if (m_pBrowser) m_pBrowser->Refresh();
 }
 
-void CPGStableHaulingView::OnClickedHaulingTensionMaxCrown()
+void CPGStableOneEndSeatedView::OnClickedOneEndSeatedTensionMaxCrown()
 {
    BOOL bEnable = IsDlgButtonChecked(IDC_CHECK_HAULING_TENSION_MAX_CROWN) == BST_CHECKED ? TRUE : FALSE;
    GetDlgItem(IDC_HAULING_TENSION_MAX_CROWN)->EnableWindow(bEnable);
    OnChange();
 }
 
-void CPGStableHaulingView::OnClickedHaulingTensionMaxSuper()
-{
-   BOOL bEnable = IsDlgButtonChecked(IDC_CHECK_HAULING_TENSION_MAX_SUPER) == BST_CHECKED ? TRUE : FALSE;
-   GetDlgItem(IDC_HAULING_TENSION_MAX_SUPER)->EnableWindow(bEnable);
-   OnChange();
-}
-
-void CPGStableHaulingView::OnSize(UINT nType, int cx, int cy)
+void CPGStableOneEndSeatedView::OnSize(UINT nType, int cx, int cy)
 {
    CPGStableFormView::OnSize(nType, cx, cy);
 
@@ -713,17 +665,17 @@ void CPGStableHaulingView::OnSize(UINT nType, int cx, int cy)
    }
 }
 
-void CPGStableHaulingView::OnPrint() 
+void CPGStableOneEndSeatedView::OnPrint() 
 {
    m_pBrowser->Print(true);
 }
 
-void CPGStableHaulingView::OnPrintDirect() 
+void CPGStableOneEndSeatedView::OnPrintDirect() 
 {
    m_pBrowser->Print(false);
 }
 
-void CPGStableHaulingView::OnWindTypeChanged()
+void CPGStableOneEndSeatedView::OnWindTypeChanged()
 {
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    int curSel = pcbWindType->GetCurSel();
@@ -742,7 +694,7 @@ void CPGStableHaulingView::OnWindTypeChanged()
    OnChange();
 }
 
-void CPGStableHaulingView::OnHaulTruckChanged()
+void CPGStableOneEndSeatedView::OnHaulTruckChanged()
 {
    CString strHaulTruck;
    CComboBox* pCB = (CComboBox*)GetDlgItem(IDC_HAUL_TRUCK);
@@ -754,9 +706,6 @@ void CPGStableHaulingView::OnHaulTruckChanged()
    GetDlgItem(IDC_HRC)->EnableWindow(bEnable);
    GetDlgItem(IDC_KTHETA)->EnableWindow(bEnable);
    GetDlgItem(IDC_WCC)->EnableWindow(bEnable);
-   GetDlgItem(IDC_MAX_BUNK)->EnableWindow(bEnable);
-   GetDlgItem(IDC_LEADING_OVERHANG)->EnableWindow(bEnable);
-   GetDlgItem(IDC_MAX_GIRDER_WEIGHT)->EnableWindow(bEnable);
 
    if ( !bEnable )
    {
@@ -769,9 +718,6 @@ void CPGStableHaulingView::OnHaulTruckChanged()
       Float64 Hrc = pEntry->GetRollCenterHeight();
       Float64 Wcc = pEntry->GetAxleWidth();
       Float64 Ktheta = pEntry->GetRollStiffness();
-      Float64 Lmax = pEntry->GetMaxDistanceBetweenBunkPoints();
-      Float64 MaxOH = pEntry->GetMaximumLeadingOverhang();
-      Float64 Wmax = pEntry->GetMaxGirderWeight();
 
 
       CEAFApp* pApp = EAFGetApp();
@@ -781,10 +727,93 @@ void CPGStableHaulingView::OnHaulTruckChanged()
       DDX_UnitValueAndTag(&dx,IDC_HRC,IDC_HRC_UNIT,Hrc,pDispUnits->ComponentDim);
       DDX_UnitValueAndTag(&dx,IDC_WCC,IDC_WCC_UNIT,Wcc,pDispUnits->ComponentDim);
       DDX_UnitValueAndTag(&dx,IDC_KTHETA,IDC_KTHETA_UNIT,Ktheta,pDispUnits->MomentPerAngle);
-      DDX_UnitValueAndTag(&dx,IDC_MAX_BUNK,IDC_MAX_BUNK_UNIT,Lmax,pDispUnits->SpanLength);
-      DDX_UnitValueAndTag(&dx,IDC_LEADING_OVERHANG,IDC_LEADING_OVERHANG_UNIT,MaxOH,pDispUnits->SpanLength);
-      DDX_UnitValueAndTag(&dx,IDC_MAX_GIRDER_WEIGHT,IDC_MAX_GIRDER_WEIGHT_UNIT,Wmax,pDispUnits->GeneralForce);
 
       OnChange();
    }
+}
+
+
+void CPGStableOneEndSeatedView::OnCopy()
+{
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   const WBFL::Stability::LiftingStabilityProblem& lifting_problem = pDoc->GetLiftingStabilityProblem();
+   const WBFL::Stability::HaulingStabilityProblem& hauling_problem = pDoc->GetHaulingStabilityProblem();
+
+   auto problem = pDoc->GetOneEndSeatedStabilityProblem();
+
+   // copy prestressing
+   GirderType girderType = pDoc->GetGirderType();
+   const CPGStableStrands& hauling_strands = pDoc->GetStrands(girderType, ModelType::Hauling);
+   pDoc->SetStrands(girderType, ModelType::OneEndSeated, hauling_strands);
+
+   // copy materials
+   problem.SetConcrete(hauling_problem.GetConcrete());
+
+   // copy wind loading
+   WBFL::Stability::WindType windType;
+   Float64 windLoad;
+   hauling_problem.GetWindLoading(&windType, &windLoad);
+   problem.SetWindLoading(windType, windLoad);
+
+   // copy overhang bracket
+   Float64 eb, Wb;
+   hauling_problem.GetAppurtenanceLoading(&eb, &Wb);
+   problem.SetAppurtenanceLoading(eb, Wb);
+
+   // copy camber
+   problem.SetCamber(hauling_problem.GetCamber());
+   problem.SetCamberMultiplier(hauling_problem.GetCamberMultiplier());
+   problem.SetLateralCamber(hauling_problem.GetLateralCamber());
+   problem.IncludeLateralRollAxisOffset(hauling_problem.IncludeLateralRollAxisOffset());
+
+   // copy lift point
+   problem.SetYRollLiftEnd(lifting_problem.GetYRollAxis());
+   problem.SetLiftPlacementTolerance(lifting_problem.GetSupportPlacementTolerance());
+
+   // copy haul truck
+   pDoc->SetOneEndSeatedHaulTruck(pDoc->GetHaulTruck());
+   problem.SetYRollAxis(hauling_problem.GetYRollAxis());
+   problem.SetSupportPlacementTolerance(hauling_problem.GetSupportPlacementTolerance());
+   problem.SetRotationalStiffness(hauling_problem.GetRotationalStiffness());
+   problem.SetSupportWidth(hauling_problem.GetSupportWidth());
+   problem.SetHeightOfRollAxis(hauling_problem.GetHeightOfRollAxis());
+   
+   // copy sweep
+   problem.SetSweepTolerance(hauling_problem.GetSweepTolerance());
+   problem.SetSweepGrowth(hauling_problem.GetSweepGrowth());
+
+   // copy support locations - use the leading truck support assuming the trailing end is hanging from a crain
+   Float64 Llift1, Llift2;
+   lifting_problem.GetSupportLocations(&Llift1, &Llift2);
+   Float64 Lt, Ll;
+   hauling_problem.GetSupportLocations(&Lt, &Ll);
+   problem.SetSupportLocations(Ll, Llift1);
+
+   // copy criteria
+   const CPGStableHaulingCriteria& hauling_criteria = pDoc->GetHaulingCriteria();
+   CPGStableOneEndSeatedCriteria criteria = pDoc->GetOneEndSeatedCriteria();
+   criteria.MinFScr = hauling_criteria.MinFScr;
+   criteria.MinFSf = hauling_criteria.MinFSf;
+   criteria.AllowableCompression_GlobalStress = hauling_criteria.AllowableCompression_GlobalStress;
+   criteria.AllowableCompression_PeakStress = hauling_criteria.AllowableCompression_PeakStress;
+   criteria.CompressionCoefficient_GlobalStress = hauling_criteria.CompressionCoefficient_GlobalStress;
+   criteria.CompressionCoefficient_PeakStress = hauling_criteria.CompressionCoefficient_PeakStress;
+
+   const auto* pHaulingTensionStressLimit = dynamic_cast<const WBFL::Stability::CCHaulingTensionStressLimit*>(hauling_criteria.TensionStressLimit.get());
+   auto* pOneEndSeatedTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(criteria.TensionStressLimit.get());
+   pOneEndSeatedTensionStressLimit->Lambda = pHaulingTensionStressLimit->Lambda;
+   pOneEndSeatedTensionStressLimit->TensionCoefficient = pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->bMaxTension = pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->MaxTension = pHaulingTensionStressLimit->MaxTension[WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->AllowableTension = pHaulingTensionStressLimit->AllowableTension[WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->bWithRebarLimit = pHaulingTensionStressLimit->bWithRebarLimit[WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->AllowableTensionWithRebar = pHaulingTensionStressLimit->AllowableTensionWithRebar[WBFL::Stability::HaulingSlope::CrownSlope];
+
+   pDoc->SetOneEndSeatedCriteria(criteria);
+
+   pDoc->SetOneEndSeatedStabilityProblem(problem);
+   UpdateData(FALSE);
+   OnHaulTruckChanged();
+   OnClickedOneEndSeatedTensionMaxCrown();
 }

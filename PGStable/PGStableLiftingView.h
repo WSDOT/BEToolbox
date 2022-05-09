@@ -39,8 +39,6 @@ protected:
 
 	CEdit	   m_ctrlEc;
    CEdit    m_ctrlFc;
-   CEdit    m_ctrlK1;
-   CEdit    m_ctrlK2;
    CString m_strUserEc;
    void UpdateEc();
 

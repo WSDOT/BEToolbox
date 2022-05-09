@@ -55,7 +55,7 @@ Uint16 CPGStableHaulingDetailsChapterBuilder::GetMaxLevel() const
 
 rptChapter* CPGStableHaulingDetailsChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
 {
-   int girderType = m_pDoc->GetGirderType();
+   GirderType girderType = m_pDoc->GetGirderType();
    WBFL::Stability::Girder girder = m_pDoc->GetGirder(girderType);
    WBFL::Stability::HaulingResults results = m_pDoc->GetHaulingResults();
    const WBFL::Stability::HaulingStabilityProblem& problem = m_pDoc->GetHaulingStabilityProblem();

@@ -36,7 +36,7 @@ static char THIS_FILE[] = __FILE__;
 
 CPGStableModel::CPGStableModel()
 {
-   m_GirderType = PRISMATIC;
+   m_GirderType = GirderType::Prismatic;
    m_StressPointType = COMPUTE_STRESS_POINTS;
 
    Float64 Hg  = ::ConvertToSysUnits(72,unitMeasure::Inch);
@@ -50,24 +50,30 @@ CPGStableModel::CPGStableModel()
    Float64 Xleft = Wtf / 2;
    Float64 Ytop = ::ConvertToSysUnits(36.6-72,unitMeasure::Inch); // want neg because we are in section coordinates
    Float64 L = ::ConvertToSysUnits(100,unitMeasure::Feet);
-   m_Girder[PRISMATIC].AddSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf);
+   m_Girder[GirderType::Prismatic].AddSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf);
 
-   m_Girder[NONPRISMATIC] = m_Girder[PRISMATIC];
+   m_Girder[GirderType::Nonprismatic] = m_Girder[GirderType::Prismatic];
 
-   matConcreteEx liftingConcrete, haulingConcrete;
+   matConcreteEx liftingConcrete, haulingConcrete, oneEndSeatedConcrete;
 
    Float64 density = ::ConvertToSysUnits(0.155,unitMeasure::KipPerFeet3); // without rebar (used to compute Ec)
    Float64 densityWithRebar = ::ConvertToSysUnits(0.165,unitMeasure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
    liftingConcrete.SetDensity(density);
    haulingConcrete.SetDensity(density);
+   oneEndSeatedConcrete.SetDensity(density);
+
    liftingConcrete.SetDensityForWeight(densityWithRebar);
    haulingConcrete.SetDensityForWeight(densityWithRebar);
-
+   oneEndSeatedConcrete.SetDensityForWeight(densityWithRebar);
 
    m_LiftingFrCoefficient = ::ConvertToSysUnits(0.24,unitMeasure::SqrtKSI);
-   m_HaulingFrCoefficient = ::ConvertToSysUnits(0.24,unitMeasure::SqrtKSI);
+   m_HaulingFrCoefficient = ::ConvertToSysUnits(0.24, unitMeasure::SqrtKSI);
+   m_OneEndSeatedFrCoefficient = ::ConvertToSysUnits(0.24, unitMeasure::SqrtKSI);
+
    m_bComputeEci = true;
    m_bComputeEc = true;
+   m_bComputeEcOneEndSeated = true;
+
    Float64 fci = ::ConvertToSysUnits(5.5,unitMeasure::KSI);
    Float64 fc  = ::ConvertToSysUnits(7.0,unitMeasure::KSI);
    m_K1 = 1.0;
@@ -75,18 +81,22 @@ CPGStableModel::CPGStableModel()
 
    liftingConcrete.SetFc(fci);
    haulingConcrete.SetFc(fc);
+   oneEndSeatedConcrete.SetFc(fc);
 
    Float64 Eci = ::lrfdConcreteUtil::ModE(liftingConcrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
    Float64 Ec  = ::lrfdConcreteUtil::ModE(liftingConcrete.GetType(), fc, density,false/*ignore LRFD range checks*/);
 
    liftingConcrete.SetE(Eci);
    haulingConcrete.SetE(Ec);
+   oneEndSeatedConcrete.SetE(Ec);
 
    liftingConcrete.SetFlexureFr(::ConvertToSysUnits(0.24*sqrt(fci),unitMeasure::KSI));
    haulingConcrete.SetFlexureFr(::ConvertToSysUnits(0.24*sqrt(fc),unitMeasure::KSI));
+   oneEndSeatedConcrete.SetFlexureFr(::ConvertToSysUnits(0.24 * sqrt(fc), unitMeasure::KSI));
 
    m_LiftingStabilityProblem.SetConcrete(liftingConcrete);
    m_HaulingStabilityProblem.SetConcrete(haulingConcrete);
+   m_OneEndSeatedStabilityProblem.SetConcrete(oneEndSeatedConcrete);
 
    m_LiftingStabilityProblem.SetCamber(::ConvertToSysUnits(0,unitMeasure::Inch));
    m_LiftingStabilityProblem.SetLateralCamber(0.0);
@@ -108,15 +118,30 @@ CPGStableModel::CPGStableModel()
    m_HaulingStabilityProblem.SetSupportLocations(::ConvertToSysUnits(5,unitMeasure::Feet),::ConvertToSysUnits(5,unitMeasure::Feet));
    m_HaulingStabilityProblem.SetSweepTolerance(::ConvertToSysUnits(0.125,unitMeasure::Inch)/::ConvertToSysUnits(10.0,unitMeasure::Feet));
    m_HaulingStabilityProblem.SetSupportPlacementTolerance(::ConvertToSysUnits(1.0,unitMeasure::Inch));
-   m_HaulingStabilityProblem.SetTruckRotationalStiffness(::ConvertToSysUnits(40500.,unitMeasure::KipInchPerRadian));
-   m_HaulingStabilityProblem.SetCrownSlope(0.02);
+   m_HaulingStabilityProblem.SetRotationalStiffness(::ConvertToSysUnits(40500.,unitMeasure::KipInchPerRadian));
+   m_HaulingStabilityProblem.SetSupportSlope(0.02);
    m_HaulingStabilityProblem.SetSuperelevation(0.06);
-   m_HaulingStabilityProblem.SetWheelLineSpacing(::ConvertToSysUnits(72.,unitMeasure::Inch));
-   m_HaulingStabilityProblem.SetHeightOfRollAxisAboveRoadway(::ConvertToSysUnits(24.,unitMeasure::Inch));
+   m_HaulingStabilityProblem.SetSupportWidth(::ConvertToSysUnits(72.,unitMeasure::Inch));
+   m_HaulingStabilityProblem.SetHeightOfRollAxis(::ConvertToSysUnits(24.,unitMeasure::Inch));
    m_HaulingStabilityProblem.SetImpact(0,0);
    m_HaulingStabilityProblem.SetImpactUsage(WBFL::Stability::NormalCrown);
    m_HaulingStabilityProblem.SetVelocity(0);
    m_HaulingStabilityProblem.SetTurningRadius(::ConvertToSysUnits(100,unitMeasure::Feet));
+
+   ///////////////////////////////////////////////////
+
+   m_OneEndSeatedStabilityProblem.SetCamber(::ConvertToSysUnits(0, unitMeasure::Inch));
+   m_OneEndSeatedStabilityProblem.SetLateralCamber(0.0);
+   m_OneEndSeatedStabilityProblem.IncludeLateralRollAxisOffset(false);
+
+   m_OneEndSeatedStabilityProblem.SetSupportLocations(::ConvertToSysUnits(5, unitMeasure::Feet), ::ConvertToSysUnits(5, unitMeasure::Feet));
+   m_OneEndSeatedStabilityProblem.SetSweepTolerance(::ConvertToSysUnits(0.125, unitMeasure::Inch) / ::ConvertToSysUnits(10.0, unitMeasure::Feet));
+   m_OneEndSeatedStabilityProblem.SetSupportPlacementTolerance(::ConvertToSysUnits(1.0, unitMeasure::Inch));
+   m_OneEndSeatedStabilityProblem.SetRotationalStiffness(::ConvertToSysUnits(40500., unitMeasure::KipInchPerRadian));
+   m_OneEndSeatedStabilityProblem.SetSupportSlope(0.02);
+   m_OneEndSeatedStabilityProblem.SetSupportWidth(::ConvertToSysUnits(72., unitMeasure::Inch));
+   m_OneEndSeatedStabilityProblem.SetHeightOfRollAxis(::ConvertToSysUnits(24., unitMeasure::Inch));
+   m_OneEndSeatedStabilityProblem.SetImpact(0, 0);
 
    m_Hgb = ::ConvertToSysUnits(72.0,unitMeasure::Inch);
 
@@ -127,6 +152,10 @@ CPGStableModel::CPGStableModel()
    auto* pHaulingTensionStressLimit = new WBFL::Stability::CCHaulingTensionStressLimit;
    m_HaulingCriteria.TensionStressLimit.reset(pHaulingTensionStressLimit);
    pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope] = true;
+
+   auto* pOneEndSeatedTensionStressLimit = new WBFL::Stability::CCOneEndSeatedTensionStressLimit;
+   m_OneEndSeatedCriteria.TensionStressLimit.reset(pOneEndSeatedTensionStressLimit);
+   pOneEndSeatedTensionStressLimit->bMaxTension = true;
 
    m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
    m_DocUnitServer->SetBaseUnits(CComBSTR(unitSysUnitsMgr::GetMassUnit().UnitTag().c_str()),
@@ -191,7 +220,7 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
    for ( int i = 0; i <= n; i++ )
    {
       Float64 X = i*L/n;
-      m_LiftingStabilityProblem.AddAnalysisPoint(new WBFL::Stability::AnalysisPoint(X));
+      m_LiftingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(X)));
    }
 
    // when the lifting cables are inclined, the moment diagram due to the horizontal component of the lift force
@@ -205,15 +234,15 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
 
    if (bAddExtraLiftPointAnalysisPoints)
    {
-      m_LiftingStabilityProblem.AddAnalysisPoint(new WBFL::Stability::AnalysisPoint(Ll - offset));
+      m_LiftingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(Ll - offset)));
    }
 
-   m_LiftingStabilityProblem.AddAnalysisPoint(new WBFL::Stability::AnalysisPoint(Ll));
-   m_LiftingStabilityProblem.AddAnalysisPoint(new WBFL::Stability::AnalysisPoint(L - Lr));
+   m_LiftingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(Ll)));
+   m_LiftingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - Lr)));
 
    if (bAddExtraLiftPointAnalysisPoints)
    {
-      m_LiftingStabilityProblem.AddAnalysisPoint(new WBFL::Stability::AnalysisPoint(L - Lr + offset));
+      m_LiftingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - Lr + offset)));
    }
 
    ResolveLiftingStrandLocations();
@@ -237,6 +266,12 @@ WBFL::Stability::HaulingResults CPGStableModel::GetHaulingResults() const
 {
    WBFL::Stability::HaulingCheckArtifact artifact = GetHaulingCheckArtifact();
    return artifact.GetHaulingResults();
+}
+
+WBFL::Stability::OneEndSeatedResults CPGStableModel::GetOneEndSeatedResults() const
+{
+   WBFL::Stability::OneEndSeatedCheckArtifact artifact = GetOneEndSeatedCheckArtifact();
+   return artifact.GetOneEndSeatedResults();
 }
 
 WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
@@ -274,17 +309,17 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    for ( int i = 0; i <= n; i++ )
    {
       Float64 X = i*L/n;
-      m_HaulingStabilityProblem.AddAnalysisPoint(new WBFL::Stability::AnalysisPoint(X));
+      m_HaulingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(X)));
    }
 
    Float64 Ll, Lr;
    m_HaulingStabilityProblem.GetSupportLocations(&Ll,&Lr);
-   m_HaulingStabilityProblem.AddAnalysisPoint(new WBFL::Stability::AnalysisPoint(Ll));
-   m_HaulingStabilityProblem.AddAnalysisPoint(new WBFL::Stability::AnalysisPoint(L-Lr));
+   m_HaulingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(Ll)));
+   m_HaulingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L-Lr)));
 
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot;
    pGirder->GetSectionProperties(0,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtop,&Wbot);
-   Float64 Yra = -(Hg + m_Hgb) + m_HaulingStabilityProblem.GetHeightOfRollAxisAboveRoadway();
+   Float64 Yra = -(Hg + m_Hgb) + m_HaulingStabilityProblem.GetHeightOfRollAxis();
    ATLASSERT(Yra < 0);
    m_HaulingStabilityProblem.SetYRollAxis(Yra); // location of roll axes relative to the top of girder
 
@@ -312,9 +347,75 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    return artifact;
 }
 
+WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckArtifact() const
+{
+   matConcreteEx concrete = m_OneEndSeatedStabilityProblem.GetConcrete();
+   Float64 fc = concrete.GetFc();
+   if (m_bComputeEc)
+   {
+      Float64 density = concrete.GetDensity();
+      Float64 Ec = ::lrfdConcreteUtil::ModE(concrete.GetType(), fc, density, false/*ignore LRFD range checks*/);
+      if (lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion())
+      {
+         Ec *= m_K1 * m_K2;
+      }
+
+      concrete.SetE(Ec);
+   }
+
+   Float64 lambda = lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
+   concrete.SetLambda(lambda);
+
+   auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(m_OneEndSeatedCriteria.TensionStressLimit.get());
+   pTensionStressLimit->Lambda = concrete.GetLambda();
+
+   Float64 fr = ::lrfdConcreteUtil::ModRupture(fc, m_OneEndSeatedFrCoefficient);
+   concrete.SetFlexureFr(lambda * fr);
+
+
+   m_OneEndSeatedStabilityProblem.SetConcrete(concrete);
+
+   WBFL::Stability::Girder* pGirder = &m_Girder[m_GirderType];
+   Float64 L = pGirder->GetGirderLength();
+   m_OneEndSeatedStabilityProblem.ClearAnalysisPoints();
+   int n = 10;
+   for (int i = 0; i <= n; i++)
+   {
+      Float64 X = i * L / n;
+      m_OneEndSeatedStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(X)));
+   }
+
+   Float64 Ll, Lr;
+   m_OneEndSeatedStabilityProblem.GetSupportLocations(&Ll, &Lr);
+   m_OneEndSeatedStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(Ll)));
+   m_OneEndSeatedStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - Lr)));
+
+   Float64 Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtop, Wbot;
+   pGirder->GetSectionProperties(0, WBFL::Stability::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtop, &Wbot);
+   Float64 Yra = -(Hg + m_Hgb) + m_OneEndSeatedStabilityProblem.GetHeightOfRollAxis();
+   ATLASSERT(Yra < 0);
+   m_OneEndSeatedStabilityProblem.SetYRollAxis(Yra); // location of roll axes relative to the top of girder
+
+   ResolveOneEndSeatedStrandLocations();
+
+   m_OneEndSeatedCriteria.AllowableCompression_GlobalStress = -m_OneEndSeatedCriteria.CompressionCoefficient_GlobalStress * fc;
+   m_OneEndSeatedCriteria.AllowableCompression_PeakStress = -m_OneEndSeatedCriteria.CompressionCoefficient_PeakStress * fc;
+
+   pTensionStressLimit->AllowableTension = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficient * sqrt(fc);
+   if (pTensionStressLimit->bMaxTension)
+   {
+      pTensionStressLimit->AllowableTension = Min(pTensionStressLimit->AllowableTension, pTensionStressLimit->MaxTension);
+   }
+   pTensionStressLimit->AllowableTensionWithRebar = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficientWithRebar * sqrt(fc);
+
+   WBFL::Stability::StabilityEngineer stabilityEngineer;
+   WBFL::Stability::OneEndSeatedCheckArtifact artifact = stabilityEngineer.CheckOneEndSeated(pGirder, &m_OneEndSeatedStabilityProblem, m_OneEndSeatedCriteria);
+   return artifact;
+}
+
 void CPGStableModel::ResolveLiftingStrandLocations() const
 {
-   if ( m_Strands[m_GirderType][LIFTING].strandMethod == CPGStableStrands::Simplified )
+   if ( m_Strands[m_GirderType][ModelType::Lifting].strandMethod == CPGStableStrands::Simplified )
    {
       ResolveSimplifedLiftingStrandLocations();
    }
@@ -328,16 +429,16 @@ void CPGStableModel::ResolveSimplifedLiftingStrandLocations() const
 {
    Float64 L = m_Girder[m_GirderType].GetGirderLength();
    m_LiftingStabilityProblem.AdjustForXferLength(true);
-   m_LiftingStabilityProblem.SetXferLength(m_Strands[m_GirderType][LIFTING].XferLength,L);
+   m_LiftingStabilityProblem.SetXferLength(m_Strands[m_GirderType][ModelType::Lifting].XferLength,L);
 
    Float64 XpsStraight,YpsStraight,XpsHarped,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,XpsTemp,YpsTemp;
-   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][LIFTING],&m_Girder[m_GirderType],&XpsStraight,&YpsStraight,&XpsHarped,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&XpsTemp,&YpsTemp);
+   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][ModelType::Lifting],&m_Girder[m_GirderType],&XpsStraight,&YpsStraight,&XpsHarped,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&XpsTemp,&YpsTemp);
 
    m_LiftingStabilityProblem.ClearFpe();
 
-   Float64 FpeStraight = m_Strands[m_GirderType][LIFTING].FpeStraight;
-   Float64 FpeHarped   = m_Strands[m_GirderType][LIFTING].FpeHarped;
-   Float64 FpeTemp     = m_Strands[m_GirderType][LIFTING].FpeTemp;
+   Float64 FpeStraight = m_Strands[m_GirderType][ModelType::Lifting].FpeStraight;
+   Float64 FpeHarped   = m_Strands[m_GirderType][ModelType::Lifting].FpeHarped;
+   Float64 FpeTemp     = m_Strands[m_GirderType][ModelType::Lifting].FpeTemp;
    m_LiftingStabilityProblem.AddFpe(_T("Straight"), 0,   FpeStraight, XpsStraight, YpsStraight);
    m_LiftingStabilityProblem.AddFpe(_T("Straight"), Xh1, FpeStraight, XpsStraight, YpsStraight);
    m_LiftingStabilityProblem.AddFpe(_T("Straight"), Xh2, FpeStraight, XpsStraight, YpsStraight);
@@ -364,7 +465,7 @@ void CPGStableModel::ResolveExactLiftingStrandLocations() const
 {
    Float64 Lg = m_Girder[m_GirderType].GetGirderLength();
    m_LiftingStabilityProblem.ClearFpe();
-   for (const auto& fpe : m_Strands[m_GirderType][LIFTING].m_vFpe)
+   for (const auto& fpe : m_Strands[m_GirderType][ModelType::Lifting].m_vFpe)
    {
       if ( ::InRange(0.0,fpe.X,Lg) )
       {
@@ -379,7 +480,7 @@ void CPGStableModel::ResolveExactLiftingStrandLocations() const
 
 void CPGStableModel::ResolveHaulingStrandLocations() const
 {
-   if ( m_Strands[m_GirderType][HAULING].strandMethod == CPGStableStrands::Simplified )
+   if ( m_Strands[m_GirderType][ModelType::Hauling].strandMethod == CPGStableStrands::Simplified )
    {
       ResolveSimplifedHaulingStrandLocations();
    }
@@ -393,16 +494,16 @@ void CPGStableModel::ResolveSimplifedHaulingStrandLocations() const
 {
    Float64 L = m_Girder[m_GirderType].GetGirderLength();
    m_HaulingStabilityProblem.AdjustForXferLength(true);
-   m_HaulingStabilityProblem.SetXferLength(m_Strands[m_GirderType][HAULING].XferLength,L);
+   m_HaulingStabilityProblem.SetXferLength(m_Strands[m_GirderType][ModelType::Hauling].XferLength,L);
 
    Float64 XpsStraight,YpsStraight,XpsHarped,Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4,XpsTemp,YpsTemp;
-   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][HAULING],&m_Girder[m_GirderType],&XpsStraight,&YpsStraight,&XpsHarped,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&XpsTemp,&YpsTemp);
+   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][ModelType::Hauling],&m_Girder[m_GirderType],&XpsStraight,&YpsStraight,&XpsHarped,&Xh1,&Yh1,&Xh2,&Yh2,&Xh3,&Yh3,&Xh4,&Yh4,&XpsTemp,&YpsTemp);
 
    m_HaulingStabilityProblem.ClearFpe();
 
-   Float64 FpeStraight = m_Strands[m_GirderType][HAULING].FpeStraight;
-   Float64 FpeHarped   = m_Strands[m_GirderType][HAULING].FpeHarped;
-   Float64 FpeTemp     = m_Strands[m_GirderType][HAULING].FpeTemp;
+   Float64 FpeStraight = m_Strands[m_GirderType][ModelType::Hauling].FpeStraight;
+   Float64 FpeHarped   = m_Strands[m_GirderType][ModelType::Hauling].FpeHarped;
+   Float64 FpeTemp     = m_Strands[m_GirderType][ModelType::Hauling].FpeTemp;
 
    m_HaulingStabilityProblem.AddFpe(_T("Straight"), 0, FpeStraight, XpsStraight, YpsStraight);
    m_HaulingStabilityProblem.AddFpe(_T("Straight"), Xh1, FpeStraight, XpsStraight, YpsStraight);
@@ -430,7 +531,7 @@ void CPGStableModel::ResolveExactHaulingStrandLocations() const
 {
    Float64 Lg = m_Girder[m_GirderType].GetGirderLength();
    m_HaulingStabilityProblem.ClearFpe();
-   for (const auto& fpe : m_Strands[m_GirderType][HAULING].m_vFpe)
+   for (const auto& fpe : m_Strands[m_GirderType][ModelType::Hauling].m_vFpe)
    {
       if ( ::InRange(0.0,fpe.X,Lg) )
       {
@@ -439,6 +540,71 @@ void CPGStableModel::ResolveExactHaulingStrandLocations() const
          m_HaulingStabilityProblem.AddFpe(_T("Straight"), fpe.X, fpe.FpeStraight, Xs, Ys);
          m_HaulingStabilityProblem.AddFpe(_T("Harped"), fpe.X, fpe.FpeHarped, Xh, Yh);
          m_HaulingStabilityProblem.AddFpe(_T("Temporary"), fpe.X, fpe.FpeTemp, Xt, Yt);
+      }
+   }
+}
+
+void CPGStableModel::ResolveOneEndSeatedStrandLocations() const
+{
+   if (m_Strands[m_GirderType][ModelType::OneEndSeated].strandMethod == CPGStableStrands::Simplified)
+   {
+      ResolveSimplifedOneEndSeatedStrandLocations();
+   }
+   else
+   {
+      ResolveExactOneEndSeatedStrandLocations();
+   }
+}
+void CPGStableModel::ResolveSimplifedOneEndSeatedStrandLocations() const
+{
+   Float64 L = m_Girder[m_GirderType].GetGirderLength();
+   m_OneEndSeatedStabilityProblem.AdjustForXferLength(true);
+   m_OneEndSeatedStabilityProblem.SetXferLength(m_Strands[m_GirderType][ModelType::OneEndSeated].XferLength, L);
+
+   Float64 XpsStraight, YpsStraight, XpsHarped, Xh1, Yh1, Xh2, Yh2, Xh3, Yh3, Xh4, Yh4, XpsTemp, YpsTemp;
+   GetSimplifiedStrandLocations(&m_Strands[m_GirderType][ModelType::OneEndSeated], &m_Girder[m_GirderType], &XpsStraight, &YpsStraight, &XpsHarped, &Xh1, &Yh1, &Xh2, &Yh2, &Xh3, &Yh3, &Xh4, &Yh4, &XpsTemp, &YpsTemp);
+
+   m_OneEndSeatedStabilityProblem.ClearFpe();
+
+   Float64 FpeStraight = m_Strands[m_GirderType][ModelType::OneEndSeated].FpeStraight;
+   Float64 FpeHarped = m_Strands[m_GirderType][ModelType::OneEndSeated].FpeHarped;
+   Float64 FpeTemp = m_Strands[m_GirderType][ModelType::OneEndSeated].FpeTemp;
+
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Straight"), 0, FpeStraight, XpsStraight, YpsStraight);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Straight"), Xh1, FpeStraight, XpsStraight, YpsStraight);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Straight"), Xh2, FpeStraight, XpsStraight, YpsStraight);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Straight"), Xh3, FpeStraight, XpsStraight, YpsStraight);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Straight"), Xh4, FpeStraight, XpsStraight, YpsStraight);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Straight"), L, FpeStraight, XpsStraight, YpsStraight);
+
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Harped"), 0, FpeHarped, XpsHarped, Yh1);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Harped"), Xh1, FpeHarped, XpsHarped, Yh1);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Harped"), Xh2, FpeHarped, XpsHarped, Yh2);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Harped"), Xh3, FpeHarped, XpsHarped, Yh3);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Harped"), Xh4, FpeHarped, XpsHarped, Yh4);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Harped"), L, FpeHarped, XpsHarped, Yh4);
+
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Temporary"), 0, FpeTemp, XpsTemp, YpsTemp);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Temporary"), Xh1, FpeTemp, XpsTemp, YpsTemp);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Temporary"), Xh2, FpeTemp, XpsTemp, YpsTemp);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Temporary"), Xh3, FpeTemp, XpsTemp, YpsTemp);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Temporary"), Xh4, FpeTemp, XpsTemp, YpsTemp);
+   m_OneEndSeatedStabilityProblem.AddFpe(_T("Temporary"), L, FpeTemp, XpsTemp, YpsTemp);
+}
+
+void CPGStableModel::ResolveExactOneEndSeatedStrandLocations() const
+{
+   Float64 Lg = m_Girder[m_GirderType].GetGirderLength();
+   m_OneEndSeatedStabilityProblem.ClearFpe();
+   for (const auto& fpe : m_Strands[m_GirderType][ModelType::OneEndSeated].m_vFpe)
+   {
+      if (::InRange(0.0, fpe.X, Lg))
+      {
+         Float64 Xs, Ys, Xh, Yh, Xt, Yt;
+         GetStrandLocations(fpe, &m_Girder[m_GirderType], &Xs, &Ys, &Xh, &Yh, &Xt, &Yt);
+         m_OneEndSeatedStabilityProblem.AddFpe(_T("Straight"), fpe.X, fpe.FpeStraight, Xs, Ys);
+         m_OneEndSeatedStabilityProblem.AddFpe(_T("Harped"), fpe.X, fpe.FpeHarped, Xh, Yh);
+         m_OneEndSeatedStabilityProblem.AddFpe(_T("Temporary"), fpe.X, fpe.FpeTemp, Xt, Yt);
       }
    }
 }
@@ -598,6 +764,7 @@ bool CPGStableModel::SetConcreteType(matConcrete::Type type)
    {
       m_LiftingStabilityProblem.GetConcrete().SetType(type);
       m_HaulingStabilityProblem.GetConcrete().SetType(type);
+      m_OneEndSeatedStabilityProblem.GetConcrete().SetType(type);
       return true;
    }
    return false;
@@ -615,6 +782,7 @@ bool CPGStableModel::SetDensity(Float64 density)
       ATLASSERT(!::IsEqual(m_HaulingStabilityProblem.GetConcrete().GetDensity(),density));
       m_LiftingStabilityProblem.GetConcrete().SetDensity(density);
       m_HaulingStabilityProblem.GetConcrete().SetDensity(density);
+      m_OneEndSeatedStabilityProblem.GetConcrete().SetDensity(density);
       return true;
    }
    return false;
@@ -633,6 +801,7 @@ bool CPGStableModel::SetDensityWithRebar(Float64 density)
       ATLASSERT(!::IsEqual(m_HaulingStabilityProblem.GetConcrete().GetDensityForWeight(),density));
       m_LiftingStabilityProblem.GetConcrete().SetDensityForWeight(density);
       m_HaulingStabilityProblem.GetConcrete().SetDensityForWeight(density);
+      m_OneEndSeatedStabilityProblem.GetConcrete().SetDensityForWeight(density);
       return true;
    }
    return false;
@@ -644,7 +813,7 @@ Float64 CPGStableModel::GetDensityWithRebar() const
    return m_LiftingStabilityProblem.GetConcrete().GetDensityForWeight();
 }
 
-bool CPGStableModel::SetGirderType(int girderType)
+bool CPGStableModel::SetGirderType(GirderType girderType)
 {
    if ( m_GirderType != girderType )
    {
@@ -654,7 +823,7 @@ bool CPGStableModel::SetGirderType(int girderType)
    return false;
 }
 
-int CPGStableModel::GetGirderType() const
+GirderType CPGStableModel::GetGirderType() const
 {
    return m_GirderType;
 }
@@ -674,7 +843,7 @@ int CPGStableModel::GetStressPointType() const
    return m_StressPointType;
 }
 
-bool CPGStableModel::SetStrands(int girderType,int modelType,const CPGStableStrands& strands)
+bool CPGStableModel::SetStrands(GirderType girderType,ModelType modelType,const CPGStableStrands& strands)
 {
    if ( m_Strands[girderType][modelType] != strands )
    {
@@ -688,12 +857,12 @@ bool CPGStableModel::SetStrands(int girderType,int modelType,const CPGStableStra
    return false;
 }
 
-const CPGStableStrands& CPGStableModel::GetStrands(int girderType,int modelType) const
+const CPGStableStrands& CPGStableModel::GetStrands(GirderType girderType,ModelType modelType) const
 {
    return m_Strands[girderType][modelType];
 }
 
-bool CPGStableModel::SetGirder(int girderType,const WBFL::Stability::Girder& girder)
+bool CPGStableModel::SetGirder(GirderType girderType,const WBFL::Stability::Girder& girder)
 {
    if ( m_Girder[girderType] != girder )
    {
@@ -703,7 +872,7 @@ bool CPGStableModel::SetGirder(int girderType,const WBFL::Stability::Girder& gir
    return false;
 }
 
-const WBFL::Stability::Girder& CPGStableModel::GetGirder(int girderType) const
+const WBFL::Stability::Girder& CPGStableModel::GetGirder(GirderType girderType) const
 {
    return m_Girder[girderType];
 }
@@ -738,6 +907,21 @@ const WBFL::Stability::HaulingStabilityProblem& CPGStableModel::GetHaulingStabil
    return m_HaulingStabilityProblem;
 }
 
+bool CPGStableModel::SetOneEndSeatedStabilityProblem(const WBFL::Stability::OneEndSeatedStabilityProblem& problem)
+{
+   if (m_OneEndSeatedStabilityProblem != problem)
+   {
+      m_OneEndSeatedStabilityProblem = problem;
+      return true;
+   }
+   return false;
+}
+
+const WBFL::Stability::OneEndSeatedStabilityProblem& CPGStableModel::GetOneEndSeatedStabilityProblem() const
+{
+   return m_OneEndSeatedStabilityProblem;
+}
+
 bool CPGStableModel::SetLiftingCriteria(const CPGStableLiftingCriteria& criteria)
 {
    if ( m_LiftingCriteria != criteria )
@@ -766,6 +950,21 @@ bool CPGStableModel::SetHaulingCriteria(const CPGStableHaulingCriteria& criteria
 const CPGStableHaulingCriteria& CPGStableModel::GetHaulingCriteria() const
 {
    return m_HaulingCriteria;
+}
+
+bool CPGStableModel::SetOneEndSeatedCriteria(const CPGStableOneEndSeatedCriteria& criteria)
+{
+   if (m_OneEndSeatedCriteria != criteria)
+   {
+      m_OneEndSeatedCriteria = criteria;
+      return true;
+   }
+   return false;
+}
+
+const CPGStableOneEndSeatedCriteria& CPGStableModel::GetOneEndSeatedCriteria() const
+{
+   return m_OneEndSeatedCriteria;
 }
 
 Float64 CPGStableModel::GetK1() const
@@ -832,6 +1031,25 @@ bool CPGStableModel::SetHaulingMaterials(Float64 fc,bool bComputeEc,Float64 frCo
       m_HaulingStabilityProblem.GetConcrete().SetFc(fc);
       m_bComputeEc = bComputeEc;
       m_HaulingFrCoefficient = frCoefficient;
+      return true;
+   }
+   return false;
+}
+
+void CPGStableModel::GetOneEndSeatedMaterials(Float64* pFc, bool* pbComputeEc, Float64* pFrCoefficient) const
+{
+   *pFc = m_OneEndSeatedStabilityProblem.GetConcrete().GetFc();
+   *pbComputeEc = m_bComputeEcOneEndSeated;
+   *pFrCoefficient = m_OneEndSeatedFrCoefficient;
+}
+
+bool CPGStableModel::SetOneEndSeatedMaterials(Float64 fc, bool bComputeEc, Float64 frCoefficient)
+{
+   if (!IsEqual(m_OneEndSeatedStabilityProblem.GetConcrete().GetFc(), fc) || m_bComputeEcOneEndSeated != bComputeEc || !IsEqual(m_OneEndSeatedFrCoefficient, frCoefficient))
+   {
+      m_OneEndSeatedStabilityProblem.GetConcrete().SetFc(fc);
+      m_bComputeEcOneEndSeated = bComputeEc;
+      m_OneEndSeatedFrCoefficient = frCoefficient;
       return true;
    }
    return false;
@@ -958,7 +1176,7 @@ void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const WBFL::Stab
 
 HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 {
-   HRESULT hr = pStrSave->BeginUnit(_T("PGStable"),2.0);
+   HRESULT hr = pStrSave->BeginUnit(_T("PGStable"),3.0);
    if ( FAILED(hr) )
       return hr;
 
@@ -1100,7 +1318,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    {
    pStrSave->BeginUnit(_T("LiftingProblem"),6.0);
    const WBFL::Stability::LiftingStabilityProblem& liftingProblem = GetLiftingStabilityProblem();
-   m_Strands[m_GirderType][LIFTING].Save(pStrSave);
+   m_Strands[m_GirderType][ModelType::Lifting].Save(pStrSave);
 
    Float64 camber = liftingProblem.GetCamber();
    //pStrSave->put_Property(_T("DirectCamber"),CComVariant(bDirectCamber)); // removed in version 4
@@ -1164,7 +1382,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 
    {
    pStrSave->BeginUnit(_T("HaulingProblem"),6.0);
-   m_Strands[m_GirderType][HAULING].Save(pStrSave);
+   m_Strands[m_GirderType][ModelType::Hauling].Save(pStrSave);
 
    const WBFL::Stability::HaulingStabilityProblem& haulingProblem = GetHaulingStabilityProblem();
 
@@ -1216,13 +1434,13 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->put_Property(_T("BracketEccentricity"), CComVariant(eb));
    pStrSave->put_Property(_T("BracketWeight"), CComVariant(wb));
 
-   Float64 Ktheta = haulingProblem.GetTruckRotationalStiffness();
+   Float64 Ktheta = haulingProblem.GetRotationalStiffness();
    pStrSave->put_Property(_T("Ktheta"),CComVariant(Ktheta));
-   Float64 Wcc = haulingProblem.GetWheelLineSpacing();
+   Float64 Wcc = haulingProblem.GetSupportWidth();
    pStrSave->put_Property(_T("Wcc"),CComVariant(Wcc));
-   Float64 Hrc = haulingProblem.GetHeightOfRollAxisAboveRoadway();
+   Float64 Hrc = haulingProblem.GetHeightOfRollAxis();
    pStrSave->put_Property(_T("Hrc"),CComVariant(Hrc));
-   Float64 CrownSlope = haulingProblem.GetCrownSlope();
+   Float64 CrownSlope = haulingProblem.GetSupportSlope();
    pStrSave->put_Property(_T("CrownSlope"),CComVariant(CrownSlope));
    Float64 Superelevation = haulingProblem.GetSuperelevation();
    pStrSave->put_Property(_T("Superelevation"),CComVariant(Superelevation));
@@ -1241,6 +1459,75 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->EndUnit(); // HaulingProblem
    }
 
+   {
+      // added in version 3 of the parent datablock
+      pStrSave->BeginUnit(_T("OneEndSeatedProblem"), 1.0);
+      m_Strands[m_GirderType][ModelType::OneEndSeated].Save(pStrSave);
+
+      const WBFL::Stability::OneEndSeatedStabilityProblem& oneEndSeatedProblem = GetOneEndSeatedStabilityProblem();
+
+      Float64 camber = oneEndSeatedProblem.GetCamber();
+      pStrSave->put_Property(_T("Camber"), CComVariant(camber));
+
+      Float64 lateralCamber = oneEndSeatedProblem.GetLateralCamber();
+      pStrSave->put_Property(_T("LateralCamber"), CComVariant(lateralCamber));
+
+      Float64 Ll, Lr;
+      oneEndSeatedProblem.GetSupportLocations(&Ll, &Lr);
+      pStrSave->put_Property(_T("LeftBunkPoint"), CComVariant(Ll));
+      pStrSave->put_Property(_T("RightBunkPoint"), CComVariant(Lr));
+
+      pStrSave->put_Property(_T("Hgb"), CComVariant(m_Hgb));
+
+      Float64 SweepTolerance = oneEndSeatedProblem.GetSweepTolerance();
+      pStrSave->put_Property(_T("SweepTolerance"), CComVariant(SweepTolerance));
+
+      Float64 SweepGrowth = oneEndSeatedProblem.GetSweepGrowth();
+      pStrSave->put_Property(_T("SweepGrowth"), CComVariant(SweepGrowth));
+
+      Float64 SupportPlacementTolerance = oneEndSeatedProblem.GetSupportPlacementTolerance();
+      pStrSave->put_Property(_T("SupportPlacementTolerance"), CComVariant(SupportPlacementTolerance));
+
+      Float64 YrollLift = oneEndSeatedProblem.GetYRollLiftEnd();
+      pStrSave->put_Property(_T("YrollLiftEnd"), CComVariant(YrollLift));
+      Float64 liftTolerance = oneEndSeatedProblem.GetLiftPlacementTolerance();
+      pStrSave->put_Property(_T("LiftPlacementTolerance"), CComVariant(liftTolerance));
+
+      Float64 imup, imdn;
+      oneEndSeatedProblem.GetImpact(&imup, &imdn);
+      pStrSave->put_Property(_T("ImpactUp"), CComVariant(imup));
+      pStrSave->put_Property(_T("ImpactDown"), CComVariant(imdn));
+
+      WBFL::Stability::WindType windLoadType;
+      Float64 windLoad;
+      oneEndSeatedProblem.GetWindLoading(&windLoadType, &windLoad);
+      pStrSave->put_Property(_T("WindLoadType"), CComVariant(windLoadType));
+      pStrSave->put_Property(_T("WindLoad"), CComVariant(windLoad));
+
+      Float64 eb, wb;
+      oneEndSeatedProblem.GetAppurtenanceLoading(&eb, &wb);
+      pStrSave->put_Property(_T("BracketEccentricity"), CComVariant(eb));
+      pStrSave->put_Property(_T("BracketWeight"), CComVariant(wb));
+
+      Float64 Ktheta = oneEndSeatedProblem.GetRotationalStiffness();
+      pStrSave->put_Property(_T("Ktheta"), CComVariant(Ktheta));
+      Float64 Kadjust = oneEndSeatedProblem.GetRotationalStiffnessAdjustmentFactor();
+      pStrSave->put_Property(_T("Kadjust"), CComVariant(Kadjust));
+      Float64 Wcc = oneEndSeatedProblem.GetSupportWidth();
+      pStrSave->put_Property(_T("Wcc"), CComVariant(Wcc));
+      Float64 Hrc = oneEndSeatedProblem.GetHeightOfRollAxis();
+      pStrSave->put_Property(_T("Hrc"), CComVariant(Hrc));
+      Float64 CrownSlope = oneEndSeatedProblem.GetSupportSlope();
+      pStrSave->put_Property(_T("CrownSlope"), CComVariant(CrownSlope));
+
+      const matConcreteEx& concrete = oneEndSeatedProblem.GetConcrete();
+      pStrSave->put_Property(_T("FrCoefficient"), CComVariant(m_OneEndSeatedFrCoefficient));
+      pStrSave->put_Property(_T("Fc"), CComVariant(concrete.GetFc()));
+      pStrSave->put_Property(_T("ComputeEc"), CComVariant(m_bComputeEcOneEndSeated));
+      pStrSave->put_Property(_T("Ec"), CComVariant(concrete.GetE()));
+      pStrSave->EndUnit(); // OneEndSeatedProblem
+   }
+
    pStrSave->BeginUnit(_T("LiftingCriteria"),1.0);
    m_LiftingCriteria.Save(pStrSave);
    pStrSave->EndUnit(); // LiftingCriteria
@@ -1248,6 +1535,12 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->BeginUnit(_T("HaulingCriteria"),1.0);
    m_HaulingCriteria.Save(pStrSave);
    pStrSave->EndUnit(); // HaulingCriteria
+
+   // added in version 3 of the PGStable data block
+   pStrSave->BeginUnit(_T("OneEndSeatedCriteria"), 1.0);
+   m_OneEndSeatedCriteria.Save(pStrSave);
+   pStrSave->EndUnit(); // OneEndSeatedCriteria
+
 
    hr = pStrSave->EndUnit();
    if ( FAILED(hr) )
@@ -1276,7 +1569,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       var.vt = VT_I4;
       hr = pStrLoad->get_Property(_T("GirderType"),&var);
-      m_GirderType = var.lVal;
+      m_GirderType = (GirderType)var.lVal;
 
       if (1 < version)
       {
@@ -1589,8 +1882,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       Float64 version;
       pStrLoad->get_Version(&version);
-
-      hr = m_Strands[m_GirderType][LIFTING].Load(pStrLoad);
+      hr = m_Strands[m_GirderType][ModelType::Lifting].Load(pStrLoad);
 
       if (version < 4)
       {
@@ -1635,6 +1927,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       hr = pStrLoad->get_Property(_T("SupportPlacementTolerance"),&var);
       m_LiftingStabilityProblem.SetSupportPlacementTolerance(var.dblVal);
+
 
       Float64 imup,imdn;
       hr = pStrLoad->get_Property(_T("ImpactUp"),&var);
@@ -1707,8 +2000,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       Float64 version;
       pStrLoad->get_Version(&version);
-
-      hr = m_Strands[m_GirderType][HAULING].Load(pStrLoad);
+      hr = m_Strands[m_GirderType][ModelType::Hauling].Load(pStrLoad);
 
       if (version < 4)
       {
@@ -1797,16 +2089,16 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       }
 
       hr = pStrLoad->get_Property(_T("Ktheta"),&var);
-      m_HaulingStabilityProblem.SetTruckRotationalStiffness(var.dblVal);
+      m_HaulingStabilityProblem.SetRotationalStiffness(var.dblVal);
 
       hr = pStrLoad->get_Property(_T("Wcc"),&var);
-      m_HaulingStabilityProblem.SetWheelLineSpacing(var.dblVal);
+      m_HaulingStabilityProblem.SetSupportWidth(var.dblVal);
 
       hr = pStrLoad->get_Property(_T("Hrc"),&var);
-      m_HaulingStabilityProblem.SetHeightOfRollAxisAboveRoadway(var.dblVal);
+      m_HaulingStabilityProblem.SetHeightOfRollAxis(var.dblVal);
 
       hr = pStrLoad->get_Property(_T("CrownSlope"),&var);
-      m_HaulingStabilityProblem.SetCrownSlope(var.dblVal);
+      m_HaulingStabilityProblem.SetSupportSlope(var.dblVal);
 
       hr = pStrLoad->get_Property(_T("Superelevation"),&var);
       m_HaulingStabilityProblem.SetSuperelevation(var.dblVal);
@@ -1842,6 +2134,112 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       hr = pStrLoad->EndUnit(); // HaulingProblem
       }
       
+      /////////////////////////////////////////////////////////////////
+      // added in version 3
+      if(2 < version)
+      {
+         hr = pStrLoad->BeginUnit(_T("OneEndSeatedProblem"));
+
+         hr = m_Strands[m_GirderType][ModelType::OneEndSeated].Load(pStrLoad);
+
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("Camber"), &var);
+         Float64 camber;
+         camber = var.dblVal;
+
+         m_OneEndSeatedStabilityProblem.SetCamber(camber);
+
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("LateralCamber"), &var);
+         m_OneEndSeatedStabilityProblem.SetLateralCamber(var.dblVal);
+
+         Float64 Ll, Lr;
+         ATLASSERT(IsEqual(Ll, Lr));
+         hr = pStrLoad->get_Property(_T("LeftBunkPoint"), &var);
+         Ll = var.dblVal;
+         hr = pStrLoad->get_Property(_T("RightBunkPoint"), &var);
+         Lr = var.dblVal;
+         m_OneEndSeatedStabilityProblem.SetSupportLocations(Ll, Lr);
+
+         hr = pStrLoad->get_Property(_T("Hgb"), &var);
+         m_Hgb = var.dblVal;
+
+         hr = pStrLoad->get_Property(_T("SweepTolerance"), &var);
+         m_OneEndSeatedStabilityProblem.SetSweepTolerance(var.dblVal);
+
+         hr = pStrLoad->get_Property(_T("SweepGrowth"), &var);
+         m_OneEndSeatedStabilityProblem.SetSweepGrowth(var.dblVal);
+
+         hr = pStrLoad->get_Property(_T("SupportPlacementTolerance"), &var);
+         m_OneEndSeatedStabilityProblem.SetSupportPlacementTolerance(var.dblVal);
+
+         hr = pStrLoad->get_Property(_T("YrollLiftEnd"), &var);
+         m_OneEndSeatedStabilityProblem.SetYRollLiftEnd(var.dblVal);
+
+         hr = pStrLoad->get_Property(_T("LiftPlacementTolerance"), &var);
+         m_OneEndSeatedStabilityProblem.SetLiftPlacementTolerance(var.dblVal);
+
+         Float64 imup, imdn;
+         hr = pStrLoad->get_Property(_T("ImpactUp"), &var);
+         imup = var.dblVal;
+         hr = pStrLoad->get_Property(_T("ImpactDown"), &var);
+         imdn = var.dblVal;
+         m_OneEndSeatedStabilityProblem.SetImpact(imup, imdn);
+
+         var.vt = VT_I4;
+         hr = pStrLoad->get_Property(_T("WindLoadType"), &var);
+         WBFL::Stability::WindType windLoadType = (WBFL::Stability::WindType)var.lVal;
+
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("WindLoad"), &var);
+         Float64 windLoad = var.dblVal;
+         m_OneEndSeatedStabilityProblem.SetWindLoading(windLoadType, windLoad);
+
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("BracketEccentricity"), &var);
+         Float64 eb = var.dblVal;
+         hr = pStrLoad->get_Property(_T("BracketWeight"), &var);
+         Float64 wb = var.dblVal;
+         m_OneEndSeatedStabilityProblem.SetAppurtenanceLoading(eb, wb);
+
+         hr = pStrLoad->get_Property(_T("Ktheta"), &var);
+         m_OneEndSeatedStabilityProblem.SetRotationalStiffness(var.dblVal);
+
+         hr = pStrLoad->get_Property(_T("Kadjust"), &var);
+         m_OneEndSeatedStabilityProblem.SetRotationalStiffnessAdjustmentFactor(var.dblVal);
+
+         hr = pStrLoad->get_Property(_T("Wcc"), &var);
+         m_OneEndSeatedStabilityProblem.SetSupportWidth(var.dblVal);
+
+         hr = pStrLoad->get_Property(_T("Hrc"), &var);
+         m_OneEndSeatedStabilityProblem.SetHeightOfRollAxis(var.dblVal);
+
+         hr = pStrLoad->get_Property(_T("CrownSlope"), &var);
+         m_OneEndSeatedStabilityProblem.SetSupportSlope(var.dblVal);
+
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("FrCoefficient"), &var);
+         m_OneEndSeatedFrCoefficient = var.dblVal;
+
+         hr = pStrLoad->get_Property(_T("Fc"), &var);
+         Float64 fc = var.dblVal;
+
+         var.vt = VT_BOOL;
+         hr = pStrLoad->get_Property(_T("ComputeEc"), &var);
+         m_bComputeEcOneEndSeated = (var.boolVal == VARIANT_TRUE ? true : false);
+
+         var.vt = VT_R8;
+         hr = pStrLoad->get_Property(_T("Ec"), &var);
+         Float64 Ec = var.dblVal;
+
+         m_OneEndSeatedStabilityProblem.GetConcrete().SetFc(fc);
+         m_OneEndSeatedStabilityProblem.GetConcrete().SetE(Ec);
+
+         hr = pStrLoad->EndUnit(); // OneEndSeatedProblem
+      }
+
+
+
       hr = pStrLoad->BeginUnit(_T("LiftingCriteria"));
       hr = m_LiftingCriteria.Load(pStrLoad);
       hr = pStrLoad->EndUnit(); // LiftingCriteria
@@ -1850,6 +2248,14 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       hr = m_HaulingCriteria.Load(pStrLoad);
       hr = pStrLoad->EndUnit(); // HaulingCriteria
 
+      if (2 < version)
+      {
+         // added in version 3
+         hr = pStrLoad->BeginUnit(_T("OneEndSeatedCriteria"));
+         hr = m_OneEndSeatedCriteria.Load(pStrLoad);
+         hr = pStrLoad->EndUnit(); // OneEndSeatedCriteria
+      }
+
       hr = pStrLoad->EndUnit();
    }
    catch(...)
@@ -1857,22 +2263,22 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       THROW_LOAD(InvalidFileFormat,pStrLoad);
    }
 
-   if ( m_GirderType == PRISMATIC )
+   if ( m_GirderType == GirderType::Prismatic )
    {
-      m_Girder[NONPRISMATIC] = m_Girder[PRISMATIC];
-      m_Strands[NONPRISMATIC][LIFTING] = m_Strands[PRISMATIC][LIFTING];
-      m_Strands[NONPRISMATIC][HAULING] = m_Strands[PRISMATIC][HAULING];
+      m_Girder[GirderType::Nonprismatic] = m_Girder[GirderType::Prismatic];
+      m_Strands[GirderType::Nonprismatic][ModelType::Lifting] = m_Strands[GirderType::Prismatic][ModelType::Lifting];
+      m_Strands[GirderType::Nonprismatic][ModelType::Hauling] = m_Strands[GirderType::Prismatic][ModelType::Hauling];
    }
    else
    {
-      m_Girder[PRISMATIC] = m_Girder[NONPRISMATIC];
+      m_Girder[GirderType::Prismatic] = m_Girder[GirderType::Nonprismatic];
 
-      Float64 L = m_Girder[NONPRISMATIC].GetSectionLength(0);
+      Float64 L = m_Girder[GirderType::Nonprismatic].GetSectionLength(0);
       Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      m_Girder[NONPRISMATIC].GetSectionProperties(0,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+      m_Girder[GirderType::Nonprismatic].GetSectionProperties(0,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
-      m_Girder[PRISMATIC].ClearSections();
-      m_Girder[PRISMATIC].AddSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf);
+      m_Girder[GirderType::Prismatic].ClearSections();
+      m_Girder[GirderType::Prismatic].AddSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf);
    }
 
    return S_OK;

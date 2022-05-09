@@ -15,7 +15,6 @@ Item | Description
 f'ci | Concrete strength at time of lift.
 Eci  | Modulus of elasticity. If this box is checked, enter a value, otherwise the modulus of elasticity will be computed
 fr   | Modulus of rupture. Enter the coefficient for computing the modulus of rupture
-K1, K2 | Averaging and bounding factor used when computing the modulus of elasticity
 
 ## Analysis Parameters
 Enter the analysis parameters
