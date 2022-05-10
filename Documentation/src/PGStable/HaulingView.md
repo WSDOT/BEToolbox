@@ -4,8 +4,8 @@ The Hauling View provides the parameters for hauling analysis as well as the hau
 
 Analysis is performed for two cases; Normal Crown Slope and Maximum Superelevation.
 
-## Effective Prestress Force at Lifting (Fpe)
-Enter the effective prestress force at the time of hauling. If the Prestress Definition in the Girder View is set to Simplified, enter the effective prestress force in the straight, harped, and temporary strands. If the effective Prestress Defintiion in the Girder View is set to Detailed, press [Edit Fpe] and enter the prestress force and its location relative to the top or bottom of the girder.
+## Effective Prestress Force at Hauling (Fpe)
+Enter the effective prestress force at the time of hauling. If the Prestress Definition in the Girder View is set to Simplified, enter the effective prestress force in the straight, harped, and temporary strands. If the effective Prestress Definition in the Girder View is set to Detailed, press [Edit Fpe] and enter the prestress force and its location relative to the top or bottom of the girder.
 
 ## Material
 Enter the girder material at the time of hauling.

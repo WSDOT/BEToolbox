@@ -7,8 +7,8 @@ Analysis is performed for the special case of the girder lifted from one end whi
 ## Copy
 Press the [Copy from Lifting and Hauling Tabs] to copy the prestressing, material, analysis parameters and criteria from previously defined analyses. Parameters are copied from the hauling tab with the exception of the Height of lift point above top of girder and Lift Point Tolerance. These two parameters are copied from the Lifting tab. The Seated Support parameters is taken to be the Trailing Bunk distance from the Hauling tab.
 
-## Effective Prestress Force at Lifting (Fpe)
-Enter the effective prestress force at the time of hauling. If the Prestress Definition in the Girder View is set to Simplified, enter the effective prestress force in the straight, harped, and temporary strands. If the effective Prestress Defintiion in the Girder View is set to Detailed, press [Edit Fpe] and enter the prestress force and its location relative to the top or bottom of the girder.
+## Effective Prestress Force (Fpe)
+Enter the effective prestress force. If the Prestress Definition in the Girder View is set to Simplified, enter the effective prestress force in the straight, harped, and temporary strands. If the effective Prestress Definition in the Girder View is set to Detailed, press [Edit Fpe] and enter the prestress force and its location relative to the top or bottom of the girder.
 
 ## Material
 Enter the girder material at the time of hauling.

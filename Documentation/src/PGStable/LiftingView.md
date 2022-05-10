@@ -5,7 +5,7 @@ The Lifting View provides the parameters for lifting analysis as well as the lif
 > NOTE: This analysis can be used for lifting at any time. Simply enter the prestress force, concrete strength, and other parameters for the time of lift.
 
 ## Effective Prestress Force at Lifting (Fpe)
-Enter the effective prestress force at the time of lifting. If the Prestress Definition in the Girder View is set to Simplified, enter the effective prestress force in the straight, harped, and temporary strands. If the effective Prestress Defintiion in the Girder View is set to Detailed, press [Edit Fpe] and enter the prestress force and its location relative to the top or bottom of the girder.
+Enter the effective prestress force at the time of lifting. If the Prestress Definition in the Girder View is set to Simplified, enter the effective prestress force in the straight, harped, and temporary strands. If the effective Prestress Definition in the Girder View is set to Detailed, press [Edit Fpe] and enter the prestress force and its location relative to the top or bottom of the girder.
 
 ## Material
 Enter the girder material at the time of lifting.
