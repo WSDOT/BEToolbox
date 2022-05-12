@@ -125,9 +125,9 @@ void CPGStableTabView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
    //UpdateWindow();
 
    CView* pView = GetActiveView();
-   if ( pView )
+   if ( pView && pView->IsKindOf(RUNTIME_CLASS(CPGStableFormView)))
    {
-      pView->Invalidate();
-      pView->UpdateWindow();
+      CPGStableFormView* pFormView = (CPGStableFormView*)pView;
+      pFormView->RefreshReport();
    }
 }

@@ -147,6 +147,11 @@ void CPGStableGirderView::OnDeactivateView()
    }
 }
 
+void CPGStableGirderView::RefreshReport()
+{
+   // do nothing - this view doesn't have a report
+}
+
 void CPGStableGirderView::OnSwapUI()
 {
    if ( m_bViewInitialized )

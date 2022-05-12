@@ -30,6 +30,7 @@ class CPGStableFormView : public CFormView
 
    virtual void OnActivateView() = 0;
    virtual void OnDeactivateView() = 0;
+	virtual void RefreshReport() = 0;
 
 protected:
 	CPGStableFormView(UINT nTemplate);

@@ -48,6 +48,8 @@ public:
 
    virtual void OnActivateView() override;
    virtual void OnDeactivateView() override;
+   virtual void RefreshReport() override;
+
    virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext) override;
 
 protected:

@@ -69,10 +69,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
    virtual void OnActivateView() override;
    virtual void OnDeactivateView() override;
+   virtual void RefreshReport() override;
 
    std::shared_ptr<CReportSpecification> m_pRptSpec;
    std::shared_ptr<CReportBrowser> m_pBrowser; // this is the actual browser window that displays the report
-   void RefreshReport();
 
    void UpdateFpeControls();
    void UpdateCriteriaControls();
