@@ -295,7 +295,7 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       {
          // if there aren't any temporary strands, Yt is zero. This value doesn't
          // work well in PGStable so make it 2"
-         Yt = ::ConvertToSysUnits(2.0,unitMeasure::Inch);
+         Yt = WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch);
       }
 
       Float64 Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftingIntervalIdx,pgsTypes::Start);

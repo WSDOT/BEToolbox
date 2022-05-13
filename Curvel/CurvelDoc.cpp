@@ -57,11 +57,11 @@ CCurvelDoc::CCurvelDoc()
    // CurvelXML instance document would work throughout this program because Curvel works exclusively in
    // consistent units.
    m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
-   m_DocUnitServer->SetBaseUnits(CComBSTR(unitSysUnitsMgr::GetMassUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetLengthUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetTimeUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetTemperatureUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetAngleUnit().UnitTag().c_str()));  
+   m_DocUnitServer->SetBaseUnits(CComBSTR(WBFL::Units::System::GetMassUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetLengthUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetTimeUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetTemperatureUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetAngleUnit().UnitTag().c_str()));  
    m_DocUnitServer->QueryInterface(&m_DocConvert);
 
    // Setup the reporting mechanism

@@ -33,9 +33,9 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////
 CBoxGdrChapterBuilder::CBoxGdrChapterBuilder(CBoxGdrDoc* pDoc) :
-m_Area(unitMeasure::Feet2,0.001,6,2),
-m_SectionModulus(unitMeasure::Feet3,0.001,10,2),
-m_MomentOfInertia(unitMeasure::Feet4,0.001,10,2)
+m_Area(WBFL::Units::Measure::Feet2,0.001,6,2),
+m_SectionModulus(WBFL::Units::Measure::Feet3,0.001,10,2),
+m_MomentOfInertia(WBFL::Units::Measure::Feet4,0.001,10,2)
 {
    m_Area.Format = sysNumericFormatTool::Fixed;
    m_SectionModulus.Format = sysNumericFormatTool::Fixed;
@@ -80,11 +80,11 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    *pPara << pTable << rptNewLine;
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   m_Area.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Feet2 : unitMeasure::Meter2);
-   m_SectionModulus.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Feet3 : unitMeasure::Meter3);
-   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Feet4 : unitMeasure::Meter4);
+   m_Area.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet2 : WBFL::Units::Measure::Meter2);
+   m_SectionModulus.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet3 : WBFL::Units::Measure::Meter3);
+   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet4 : WBFL::Units::Measure::Meter4);
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  longLength,  pDispUnits->SpanLength, false);
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  shortLength, pDispUnits->ComponentDim, false);
@@ -179,7 +179,7 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
       Sb = IsZero(Yb) ? 0 : Ix/Yb;
 
       Float64 Weight;
-      Weight = Area*::ConvertToSysUnits(160.0,unitMeasure::PCF);
+      Weight = Area*WBFL::Units::ConvertToSysUnits(160.0,WBFL::Units::Measure::PCF);
 
       (*pTable)(row,col++) << momentOfInertia.SetValue(Ix);
       (*pTable)(row,col++) << longLength.SetValue(Yt);

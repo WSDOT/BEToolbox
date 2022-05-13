@@ -142,56 +142,56 @@ void CPGStableFpeGrid::AddFpe()
 void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float64* pXpsStraight,Float64* pYpsStraight,int* pYpsStraightMeasure,Float64* pFpeHarped,Float64* pXpsHarped,Float64* pYpsHarped,int* pYpsHarpedMeasure,Float64* pFpeTemp,Float64* pXpsTemp,Float64* pYpsTemp,int* pYpsTempMeasure)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ROWCOL col = 1;
    CString strValue;
    Float64 value;
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pX = ::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
+   *pX = WBFL::Units::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pFpeStraight = ::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
+   *pFpeStraight = WBFL::Units::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pXpsStraight = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   *pXpsStraight = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pYpsStraight = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   *pYpsStraight = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    *pYpsStraightMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pFpeHarped = ::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
+   *pFpeHarped = WBFL::Units::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pXpsHarped = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   *pXpsHarped = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pYpsHarped = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   *pYpsHarped = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    *pYpsHarpedMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pFpeTemp = ::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
+   *pFpeTemp = WBFL::Units::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pXpsTemp = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   *pXpsTemp = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pYpsTemp = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   *pYpsTemp = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    *pYpsTempMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
@@ -200,7 +200,7 @@ void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float
 void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 XpsStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 XpsHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 XpsTemp,Float64 YpsTemp,int YpsTempMeasure)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CString strChoiceList(_T("Top\nBottom"));
 
@@ -351,7 +351,7 @@ void CPGStableFpeGrid::OnUnitsModeChanged()
 void CPGStableFpeGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 0;

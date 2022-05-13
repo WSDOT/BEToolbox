@@ -879,11 +879,11 @@ CString CPGStableDoc::UpdateEc(const CString& strFc)
    if (sysTokenizer::ParseDouble(strFc, &fc) && 0 < fc)
    {
          CEAFApp* pApp = EAFGetApp();
-         const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+         const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-         const unitPressure& stress_unit = pDispUnits->Stress.UnitOfMeasure;
+         const WBFL::Units::Pressure& stress_unit = pDispUnits->Stress.UnitOfMeasure;
 
-         fc       = ::ConvertToSysUnits(fc,      stress_unit);
+         fc       = WBFL::Units::ConvertToSysUnits(fc,      stress_unit);
 
          ec = m_Model.GetK1()*m_Model.GetK2()*lrfdConcreteUtil::ModE(m_Model.GetConcreteType(),fc,m_Model.GetDensity(),false);
 

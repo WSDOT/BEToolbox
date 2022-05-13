@@ -40,21 +40,21 @@ CPGStableHaulingCriteria::CPGStableHaulingCriteria()
    CompressionCoefficient_GlobalStress = 0.65;
    CompressionCoefficient_PeakStress = 0.70;
 
-   MaxClearSpan = ::ConvertToSysUnits(130.0, unitMeasure::Feet);
-   MaxLeadingOverhang = ::ConvertToSysUnits(15, unitMeasure::Feet);
-   MaxGirderWeight = ::ConvertToSysUnits(200.0, unitMeasure::Kip);
+   MaxClearSpan = WBFL::Units::ConvertToSysUnits(130.0, WBFL::Units::Measure::Feet);
+   MaxLeadingOverhang = WBFL::Units::ConvertToSysUnits(15, WBFL::Units::Measure::Feet);
+   MaxGirderWeight = WBFL::Units::ConvertToSysUnits(200.0, WBFL::Units::Measure::Kip);
 
    WBFL::Stability::CCHaulingTensionStressLimit* pTensionStressLimit = new WBFL::Stability::CCHaulingTensionStressLimit;
 
-   pTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope] = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
+   pTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope] = WBFL::Units::ConvertToSysUnits(0.0948,WBFL::Units::Measure::SqrtKSI);
    pTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope] = false;
-   pTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope] = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
-   pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope] = ::ConvertToSysUnits(0.1900,unitMeasure::SqrtKSI);
+   pTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope] = WBFL::Units::ConvertToSysUnits(0.2,WBFL::Units::Measure::KSI);
+   pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope] = WBFL::Units::ConvertToSysUnits(0.1900,WBFL::Units::Measure::SqrtKSI);
 
-   pTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper] = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
+   pTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper] = WBFL::Units::ConvertToSysUnits(0.0948,WBFL::Units::Measure::SqrtKSI);
    pTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper] = false;
-   pTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper] = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
-   pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = ::ConvertToSysUnits(0.24,unitMeasure::SqrtKSI);
+   pTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper] = WBFL::Units::ConvertToSysUnits(0.2,WBFL::Units::Measure::KSI);
+   pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = WBFL::Units::ConvertToSysUnits(0.24,WBFL::Units::Measure::SqrtKSI);
 
    TensionStressLimit.reset(pTensionStressLimit);
 }

@@ -39,25 +39,25 @@ CPGStableModel::CPGStableModel()
    m_GirderType = GirderType::Prismatic;
    m_StressPointType = COMPUTE_STRESS_POINTS;
 
-   Float64 Hg  = ::ConvertToSysUnits(72,unitMeasure::Inch);
-   Float64 Wtf = ::ConvertToSysUnits(42,unitMeasure::Inch);
-   Float64 Wbf = ::ConvertToSysUnits(26,unitMeasure::Inch);
+   Float64 Hg  = WBFL::Units::ConvertToSysUnits(72,WBFL::Units::Measure::Inch);
+   Float64 Wtf = WBFL::Units::ConvertToSysUnits(42,WBFL::Units::Measure::Inch);
+   Float64 Wbf = WBFL::Units::ConvertToSysUnits(26,WBFL::Units::Measure::Inch);
    
-   Float64 Ag = ::ConvertToSysUnits(767,unitMeasure::Inch2);
-   Float64 Ixx = ::ConvertToSysUnits(545894,unitMeasure::Inch4);
-   Float64 Iyy = ::ConvertToSysUnits(37634,unitMeasure::Inch4);
+   Float64 Ag = WBFL::Units::ConvertToSysUnits(767,WBFL::Units::Measure::Inch2);
+   Float64 Ixx = WBFL::Units::ConvertToSysUnits(545894,WBFL::Units::Measure::Inch4);
+   Float64 Iyy = WBFL::Units::ConvertToSysUnits(37634,WBFL::Units::Measure::Inch4);
    Float64 Ixy = 0.0;
    Float64 Xleft = Wtf / 2;
-   Float64 Ytop = ::ConvertToSysUnits(36.6-72,unitMeasure::Inch); // want neg because we are in section coordinates
-   Float64 L = ::ConvertToSysUnits(100,unitMeasure::Feet);
+   Float64 Ytop = WBFL::Units::ConvertToSysUnits(36.6-72,WBFL::Units::Measure::Inch); // want neg because we are in section coordinates
+   Float64 L = WBFL::Units::ConvertToSysUnits(100,WBFL::Units::Measure::Feet);
    m_Girder[GirderType::Prismatic].AddSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf);
 
    m_Girder[GirderType::Nonprismatic] = m_Girder[GirderType::Prismatic];
 
    matConcreteEx liftingConcrete, haulingConcrete, oneEndSeatedConcrete;
 
-   Float64 density = ::ConvertToSysUnits(0.155,unitMeasure::KipPerFeet3); // without rebar (used to compute Ec)
-   Float64 densityWithRebar = ::ConvertToSysUnits(0.165,unitMeasure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
+   Float64 density = WBFL::Units::ConvertToSysUnits(0.155,WBFL::Units::Measure::KipPerFeet3); // without rebar (used to compute Ec)
+   Float64 densityWithRebar = WBFL::Units::ConvertToSysUnits(0.165,WBFL::Units::Measure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
    liftingConcrete.SetDensity(density);
    haulingConcrete.SetDensity(density);
    oneEndSeatedConcrete.SetDensity(density);
@@ -66,16 +66,16 @@ CPGStableModel::CPGStableModel()
    haulingConcrete.SetDensityForWeight(densityWithRebar);
    oneEndSeatedConcrete.SetDensityForWeight(densityWithRebar);
 
-   m_LiftingFrCoefficient = ::ConvertToSysUnits(0.24,unitMeasure::SqrtKSI);
-   m_HaulingFrCoefficient = ::ConvertToSysUnits(0.24, unitMeasure::SqrtKSI);
-   m_OneEndSeatedFrCoefficient = ::ConvertToSysUnits(0.24, unitMeasure::SqrtKSI);
+   m_LiftingFrCoefficient = WBFL::Units::ConvertToSysUnits(0.24,WBFL::Units::Measure::SqrtKSI);
+   m_HaulingFrCoefficient = WBFL::Units::ConvertToSysUnits(0.24, WBFL::Units::Measure::SqrtKSI);
+   m_OneEndSeatedFrCoefficient = WBFL::Units::ConvertToSysUnits(0.24, WBFL::Units::Measure::SqrtKSI);
 
    m_bComputeEci = true;
    m_bComputeEc = true;
    m_bComputeEcOneEndSeated = true;
 
-   Float64 fci = ::ConvertToSysUnits(5.5,unitMeasure::KSI);
-   Float64 fc  = ::ConvertToSysUnits(7.0,unitMeasure::KSI);
+   Float64 fci = WBFL::Units::ConvertToSysUnits(5.5,WBFL::Units::Measure::KSI);
+   Float64 fc  = WBFL::Units::ConvertToSysUnits(7.0,WBFL::Units::Measure::KSI);
    m_K1 = 1.0;
    m_K2 = 1.0;
 
@@ -90,60 +90,60 @@ CPGStableModel::CPGStableModel()
    haulingConcrete.SetE(Ec);
    oneEndSeatedConcrete.SetE(Ec);
 
-   liftingConcrete.SetFlexureFr(::ConvertToSysUnits(0.24*sqrt(fci),unitMeasure::KSI));
-   haulingConcrete.SetFlexureFr(::ConvertToSysUnits(0.24*sqrt(fc),unitMeasure::KSI));
-   oneEndSeatedConcrete.SetFlexureFr(::ConvertToSysUnits(0.24 * sqrt(fc), unitMeasure::KSI));
+   liftingConcrete.SetFlexureFr(WBFL::Units::ConvertToSysUnits(0.24*sqrt(fci),WBFL::Units::Measure::KSI));
+   haulingConcrete.SetFlexureFr(WBFL::Units::ConvertToSysUnits(0.24*sqrt(fc),WBFL::Units::Measure::KSI));
+   oneEndSeatedConcrete.SetFlexureFr(WBFL::Units::ConvertToSysUnits(0.24 * sqrt(fc), WBFL::Units::Measure::KSI));
 
    m_LiftingStabilityProblem.SetConcrete(liftingConcrete);
    m_HaulingStabilityProblem.SetConcrete(haulingConcrete);
    m_OneEndSeatedStabilityProblem.SetConcrete(oneEndSeatedConcrete);
 
-   m_LiftingStabilityProblem.SetCamber(::ConvertToSysUnits(0,unitMeasure::Inch));
+   m_LiftingStabilityProblem.SetCamber(WBFL::Units::ConvertToSysUnits(0,WBFL::Units::Measure::Inch));
    m_LiftingStabilityProblem.SetLateralCamber(0.0);
    m_LiftingStabilityProblem.IncludeLateralRollAxisOffset(false);
 
-   m_LiftingStabilityProblem.SetSweepTolerance(::ConvertToSysUnits(0.125,unitMeasure::Inch)/::ConvertToSysUnits(10.0,unitMeasure::Feet));
-   m_LiftingStabilityProblem.SetSupportPlacementTolerance( ::ConvertToSysUnits(0.25,unitMeasure::Inch) );
-   m_LiftingStabilityProblem.SetSupportLocations(::ConvertToSysUnits(3,unitMeasure::Feet),::ConvertToSysUnits(3,unitMeasure::Feet));
+   m_LiftingStabilityProblem.SetSweepTolerance(WBFL::Units::ConvertToSysUnits(0.125,WBFL::Units::Measure::Inch)/WBFL::Units::ConvertToSysUnits(10.0,WBFL::Units::Measure::Feet));
+   m_LiftingStabilityProblem.SetSupportPlacementTolerance( WBFL::Units::ConvertToSysUnits(0.25,WBFL::Units::Measure::Inch) );
+   m_LiftingStabilityProblem.SetSupportLocations(WBFL::Units::ConvertToSysUnits(3,WBFL::Units::Measure::Feet),WBFL::Units::ConvertToSysUnits(3,WBFL::Units::Measure::Feet));
    m_LiftingStabilityProblem.SetLiftAngle(PI_OVER_2);
-   m_LiftingStabilityProblem.SetYRollAxis(::ConvertToSysUnits(0.0,unitMeasure::Inch));
+   m_LiftingStabilityProblem.SetYRollAxis(WBFL::Units::ConvertToSysUnits(0.0,WBFL::Units::Measure::Inch));
    m_LiftingStabilityProblem.SetImpact(0,0);
 
    ///////////////////////////////////////////////////
 
-   m_HaulingStabilityProblem.SetCamber(::ConvertToSysUnits(0,unitMeasure::Inch));
+   m_HaulingStabilityProblem.SetCamber(WBFL::Units::ConvertToSysUnits(0,WBFL::Units::Measure::Inch));
    m_HaulingStabilityProblem.SetLateralCamber(0.0);
    m_HaulingStabilityProblem.IncludeLateralRollAxisOffset(false);
 
-   m_HaulingStabilityProblem.SetSupportLocations(::ConvertToSysUnits(5,unitMeasure::Feet),::ConvertToSysUnits(5,unitMeasure::Feet));
-   m_HaulingStabilityProblem.SetSweepTolerance(::ConvertToSysUnits(0.125,unitMeasure::Inch)/::ConvertToSysUnits(10.0,unitMeasure::Feet));
-   m_HaulingStabilityProblem.SetSupportPlacementTolerance(::ConvertToSysUnits(1.0,unitMeasure::Inch));
-   m_HaulingStabilityProblem.SetRotationalStiffness(::ConvertToSysUnits(40500.,unitMeasure::KipInchPerRadian));
+   m_HaulingStabilityProblem.SetSupportLocations(WBFL::Units::ConvertToSysUnits(5,WBFL::Units::Measure::Feet),WBFL::Units::ConvertToSysUnits(5,WBFL::Units::Measure::Feet));
+   m_HaulingStabilityProblem.SetSweepTolerance(WBFL::Units::ConvertToSysUnits(0.125,WBFL::Units::Measure::Inch)/WBFL::Units::ConvertToSysUnits(10.0,WBFL::Units::Measure::Feet));
+   m_HaulingStabilityProblem.SetSupportPlacementTolerance(WBFL::Units::ConvertToSysUnits(1.0,WBFL::Units::Measure::Inch));
+   m_HaulingStabilityProblem.SetRotationalStiffness(WBFL::Units::ConvertToSysUnits(40500.,WBFL::Units::Measure::KipInchPerRadian));
    m_HaulingStabilityProblem.SetSupportSlope(0.02);
    m_HaulingStabilityProblem.SetSuperelevation(0.06);
-   m_HaulingStabilityProblem.SetSupportWidth(::ConvertToSysUnits(72.,unitMeasure::Inch));
-   m_HaulingStabilityProblem.SetHeightOfRollAxis(::ConvertToSysUnits(24.,unitMeasure::Inch));
+   m_HaulingStabilityProblem.SetSupportWidth(WBFL::Units::ConvertToSysUnits(72.,WBFL::Units::Measure::Inch));
+   m_HaulingStabilityProblem.SetHeightOfRollAxis(WBFL::Units::ConvertToSysUnits(24.,WBFL::Units::Measure::Inch));
    m_HaulingStabilityProblem.SetImpact(0,0);
    m_HaulingStabilityProblem.SetImpactUsage(WBFL::Stability::NormalCrown);
    m_HaulingStabilityProblem.SetVelocity(0);
-   m_HaulingStabilityProblem.SetTurningRadius(::ConvertToSysUnits(100,unitMeasure::Feet));
+   m_HaulingStabilityProblem.SetTurningRadius(WBFL::Units::ConvertToSysUnits(100,WBFL::Units::Measure::Feet));
 
    ///////////////////////////////////////////////////
 
-   m_OneEndSeatedStabilityProblem.SetCamber(::ConvertToSysUnits(0, unitMeasure::Inch));
+   m_OneEndSeatedStabilityProblem.SetCamber(WBFL::Units::ConvertToSysUnits(0, WBFL::Units::Measure::Inch));
    m_OneEndSeatedStabilityProblem.SetLateralCamber(0.0);
    m_OneEndSeatedStabilityProblem.IncludeLateralRollAxisOffset(false);
 
-   m_OneEndSeatedStabilityProblem.SetSupportLocations(::ConvertToSysUnits(5, unitMeasure::Feet), ::ConvertToSysUnits(5, unitMeasure::Feet));
-   m_OneEndSeatedStabilityProblem.SetSweepTolerance(::ConvertToSysUnits(0.125, unitMeasure::Inch) / ::ConvertToSysUnits(10.0, unitMeasure::Feet));
-   m_OneEndSeatedStabilityProblem.SetSupportPlacementTolerance(::ConvertToSysUnits(1.0, unitMeasure::Inch));
-   m_OneEndSeatedStabilityProblem.SetRotationalStiffness(::ConvertToSysUnits(40500., unitMeasure::KipInchPerRadian));
+   m_OneEndSeatedStabilityProblem.SetSupportLocations(WBFL::Units::ConvertToSysUnits(5, WBFL::Units::Measure::Feet), WBFL::Units::ConvertToSysUnits(5, WBFL::Units::Measure::Feet));
+   m_OneEndSeatedStabilityProblem.SetSweepTolerance(WBFL::Units::ConvertToSysUnits(0.125, WBFL::Units::Measure::Inch) / WBFL::Units::ConvertToSysUnits(10.0, WBFL::Units::Measure::Feet));
+   m_OneEndSeatedStabilityProblem.SetSupportPlacementTolerance(WBFL::Units::ConvertToSysUnits(1.0, WBFL::Units::Measure::Inch));
+   m_OneEndSeatedStabilityProblem.SetRotationalStiffness(WBFL::Units::ConvertToSysUnits(40500., WBFL::Units::Measure::KipInchPerRadian));
    m_OneEndSeatedStabilityProblem.SetSupportSlope(0.02);
-   m_OneEndSeatedStabilityProblem.SetSupportWidth(::ConvertToSysUnits(72., unitMeasure::Inch));
-   m_OneEndSeatedStabilityProblem.SetHeightOfRollAxis(::ConvertToSysUnits(24., unitMeasure::Inch));
+   m_OneEndSeatedStabilityProblem.SetSupportWidth(WBFL::Units::ConvertToSysUnits(72., WBFL::Units::Measure::Inch));
+   m_OneEndSeatedStabilityProblem.SetHeightOfRollAxis(WBFL::Units::ConvertToSysUnits(24., WBFL::Units::Measure::Inch));
    m_OneEndSeatedStabilityProblem.SetImpact(0, 0);
 
-   m_Hgb = ::ConvertToSysUnits(72.0,unitMeasure::Inch);
+   m_Hgb = WBFL::Units::ConvertToSysUnits(72.0,WBFL::Units::Measure::Inch);
 
    auto* pLiftingTensionStressLimit = new WBFL::Stability::CCLiftingTensionStressLimit;
    m_LiftingCriteria.TensionStressLimit.reset(pLiftingTensionStressLimit);
@@ -158,11 +158,11 @@ CPGStableModel::CPGStableModel()
    pOneEndSeatedTensionStressLimit->bMaxTension = true;
 
    m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
-   m_DocUnitServer->SetBaseUnits(CComBSTR(unitSysUnitsMgr::GetMassUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetLengthUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetTimeUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetTemperatureUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetAngleUnit().UnitTag().c_str()));  
+   m_DocUnitServer->SetBaseUnits(CComBSTR(WBFL::Units::System::GetMassUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetLengthUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetTimeUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetTemperatureUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetAngleUnit().UnitTag().c_str()));  
    m_DocUnitServer->QueryInterface(&m_DocConvert);
 
 
@@ -230,7 +230,7 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
 
    Float64 Ll, Lr;
    m_LiftingStabilityProblem.GetSupportLocations(&Ll,&Lr);
-   Float64 offset = ::ConvertToSysUnits(0.001, unitMeasure::Feet);
+   Float64 offset = WBFL::Units::ConvertToSysUnits(0.001, WBFL::Units::Measure::Feet);
 
    if (bAddExtraLiftPointAnalysisPoints)
    {

@@ -45,9 +45,9 @@ private:
    void ReportBuiltUpSectionProperties(rptChapter* pChapter,IndexType idx,const GIRCOMPDIMENSIONS& dimensions) const;
    void ReportCompositeSectionProperties(rptChapter* pChapter,IndexType idx,const GIRCOMPDIMENSIONS& dimensions,int n) const;
 
-   mutable unitmgtIndirectMeasureDataT<unitLength>  m_Length;
-   mutable unitmgtIndirectMeasureDataT<unitLength2> m_Area;
-   mutable unitmgtIndirectMeasureDataT<unitLength3> m_SectionModulus;
-   mutable unitmgtIndirectMeasureDataT<unitLength4> m_MomentOfInertia;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length>  m_Length;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length2> m_Area;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length3> m_SectionModulus;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length4> m_MomentOfInertia;
 
 };

@@ -77,36 +77,36 @@ CPGStableStrands::CPGStableStrands()
 
    ex = 0;
 
-   XferLength = ::ConvertToSysUnits(36.0,unitMeasure::Inch);
+   XferLength = WBFL::Units::ConvertToSysUnits(36.0,WBFL::Units::Measure::Inch);
 
-   Ys = ::ConvertToSysUnits(3.0,unitMeasure::Inch);
+   Ys = WBFL::Units::ConvertToSysUnits(3.0,WBFL::Units::Measure::Inch);
    YsMeasure = BOTTOM;
 
-   Yt = ::ConvertToSysUnits(2.0,unitMeasure::Inch);
+   Yt = WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch);
    YtMeasure = TOP;
 
    Xh1 = 0.0;
    Xh1Measure = FRACTION;
 
-   Yh1 = ::ConvertToSysUnits(4.0,unitMeasure::Inch);
+   Yh1 = WBFL::Units::ConvertToSysUnits(4.0,WBFL::Units::Measure::Inch);
    Yh1Measure = TOP;
 
    Xh2 = 0.4;
    Xh2Measure = FRACTION;
    
-   Yh2 = ::ConvertToSysUnits(5.0,unitMeasure::Inch);
+   Yh2 = WBFL::Units::ConvertToSysUnits(5.0,WBFL::Units::Measure::Inch);
    Yh2Measure = BOTTOM;
 
    Xh3 = 0.6;
    Xh3Measure = FRACTION;
    
-   Yh3 = ::ConvertToSysUnits(5.0,unitMeasure::Inch);
+   Yh3 = WBFL::Units::ConvertToSysUnits(5.0,WBFL::Units::Measure::Inch);
    Yh3Measure = BOTTOM;
 
    Xh4 = 1.0;
    Xh4Measure = FRACTION;
 
-   Yh4 = ::ConvertToSysUnits(4.0,unitMeasure::Inch);
+   Yh4 = WBFL::Units::ConvertToSysUnits(4.0,WBFL::Units::Measure::Inch);
    Yh4Measure = TOP;
 
    FpeStraight = 0;

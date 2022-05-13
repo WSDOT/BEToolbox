@@ -454,9 +454,9 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    pDC->SelectObject(pOldBrush);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   TimeTool   TimeTool(pDispUnits->Time3);
-   ScalarTool SaTool(pDispUnits->Scalar);
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   WBFL::Units::TimeTool   TimeTool(pDispUnits->Time3);
+   WBFL::Units::ScalarTool SaTool(pDispUnits->Scalar);
    WBFL::Graphing::GraphXY graph(TimeTool,SaTool);
 
    graph.SetOutputRect(rect);

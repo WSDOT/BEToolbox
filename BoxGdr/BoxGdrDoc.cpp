@@ -98,20 +98,20 @@ BOOL CBoxGdrDoc::Init()
 
    // initialize with some data
    BOXGDRDIMENSIONS problem;
-   problem.D = ::ConvertToSysUnits(8.0, unitMeasure::Feet);
-   problem.T = ::ConvertToSysUnits(12.0, unitMeasure::Inch);
+   problem.D = WBFL::Units::ConvertToSysUnits(8.0, WBFL::Units::Measure::Feet);
+   problem.T = WBFL::Units::ConvertToSysUnits(12.0, WBFL::Units::Measure::Inch);
    problem.N = 3;
-   problem.W = ::ConvertToSysUnits(24.0, unitMeasure::Feet);
-   problem.ST = ::ConvertToSysUnits(7.5, unitMeasure::Inch);
-   problem.SB = ::ConvertToSysUnits(7.0, unitMeasure::Inch);
-   problem.FT = ::ConvertToSysUnits(6.0, unitMeasure::Inch);
-   problem.FB = ::ConvertToSysUnits(6.0, unitMeasure::Inch);
-   problem.EL = ::ConvertToSysUnits(5.0, unitMeasure::Feet);
-   problem.CL = ::ConvertToSysUnits(8.5, unitMeasure::Inch);
-   problem.BL = ::ConvertToSysUnits(1.21, unitMeasure::Feet);
-   problem.ER = ::ConvertToSysUnits(5.0, unitMeasure::Feet);
-   problem.CR = ::ConvertToSysUnits(8.5, unitMeasure::Inch);
-   problem.BR = ::ConvertToSysUnits(1.21, unitMeasure::Feet);
+   problem.W = WBFL::Units::ConvertToSysUnits(24.0, WBFL::Units::Measure::Feet);
+   problem.ST = WBFL::Units::ConvertToSysUnits(7.5, WBFL::Units::Measure::Inch);
+   problem.SB = WBFL::Units::ConvertToSysUnits(7.0, WBFL::Units::Measure::Inch);
+   problem.FT = WBFL::Units::ConvertToSysUnits(6.0, WBFL::Units::Measure::Inch);
+   problem.FB = WBFL::Units::ConvertToSysUnits(6.0, WBFL::Units::Measure::Inch);
+   problem.EL = WBFL::Units::ConvertToSysUnits(5.0, WBFL::Units::Measure::Feet);
+   problem.CL = WBFL::Units::ConvertToSysUnits(8.5, WBFL::Units::Measure::Inch);
+   problem.BL = WBFL::Units::ConvertToSysUnits(1.21, WBFL::Units::Measure::Feet);
+   problem.ER = WBFL::Units::ConvertToSysUnits(5.0, WBFL::Units::Measure::Feet);
+   problem.CR = WBFL::Units::ConvertToSysUnits(8.5, WBFL::Units::Measure::Inch);
+   problem.BR = WBFL::Units::ConvertToSysUnits(1.21, WBFL::Units::Measure::Feet);
 
    m_Problems.push_back(problem);
 

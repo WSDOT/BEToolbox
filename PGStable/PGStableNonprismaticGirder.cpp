@@ -54,7 +54,7 @@ void DDX_GirderSectionGrid(CDataExchange* pDX,CPGStableGirderSectionGrid* pGrid,
 void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    DDX_CBEnum(pDX,IDC_PS_METHOD,strands.strandMethod);
 
@@ -152,7 +152,7 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_Control(pDX,IDC_GIRDER,m_ctrlGirder);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
@@ -347,7 +347,7 @@ void CPGStableNonprismaticGirder::FillComboBoxes(INT xIDC,INT yIDC)
    if ( xIDC != 0 )
    {
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
       CComboBox* pX = (CComboBox*)GetDlgItem(xIDC);
       int idx = pX->AddString(pDispUnits->SpanLength.UnitOfMeasure.UnitTag().c_str());
@@ -423,7 +423,7 @@ BOOL CPGStableNonprismaticGirder::AreLoadsSelected()
 void CPGStableNonprismaticGirder::SetGirderLength(Float64 Lg)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
    CString str;
    str.Format(_T("Girder Length: %s"),::FormatDimension(Lg,pDispUnits->SpanLength));
    GetDlgItem(IDC_L)->SetWindowText(str);

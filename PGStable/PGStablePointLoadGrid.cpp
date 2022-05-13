@@ -160,23 +160,23 @@ void CPGStablePointLoadGrid::AddLoad()
 void CPGStablePointLoadGrid::GetLoad(ROWCOL row,Float64* pX,Float64* pP)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CString strValue;
    Float64 value;
    strValue = GetCellValue(row,1);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pX = ::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
+   *pX = WBFL::Units::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
 
    strValue = GetCellValue(row,2);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pP = ::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
+   *pP = WBFL::Units::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 }
 
 void CPGStablePointLoadGrid::InsertLoad(Float64 X,Float64 P)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -190,12 +190,12 @@ void CPGStablePointLoadGrid::InsertLoad(Float64 X,Float64 P)
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(::ConvertFromSysUnits(X,pDispUnits->SpanLength.UnitOfMeasure))
+      .SetValue(WBFL::Units::ConvertFromSysUnits(X,pDispUnits->SpanLength.UnitOfMeasure))
          );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(::ConvertFromSysUnits(P,pDispUnits->GeneralForce.UnitOfMeasure))
+      .SetValue(WBFL::Units::ConvertFromSysUnits(P,pDispUnits->GeneralForce.UnitOfMeasure))
          );
 
    SetCurrentCell(nRow, GetLeftCol(), GX_SCROLLINVIEW|GX_DISPLAYEDITWND);
@@ -243,7 +243,7 @@ BOOL CPGStablePointLoadGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
 void CPGStablePointLoadGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 1;

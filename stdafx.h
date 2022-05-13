@@ -52,7 +52,7 @@
 #include <ReportManager\ReportManager.h>
 #include <Reporter\Reporter.h>
 #include <MFCTools\MFCTools.h>
-#include <UnitMgt\UnitMgt.h>
+#include <Units\Units.h>
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFHelp.h>
 #include <EAF\EAFResources.h>
@@ -80,7 +80,7 @@
 #include <PGSuperTypes.h>
 #include <PgsExt\LongitudinalRebarData.h>
 
-#include <UnitMgt\UnitMgt.h>
+#include <Units\Units.h>
 #include <Stability\Stability.h>
 
 #include "SpectraBuilder\SpectraValues.h"

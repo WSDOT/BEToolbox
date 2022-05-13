@@ -141,7 +141,7 @@ void CCurvelIndividualStationGrid::AddStation()
 void CCurvelIndividualStationGrid::GetStation(ROWCOL row,IndividualStation& station)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CString strStation = GetCellValue(row,1);
    HRESULT hr = m_objStation->FromString(CComBSTR(strStation),umUS);
@@ -149,7 +149,7 @@ void CCurvelIndividualStationGrid::GetStation(ROWCOL row,IndividualStation& stat
 
    Float64 station_value;
    m_objStation->get_Value(&station_value);
-   station_value = ::ConvertToSysUnits(station_value,pDispUnits->AlignmentLength.UnitOfMeasure);
+   station_value = WBFL::Units::ConvertToSysUnits(station_value,pDispUnits->AlignmentLength.UnitOfMeasure);
    station.Station = station_value;
 
    station.Offset = GetOffset(GetCellValue(row,2),pDispUnits->AlignmentLength);
@@ -158,7 +158,7 @@ void CCurvelIndividualStationGrid::GetStation(ROWCOL row,IndividualStation& stat
 void CCurvelIndividualStationGrid::InsertStation(const IndividualStation& station)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -244,7 +244,7 @@ BOOL CCurvelIndividualStationGrid::OnEndEditing(ROWCOL nRow,ROWCOL nCol)
 void CCurvelIndividualStationGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 1;

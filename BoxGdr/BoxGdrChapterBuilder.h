@@ -40,8 +40,8 @@ public:
 private:
    CBoxGdrDoc* m_pDoc;
 
-   mutable unitmgtIndirectMeasureDataT<unitLength2> m_Area;
-   mutable unitmgtIndirectMeasureDataT<unitLength3> m_SectionModulus;
-   mutable unitmgtIndirectMeasureDataT<unitLength4> m_MomentOfInertia;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length2> m_Area;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length3> m_SectionModulus;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length4> m_MomentOfInertia;
 
 };

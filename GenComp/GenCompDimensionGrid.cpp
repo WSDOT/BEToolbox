@@ -176,23 +176,23 @@ void CGenCompDimensionGrid::RemoveSelectedPoints()
 void CGenCompDimensionGrid::GetPoint(ROWCOL row,Float64& x,Float64 &y)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CString strValue;
    Float64 value;
    strValue = GetCellValue(row,1);
    sysTokenizer::ParseDouble(strValue, &value);
-   x = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   x = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,2);
    sysTokenizer::ParseDouble(strValue, &value);
-   y = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   y = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 }
 
 void CGenCompDimensionGrid::InsertRow(Float64 x,Float64 y)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -201,11 +201,11 @@ void CGenCompDimensionGrid::InsertRow(Float64 x,Float64 y)
 
    ROWCOL col = 1;
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
-      .SetValue(::ConvertFromSysUnits(x,pDispUnits->ComponentDim.UnitOfMeasure))
+      .SetValue(WBFL::Units::ConvertFromSysUnits(x,pDispUnits->ComponentDim.UnitOfMeasure))
          );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
-      .SetValue(::ConvertFromSysUnits(y,pDispUnits->ComponentDim.UnitOfMeasure))
+      .SetValue(WBFL::Units::ConvertFromSysUnits(y,pDispUnits->ComponentDim.UnitOfMeasure))
          );
 
    SetCurrentCell(nRow, GetLeftCol(), GX_SCROLLINVIEW|GX_DISPLAYEDITWND);
@@ -284,7 +284,7 @@ void CGenCompDimensionGrid::OnUnitsModeChanged()
 void CGenCompDimensionGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 0;

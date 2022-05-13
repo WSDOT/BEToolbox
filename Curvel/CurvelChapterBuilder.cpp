@@ -66,7 +66,7 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    Init(pTheRptSpec);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  alignment,  pDispUnits->AlignmentLength, true);
 
    rptRcScalar scalar;

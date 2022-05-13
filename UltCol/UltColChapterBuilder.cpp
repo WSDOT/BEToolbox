@@ -80,7 +80,7 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    // Echo Input
    //
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  length, pDispUnits->ComponentDim, true);
    INIT_UV_PROTOTYPE( rptAreaUnitValue,    area,   pDispUnits->Area,         true);
@@ -177,7 +177,7 @@ CChapterBuilder* CUltColChapterBuilder::Clone() const
 rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IPoint2dCollection* factored) const
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CImage image;
    image.Create(500,500,32);
@@ -191,8 +191,8 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
    pDC->Rectangle(rect);
    pDC->SelectObject(pOldBrush);
 
-   MomentTool momentTool(pDispUnits->Moment);
-   AxialTool  axialTool(pDispUnits->GeneralForce);
+   WBFL::Units::MomentTool momentTool(pDispUnits->Moment);
+   WBFL::Units::AxialTool  axialTool(pDispUnits->GeneralForce);
    WBFL::Graphing::GraphXY graph(momentTool,axialTool);
 
    graph.SetOutputRect(rect);
@@ -234,8 +234,8 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
       pn->get_X(&Mn);
       pn->get_Y(&Pn);
 
-      Mn = ::ConvertFromSysUnits(Mn,pDispUnits->Moment.UnitOfMeasure);
-      Pn = ::ConvertFromSysUnits(Pn,pDispUnits->GeneralForce.UnitOfMeasure);
+      Mn = WBFL::Units::ConvertFromSysUnits(Mn,pDispUnits->Moment.UnitOfMeasure);
+      Pn = WBFL::Units::ConvertFromSysUnits(Pn,pDispUnits->GeneralForce.UnitOfMeasure);
 
       CComPtr<IPoint2d> pr;
       factored->get_Item(i,&pr);
@@ -244,8 +244,8 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
       pr->get_X(&Mr);
       pr->get_Y(&Pr);
 
-      Mr = ::ConvertFromSysUnits(Mr,pDispUnits->Moment.UnitOfMeasure);
-      Pr = ::ConvertFromSysUnits(Pr,pDispUnits->GeneralForce.UnitOfMeasure);
+      Mr = WBFL::Units::ConvertFromSysUnits(Mr,pDispUnits->Moment.UnitOfMeasure);
+      Pr = WBFL::Units::ConvertFromSysUnits(Pr,pDispUnits->GeneralForce.UnitOfMeasure);
 
       graph.AddPoint(series1, WBFL::Graphing::Point(Mn,-Pn));
       graph.AddPoint(series2, WBFL::Graphing::Point(Mr,-Pr));

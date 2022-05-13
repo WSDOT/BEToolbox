@@ -42,7 +42,7 @@ static char THIS_FILE[] = __FILE__;
 void DDX_Girder(CDataExchange* pDX,WBFL::Stability::Girder& girder)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ATLASSERT(girder.GetSectionCount() == 1); // prismatic girders have only one section
    IndexType sectIdx = 0;
@@ -99,7 +99,7 @@ void DDX_Girder(CDataExchange* pDX,WBFL::Stability::Girder& girder)
 void DDX_PrismaticGirderStrands(CDataExchange* pDX,CPGStableStrands& strands)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    DDX_CBEnum(pDX,IDC_PS_METHOD,strands.strandMethod);
 
@@ -170,7 +170,7 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_Control(pDX,IDC_GIRDER,m_ctrlGirder);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
@@ -543,7 +543,7 @@ void CPGStablePrismaticGirder::OnGirderChanged()
       shapeProperties->get_Xleft(&Xleft);
 
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
       CDataExchange dx(this,false);
       DDX_UnitValueAndTag(&dx,IDC_HG,IDC_HG_UNIT, Hg, pDispUnits->ComponentDim);
       DDX_UnitValueAndTag(&dx,IDC_WTF,IDC_WTF_UNIT, Wtf, pDispUnits->ComponentDim);
@@ -583,7 +583,7 @@ void CPGStablePrismaticGirder::UpdateStressPoints()
    {
       Float64 Wtf, Wbf, Ytop, Hg;
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
       CDataExchange dx(this, true);
       DDX_UnitValueAndTag(&dx, IDC_HG, IDC_HG_UNIT, Hg, pDispUnits->ComponentDim);
       DDX_UnitValueAndTag(&dx, IDC_WTF, IDC_WTF_UNIT, Wtf, pDispUnits->ComponentDim);

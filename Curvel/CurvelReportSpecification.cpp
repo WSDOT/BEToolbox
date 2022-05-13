@@ -137,7 +137,7 @@ SuperelevationProfilePoint CCurvelReportSpecification::GetSuperelevationPoint(In
    }
    else
    {
-      p.Station    = idx*::ConvertToSysUnits(50.0,unitMeasure::Feet);
+      p.Station    = idx*WBFL::Units::ConvertToSysUnits(50.0,WBFL::Units::Measure::Feet);
       p.LeftSlope  = -0.02;
       p.RightSlope = -0.02;
    }

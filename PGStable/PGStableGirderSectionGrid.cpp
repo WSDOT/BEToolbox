@@ -173,7 +173,7 @@ void CPGStableGirderSectionGrid::AddGirderSection()
 void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot, WBFL::Stability::Point* pntTL, WBFL::Stability::Point* pntTR, WBFL::Stability::Point* pntBL, WBFL::Stability::Point* pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ROWCOL col = 1;
    CString strValue;
@@ -181,81 +181,81 @@ void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pHg = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   *pHg = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pWtop = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   *pWtop = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pWbot = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   *pWbot = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pAg = ::ConvertToSysUnits(value,pDispUnits->Area.UnitOfMeasure);
+   *pAg = WBFL::Units::ConvertToSysUnits(value,pDispUnits->Area.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pIxx = ::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
+   *pIxx = WBFL::Units::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pIyy = ::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
+   *pIyy = WBFL::Units::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pIxy = ::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
+   *pIxy = WBFL::Units::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pXcg = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   *pXcg = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pYcg = -1 * ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   *pYcg = -1 * WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   *pL = ::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
+   *pL = WBFL::Units::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   pntTL->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   pntTL->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   pntTL->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   pntTL->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   pntTR->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   pntTR->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   pntTR->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   pntTR->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   pntBL->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   pntBL->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   pntBL->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   pntBL->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   pntBR->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   pntBR->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
    sysTokenizer::ParseDouble(strValue, &value);
-   pntBR->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   pntBR->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 }
 
 void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf, const WBFL::Stability::Point& pntTL, const WBFL::Stability::Point& pntTR, const WBFL::Stability::Point& pntBL, const WBFL::Stability::Point& pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -340,7 +340,7 @@ void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,F
 void CPGStableGirderSectionGrid::SetStressPoints(ROWCOL row,const WBFL::Stability::Point& pntTL, const WBFL::Stability::Point& pntTR, const WBFL::Stability::Point& pntBL, const WBFL::Stability::Point& pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 
@@ -445,7 +445,7 @@ void CPGStableGirderSectionGrid::OnModifyCell(ROWCOL nRow,ROWCOL nCol)
 void CPGStableGirderSectionGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    SetMergeCellsMode(gxnMergeEvalOnDisplay); // we want to merge cells
    SetFrozenRows(1/*# frozen rows*/, 1/*# extra header rows*/);

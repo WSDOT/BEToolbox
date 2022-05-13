@@ -147,7 +147,7 @@ void CCurvelSkewLineGrid::AddSkewLine()
 void CCurvelSkewLineGrid::GetSkewLine(ROWCOL row,SkewLine& skewLine)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ROWCOL col = 1;
    CString strStation = GetCellValue(row,col++);
@@ -156,7 +156,7 @@ void CCurvelSkewLineGrid::GetSkewLine(ROWCOL row,SkewLine& skewLine)
 
    Float64 station_value;
    m_objStation->get_Value(&station_value);
-   station_value = ::ConvertToSysUnits(station_value,pDispUnits->AlignmentLength.UnitOfMeasure);
+   station_value = WBFL::Units::ConvertToSysUnits(station_value,pDispUnits->AlignmentLength.UnitOfMeasure);
    skewLine.Station = station_value;
 
    skewLine.OffsetType = (SkewLine::Type)_tstoi(GetCellValue(row,col++));
@@ -173,7 +173,7 @@ void CCurvelSkewLineGrid::GetSkewLine(ROWCOL row,SkewLine& skewLine)
 void CCurvelSkewLineGrid::InsertSkewLine(const SkewLine& skewLine)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -296,7 +296,7 @@ BOOL CCurvelSkewLineGrid::OnEndEditing(ROWCOL nRow,ROWCOL nCol)
 void CCurvelSkewLineGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 1;

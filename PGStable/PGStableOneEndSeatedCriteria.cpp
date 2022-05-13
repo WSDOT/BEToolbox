@@ -42,10 +42,10 @@ CPGStableOneEndSeatedCriteria::CPGStableOneEndSeatedCriteria()
 
    WBFL::Stability::CCOneEndSeatedTensionStressLimit* pTensionStressLimit = new WBFL::Stability::CCOneEndSeatedTensionStressLimit;
 
-   pTensionStressLimit->TensionCoefficient = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
+   pTensionStressLimit->TensionCoefficient = WBFL::Units::ConvertToSysUnits(0.0948,WBFL::Units::Measure::SqrtKSI);
    pTensionStressLimit->bMaxTension = false;
-   pTensionStressLimit->MaxTension = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
-   pTensionStressLimit->TensionCoefficientWithRebar = ::ConvertToSysUnits(0.1900,unitMeasure::SqrtKSI);
+   pTensionStressLimit->MaxTension = WBFL::Units::ConvertToSysUnits(0.2,WBFL::Units::Measure::KSI);
+   pTensionStressLimit->TensionCoefficientWithRebar = WBFL::Units::ConvertToSysUnits(0.1900,WBFL::Units::Measure::SqrtKSI);
 
    TensionStressLimit.reset(pTensionStressLimit);
 }

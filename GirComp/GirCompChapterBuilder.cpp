@@ -33,10 +33,10 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////
 CGirCompChapterBuilder::CGirCompChapterBuilder(CGirCompDoc* pDoc) :
-m_Length(unitMeasure::Inch,0.001,6,2),
-m_Area(unitMeasure::Feet2,0.001,6,2),
-m_SectionModulus(unitMeasure::Feet3,0.001,10,2),
-m_MomentOfInertia(unitMeasure::Feet4,0.001,10,2)
+m_Length(WBFL::Units::Measure::Inch,0.001,6,2),
+m_Area(WBFL::Units::Measure::Feet2,0.001,6,2),
+m_SectionModulus(WBFL::Units::Measure::Feet3,0.001,10,2),
+m_MomentOfInertia(WBFL::Units::Measure::Feet4,0.001,10,2)
 {
    m_Length.Format          = sysNumericFormatTool::Fixed;
    m_Area.Format            = sysNumericFormatTool::Fixed;
@@ -76,12 +76,12 @@ rptChapter* CGirCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    }
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   m_Length.UnitOfMeasure          = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Inch  : unitMeasure::Millimeter);
-   m_Area.UnitOfMeasure            = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Inch2 : unitMeasure::Millimeter2);
-   m_SectionModulus.UnitOfMeasure  = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Inch3 : unitMeasure::Millimeter3);
-   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Inch4 : unitMeasure::Millimeter4);
+   m_Length.UnitOfMeasure          = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch  : WBFL::Units::Measure::Millimeter);
+   m_Area.UnitOfMeasure            = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch2 : WBFL::Units::Measure::Millimeter2);
+   m_SectionModulus.UnitOfMeasure  = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch3 : WBFL::Units::Measure::Millimeter3);
+   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch4 : WBFL::Units::Measure::Millimeter4);
 
 
    IndexType nProblems = m_pDoc->GetProblemCount();

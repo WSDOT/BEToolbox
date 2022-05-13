@@ -112,12 +112,12 @@ BOOL CUltColDoc::Init()
       return FALSE;
 
    // initialize with some defaults
-   m_Column->put_Diameter( ::ConvertToSysUnits(72.0,unitMeasure::Inch) );
-   m_Column->put_Cover( ::ConvertToSysUnits(2.0,unitMeasure::Inch));
-   m_Column->put_As( ::ConvertToSysUnits(10.0,unitMeasure::Inch2));
-   m_Column->put_fc( ::ConvertToSysUnits(4.0,unitMeasure::KSI));
-   m_Column->put_fy( ::ConvertToSysUnits(60.0,unitMeasure::KSI));
-   m_Column->put_Es( ::ConvertToSysUnits(29000.0,unitMeasure::KSI));
+   m_Column->put_Diameter( WBFL::Units::ConvertToSysUnits(72.0,WBFL::Units::Measure::Inch) );
+   m_Column->put_Cover( WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch));
+   m_Column->put_As( WBFL::Units::ConvertToSysUnits(10.0,WBFL::Units::Measure::Inch2));
+   m_Column->put_fc( WBFL::Units::ConvertToSysUnits(4.0,WBFL::Units::Measure::KSI));
+   m_Column->put_fy( WBFL::Units::ConvertToSysUnits(60.0,WBFL::Units::Measure::KSI));
+   m_Column->put_Es( WBFL::Units::ConvertToSysUnits(29000.0,WBFL::Units::Measure::KSI));
 
    m_ecl = 0.0020;
    m_etl = 0.0050;

@@ -74,7 +74,7 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << pLayoutTable;
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  length, pDispUnits->ComponentDim, false);
 
@@ -152,7 +152,7 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
 void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,IShapeProperties* pShapeProp) const
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  length, pDispUnits->ComponentDim, true);
    INIT_UV_PROTOTYPE( rptLength2UnitValue,  area, pDispUnits->Area, true);
@@ -186,7 +186,7 @@ CChapterBuilder* CGenCompChapterBuilder::Clone() const
 rptRcImage* CGenCompChapterBuilder::CreateImage() const
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CImage image;
    image.Create(500,500,32);
@@ -200,7 +200,7 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    pDC->Rectangle(rect);
    pDC->SelectObject(pOldBrush);
 
-   LengthTool lengthTool(pDispUnits->ComponentDim);
+   WBFL::Units::LengthTool lengthTool(pDispUnits->ComponentDim);
    WBFL::Graphing::GraphXY graph(lengthTool,lengthTool);
 
    graph.SetOutputRect(rect);
@@ -240,13 +240,13 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    std::vector<std::pair<Float64,Float64>>::const_iterator end(primaryPoints.end());
    for (; iter != end; iter++)
    {
-      WBFL::Graphing::Point point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(WBFL::Units::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),WBFL::Units::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(primarySeries,point);
    }
 
    if ( 0 < primaryPoints.size() )
    {
-      WBFL::Graphing::Point point(::ConvertFromSysUnits(primaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(primaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(WBFL::Units::ConvertFromSysUnits(primaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),WBFL::Units::ConvertFromSysUnits(primaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(primarySeries,point);
    }
 
@@ -255,13 +255,13 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    end = secondaryPoints.end();
    for (; iter != end; iter++)
    {
-      WBFL::Graphing::Point point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(WBFL::Units::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),WBFL::Units::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(secondarySeries,point);
    }
 
    if ( 0 < secondaryPoints.size() )
    {
-      WBFL::Graphing::Point point(::ConvertFromSysUnits(secondaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(secondaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(WBFL::Units::ConvertFromSysUnits(secondaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),WBFL::Units::ConvertFromSysUnits(secondaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(secondarySeries,point);
    }
 
