@@ -37,9 +37,9 @@ m_Area(WBFL::Units::Measure::Feet2,0.001,6,2),
 m_SectionModulus(WBFL::Units::Measure::Feet3,0.001,10,2),
 m_MomentOfInertia(WBFL::Units::Measure::Feet4,0.001,10,2)
 {
-   m_Area.Format = sysNumericFormatTool::Fixed;
-   m_SectionModulus.Format = sysNumericFormatTool::Fixed;
-   m_MomentOfInertia.Format = sysNumericFormatTool::Fixed;
+   m_Area.Format = WBFL::System::NumericFormatTool::Format::Fixed;
+   m_SectionModulus.Format = WBFL::System::NumericFormatTool::Format::Fixed;
+   m_MomentOfInertia.Format = WBFL::System::NumericFormatTool::Format::Fixed;
 
    m_pDoc = pDoc;
 }

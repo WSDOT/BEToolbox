@@ -181,11 +181,11 @@ void CGenCompDimensionGrid::GetPoint(ROWCOL row,Float64& x,Float64 &y)
    CString strValue;
    Float64 value;
    strValue = GetCellValue(row,1);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    x = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,2);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    y = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 }
 
@@ -241,7 +241,7 @@ BOOL CGenCompDimensionGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
  //  }
 
  //  Float64 d;
- //  if ( !sysTokenizer::ParseDouble(s,&d) )
+ //  if ( !WBFL::System::Tokenizer::ParseDouble(s,&d) )
  //  {
  //     SetWarningText(_T("Value must be a number"));
  //     return FALSE;
@@ -259,7 +259,7 @@ void CGenCompDimensionGrid::OnModifyCell(ROWCOL nRow,ROWCOL nCol)
 	//pControl->GetCurrentText(s);
 
  //  Float64 d;
- //  if ( sysTokenizer::ParseDouble(s,&d) )
+ //  if ( WBFL::System::Tokenizer::ParseDouble(s,&d) )
  //  {
  //     CGenCompDoc* pDoc = (CGenCompDoc*)EAFGetDocument();
  //     pDoc->UpdateAllViews(nullptr,0,nullptr);

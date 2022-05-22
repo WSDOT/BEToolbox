@@ -64,12 +64,12 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    SpecificationType specType = m_pDoc->GetSpecification();
 
    rptRcScalar scalar;
-   scalar.SetFormat(sysNumericFormatTool::Fixed);
+   scalar.SetFormat(WBFL::System::NumericFormatTool::Format::Fixed);
    scalar.SetWidth(6);
    scalar.SetPrecision(3);
 
    rptRcScalar table_value;
-   table_value.SetFormat(sysNumericFormatTool::Fixed);
+   table_value.SetFormat(WBFL::System::NumericFormatTool::Format::Fixed);
    table_value.SetWidth(4);
    table_value.SetPrecision(1);
 

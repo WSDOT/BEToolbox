@@ -167,7 +167,7 @@ void CCurvelStationRangeGrid::GetStation(ROWCOL row,StationRange& station)
    CString strValue;
    long nSpaces;
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseLong(strValue,&nSpaces);
+   WBFL::System::Tokenizer::ParseLong(strValue,&nSpaces);
    station.nSpaces = nSpaces;
 
    station.Offset = GetOffset(GetCellValue(row,col++),pDispUnits->AlignmentLength);

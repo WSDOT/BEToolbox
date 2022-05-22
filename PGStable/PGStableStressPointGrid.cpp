@@ -310,6 +310,6 @@ Float64 CPGStableStressPointGrid::GetCellValue(ROWCOL nRow, ROWCOL nCol)
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    Float64 value;
-   sysTokenizer::ParseDouble(s, &value);
+   WBFL::System::Tokenizer::ParseDouble(s, &value);
    return WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 }

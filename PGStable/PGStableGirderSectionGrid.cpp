@@ -180,75 +180,75 @@ void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64
    Float64 value;
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pHg = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pWtop = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pWbot = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pAg = WBFL::Units::ConvertToSysUnits(value,pDispUnits->Area.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pIxx = WBFL::Units::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pIyy = WBFL::Units::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pIxy = WBFL::Units::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pXcg = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pYcg = -1 * WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pL = WBFL::Units::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    pntTL->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    pntTL->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    pntTR->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    pntTR->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    pntBL->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    pntBL->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    pntBR->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    pntBR->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 }
 
@@ -418,7 +418,7 @@ BOOL CPGStableGirderSectionGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
  //  }
 
  //  Float64 d;
- //  if ( !sysTokenizer::ParseDouble(s,&d) )
+ //  if ( !WBFL::System::Tokenizer::ParseDouble(s,&d) )
  //  {
  //     SetWarningText(_T("Value must be a number"));
  //     return FALSE;

@@ -165,11 +165,11 @@ void CPGStablePointLoadGrid::GetLoad(ROWCOL row,Float64* pX,Float64* pP)
    CString strValue;
    Float64 value;
    strValue = GetCellValue(row,1);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pX = WBFL::Units::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
 
    strValue = GetCellValue(row,2);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pP = WBFL::Units::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 }
 
@@ -231,7 +231,7 @@ BOOL CPGStablePointLoadGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
    }
 
    Float64 d;
-   if ( !sysTokenizer::ParseDouble(s,&d) )
+   if ( !WBFL::System::Tokenizer::ParseDouble(s,&d) )
    {
       SetWarningText(_T("Value must be a number"));
       return FALSE;

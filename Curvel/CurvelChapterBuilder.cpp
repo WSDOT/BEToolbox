@@ -72,7 +72,7 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    rptRcScalar scalar;
    scalar.SetWidth(7);
    scalar.SetPrecision(4);
-   scalar.SetFormat(sysNumericFormatTool::Fixed);
+   scalar.SetFormat(WBFL::System::NumericFormatTool::Format::Fixed);
    scalar.SetTolerance(1.0e-6);
 
    std::_tstring strSlopeTag = pDispUnits->AlignmentLength.UnitOfMeasure.UnitTag();

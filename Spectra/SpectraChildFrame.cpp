@@ -168,7 +168,7 @@ void CSpectraChildFrame::OnExport()
       std::_tstring strSiteClass[] = {_T("A"), _T("B"), _T("C"), _T("D"), _T("E")};
 
       std::ofstream ofile(file_path);
-      sysDate date;
+      WBFL::System::Date date;
       ofile << "$ This response spectrum created by BridgeLink-BEToolbox-Spectra, " << T2A(date.AsString().c_str()) << std::endl;
       ofile << "$ Site Coordinates: " << lat << "° N, " << -lng << "° W" << std::endl;
       ofile << "$ Site Soil Classification: Site Class " << T2A(strSiteClass[siteClass].c_str()) << " - " << T2A(pDoc->GetSiteClassDescription(siteClass)) << std::endl;

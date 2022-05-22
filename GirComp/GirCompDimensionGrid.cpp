@@ -183,12 +183,12 @@ void CGirCompDimensionGrid::GetProblemData(ROWCOL row,GIRCOMPDIMENSIONS& dimensi
    dimensions.RolledSectionName = rolledSections[idx].Name;
 
    Float64 value;
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.Area = WBFL::Units::ConvertToSysUnits(value,pDispUnits->Area.UnitOfMeasure);
 
    if ( dimensions.Type == GIRCOMPDIMENSIONS::General || dimensions.Type == GIRCOMPDIMENSIONS::Rolled )
    {
-      sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+      WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
       dimensions.D = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
    }
    else
@@ -196,12 +196,12 @@ void CGirCompDimensionGrid::GetProblemData(ROWCOL row,GIRCOMPDIMENSIONS& dimensi
       col++;
    }
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.MomentOfInertia = WBFL::Units::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    if ( dimensions.Type == GIRCOMPDIMENSIONS::BuiltUp )
    {
-      sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+      WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
       dimensions.D = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
    }
    else
@@ -209,37 +209,37 @@ void CGirCompDimensionGrid::GetProblemData(ROWCOL row,GIRCOMPDIMENSIONS& dimensi
       col++;
    }
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.tWeb = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.wTopFlange = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.tTopFlange = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.wBotFlange = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.tBotFlange = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.wSlab = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.tSlab = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.G = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.N1 = value;
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.N2 = value;
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.N3 = value;
 }
 

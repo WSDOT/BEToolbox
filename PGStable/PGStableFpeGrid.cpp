@@ -148,49 +148,49 @@ void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float
    CString strValue;
    Float64 value;
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pX = WBFL::Units::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pFpeStraight = WBFL::Units::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pXpsStraight = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pYpsStraight = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    *pYpsStraightMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pFpeHarped = WBFL::Units::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pXpsHarped = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pYpsHarped = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
    *pYpsHarpedMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pFpeTemp = WBFL::Units::ConvertToSysUnits(value,pDispUnits->GeneralForce.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pXpsTemp = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
    *pYpsTemp = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
@@ -325,7 +325,7 @@ BOOL CPGStableFpeGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
    if ( nCol != 5 && nCol != 9 && nCol != 13 ) // these are the Top/Bottom combo box columns
    {
       Float64 d;
-      if ( !sysTokenizer::ParseDouble(s,&d) )
+      if ( !WBFL::System::Tokenizer::ParseDouble(s,&d) )
       {
          SetWarningText(_T("Value must be a number"));
          return FALSE;

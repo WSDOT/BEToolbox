@@ -170,7 +170,7 @@ void CPGStableDoc::LoadPGSLibrary()
 
    CComBSTR bpath(strMasterLibaryFile);
 
-   FileStream ifile;
+   WBFL::System::FileStream ifile;
    if ( ifile.open(bpath) )
    {
       // try to load file
@@ -179,7 +179,7 @@ void CPGStableDoc::LoadPGSLibrary()
          // clear out library
          m_LibMgr.ClearAllEntries();
 
-         sysStructuredLoadXmlPrs load;
+         WBFL::System::StructuredLoadXml load;
          load.BeginLoad( &ifile );
 
          // Problem : Library Editor application specific code is in the
@@ -202,10 +202,10 @@ void CPGStableDoc::LoadPGSLibrary()
          // success!
          WATCH(_T("Master Library loaded successfully"));
       }
-      catch( sysXStructuredLoad& e )
+      catch(WBFL::System::XStructuredLoad& e )
       {
          CString strMsg;
-         if ( e.GetExplicitReason() == sysXStructuredLoad::CantInitializeTheParser )
+         if ( e.GetReasonCode() == WBFL::System::XStructuredLoad::CantInitializeTheParser )
          {
             strMsg = _T("Failed to initialize the xml parser. This is an installation issue.");
          }
@@ -876,7 +876,7 @@ CString CPGStableDoc::UpdateEc(const CString& strFc)
    CString strEc;
    Float64 fc;
    Float64 ec = 0;
-   if (sysTokenizer::ParseDouble(strFc, &fc) && 0 < fc)
+   if (WBFL::System::Tokenizer::ParseDouble(strFc, &fc) && 0 < fc)
    {
          CEAFApp* pApp = EAFGetApp();
          const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
