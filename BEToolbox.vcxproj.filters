@@ -281,6 +281,18 @@
     <ClCompile Include=".\UltCol\UltColView.cpp">
       <Filter>UltCol\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PGStable\PGStableOneEndSeatedCriteria.cpp">
+      <Filter>PGStable\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PGStable\PGStableOneEndSeatedDetailsChapterBuilder.cpp">
+      <Filter>PGStable\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PGStable\PGStableOneEndSeatedSummaryChapterBuilder.cpp">
+      <Filter>PGStable\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PGStable\PGStableOneEndSeatedView.cpp">
+      <Filter>PGStable\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BEToolbox_i.h" />
@@ -598,6 +610,18 @@
     </ClInclude>
     <ClInclude Include=".\GenComp\GenCompTitlePageBuilder.h">
       <Filter>GenComp\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PGStable\PGStableOneEndSeatedCriteria.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PGStable\PGStableOneEndSeatedDetailsChapterBuilder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PGStable\PGStableOneEndSeatedSummaryChapterBuilder.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PGStable\PGStableOneEndSeatedView.h">
+      <Filter>PGStable\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

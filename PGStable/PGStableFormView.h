@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,7 @@ class CPGStableFormView : public CFormView
 
    virtual void OnActivateView() = 0;
    virtual void OnDeactivateView() = 0;
+	virtual void RefreshReport() = 0;
 
 protected:
 	CPGStableFormView(UINT nTemplate);

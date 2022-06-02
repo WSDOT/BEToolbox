@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -239,13 +239,13 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    std::vector<std::pair<Float64,Float64>>::const_iterator end(primaryPoints.end());
    for (; iter != end; iter++)
    {
-      gpPoint2d point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
+      GraphPoint point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(primarySeries,point);
    }
 
    if ( 0 < primaryPoints.size() )
    {
-      gpPoint2d point(::ConvertFromSysUnits(primaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(primaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
+      GraphPoint point(::ConvertFromSysUnits(primaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(primaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(primarySeries,point);
    }
 
@@ -254,13 +254,13 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    end = secondaryPoints.end();
    for (; iter != end; iter++)
    {
-      gpPoint2d point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
+      GraphPoint point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(secondarySeries,point);
    }
 
    if ( 0 < secondaryPoints.size() )
    {
-      gpPoint2d point(::ConvertFromSysUnits(secondaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(secondaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
+      GraphPoint point(::ConvertFromSysUnits(secondaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(secondaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(secondarySeries,point);
    }
 

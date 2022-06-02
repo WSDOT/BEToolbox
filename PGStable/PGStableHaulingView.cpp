@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -55,8 +55,6 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
    DDX_Control(pDX, IDC_EC, m_ctrlEc);
    DDX_Control(pDX, IDC_FC, m_ctrlFc);
-   DDX_Control(pDX, IDC_K1, m_ctrlK1);
-   DDX_Control(pDX, IDC_K2, m_ctrlK2);
 
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -71,16 +69,16 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    pDoc->GetHaulingMaterials(&fc,&bComputeEc,&frCoefficient);
    bComputeEc = !bComputeEc;
 
-   stbHaulingStabilityProblem problem = pDoc->GetHaulingStabilityProblem();
+   WBFL::Stability::HaulingStabilityProblem problem = pDoc->GetHaulingStabilityProblem();
 
-   stbTypes::HaulingImpact impactUsage = problem.GetImpactUsage();
+   WBFL::Stability::HaulingImpact impactUsage = problem.GetImpactUsage();
    DDX_CBItemData(pDX,IDC_IMPACT_USAGE,impactUsage);
 
-   stbTypes::WindType windLoadType;
+   WBFL::Stability::WindType windLoadType;
    Float64 windLoad;
    problem.GetWindLoading(&windLoadType,&windLoad);
    DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
-   if ( windLoadType == stbTypes::Speed )
+   if ( windLoadType == WBFL::Stability::Speed )
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
    }
@@ -88,6 +86,11 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->WindPressure);
    }
+
+   Float64 eb, Wb;
+   problem.GetAppurtenanceLoading(&eb, &Wb);
+   DDX_UnitValueAndTag(pDX, IDC_BRACKET_WEIGHT, IDC_BRACKET_WEIGHT_UNIT, Wb, pDispUnits->ForcePerLength);
+   DDX_UnitValueAndTag(pDX, IDC_BRACKET_ECCENTRICITY, IDC_BRACKET_ECCENTRICITY_UNIT, eb, pDispUnits->ComponentDim);
 
    Float64 Ll,Lr;
    problem.GetSupportLocations(&Ll,&Lr);
@@ -103,11 +106,6 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    Float64 Ec = problem.GetConcrete().GetE(); // this is the computed value
    DDX_Check_Bool(pDX,IDC_COMPUTE_EC,bComputeEc);
    DDX_UnitValueAndTag(pDX,IDC_EC,IDC_EC_UNIT,Ec,pDispUnits->ModE);
-
-   Float64 K1 = pDoc->GetK1();
-   Float64 K2 = pDoc->GetK2();
-   DDX_Text(pDX,IDC_K1,K1);
-   DDX_Text(pDX,IDC_K2,K2);
 
    Float64 sweepTolerance = problem.GetSweepTolerance();
    Float64 sweepGrowth = problem.GetSweepGrowth();
@@ -144,7 +142,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
    Float64 velocity = problem.GetVelocity();
    Float64 radius = problem.GetTurningRadius();
-   stbTypes::CFType cfType = problem.GetCentrifugalForceType();
+   WBFL::Stability::CFType cfType = problem.GetCentrifugalForceType();
    DDX_UnitValueAndTag(pDX,IDC_VELOCITY,IDC_VELOCITY_UNIT,velocity,pDispUnits->Velocity);
    DDX_UnitValueAndTag(pDX,IDC_RADIUS,IDC_RADIUS_UNIT,radius,pDispUnits->AlignmentLength);
    DDX_CBEnum(pDX,IDC_CF_TYPE,cfType);
@@ -186,12 +184,12 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    Float64 Hgb = pDoc->GetHeightOfGirderBottomAboveRoadway();
    DDX_UnitValueAndTag(pDX,IDC_HGB,IDC_HGB_UNIT,Hgb,pDispUnits->ComponentDim);
 
-   Float64 Hrc = problem.GetHeightOfRollAxisAboveRoadway();
+   Float64 Hrc = problem.GetHeightOfRollAxis();
    DDX_UnitValueAndTag(pDX,IDC_HRC,IDC_HRC_UNIT,Hrc,pDispUnits->ComponentDim);
 
    CString slope_unit(pApp->GetUnitsMode() == eafTypes::umSI ? _T("m/m") : _T("ft/ft"));
 
-   Float64 crown_slope = problem.GetCrownSlope();
+   Float64 crown_slope = problem.GetSupportSlope();
    DDX_Text(pDX,IDC_CROWN_SLOPE,crown_slope);
    DDX_Text(pDX,IDC_CROWN_SLOPE_UNIT,slope_unit);
 
@@ -199,10 +197,10 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX,IDC_SUPERELEVATION,superelevation);
    DDX_Text(pDX,IDC_SUPERELEVATION_UNIT,slope_unit);
 
-   Float64 Wcc = problem.GetWheelLineSpacing();
+   Float64 Wcc = problem.GetSupportWidth();
    DDX_UnitValueAndTag(pDX,IDC_WCC,IDC_WCC_UNIT,Wcc,pDispUnits->ComponentDim);
 
-   Float64 Ktheta = problem.GetTruckRotationalStiffness();
+   Float64 Ktheta = problem.GetRotationalStiffness();
    DDX_UnitValueAndTag(pDX,IDC_KTHETA,IDC_KTHETA_UNIT,Ktheta,pDispUnits->MomentPerAngle);
 
    DDX_Text(pDX,IDC_HAULING_FS_CRACKING,m_HaulingCriteria.MinFScr);
@@ -213,25 +211,25 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX, IDC_HAULING_GLOBAL_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_GlobalStress);
    DDX_Text(pDX, IDC_HAULING_PEAK_COMPRESSION, m_HaulingCriteria.CompressionCoefficient_PeakStress);
 
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN,m_HaulingCriteria.TensionCoefficient[stbTypes::CrownSlope],pDispUnits->SqrtPressure);
+   auto* pHaulingTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(m_HaulingCriteria.TensionStressLimit.get());
+
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN, pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_CROWN_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN,m_HaulingCriteria.bMaxTension[stbTypes::CrownSlope]);
-   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT,m_HaulingCriteria.MaxTension[stbTypes::CrownSlope],pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN,m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::CrownSlope],pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN, pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope]);
+   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT, pHaulingTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope],pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN, pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,tag);
 
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_SUPER,m_HaulingCriteria.TensionCoefficient[stbTypes::MaxSuper],pDispUnits->SqrtPressure);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_SUPER, pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_SUPER_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_SUPER,m_HaulingCriteria.bMaxTension[stbTypes::MaxSuper]);
-   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT,m_HaulingCriteria.MaxTension[stbTypes::MaxSuper],pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER,m_HaulingCriteria.TensionCoefficientWithRebar[stbTypes::MaxSuper],pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_SUPER, pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper]);
+   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT, pHaulingTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper],pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER, pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,tag);
 
    if ( pDX->m_bSaveAndValidate )
    {
       problem.GetConcrete().SetE(Ec);
-      pDoc->SetK1(K1);
-      pDoc->SetK2(K2);
 
       problem.SetSweepTolerance(sweepTolerance);
       problem.SetSweepGrowth(sweepGrowth);
@@ -244,15 +242,17 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
       problem.SetWindLoading(windLoadType,windLoad);
 
+      problem.SetAppurtenanceLoading(eb, Wb);
+
       problem.SetVelocity(velocity);
       problem.SetTurningRadius(radius);
       problem.SetCentrifugalForceType(cfType);
 
-      problem.SetCrownSlope(crown_slope);
+      problem.SetSupportSlope(crown_slope);
       problem.SetSuperelevation(superelevation);
-      problem.SetWheelLineSpacing(Wcc);
-      problem.SetTruckRotationalStiffness(Ktheta);
-      problem.SetHeightOfRollAxisAboveRoadway(Hrc);
+      problem.SetSupportWidth(Wcc);
+      problem.SetRotationalStiffness(Ktheta);
+      problem.SetHeightOfRollAxis(Hrc);
 
       pDoc->SetHeightOfGirderBottomAboveRoadway(Hgb);
 
@@ -267,14 +267,14 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetHaulingCriteria(m_HaulingCriteria);
 
-      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), HAULING);
+      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Hauling);
       if ( strands.strandMethod == CPGStableStrands::Simplified )
       {
          strands.FpeStraight = Fs;
          strands.FpeHarped   = Fh;
          strands.FpeTemp     = Ft;
       }
-      pDoc->SetStrands(pDoc->GetGirderType(),HAULING, strands);
+      pDoc->SetStrands(pDoc->GetGirderType(),ModelType::Hauling, strands);
 
       pDoc->SetHaulTruck(strHaulTruck);
 
@@ -284,8 +284,6 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_BN_CLICKED(IDC_COMPUTE_EC, &CPGStableHaulingView::OnUserEc)
 	ON_EN_CHANGE(IDC_FC, &CPGStableHaulingView::OnChangeFc)
-   ON_EN_CHANGE(IDC_K1, &CPGStableHaulingView::OnChangeFc)
-   ON_EN_CHANGE(IDC_K2, &CPGStableHaulingView::OnChangeFc)
    ON_EN_CHANGE(IDC_FPE_STRAIGHT, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_FPE_HARPED, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_FPE_TEMP, &CPGStableHaulingView::OnChange)
@@ -298,6 +296,8 @@ BEGIN_MESSAGE_MAP(CPGStableHaulingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_CROWN_SLOPE, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_SUPERELEVATION, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_WIND_PRESSURE, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_BRACKET_WEIGHT, &CPGStableHaulingView::OnChange)
+   ON_EN_CHANGE(IDC_BRACKET_ECCENTRICITY, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_VELOCITY, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_RADIUS, &CPGStableHaulingView::OnChange)
    ON_EN_CHANGE(IDC_CAMBER, &CPGStableHaulingView::OnChange)
@@ -453,8 +453,6 @@ void CPGStableHaulingView::OnUserEc()
    BOOL bEnable = ((CButton*)GetDlgItem(IDC_COMPUTE_EC))->GetCheck();
    GetDlgItem(IDC_EC)->EnableWindow(bEnable);
    GetDlgItem(IDC_EC_UNIT)->EnableWindow(bEnable);
-   GetDlgItem(IDC_K1)->EnableWindow(!bEnable);
-   GetDlgItem(IDC_K2)->EnableWindow(!bEnable);
 
    if (bEnable==FALSE)
    {
@@ -474,20 +472,11 @@ void CPGStableHaulingView::UpdateEc()
       return;
    }
 
-    // need to manually parse strength and density values
-   CString strFc, strDensity, strK1, strK2;
+   CString strFc;
    m_ctrlFc.GetWindowText(strFc);
-   m_ctrlK1.GetWindowText(strK1);
-   m_ctrlK2.GetWindowText(strK2);
-
-   CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-
-   strDensity.Format(_T("%s"),FormatDimension(pDoc->GetDensity(),pDispUnits->Density,false));
-
-   CString strEc = pDoc->UpdateEc(strFc,strDensity,strK1,strK2);
+   CString strEc = pDoc->UpdateEc(strFc);
    m_ctrlEc.SetWindowText(strEc);
 }
 
@@ -506,7 +495,7 @@ void CPGStableHaulingView::OnChange()
 void CPGStableHaulingView::UpdateFpeControls()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), HAULING);
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Hauling);
    BOOL bEnable = (strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
    GetDlgItem(IDC_FPE_STRAIGHT)->EnableWindow(bEnable);
    GetDlgItem(IDC_FPE_HARPED)->EnableWindow(bEnable);
@@ -553,10 +542,10 @@ void CPGStableHaulingView::OnEditFpe()
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    CPGStableEffectivePrestressDlg dlg;
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), HAULING);
+   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Hauling);
    if ( dlg.DoModal() == IDOK )
    {
-      pDoc->SetStrands(pDoc->GetGirderType(), HAULING, dlg.m_Strands);
+      pDoc->SetStrands(pDoc->GetGirderType(), ModelType::Hauling, dlg.m_Strands);
 
       Float64 Fs,Fh,Ft;
       GetMaxFpe(&Fs,&Fh,&Ft);
@@ -597,17 +586,17 @@ void CPGStableHaulingView::OnInitialUpdate()
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbImpactUsage = (CComboBox*)GetDlgItem(IDC_IMPACT_USAGE);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope and Max. Superelevation Cases")),(DWORD_PTR)stbTypes::Both);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope Case Only")),(DWORD_PTR)stbTypes::NormalCrown);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Max. Superelevation Case Only")),(DWORD_PTR)stbTypes::MaxSuper);
+   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope and Max. Superelevation Cases")),(DWORD_PTR)WBFL::Stability::Both);
+   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope Case Only")),(DWORD_PTR)WBFL::Stability::NormalCrown);
+   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Max. Superelevation Case Only")),(DWORD_PTR)WBFL::Stability::MaxSuper);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)stbTypes::Speed);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)stbTypes::Pressure);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::Pressure);
 
    CComboBox* pcbCFType = (CComboBox*)GetDlgItem(IDC_CF_TYPE);
-   pcbCFType->SetItemData(pcbCFType->AddString(_T("Adverse")),(DWORD_PTR)stbTypes::Adverse);
-   pcbCFType->SetItemData(pcbCFType->AddString(_T("Favorable")),(DWORD_PTR)stbTypes::Favorable);
+   pcbCFType->SetItemData(pcbCFType->AddString(_T("Adverse")),(DWORD_PTR)WBFL::Stability::Adverse);
+   pcbCFType->SetItemData(pcbCFType->AddString(_T("Favorable")),(DWORD_PTR)WBFL::Stability::Favorable);
 
    CPGStableFormView::OnInitialUpdate();
 
@@ -621,7 +610,7 @@ void CPGStableHaulingView::OnInitialUpdate()
 void CPGStableHaulingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), HAULING);
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Hauling);
 
    if (strands.strandMethod == CPGStableStrands::Simplified )
    {
@@ -676,6 +665,7 @@ void CPGStableHaulingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /
          OnChange();
       }
    }
+   if (m_pBrowser) m_pBrowser->Refresh();
 }
 
 void CPGStableHaulingView::OnClickedHaulingTensionMaxCrown()
@@ -737,11 +727,11 @@ void CPGStableHaulingView::OnWindTypeChanged()
 {
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    int curSel = pcbWindType->GetCurSel();
-   stbTypes::WindType windType = (stbTypes::WindType)pcbWindType->GetItemData(curSel);
+   WBFL::Stability::WindType windType = (WBFL::Stability::WindType)pcbWindType->GetItemData(curSel);
    CDataExchange dx(this,false);
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   if ( windType == stbTypes::Speed )
+   if ( windType == WBFL::Stability::Speed )
    {
       DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
    }

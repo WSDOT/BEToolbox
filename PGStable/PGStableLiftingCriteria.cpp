@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -39,10 +39,16 @@ CPGStableLiftingCriteria::CPGStableLiftingCriteria()
    MinFSf = 1.5;
    CompressionCoefficient_GlobalStress = 0.65;
    CompressionCoefficient_PeakStress = 0.70;
-   TensionCoefficient = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
-   bMaxTension = false;
-   MaxTension = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
-   TensionCoefficientWithRebar = ::ConvertToSysUnits(0.1900,unitMeasure::SqrtKSI);
+
+   WBFL::Stability::CCLiftingTensionStressLimit* pTensionStressLimit = new WBFL::Stability::CCLiftingTensionStressLimit;
+   pTensionStressLimit->Lambda = 1.0;
+   pTensionStressLimit->TensionCoefficient = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
+   pTensionStressLimit->bMaxTension = false;
+   pTensionStressLimit->MaxTension = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
+   pTensionStressLimit->bWithRebarLimit = false;
+   pTensionStressLimit->TensionCoefficientWithRebar = ::ConvertToSysUnits(0.1900,unitMeasure::SqrtKSI);
+
+   TensionStressLimit.reset(pTensionStressLimit);
 }
 
 CPGStableLiftingCriteria::~CPGStableLiftingCriteria()
@@ -63,16 +69,19 @@ bool CPGStableLiftingCriteria::operator==(const CPGStableLiftingCriteria& other)
    if (!IsEqual(CompressionCoefficient_PeakStress, other.CompressionCoefficient_PeakStress))
       return false;
 
-   if ( !IsEqual(TensionCoefficient,other.TensionCoefficient) )
+   auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(TensionStressLimit.get());
+   auto* pOtherTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(other.TensionStressLimit.get());
+
+   if ( !IsEqual(pTensionStressLimit->TensionCoefficient, pOtherTensionStressLimit->TensionCoefficient) )
       return false;
 
-   if ( bMaxTension != other.bMaxTension )
+   if (pTensionStressLimit->bMaxTension != pOtherTensionStressLimit->bMaxTension )
       return false;
    
-   if ( !IsEqual(MaxTension,other.MaxTension) )
+   if ( !IsEqual(pTensionStressLimit->MaxTension, pOtherTensionStressLimit->MaxTension) )
       return false;
    
-   if ( !IsEqual(TensionCoefficientWithRebar,other.TensionCoefficientWithRebar) )
+   if ( !IsEqual(pTensionStressLimit->TensionCoefficientWithRebar, pOtherTensionStressLimit->TensionCoefficientWithRebar) )
       return false;
 
    return true;
@@ -83,9 +92,9 @@ bool CPGStableLiftingCriteria::operator!=(const CPGStableLiftingCriteria& other)
    return !(*this == other);
 }
 
-void CPGStableLiftingCriteria::operator=(const stbLiftingCriteria& other)
+void CPGStableLiftingCriteria::operator=(const WBFL::Stability::LiftingCriteria& other)
 {
-   *((stbLiftingCriteria*)this) = other;
+   *((WBFL::Stability::LiftingCriteria*)this) = other;
 }
 
 HRESULT CPGStableLiftingCriteria::Save(IStructuredSave* pStrSave)
@@ -99,10 +108,12 @@ HRESULT CPGStableLiftingCriteria::Save(IStructuredSave* pStrSave)
    //pStrSave->put_Property(_T("CompressionCoefficient"),CComVariant(CompressionCoefficient)); // removed in version 2
    pStrSave->put_Property(_T("CompressionCoefficient_GlobalStress"),CComVariant(CompressionCoefficient_GlobalStress)); // added in version 2
    pStrSave->put_Property(_T("CompressionCoefficient_PeakStress"),CComVariant(CompressionCoefficient_PeakStress)); // added in version 2
-   pStrSave->put_Property(_T("TensionCoefficient"),CComVariant(TensionCoefficient));
-   pStrSave->put_Property(_T("UseMaxTension"),CComVariant(bMaxTension));
-   pStrSave->put_Property(_T("MaxTension"),CComVariant(MaxTension));
-   pStrSave->put_Property(_T("TensionCoefficientWithRebar"),CComVariant(TensionCoefficientWithRebar));
+
+   auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(TensionStressLimit.get());
+   pStrSave->put_Property(_T("TensionCoefficient"),CComVariant(pTensionStressLimit->TensionCoefficient));
+   pStrSave->put_Property(_T("UseMaxTension"),CComVariant(pTensionStressLimit->bMaxTension));
+   pStrSave->put_Property(_T("MaxTension"),CComVariant(pTensionStressLimit->MaxTension));
+   pStrSave->put_Property(_T("TensionCoefficientWithRebar"),CComVariant(pTensionStressLimit->TensionCoefficientWithRebar));
 
    hr = pStrSave->EndUnit(); // Criteria
    if ( FAILED(hr) )
@@ -146,19 +157,21 @@ HRESULT CPGStableLiftingCriteria::Load(IStructuredLoad* pStrLoad)
          CompressionCoefficient_PeakStress = var.dblVal;
       }
 
+      auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(TensionStressLimit.get());
+
       hr = pStrLoad->get_Property(_T("TensionCoefficient"),&var);
-      TensionCoefficient = var.dblVal;
+      pTensionStressLimit->TensionCoefficient = var.dblVal;
 
       var.vt = VT_BOOL;
       hr = pStrLoad->get_Property(_T("UseMaxTension"),&var);
-      bMaxTension = (var.boolVal == VARIANT_TRUE ? true : false);
+      pTensionStressLimit->bMaxTension = (var.boolVal == VARIANT_TRUE ? true : false);
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("MaxTension"),&var);
-      MaxTension = var.dblVal;
+      pTensionStressLimit->MaxTension = var.dblVal;
 
       hr = pStrLoad->get_Property(_T("TensionCoefficientWithRebar"),&var);
-      TensionCoefficientWithRebar = var.dblVal;
+      pTensionStressLimit->TensionCoefficientWithRebar = var.dblVal;
 
       hr = pStrLoad->EndUnit(); // Criteria
    }

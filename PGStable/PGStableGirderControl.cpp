@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -25,8 +25,6 @@
 #include "stdafx.h"
 #include "..\resource.h"
 #include "PGStableGirderControl.h"
-
-#include <GeometricPrimitives\Primitives.h>
 
 #include <Colors.h>
 #define SEGMENT_BORDER_COLOR GREY50
@@ -104,7 +102,7 @@ void CPGStableGirderControl::OnPaint()
    // Set up coordinate mapping
    //
    std::vector<std::pair<Float64,Float64>> vProfile = pParent->GetGirderProfile();
-   gpRect2d box(DBL_MAX,DBL_MAX,-DBL_MAX,-DBL_MAX);
+   GraphRect box(DBL_MAX,DBL_MAX,-DBL_MAX,-DBL_MAX);
    std::vector<std::pair<Float64,Float64>>::iterator iter(vProfile.begin());
    std::vector<std::pair<Float64,Float64>>::iterator end(vProfile.end());
    for ( ; iter != end; iter++ )

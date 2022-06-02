@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2013  Washington State Department of Transportation
+// Copyright © 1999-2020  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -38,6 +38,7 @@
 #define IDH_PGSTABLE_NONPRISMATIC_GIRDER_VIEW   602
 #define IDH_PGSTABLE_LIFTING_VIEW               603
 #define IDH_PGSTABLE_HAULING_VIEW               604
+#define IDH_PGSTABLE_ONEENDSEATED_VIEW          605
 
 #define IDH_SPECTRA                             700
 

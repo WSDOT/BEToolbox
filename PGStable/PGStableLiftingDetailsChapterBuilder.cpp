@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -55,13 +55,13 @@ Uint16 CPGStableLiftingDetailsChapterBuilder::GetMaxLevel() const
 
 rptChapter* CPGStableLiftingDetailsChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
 {
-   int girderType = m_pDoc->GetGirderType();
-   stbGirder girder = m_pDoc->GetGirder(girderType);
-   stbLiftingResults results = m_pDoc->GetLiftingResults();
-   const stbLiftingStabilityProblem& problem = m_pDoc->GetLiftingStabilityProblem();
+   GirderType girderType = m_pDoc->GetGirderType();
+   WBFL::Stability::Girder girder = m_pDoc->GetGirder(girderType);
+   WBFL::Stability::LiftingResults results = m_pDoc->GetLiftingResults();
+   const WBFL::Stability::LiftingStabilityProblem& problem = m_pDoc->GetLiftingStabilityProblem();
 
    rptChapter* pChapter = new rptChapter;
-   stbLiftingStabilityReporter reporter;
+   WBFL::Stability::LiftingStabilityReporter reporter;
    reporter.BuildDetailsChapter(&girder,&problem,&results,pChapter);
 
    return pChapter;

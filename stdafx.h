@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -37,8 +37,16 @@
 #include <atlbase.h>
 #include <atlcom.h>
 #include <atlimage.h> // for CImage used in the chapter builder code
+#include <afxext.h>
+#include <afxdisp.h>
+#include <afxole.h>
 
+#if defined _NOGRID
+#include <NoGrid.h>
+#else
 #include <grid\gxall.h>
+#endif
+
 #include <System\System.h>
 #include <MathEx.h>
 #include <ReportManager\ReportManager.h>

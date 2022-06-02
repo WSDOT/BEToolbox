@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-void DDX_GirderSectionGrid(CDataExchange* pDX,CPGStableGirderSectionGrid* pGrid,stbGirder& girder)
+void DDX_GirderSectionGrid(CDataExchange* pDX,CPGStableGirderSectionGrid* pGrid,WBFL::Stability::Girder& girder)
 {
    if ( pDX->m_bSaveAndValidate )
    {
@@ -157,8 +157,8 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   stbGirder girder = pDoc->GetGirder(NONPRISMATIC);
-   CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(GirderType::Nonprismatic);
+   CPGStableStrands strands = pDoc->GetStrands(GirderType::Nonprismatic, ModelType::Lifting);
 
    DDX_GirderSectionGrid(pDX,m_pGirderSectionGrid,girder);
    DDX_Strands(pDX,strands);
@@ -184,6 +184,11 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    matConcrete::Type concrete_type = pDoc->GetConcreteType();
    DDX_RadioEnum(pDX, IDC_NWC, concrete_type);
 
+   Float64 K1 = pDoc->GetK1();
+   Float64 K2 = pDoc->GetK2();
+   DDX_Text(pDX, IDC_K1, K1);
+   DDX_Text(pDX, IDC_K2, K2);
+
    std::vector<std::pair<Float64,Float64>> vLoads = girder.GetAdditionalLoads();
    DDX_PointLoadGrid(pDX,m_pPointLoadGrid,vLoads);
 
@@ -202,21 +207,25 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
          IndexType sectIdx = 0;
          for (const auto& sp : vStressPoints)
          {
-            girder.SetStressPoints(sectIdx, sp.pntTL[stbTypes::Start], sp.pntTR[stbTypes::Start], sp.pntBL[stbTypes::Start], sp.pntBR[stbTypes::Start], sp.pntTL[stbTypes::End], sp.pntTR[stbTypes::End], sp.pntBL[stbTypes::End], sp.pntBR[stbTypes::End]);
+            girder.SetStressPoints(sectIdx, sp.pntTL[WBFL::Stability::Start], sp.pntTR[WBFL::Stability::Start], sp.pntBL[WBFL::Stability::Start], sp.pntBR[WBFL::Stability::Start], sp.pntTL[WBFL::Stability::End], sp.pntTR[WBFL::Stability::End], sp.pntBL[WBFL::Stability::End], sp.pntBR[WBFL::Stability::End]);
             sectIdx++;
          }
       }
 
-      pDoc->SetGirder(NONPRISMATIC,girder);
+      pDoc->SetGirder(GirderType::Nonprismatic,girder);
 
       pDoc->SetDensity(density);
       pDoc->SetDensityWithRebar(densityWithRebar);
 
       pDoc->SetConcreteType(concrete_type);
 
-      pDoc->SetStrands(NONPRISMATIC,LIFTING,strands);
+      pDoc->SetK1(K1);
+      pDoc->SetK2(K2);
 
-      CPGStableStrands haulingStrands = pDoc->GetStrands(NONPRISMATIC,HAULING);
+
+      pDoc->SetStrands(GirderType::Nonprismatic, ModelType::Lifting,strands);
+
+      CPGStableStrands haulingStrands = pDoc->GetStrands(GirderType::Nonprismatic, ModelType::Hauling);
       haulingStrands.strandMethod = strands.strandMethod;
       if ( strands.strandMethod == CPGStableStrands::Simplified )
       {
@@ -238,7 +247,8 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
          haulingStrands.Yt = strands.Yt;
          haulingStrands.YtMeasure = strands.YtMeasure;
       }
-      pDoc->SetStrands(NONPRISMATIC,HAULING,haulingStrands);
+      pDoc->SetStrands(GirderType::Nonprismatic, ModelType::Hauling,haulingStrands);
+      pDoc->SetStrands(GirderType::Nonprismatic, ModelType::OneEndSeated, haulingStrands); // assume strands are the same for this condition
    }
 
    if ( !pDX->m_bSaveAndValidate )
@@ -319,7 +329,7 @@ BOOL CPGStableNonprismaticGirder::OnInitDialog()
 
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
-   const stbGirder& girder = pDoc->GetGirder(NONPRISMATIC);
+   const WBFL::Stability::Girder& girder = pDoc->GetGirder(GirderType::Nonprismatic);
    InitStressPointCache(girder);
 
    CDialog::OnInitDialog();
@@ -435,13 +445,13 @@ void CPGStableNonprismaticGirder::GetStrandProfiles(std::vector<std::pair<Float6
    std::vector<std::pair<Float64,Float64>> vProfile;
 
    CDataExchange dx(this,TRUE);
-   stbGirder girder;
+   WBFL::Stability::Girder girder;
    DDX_GirderSectionGrid(&dx,m_pGirderSectionGrid,girder);
 
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);
+   CPGStableStrands strands = pDoc->GetStrands(GirderType::Nonprismatic, ModelType::Lifting);
    DDX_Strands(&dx,strands);
 
    pDoc->GetStrandProfiles(strands,girder,pvStraight,pvHarped,pvTemp);
@@ -531,15 +541,15 @@ void CPGStableNonprismaticGirder::OnPSMethodChanged()
    GetDlgItem(IDC_EX_UNIT)->ShowWindow(show);
 }
 
-void CPGStableNonprismaticGirder::InitStressPointCache(const stbGirder& girder)
+void CPGStableNonprismaticGirder::InitStressPointCache(const WBFL::Stability::Girder& girder)
 {
    m_StressPointCache.clear();
    IndexType nSections = girder.GetSectionCount();
    for (IndexType sectIdx = 0; sectIdx < nSections; sectIdx++)
    {
       StressPoints sp;
-      girder.GetStressPoints(sectIdx, stbTypes::Start, &sp.pntTL[stbTypes::Start], &sp.pntTR[stbTypes::Start], &sp.pntBL[stbTypes::Start], &sp.pntBR[stbTypes::Start]);
-      girder.GetStressPoints(sectIdx, stbTypes::End,   &sp.pntTL[stbTypes::End],   &sp.pntTR[stbTypes::End],   &sp.pntBL[stbTypes::End],   &sp.pntBR[stbTypes::End]);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Start, &sp.pntTL[WBFL::Stability::Start], &sp.pntTR[WBFL::Stability::Start], &sp.pntBL[WBFL::Stability::Start], &sp.pntBR[WBFL::Stability::Start]);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::End,   &sp.pntTL[WBFL::Stability::End],   &sp.pntTR[WBFL::Stability::End],   &sp.pntBL[WBFL::Stability::End],   &sp.pntBR[WBFL::Stability::End]);
       m_StressPointCache.push_back(sp);
    }
 }

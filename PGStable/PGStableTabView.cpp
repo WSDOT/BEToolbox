@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 #include "PGStableGirderView.h"
 #include "PGStableLiftingView.h"
 #include "PGStableHaulingView.h"
+#include "PGStableOneEndSeatedView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -91,7 +92,8 @@ int CPGStableTabView::OnCreate(LPCREATESTRUCT lpCreateStruct)
    // Doing so doesn't seem worth the effort.
    AddView(RUNTIME_CLASS(CPGStableGirderView),  _T("Girder")   );
    AddView(RUNTIME_CLASS(CPGStableLiftingView), _T("Lifting")  );
-   AddView(RUNTIME_CLASS(CPGStableHaulingView), _T("Hauling")  );
+   AddView(RUNTIME_CLASS(CPGStableHaulingView), _T("Hauling"));
+   AddView(RUNTIME_CLASS(CPGStableOneEndSeatedView), _T("Lifted from One End"));
 
    return result;
 }
@@ -116,16 +118,16 @@ void CPGStableTabView::OnActivateView(CView* pView)
    }
 }
 
-void CPGStableTabView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+void CPGStableTabView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
    // TODO: Add your specialized code here and/or call the base class
-   Invalidate();
-   UpdateWindow();
+   //Invalidate();
+   //UpdateWindow();
 
    CView* pView = GetActiveView();
-   if ( pView )
+   if ( pView && pView->IsKindOf(RUNTIME_CLASS(CPGStableFormView)))
    {
-      pView->Invalidate();
-      pView->UpdateWindow();
+      CPGStableFormView* pFormView = (CPGStableFormView*)pView;
+      pFormView->RefreshReport();
    }
 }

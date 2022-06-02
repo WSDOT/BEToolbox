@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -39,8 +39,6 @@ protected:
 
 	CEdit	   m_ctrlEc;
    CEdit    m_ctrlFc;
-   CEdit    m_ctrlK1;
-   CEdit    m_ctrlK2;
    CString m_strUserEc;
    void UpdateEc();
 
@@ -67,10 +65,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
    virtual void OnActivateView() override;
    virtual void OnDeactivateView() override;
+   virtual void RefreshReport() override;
 
    std::shared_ptr<CReportSpecification> m_pRptSpec;
    std::shared_ptr<CReportBrowser> m_pBrowser; // this is the actual browser window that displays the report
-   void RefreshReport();
 
    void UpdateFpeControls();
    void UpdateCriteriaControls();

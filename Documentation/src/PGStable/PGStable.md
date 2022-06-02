@@ -9,6 +9,7 @@ PGStable uses a simple tab view user interface. The girder is defined in the Gir
 @subpage pgstable_girder_view <br>
 @subpage pgstable_lifting_view <br>
 @subpage pgstable_hauling_view <br>
+@subpage pgstable_oneendseated_view <br>
 
 PGSuper Configuration Support
 --------------------------------

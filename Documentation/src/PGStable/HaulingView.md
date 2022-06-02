@@ -4,8 +4,8 @@ The Hauling View provides the parameters for hauling analysis as well as the hau
 
 Analysis is performed for two cases; Normal Crown Slope and Maximum Superelevation.
 
-## Effective Prestress Force at Lifting (Fpe)
-Enter the effective prestress force at the time of hauling. If the Prestress Definition in the Girder View is set to Simplified, enter the effective prestress force in the straight, harped, and temporary strands. If the effective Prestress Defintiion in the Girder View is set to Detailed, press [Edit Fpe] and enter the prestress force and its location relative to the top or bottom of the girder.
+## Effective Prestress Force at Hauling (Fpe)
+Enter the effective prestress force at the time of hauling. If the Prestress Definition in the Girder View is set to Simplified, enter the effective prestress force in the straight, harped, and temporary strands. If the effective Prestress Definition in the Girder View is set to Detailed, press [Edit Fpe] and enter the prestress force and its location relative to the top or bottom of the girder.
 
 ## Material
 Enter the girder material at the time of hauling.
@@ -15,7 +15,7 @@ Item | Description
 f'c | Concrete strength
 Ec  | Modulus of elasticity. If this box is checked, enter a value, otherwise the modulus of elasticity will be computed
 fr   | Modulus of rupture. Enter the coefficient for computing the modulus of rupture
-K1, K2 | Averaging and bounding factor used when computing the modulus of elasticity
+
 
 ## Analysis Parameters
 Enter the analysis parameters
@@ -28,10 +28,11 @@ Impact Up/Down | Dynamic load allowance (impact). Select how the impact loading 
 Normal Crown Slope | Enter the normal crown slope
 Max. Superelevation | Enter the maximum expectied superelevation to be encountered during the haul
 Wind Loading | Select the wind loading type and enter the loading parameters. For Wind Speed, enter the wind velocity and wind pressure will be comptued according to LRFD 3.8.1.2. For Wind Pressure, enter a pressure loading applied to the vertical surface of the girder.
+Overhang Bracket | Deck form overhang brackets may be attached to the girder prior to transport to facilitate on site construction. Enter an equivalent weight per unit length and eccentricity of the resultant overhang bracket weight from the centerline of the girder. Positive value for weight is in the direction of gravity (downwards). Positive values for eccentricity is in the direction of sweep.
 Centrifugal Force | Select the centrifugal force type; Favorable or Adverse. Favorable forces act away from the center of the turning movement while Adverse forces act inwards.
 Speed | Enter the turning speed
 Turning Radius | Enter the turning radius
-Vertical Camber | Enter the camber and a camber multiplier, if applicable.
+Vertical Camber | Enter the camber and a camber multiplier, if applicable. This value should include formed camber when applicable.
 Lateral Camber | Asymmetric girders can have lateral deflections due to the geometry of the section. Prestressing that is not symmetric with respect to the vertical axis of the girder can also have lateral deflection. Enter the lateral camber if applicable.
 Haul Truck | Select a haul truck from the drop down list or select "Define haul truck" to input the haul truck parameters
 Height of girder bottom above roadway | Enter the location of the bottom of the girder from the roadway surface directly above the roll center

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -722,8 +722,8 @@ void CCurvelChapterBuilder::UpdateAlignment(const SkewLine& skewLine) const
       return; // no need for horizontal curve objects if there is no radius
    }
 
-   CComPtr<IHorzCurve> hc;
-   hc.CoCreateInstance(CLSID_HorzCurve);
+   CComPtr<ICompoundCurve> hc;
+   hc.CoCreateInstance(CLSID_CompoundCurve);
 
    CComPtr<IPoint2d> PBT, PFT, PI;
    hc->get_PBT(&PBT);

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -114,17 +114,20 @@ STDMETHODIMP CCurvelImporter::Import(IBroker* pBroker)
          if (IsZero(cpo))
          {
             sectionData.NumberOfSegmentsPerSection = 2;
-            sectionData.ControllingRidgePointIdx = 1;
+            sectionData.AlignmentPointIdx = 1;
+            sectionData.ProfileGradePointIdx = 1;
          }
          else if (cpo > 0.0) 
          {
             sectionData.NumberOfSegmentsPerSection = 3;
-            sectionData.ControllingRidgePointIdx = 1;
+            sectionData.AlignmentPointIdx = 1;
+            sectionData.ProfileGradePointIdx = 1;
          }
          else // (cpo < 0.0) 
          {
             sectionData.NumberOfSegmentsPerSection = 3;
-            sectionData.ControllingRidgePointIdx = 2;
+            sectionData.AlignmentPointIdx = 2;
+            sectionData.ProfileGradePointIdx = 2;
          }
 
          for ( int i = 0; i < 3; i++ )
@@ -142,7 +145,7 @@ STDMETHODIMP CCurvelImporter::Import(IBroker* pBroker)
             if (!IsZero(cpo))
             {
                RoadwaySegmentData seg;
-               if (cpo > 0.0)
+               if (0.0 < cpo)
                {
                   seg.Length = cpo;
                   seg.Slope = crown.LeftSlope;

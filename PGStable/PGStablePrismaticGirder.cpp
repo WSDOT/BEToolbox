@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-void DDX_Girder(CDataExchange* pDX,stbGirder& girder)
+void DDX_Girder(CDataExchange* pDX,WBFL::Stability::Girder& girder)
 {
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -47,7 +47,7 @@ void DDX_Girder(CDataExchange* pDX,stbGirder& girder)
    ATLASSERT(girder.GetSectionCount() == 1); // prismatic girders have only one section
    IndexType sectIdx = 0;
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   girder.GetSectionProperties(sectIdx,stbTypes::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   girder.GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 L = girder.GetSectionLength(sectIdx);
 
@@ -178,9 +178,10 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    CString strGirder = pDoc->GetGirder();
    DDX_CBString(pDX,IDC_GIRDER_LIST,strGirder);
 
-   stbGirder girder = pDoc->GetGirder(PRISMATIC);
-   CPGStableStrands lifting_strands = pDoc->GetStrands(PRISMATIC, LIFTING);
-   CPGStableStrands hauling_strands = pDoc->GetStrands(PRISMATIC, HAULING);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(GirderType::Prismatic);
+   CPGStableStrands lifting_strands = pDoc->GetStrands(GirderType::Prismatic, ModelType::Lifting);
+   CPGStableStrands hauling_strands = pDoc->GetStrands(GirderType::Prismatic, ModelType::Hauling);
+   CPGStableStrands one_end_seated_strands = pDoc->GetStrands(GirderType::Prismatic, ModelType::OneEndSeated);
 
 
    Float64 Cd = girder.GetDragCoefficient();
@@ -190,6 +191,7 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_Girder(pDX,girder);
    DDX_PrismaticGirderStrands(pDX, lifting_strands);
    DDX_PrismaticGirderStrands(pDX, hauling_strands);
+   DDX_PrismaticGirderStrands(pDX, one_end_seated_strands);
 
    int stressPointType = pDoc->GetStressPointType();
    DDX_Radio(pDX, IDC_COMPUTE_STRESS_POINTS, stressPointType);
@@ -220,6 +222,11 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    matConcrete::Type concrete_type = pDoc->GetConcreteType();
    DDX_RadioEnum(pDX, IDC_NWC, concrete_type);
 
+   Float64 K1 = pDoc->GetK1();
+   Float64 K2 = pDoc->GetK2();
+   DDX_Text(pDX, IDC_K1, K1);
+   DDX_Text(pDX, IDC_K2, K2);
+
    std::vector<std::pair<Float64,Float64>> vLoads = girder.GetAdditionalLoads();
    DDX_PointLoadGrid(pDX,m_pPointLoadGrid.get(),vLoads);
 
@@ -236,14 +243,18 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
          girder.SetStressPoints(0, m_pntTL, m_pntTR, m_pntBL, m_pntBR);
       }
 
-      pDoc->SetGirder(PRISMATIC,girder);
-      pDoc->SetStrands(PRISMATIC, LIFTING, lifting_strands);
-      pDoc->SetStrands(PRISMATIC, HAULING, hauling_strands);
+      pDoc->SetGirder(GirderType::Prismatic,girder);
+      pDoc->SetStrands(GirderType::Prismatic, ModelType::Lifting, lifting_strands);
+      pDoc->SetStrands(GirderType::Prismatic, ModelType::Hauling, hauling_strands);
+      pDoc->SetStrands(GirderType::Prismatic, ModelType::OneEndSeated, one_end_seated_strands);
 
       pDoc->SetDensity(density);
       pDoc->SetDensityWithRebar(densityWithRebar);
 
       pDoc->SetConcreteType(concrete_type);
+
+      pDoc->SetK1(K1);
+      pDoc->SetK2(K2);
 
       pDoc->SetGirder(strGirder);
    }
@@ -316,10 +327,10 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
       }
    }
 
-   const stbGirder& girder = pDoc->GetGirder(PRISMATIC);
+   const WBFL::Stability::Girder& girder = pDoc->GetGirder(GirderType::Prismatic);
    IndexType sectIdx = 0;
    Float64 Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtf, Wbf;
-   girder.GetSectionProperties(sectIdx, stbTypes::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf);
+   girder.GetSectionProperties(sectIdx, WBFL::Stability::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf);
    Ytop *= -1; //this is in girder section coordinates, convert to Y positive down coordinates
 
    if (pDoc->GetStressPointType() == COMPUTE_STRESS_POINTS)
@@ -328,7 +339,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    }
    else
    {
-      girder.GetStressPoints(sectIdx, stbTypes::Start, &m_pntTL, &m_pntTR, &m_pntBL, &m_pntBR);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Start, &m_pntTL, &m_pntTR, &m_pntBL, &m_pntBR);
    }
    m_pntTLCache = m_pntTL;
    m_pntTRCache = m_pntTR;
@@ -441,12 +452,12 @@ std::vector<std::pair<Float64,Float64>> CPGStablePrismaticGirder::GetGirderProfi
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   stbGirder girder = pDoc->GetGirder(PRISMATIC);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(GirderType::Prismatic);
    DDX_Girder(&dx,girder);
 
    IndexType sectIdx = 0;
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   girder.GetSectionProperties(sectIdx,stbTypes::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   girder.GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 Lg = girder.GetGirderLength();
    vProfile.emplace_back(0,0);
@@ -465,10 +476,10 @@ void CPGStablePrismaticGirder::GetStrandProfiles(std::vector<std::pair<Float64,F
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
 
-   stbGirder girder = pDoc->GetGirder(PRISMATIC);
+   WBFL::Stability::Girder girder = pDoc->GetGirder(GirderType::Prismatic);
    DDX_Girder(&dx,girder);
 
-   CPGStableStrands strands = pDoc->GetStrands(NONPRISMATIC,LIFTING);
+   CPGStableStrands strands = pDoc->GetStrands(GirderType::Nonprismatic,ModelType::Lifting);
    DDX_PrismaticGirderStrands(&dx,strands);
 
    pDoc->GetStrandProfiles(strands,girder,pvStraight,pvHarped,pvTemp);

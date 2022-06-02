@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -57,21 +57,19 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
    DDX_Control(pDX, IDC_EC, m_ctrlEc);
    DDX_Control(pDX, IDC_FC, m_ctrlFc);
-   DDX_Control(pDX, IDC_K1, m_ctrlK1);
-   DDX_Control(pDX, IDC_K2, m_ctrlK2);
 
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
-   stbLiftingStabilityProblem problem = pDoc->GetLiftingStabilityProblem();
+   WBFL::Stability::LiftingStabilityProblem problem = pDoc->GetLiftingStabilityProblem();
 
-   stbTypes::WindType windLoadType;
+   WBFL::Stability::WindType windLoadType;
    Float64 windLoad;
    problem.GetWindLoading(&windLoadType,&windLoad);
    DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
-   if ( windLoadType == stbTypes::Speed )
+   if ( windLoadType == WBFL::Stability::Speed )
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
    }
@@ -79,6 +77,11 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->WindPressure);
    }
+
+   Float64 eb, Wb;
+   problem.GetAppurtenanceLoading(&eb, &Wb);
+   DDX_UnitValueAndTag(pDX, IDC_BRACKET_WEIGHT, IDC_BRACKET_WEIGHT_UNIT, Wb, pDispUnits->ForcePerLength);
+   DDX_UnitValueAndTag(pDX, IDC_BRACKET_ECCENTRICITY, IDC_BRACKET_ECCENTRICITY_UNIT, eb, pDispUnits->ComponentDim);
 
    Float64 L;
    problem.GetSupportLocations(&L,&L);
@@ -155,10 +158,6 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_FC,IDC_FC_UNIT,fci,pDispUnits->Stress);
    DDX_Check_Bool(pDX,IDC_COMPUTE_EC,bComputeEci);
    DDX_UnitValueAndTag(pDX,IDC_EC,IDC_EC_UNIT,Eci,pDispUnits->ModE);
-   Float64 K1 = pDoc->GetK1();
-   Float64 K2 = pDoc->GetK2();
-   DDX_Text(pDX,IDC_K1,K1);
-   DDX_Text(pDX,IDC_K2,K2);
 
    DDX_UnitValueAndTag(pDX,IDC_FR_COEFFICIENT,IDC_FR_COEFFICIENT_UNIT,frCoefficient,pDispUnits->SqrtPressure);
    CString tag;
@@ -178,18 +177,18 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX, IDC_LIFTING_GLOBAL_COMPRESSION, m_LiftingCriteria.CompressionCoefficient_GlobalStress);
    DDX_Text(pDX, IDC_LIFTING_PEAK_COMPRESSION, m_LiftingCriteria.CompressionCoefficient_PeakStress);
 
-   DDX_UnitValue(pDX,IDC_LIFTING_TENSION,m_LiftingCriteria.TensionCoefficient,pDispUnits->SqrtPressure);
+   auto* pLiftingTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(m_LiftingCriteria.TensionStressLimit.get());
+
+   DDX_UnitValue(pDX,IDC_LIFTING_TENSION, pLiftingTensionStressLimit->TensionCoefficient,pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_LIFTING_TENSION_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_LIFTING_TENSION_MAX,m_LiftingCriteria.bMaxTension);
-   DDX_UnitValueAndTag(pDX,IDC_LIFTING_TENSION_MAX,IDC_LIFTING_TENSION_MAX_UNIT,m_LiftingCriteria.MaxTension,pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_LIFTING_TENSION_WITH_REBAR,m_LiftingCriteria.TensionCoefficientWithRebar,pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_LIFTING_TENSION_MAX, pLiftingTensionStressLimit->bMaxTension);
+   DDX_UnitValueAndTag(pDX,IDC_LIFTING_TENSION_MAX,IDC_LIFTING_TENSION_MAX_UNIT, pLiftingTensionStressLimit->MaxTension,pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_LIFTING_TENSION_WITH_REBAR, pLiftingTensionStressLimit->TensionCoefficientWithRebar,pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_LIFTING_TENSION_WITH_REBAR_UNIT,tag);
 
    if ( pDX->m_bSaveAndValidate )
    {
       problem.GetConcrete().SetE(Eci);
-      pDoc->SetK1(K1);
-      pDoc->SetK2(K2);
 
       problem.SetSweepTolerance(sweepTolerance);
       problem.SetSweepGrowth(sweepGrowth);
@@ -202,6 +201,8 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
       problem.SetLiftAngle(liftAngle);
 
       problem.SetWindLoading(windLoadType,windLoad);
+
+      problem.SetAppurtenanceLoading(eb, Wb);
 
       problem.SetYRollAxis(Yra);
 
@@ -216,22 +217,20 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetLiftingCriteria(m_LiftingCriteria);
 
-      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+      auto strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Lifting);
       if (strands.strandMethod == CPGStableStrands::Simplified )
       {
          strands.FpeStraight = Fs;
          strands.FpeHarped   = Fh;
          strands.FpeTemp     = Ft;
       }
-      pDoc->SetStrands(pDoc->GetGirderType(),LIFTING, strands);
+      pDoc->SetStrands(pDoc->GetGirderType(), ModelType::Lifting, strands);
    }
 }
 
 BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_BN_CLICKED(IDC_COMPUTE_EC, &CPGStableLiftingView::OnUserEc)
 	ON_EN_CHANGE(IDC_FC, &CPGStableLiftingView::OnChangeFc)
-   ON_EN_CHANGE(IDC_K1, &CPGStableLiftingView::OnChangeFc)
-   ON_EN_CHANGE(IDC_K2, &CPGStableLiftingView::OnChangeFc)
    ON_EN_CHANGE(IDC_FPE_STRAIGHT, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_FPE_HARPED, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_FPE_TEMP, &CPGStableLiftingView::OnChange)
@@ -242,6 +241,8 @@ BEGIN_MESSAGE_MAP(CPGStableLiftingView, CPGStableFormView)
    ON_EN_CHANGE(IDC_IMPACT_DOWN, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_LIFT_ANGLE, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_WIND_PRESSURE, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_BRACKET_WEIGHT, &CPGStableLiftingView::OnChange)
+   ON_EN_CHANGE(IDC_BRACKET_ECCENTRICITY, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_CAMBER, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_CAMBER_MULTIPLIER, &CPGStableLiftingView::OnChange)
    ON_EN_CHANGE(IDC_YRA, &CPGStableLiftingView::OnChange)
@@ -324,8 +325,6 @@ void CPGStableLiftingView::OnUserEc()
    BOOL bEnable = ((CButton*)GetDlgItem(IDC_COMPUTE_EC))->GetCheck();
    GetDlgItem(IDC_EC)->EnableWindow(bEnable);
    GetDlgItem(IDC_EC_UNIT)->EnableWindow(bEnable);
-   GetDlgItem(IDC_K1)->EnableWindow(!bEnable);
-   GetDlgItem(IDC_K2)->EnableWindow(!bEnable);
 
    if (bEnable==FALSE)
    {
@@ -345,20 +344,12 @@ void CPGStableLiftingView::UpdateEc()
       return;
    }
 
-    // need to manually parse strength and density values
-   CString strFc, strDensity, strK1, strK2;
+    // need to manually parse strength
+   CString strFc;
    m_ctrlFc.GetWindowText(strFc);
-   m_ctrlK1.GetWindowText(strK1);
-   m_ctrlK2.GetWindowText(strK2);
-
-   CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-
-   strDensity.Format(_T("%s"),FormatDimension(pDoc->GetDensity(),pDispUnits->Density,false));
-
-   CString strEc = pDoc->UpdateEc(strFc,strDensity,strK1,strK2);
+   CString strEc = pDoc->UpdateEc(strFc);
    m_ctrlEc.SetWindowText(strEc);
 }
 
@@ -377,7 +368,7 @@ void CPGStableLiftingView::OnChange()
 void CPGStableLiftingView::UpdateFpeControls()
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Lifting);
 
    BOOL bEnable = (strands.strandMethod == CPGStableStrands::Simplified ? TRUE : FALSE);
    GetDlgItem(IDC_FPE_STRAIGHT)->EnableWindow(bEnable);
@@ -417,10 +408,10 @@ void CPGStableLiftingView::OnEditFpe()
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
    CPGStableEffectivePrestressDlg dlg;
-   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+   dlg.m_Strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Lifting);
    if ( dlg.DoModal() == IDOK )
    {
-      pDoc->SetStrands(pDoc->GetGirderType(),LIFTING,dlg.m_Strands);
+      pDoc->SetStrands(pDoc->GetGirderType(), ModelType::Lifting,dlg.m_Strands);
 
       Float64 Fs,Fh,Ft;
       GetMaxFpe(&Fs,&Fh,&Ft);
@@ -452,8 +443,8 @@ void CPGStableLiftingView::OnInitialUpdate()
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)stbTypes::Speed);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)stbTypes::Pressure);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::Pressure);
 
    CPGStableFormView::OnInitialUpdate();
 
@@ -480,7 +471,7 @@ void CPGStableLiftingView::RefreshReport()
 void CPGStableLiftingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
 {
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), LIFTING);
+   const auto& strands = pDoc->GetStrands(pDoc->GetGirderType(), ModelType::Lifting);
 
    if (strands.strandMethod == CPGStableStrands::Simplified )
    {
@@ -520,6 +511,7 @@ void CPGStableLiftingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /
          OnChange();
       }
    }
+   if (m_pBrowser) m_pBrowser->Refresh();
 }
 
 void CPGStableLiftingView::OnClickedLiftingTensionMax()
@@ -624,11 +616,11 @@ void CPGStableLiftingView::OnWindTypeChanged()
 {
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    int curSel = pcbWindType->GetCurSel();
-   stbTypes::WindType windType = (stbTypes::WindType)pcbWindType->GetItemData(curSel);
+   WBFL::Stability::WindType windType = (WBFL::Stability::WindType)pcbWindType->GetItemData(curSel);
    CDataExchange dx(this,false);
    CEAFApp* pApp = EAFGetApp();
    const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   if ( windType == stbTypes::Speed )
+   if ( windType == WBFL::Stability::Speed )
    {
       DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
    }

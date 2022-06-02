@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -93,8 +93,8 @@ public:
    void RemoveSelectedGirderSections();
    BOOL AreGirderSectionsSelected();
 
-   void FillGrid(const stbGirder& girder);
-   void GetGirderSections(stbGirder& girder);
+   void FillGrid(const WBFL::Stability::Girder& girder);
+   void GetGirderSections(WBFL::Stability::Girder& girder);
 
    Float64 GetGirderLength();
 

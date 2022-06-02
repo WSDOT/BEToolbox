@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -25,14 +25,14 @@
 
 // CPGStableHaulingCriteria document
 
-class BETCLASS CPGStableHaulingCriteria : public stbHaulingCriteria
+class BETCLASS CPGStableHaulingCriteria : public WBFL::Stability::HaulingCriteria
 {
 public:
 	CPGStableHaulingCriteria();
 	virtual ~CPGStableHaulingCriteria();
    bool operator==(const CPGStableHaulingCriteria& other) const;
    bool operator!=(const CPGStableHaulingCriteria& other) const;
-   void operator=(const stbHaulingCriteria& other);
+   void operator=(const WBFL::Stability::HaulingCriteria& other);
 
    HRESULT Save(IStructuredSave* pStrSave);
    HRESULT Load(IStructuredLoad* pStrLoad);

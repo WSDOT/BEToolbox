@@ -22,6 +22,7 @@
 #define IDD_PGSTABLEGIRDERVIEW          109
 #define IDD_PGSTABLELIFTINGVIEW         110
 #define IDD_PGSTABLEHAULINGVIEW         111
+#define IDD_PGSTABLEONEENDSEATEDVIEW    112
 #define IDD_PGSTABLEEFFECTIVEPRESTRESSDLG 113
 #define IDR_PGSTABLEEXPORTER            114
 #define IDD_SPECTRA                     115
@@ -200,13 +201,17 @@
 #define IDC_SUPPORT_PLACEMENT_TOLERANCE 332
 #define IDC_SUPPORT_PLACEMENT_TOLERANCE_UNIT 333
 #define IDC_LIFT                        334
+#define IDC_LIFT_POINT_TOLERANCE        334
 #define IDC_LIFT_UNIT                   335
+#define IDC_LIFT_POINT_TOLERANCE_UNIT   335
 #define IDC_RESULTS                     336
+#define IDC_LIFT_END_OFFSET             336
 #define IDC_IMPACT_UP                   337
 #define IDC_IMPACT_UP_UNIT              338
 #define IDC_IMPACT_DOWN                 339
 #define IDC_IMPACT_DOWN_UNIT            340
 #define IDC_LIFT_ANGLE                  341
+#define IDC_LIFT_END_OFFSET_UNIT        341
 #define IDC_LIFT_ANGLE_UNIT             342
 #define IDC_WIND_PRESSURE               343
 #define IDC_WIND_PRESSURE_UNIT          344
@@ -230,13 +235,14 @@
 #define IDC_POINT_LOAD_GRID             365
 #define IDC_HAULING_FS_CRACKING         365
 #define IDC_ADD_LOAD                    366
-#define IDC_K1                          366
+#define IDC_K1                          600
 #define IDC_STRESS_POINT_GRID           366
 #define IDC_REMOVE_LOAD                 367
+#define IDC_K3                          367
 #define IDC_GIRDER_SECTION_GRID         368
 #define IDC_ADD_SECTION                 369
 #define IDC_REMOVE_SECTION              370
-#define IDC_K2                          371
+#define IDC_K2                          601
 #define IDC_YH1_MEASURE                 372
 #define IDC_YH2_MEASURE                 373
 #define IDC_WCC                         373
@@ -254,6 +260,7 @@
 #define IDC_HGB                         379
 #define IDC_HGB_UNIT                    380
 #define IDC_USE_PGS_CRITERIA            381
+#define IDC_BRACKET_ECCENTRICITY        381
 #define IDC_PROJECT_CRITERIA            382
 #define IDC_LIFTING_FS_FAILURE          383
 #define IDC_HAULING_FS_FAILURE          385
@@ -268,6 +275,7 @@
 #define IDC_XFER_LENGTH_UNIT            395
 #define IDC_CHECK1                      396
 #define IDC_RESTRICT_IMPACT             396
+#define IDC_LIFTING                     396
 #define IDC_MAX_BUNK                    398
 #define IDC_MAX_BUNK_UNIT               399
 #define IDC_LEADING_OVERHANG            400
@@ -333,6 +341,8 @@
 #define IDC_EX_LABEL                    463
 #define IDC_EDIT1                       465
 #define IDC_LIFTING_PEAK_COMPRESSION    465
+#define IDC_ATTACHMENT_WEIGHT           465
+#define IDC_YLIFT                       465
 #define IDC_LIFTING_GLOBAL_COMPRESSION  466
 #define IDC_LIFTING_GLOBAL_COMPRESSION_UNIT 467
 #define IDC_LIFTING_PEAK_COMPRESSION_UNIT 468
@@ -347,6 +357,17 @@
 #define IDC_SPECIFICATION               473
 #define IDC_NWC                         474
 #define IDC_LWC                         475
+#define IDC_ATTACHMENT_WEIGHT_UNIT      476
+#define IDC_ECCENTRICITY                477
+#define IDC_ECCENTRICITY_UNIT           478
+#define IDC_HAULING                     479
+#define IDC_BRACKET_WEIGHT              480
+#define IDC_BRACKET_WEIGHT_UNIT         481
+#define IDC_BRACKET_ECCENTRICITY_UNIT   482
+#define IDC_YLIFT_UNIT                  483
+#define IDC_FRACTION_OF_ROLL_STIFFNESS  484
+#define IDC_FRACTION_OF_ROLL_STIFFNESS_UNIT 485
+#define IDC_COPY                        486
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -395,14 +416,15 @@
 #define IDC_GIRDER                      1781
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
+#define ID_OPTIONS_AUTOSAVE             36871
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        225
-#define _APS_NEXT_COMMAND_VALUE         36871
-#define _APS_NEXT_CONTROL_VALUE         476
+#define _APS_NEXT_RESOURCE_VALUE        226
+#define _APS_NEXT_COMMAND_VALUE         36873
+#define _APS_NEXT_CONTROL_VALUE         487
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

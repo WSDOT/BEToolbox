@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2021  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -247,8 +247,8 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
       Mr = ::ConvertFromSysUnits(Mr,pDispUnits->Moment.UnitOfMeasure);
       Pr = ::ConvertFromSysUnits(Pr,pDispUnits->GeneralForce.UnitOfMeasure);
 
-      graph.AddPoint(series1,gpPoint2d(Mn,-Pn));      
-      graph.AddPoint(series2,gpPoint2d(Mr,-Pr));      
+      graph.AddPoint(series1, GraphPoint(Mn,-Pn));
+      graph.AddPoint(series2, GraphPoint(Mr,-Pr));
    }
 
    graph.UpdateGraphMetrics(pDC->GetSafeHdc());
