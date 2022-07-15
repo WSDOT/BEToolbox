@@ -99,8 +99,8 @@ public:
    Float64 GetDensityWithRebar() const;
    void SetDensityWithRebar(Float64 density);
 
-   matConcrete::Type GetConcreteType() const;
-   void SetConcreteType(matConcrete::Type type);
+   WBFL::Materials::ConcreteType GetConcreteType() const;
+   void SetConcreteType(WBFL::Materials::ConcreteType type);
 
    Float64 GetK1() const;
    void SetK1(Float64 k1);

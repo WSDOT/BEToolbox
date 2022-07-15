@@ -219,7 +219,7 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_DENSITY_WITH_REBAR,IDC_DENSITY_WITH_REBAR_UNIT,densityWithRebar,pDispUnits->Density);
    DDV_UnitValueGreaterThanZero(pDX,IDC_DENSITY_WITH_REBAR,densityWithRebar,pDispUnits->Density);
 
-   matConcrete::Type concrete_type = pDoc->GetConcreteType();
+   auto concrete_type = pDoc->GetConcreteType();
    DDX_RadioEnum(pDX, IDC_NWC, concrete_type);
 
    Float64 K1 = pDoc->GetK1();

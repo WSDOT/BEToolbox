@@ -54,7 +54,7 @@ CPGStableModel::CPGStableModel()
 
    m_Girder[GirderType::Nonprismatic] = m_Girder[GirderType::Prismatic];
 
-   matConcreteEx liftingConcrete, haulingConcrete, oneEndSeatedConcrete;
+   WBFL::Materials::Concrete liftingConcrete, haulingConcrete, oneEndSeatedConcrete;
 
    Float64 density = WBFL::Units::ConvertToSysUnits(0.155,WBFL::Units::Measure::KipPerFeet3); // without rebar (used to compute Ec)
    Float64 densityWithRebar = WBFL::Units::ConvertToSysUnits(0.165,WBFL::Units::Measure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
@@ -188,7 +188,7 @@ WBFL::Stability::LiftingResults CPGStableModel::GetLiftingResults() const
 
 WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
 {
-   matConcreteEx concrete = m_LiftingStabilityProblem.GetConcrete();
+   WBFL::Materials::Concrete concrete = m_LiftingStabilityProblem.GetConcrete();
    Float64 fci = concrete.GetFc();
    if ( m_bComputeEci )
    {
@@ -276,7 +276,7 @@ WBFL::Stability::OneEndSeatedResults CPGStableModel::GetOneEndSeatedResults() co
 
 WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
 {
-   matConcreteEx concrete = m_HaulingStabilityProblem.GetConcrete();
+   WBFL::Materials::Concrete concrete = m_HaulingStabilityProblem.GetConcrete();
    Float64 fc = concrete.GetFc();
    if ( m_bComputeEc )
    {
@@ -349,7 +349,7 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
 
 WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckArtifact() const
 {
-   matConcreteEx concrete = m_OneEndSeatedStabilityProblem.GetConcrete();
+   WBFL::Materials::Concrete concrete = m_OneEndSeatedStabilityProblem.GetConcrete();
    Float64 fc = concrete.GetFc();
    if (m_bComputeEc)
    {
@@ -758,7 +758,7 @@ Float64 CPGStableModel::GetHarpedStrandLocation(Float64 X,Float64 X1,Float64 Y1,
    }
 }
 
-bool CPGStableModel::SetConcreteType(matConcrete::Type type)
+bool CPGStableModel::SetConcreteType(WBFL::Materials::ConcreteType type)
 {
    if (m_LiftingStabilityProblem.GetConcrete().GetType() != type)
    {
@@ -770,7 +770,7 @@ bool CPGStableModel::SetConcreteType(matConcrete::Type type)
    return false;
 }
 
-matConcrete::Type CPGStableModel::GetConcreteType() const
+WBFL::Materials::ConcreteType CPGStableModel::GetConcreteType() const
 {
    return m_LiftingStabilityProblem.GetConcrete().GetType();
 }
@@ -1372,7 +1372,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    Float64 liftAngle = liftingProblem.GetLiftAngle();
    pStrSave->put_Property(_T("LiftAngle"),CComVariant(liftAngle));
 
-   const matConcreteEx& concrete = liftingProblem.GetConcrete();
+   const WBFL::Materials::Concrete& concrete = liftingProblem.GetConcrete();
    pStrSave->put_Property(_T("FrCoefficient"),CComVariant(m_LiftingFrCoefficient));
    pStrSave->put_Property(_T("Fci"),CComVariant(concrete.GetFc()));
    pStrSave->put_Property(_T("ComputeEci"),CComVariant(m_bComputeEci));
@@ -1451,7 +1451,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    WBFL::Stability::CFType cfType = haulingProblem.GetCentrifugalForceType();
    pStrSave->put_Property(_T("CFType"),CComVariant(cfType));
 
-   const matConcreteEx& concrete = haulingProblem.GetConcrete();
+   const WBFL::Materials::Concrete& concrete = haulingProblem.GetConcrete();
    pStrSave->put_Property(_T("FrCoefficient"),CComVariant(m_HaulingFrCoefficient));
    pStrSave->put_Property(_T("Fc"),CComVariant(concrete.GetFc()));
    pStrSave->put_Property(_T("ComputeEc"),CComVariant(m_bComputeEc));
@@ -1520,7 +1520,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       Float64 CrownSlope = oneEndSeatedProblem.GetSupportSlope();
       pStrSave->put_Property(_T("CrownSlope"), CComVariant(CrownSlope));
 
-      const matConcreteEx& concrete = oneEndSeatedProblem.GetConcrete();
+      const WBFL::Materials::Concrete& concrete = oneEndSeatedProblem.GetConcrete();
       pStrSave->put_Property(_T("FrCoefficient"), CComVariant(m_OneEndSeatedFrCoefficient));
       pStrSave->put_Property(_T("Fc"), CComVariant(concrete.GetFc()));
       pStrSave->put_Property(_T("ComputeEc"), CComVariant(m_bComputeEcOneEndSeated));
@@ -1852,7 +1852,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
          CComVariant concrete_var;
          concrete_var.vt = VT_I8;
          hr = pStrLoad->get_Property(_T("ConcreteType"), &concrete_var);
-         SetConcreteType((matConcrete::Type)concrete_var.lVal);
+         SetConcreteType((WBFL::Materials::ConcreteType)concrete_var.lVal);
       }
 
       m_Girder[m_GirderType].ClearPointLoads();

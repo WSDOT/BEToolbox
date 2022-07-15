@@ -780,12 +780,12 @@ void CPGStableDoc::SetDensityWithRebar(Float64 density)
    }
 }
 
-matConcrete::Type CPGStableDoc::GetConcreteType() const
+WBFL::Materials::ConcreteType CPGStableDoc::GetConcreteType() const
 {
    return m_Model.GetConcreteType();
 }
 
-void CPGStableDoc::SetConcreteType(matConcrete::Type type)
+void CPGStableDoc::SetConcreteType(WBFL::Materials::ConcreteType type)
 {
    if (m_Model.SetConcreteType(type))
    {
