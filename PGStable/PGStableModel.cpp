@@ -54,7 +54,7 @@ CPGStableModel::CPGStableModel()
 
    m_Girder[GirderType::Nonprismatic] = m_Girder[GirderType::Prismatic];
 
-   WBFL::Materials::Concrete liftingConcrete, haulingConcrete, oneEndSeatedConcrete;
+   WBFL::Materials::SimpleConcrete liftingConcrete, haulingConcrete, oneEndSeatedConcrete;
 
    Float64 density = WBFL::Units::ConvertToSysUnits(0.155,WBFL::Units::Measure::KipPerFeet3); // without rebar (used to compute Ec)
    Float64 densityWithRebar = WBFL::Units::ConvertToSysUnits(0.165,WBFL::Units::Measure::KipPerFeet3); // including allowance for rebar (used for computing dead load)
@@ -188,7 +188,7 @@ WBFL::Stability::LiftingResults CPGStableModel::GetLiftingResults() const
 
 WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() const
 {
-   WBFL::Materials::Concrete concrete = m_LiftingStabilityProblem.GetConcrete();
+   WBFL::Materials::SimpleConcrete concrete = m_LiftingStabilityProblem.GetConcrete();
    Float64 fci = concrete.GetFc();
    if ( m_bComputeEci )
    {
@@ -276,7 +276,7 @@ WBFL::Stability::OneEndSeatedResults CPGStableModel::GetOneEndSeatedResults() co
 
 WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() const
 {
-   WBFL::Materials::Concrete concrete = m_HaulingStabilityProblem.GetConcrete();
+   WBFL::Materials::SimpleConcrete concrete = m_HaulingStabilityProblem.GetConcrete();
    Float64 fc = concrete.GetFc();
    if ( m_bComputeEc )
    {
@@ -349,7 +349,7 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
 
 WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckArtifact() const
 {
-   WBFL::Materials::Concrete concrete = m_OneEndSeatedStabilityProblem.GetConcrete();
+   WBFL::Materials::SimpleConcrete concrete = m_OneEndSeatedStabilityProblem.GetConcrete();
    Float64 fc = concrete.GetFc();
    if (m_bComputeEc)
    {
@@ -1372,7 +1372,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    Float64 liftAngle = liftingProblem.GetLiftAngle();
    pStrSave->put_Property(_T("LiftAngle"),CComVariant(liftAngle));
 
-   const WBFL::Materials::Concrete& concrete = liftingProblem.GetConcrete();
+   const WBFL::Materials::SimpleConcrete& concrete = liftingProblem.GetConcrete();
    pStrSave->put_Property(_T("FrCoefficient"),CComVariant(m_LiftingFrCoefficient));
    pStrSave->put_Property(_T("Fci"),CComVariant(concrete.GetFc()));
    pStrSave->put_Property(_T("ComputeEci"),CComVariant(m_bComputeEci));
@@ -1451,7 +1451,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    WBFL::Stability::CFType cfType = haulingProblem.GetCentrifugalForceType();
    pStrSave->put_Property(_T("CFType"),CComVariant(cfType));
 
-   const WBFL::Materials::Concrete& concrete = haulingProblem.GetConcrete();
+   const WBFL::Materials::SimpleConcrete& concrete = haulingProblem.GetConcrete();
    pStrSave->put_Property(_T("FrCoefficient"),CComVariant(m_HaulingFrCoefficient));
    pStrSave->put_Property(_T("Fc"),CComVariant(concrete.GetFc()));
    pStrSave->put_Property(_T("ComputeEc"),CComVariant(m_bComputeEc));
@@ -1520,7 +1520,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       Float64 CrownSlope = oneEndSeatedProblem.GetSupportSlope();
       pStrSave->put_Property(_T("CrownSlope"), CComVariant(CrownSlope));
 
-      const WBFL::Materials::Concrete& concrete = oneEndSeatedProblem.GetConcrete();
+      const WBFL::Materials::SimpleConcrete& concrete = oneEndSeatedProblem.GetConcrete();
       pStrSave->put_Property(_T("FrCoefficient"), CComVariant(m_OneEndSeatedFrCoefficient));
       pStrSave->put_Property(_T("Fc"), CComVariant(concrete.GetFc()));
       pStrSave->put_Property(_T("ComputeEc"), CComVariant(m_bComputeEcOneEndSeated));
