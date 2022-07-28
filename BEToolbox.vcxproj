@@ -92,7 +92,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;$(ARPDIR)\BridgeLink\Include;$(ARPDIR)\BridgeLink\Include\$(Platform);$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema;.\Documentation;$(ARPDIR)\PGSuper\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(ARPDIR)\BridgeLink\Include;$(ARPDIR)\BridgeLink\Include\$(Platform);$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema;.\Documentation;$(ARPDIR)\PGSuper\Include;%(AdditionalIncludeDirectories);$(ARPDIR)\BridgeLink\Include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -148,7 +148,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <ProxyFileName>BEToolbox_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\BEToolboxXML;$(ARPDIR)\BridgeLink\Include;$(ARPDIR)\BridgeLink\Include\$(Platform);$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema;.\Documentation;$(ARPDIR)\PGSuper\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\BEToolboxXML;$(ARPDIR)\BridgeLink\Include;$(ARPDIR)\BridgeLink\Include\$(Platform);$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema;.\Documentation;$(ARPDIR)\PGSuper\Include;%(AdditionalIncludeDirectories);$(ARPDIR)\BridgeLink\Include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>

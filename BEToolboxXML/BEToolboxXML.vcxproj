@@ -87,7 +87,7 @@ xcopy /y /d $(ARPDIR)\WBFL\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema\;$(ARPDIR)\WBFL\Apache\XALANCPKG-11-31-X64-VC100\Include;$(ARPDIR)\WBFL\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema\;$(ARPDIR)\WBFL\Apache\XALANCPKG-11-31-X64-VC100\Include;$(ARPDIR)\WBFL\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories);$(ARPDIR)\BridgeLink\Include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -124,7 +124,7 @@ xcopy /y /d $(ARPDIR)\WBFL\Apache\XALANCPKG-11-31-X64-VC100\bin\XalanMessages_1_
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema\;$(ARPDIR)\WBFL\Apache\XALANCPKG-11-31-X64-VC100\Include;$(ARPDIR)\WBFL\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema\;$(ARPDIR)\WBFL\Apache\XALANCPKG-11-31-X64-VC100\Include;$(ARPDIR)\WBFL\Apache\XERCESCPKG-11-31-X64-VC100\Include;%(AdditionalIncludeDirectories);$(ARPDIR)\BridgeLink\Include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AUTOLIB;_SCL_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDBETOOLBOXXMLLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
