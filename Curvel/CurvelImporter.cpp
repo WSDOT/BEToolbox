@@ -79,7 +79,7 @@ STDMETHODIMP CCurvelImporter::Import(IBroker* pBroker)
       // PGSuper is using the old C++ units management system... we need the new C++/COM version
       CComPtr<IUnitServer> unitServer;
       unitServer.CoCreateInstance(CLSID_UnitServer);
-      unitServer->SetBaseUnits(CComBSTR(WBFL::Units::System::GetMassUnit().UnitTag().c_str()),
+      unitServer->SetSystemUnits(CComBSTR(WBFL::Units::System::GetMassUnit().UnitTag().c_str()),
                                CComBSTR(WBFL::Units::System::GetLengthUnit().UnitTag().c_str()),
                                CComBSTR(WBFL::Units::System::GetTimeUnit().UnitTag().c_str()),
                                CComBSTR(WBFL::Units::System::GetTemperatureUnit().UnitTag().c_str()),
