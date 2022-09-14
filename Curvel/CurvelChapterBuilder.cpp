@@ -496,9 +496,9 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
                Float64 k2 = -2*B*cos(a);
                Float64 k3 = B*B - A*A;
 
-               mathQuadraticSolver qSolver(k1,k2,k3);
+               WBFL::Math::QuadraticSolver qSolver(k1,k2,k3);
                Float64 C1,C2;
-               int nRoots = qSolver.Solve(&C1,&C2);
+               auto nRoots = qSolver.Solve(&C1,&C2);
                ATLASSERT(nRoots == 2);
                Float64 C = (skewLine.Radius < 0 ? C2 : C1);
 

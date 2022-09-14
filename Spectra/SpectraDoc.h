@@ -28,7 +28,7 @@
 #include <WBFLUnitServer.h>
 #include <ReportManager\ReportManager.h>
 #include "ResponseSpectra.h"
-#include <Math\PwLinearFunction2dUsingPoints.h>
+#include <Math\PiecewiseFunction.h>
 
 class CSpectraDoc : public CBEToolboxDoc
 {
@@ -76,9 +76,9 @@ protected:
    SiteClass m_SiteClass;
 
    SpectralValues* m_pValues;
-   std::vector<std::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_ZeroPeriodSiteFactors[nSpecTypes];
-   std::vector<std::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_ShortPeriodSiteFactors[nSpecTypes];
-   std::vector<std::shared_ptr<mathPwLinearFunction2dUsingPoints>> m_LongPeriodSiteFactors[nSpecTypes];
+   std::vector<std::shared_ptr<WBFL::Math::PiecewiseFunction>> m_ZeroPeriodSiteFactors[nSpecTypes];
+   std::vector<std::shared_ptr<WBFL::Math::PiecewiseFunction>> m_ShortPeriodSiteFactors[nSpecTypes];
+   std::vector<std::shared_ptr<WBFL::Math::PiecewiseFunction>> m_LongPeriodSiteFactors[nSpecTypes];
 
 public:
    void SetSpecification(SpecificationType specType);
@@ -92,9 +92,9 @@ public:
    LPCTSTR GetSpectraResultExplaination(Uint32 result) const;
    Uint32 GetResponseSpectra(SpecificationType specType, Float64 lat,Float64 lng,SiteClass siteClass,CResponseSpectra* pSpectra) const;
 
-   const mathPwLinearFunction2dUsingPoints* GetZeroPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const;
-   const mathPwLinearFunction2dUsingPoints* GetShortPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const;
-   const mathPwLinearFunction2dUsingPoints* GetLongPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const;
+   const WBFL::Math::PiecewiseFunction* GetZeroPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const;
+   const WBFL::Math::PiecewiseFunction* GetShortPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const;
+   const WBFL::Math::PiecewiseFunction* GetLongPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const;
 
    virtual void OnCloseDocument() override;
 

@@ -266,7 +266,7 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
       SiteClass thisSiteClass = (SiteClass)i;
 
       col = 0;
-      const mathPwLinearFunction2dUsingPoints* pZeroPeriodSiteFactors = m_pDoc->GetZeroPeriodSiteFactors(specType, thisSiteClass);
+      const auto* pZeroPeriodSiteFactors = m_pDoc->GetZeroPeriodSiteFactors(specType, thisSiteClass);
       (*pZeroPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
       (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.1));
       (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.2));
@@ -279,7 +279,7 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
       }
 
       col = 0;
-      const mathPwLinearFunction2dUsingPoints* pShortPeriodSiteFactors = m_pDoc->GetShortPeriodSiteFactors(specType, thisSiteClass);
+      const auto* pShortPeriodSiteFactors = m_pDoc->GetShortPeriodSiteFactors(specType, thisSiteClass);
       (*pShortPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
       (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.25));
       (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.50));
@@ -292,7 +292,7 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
       }
 
       col = 0;
-      const mathPwLinearFunction2dUsingPoints* pLongPeriodSiteFactors = m_pDoc->GetLongPeriodSiteFactors(specType, thisSiteClass);
+      const auto* pLongPeriodSiteFactors = m_pDoc->GetLongPeriodSiteFactors(specType, thisSiteClass);
       (*pLongPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
       (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.1));
       (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.2));
