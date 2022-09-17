@@ -57,9 +57,9 @@ std::shared_ptr<CReportSpecification> CUltColView::CreateReportSpecification()
    CUltColDoc* pDoc = (CUltColDoc*)GetDocument();
 
    std::shared_ptr<CReportSpecification> pRptSpec;
-   std::vector<std::_tstring> rptNames = pDoc->m_RptMgr.GetReportNames();
+   std::vector<std::_tstring> rptNames = pDoc->GetReportManager().GetReportNames();
 
-   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(rptNames.front());
+   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->GetReportManager().GetReportBuilder(rptNames.front());
    CReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
    std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
@@ -74,7 +74,7 @@ std::shared_ptr<CReportBrowser> CUltColView::CreateReportBrowser()
       return nullptr;
 
    CUltColDoc* pDoc = (CUltColDoc*)GetDocument();
-   return pDoc->m_RptMgr.CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<CReportSpecificationBuilder>());
+   return pDoc->GetReportManager().CreateReportBrowser(GetSafeHwnd(), m_pReportSpec, std::shared_ptr<CReportSpecificationBuilder>());
 }
 
 void CUltColView::RefreshReport()
@@ -85,12 +85,12 @@ void CUltColView::RefreshReport()
    CEAFReportViewCreationData data;
    data.m_RptIdx = 0;
    data.m_bPromptForSpec = false;
-   data.m_pReportBuilderMgr = &pDoc->m_RptMgr;
+   data.m_pReportBuilderMgr = &pDoc->GetReportManager();
    CEAFDocTemplate* pDocTemplate = (CEAFDocTemplate*)pDoc->GetDocTemplate();
    pDocTemplate->SetViewCreationData((void*)&data);
 
    // refresh the report
-   std::shared_ptr<CReportBuilder> pBuilder = pDoc->m_RptMgr.GetReportBuilder( m_pReportSpec->GetReportName() );
+   std::shared_ptr<CReportBuilder> pBuilder = pDoc->GetReportManager().GetReportBuilder(m_pReportSpec->GetReportName());
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pReportSpec );
    m_pReportBrowser->UpdateReport( pReport, true );
 }
@@ -121,23 +121,17 @@ void CUltColView::OnInitialUpdate()
    CEAFReportViewCreationData data;
    data.m_RptIdx = 0;
    data.m_bPromptForSpec = false;
-   data.m_pReportBuilderMgr = &pDoc->m_RptMgr;
+   data.m_pReportBuilderMgr = &pDoc->GetReportManager();
    CEAFDocTemplate* pDocTemplate = (CEAFDocTemplate*)pDoc->GetDocTemplate();
    pDocTemplate->SetViewCreationData((void*)&data);
 
    CEAFReportView::OnInitialUpdate();
 
    // TODO: Add your specialized code here and/or call the base class
-   Float64 diameter, fc, cover, As, Es, fy, ecl, etl;
-   pDoc->m_Column->get_Diameter(&diameter);
-   pDoc->m_Column->get_fc(&fc);
-   pDoc->m_Column->get_Cover(&cover);
-   pDoc->m_Column->get_As(&As);
-   pDoc->m_Column->get_Es(&Es);
-   pDoc->m_Column->get_fy(&fy);
-   ecl = pDoc->m_ecl;
-   etl = pDoc->m_etl;
+   WBFL::RCSection::CircularColumn column;
+   Float64 ecl, etl;
+   pDoc->GetColumn(column, ecl, etl);
 
    CUltColChildFrame* pFrame = (CUltColChildFrame*)GetParentFrame();
-   pFrame->SetColumnParameters(diameter, fc, cover, As, Es, fy, ecl, etl);
+   pFrame->SetColumnParameters(column, ecl, etl);
 }

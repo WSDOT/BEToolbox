@@ -24,10 +24,7 @@
 
 // CUltColDoc document
 #include "..\BEToolboxDoc.h"
-#include <WBFLTools.h>
-#include <WBFLGeometry.h>
-#include <WBFLUnitServer.h>
-#include <WBFLRCCapacity.h>
+#include <RCSection/CircularColumn.h>
 #include <ReportManager\ReportManager.h>
 
 class CUltColDoc : public CBEToolboxDoc
@@ -39,6 +36,11 @@ public:
 	virtual ~CUltColDoc();
 
    virtual CString GetToolbarSectionName() override;
+
+   void SetColumn(const WBFL::RCSection::CircularColumn& column,Float64 ecl,Float64 etl);
+   void GetColumn(WBFL::RCSection::CircularColumn& column, Float64& ecl, Float64& etl) const;
+
+   CReportBuilderManager& GetReportManager();
 
 #ifdef _DEBUG
 	virtual void AssertValid() const override;
@@ -60,18 +62,12 @@ protected:
 
    virtual CString GetDocumentationRootLocation() override;
 
-   BOOL CreateColumn();
-
    afx_msg void OnRefreshReport();
    afx_msg void OnHelpFinder();
 	DECLARE_MESSAGE_MAP()
 
-public:
-
-   // over-ride default behavior by destroying column
-   virtual void OnCloseDocument();
-
-   CComPtr<IRoundColumn> m_Column;
+private:
+   WBFL::RCSection::CircularColumn m_Column;
    Float64 m_ecl;
    Float64 m_etl;
    CReportBuilderManager m_RptMgr;

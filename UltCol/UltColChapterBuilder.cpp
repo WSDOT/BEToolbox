@@ -62,14 +62,6 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
 
-   if ( m_pDoc->m_Column == nullptr )
-   {
-       pPara = new rptParagraph;
-      (*pChapter) << pPara;
-      *pPara << _T("Press the Update button to compute the column interaction") << rptNewLine;
-      return pChapter;
-   }
-
    pPara = new rptParagraph;
    (*pChapter) << pPara;
 
@@ -87,15 +79,16 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    INIT_UV_PROTOTYPE( rptStressUnitValue,  stress, pDispUnits->Stress,       true);
    INIT_UV_PROTOTYPE( rptStressUnitValue,  modE,   pDispUnits->ModE,         true);
 
-   Float64 diameter, cover, As, fc, fy, Es, ecl, etl;
-   m_pDoc->m_Column->get_Diameter(&diameter);
-   m_pDoc->m_Column->get_Cover(&cover);
-   m_pDoc->m_Column->get_As(&As);
-   m_pDoc->m_Column->get_fc(&fc);
-   m_pDoc->m_Column->get_fy(&fy);
-   m_pDoc->m_Column->get_Es(&Es);
-   ecl = m_pDoc->m_ecl;
-   etl = m_pDoc->m_etl;
+   WBFL::RCSection::CircularColumn column;
+   Float64 ecl, etl;
+   m_pDoc->GetColumn(column, ecl, etl);
+
+   Float64 diameter = column.GetDiameter();
+   Float64 cover = column.GetCover();
+   Float64 As = column.GetAs();
+   Float64 fc = column.GetFc();
+   Float64 fy = column.GetFy();
+   Float64 Es = column.GetEs();
 
    (*pLayoutTable)(0,1) << _T("Diameter = ") << length.SetValue(diameter) << rptNewLine;
    (*pLayoutTable)(0,1) << Sub2(_T("f'"),_T("c")) << _T(" = ") << stress.SetValue(fc) << rptNewLine;
@@ -112,8 +105,8 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    //
    // DO THE COLUMN ANALYSIS
    //
-   CComPtr<IPoint2dCollection> unfactored, factored;
-   m_pDoc->m_Column->ComputeInteractionEx(35,ecl,etl,&unfactored,&factored);
+   std::vector<std::pair<Float64,Float64>> unfactored, factored;
+   column.ComputeInteraction(35,ecl,etl,unfactored,factored);
 
    (*pLayoutTable)(0,1) << CreateImage(unfactored,factored);
 
@@ -135,23 +128,17 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
 
    RowIndexType row = pTable->GetNumberOfHeaderRows();
 
-   CollectionIndexType nPoints;
-   unfactored->get_Count(&nPoints);
-   for ( CollectionIndexType i = 0; i < nPoints; i++ )
+   IndexType nPoints = unfactored.size();
+   for ( IndexType i = 0; i < nPoints; i++ )
    {
-      CComPtr<IPoint2d> pn;
-      unfactored->get_Item(i,&pn);
+      const auto& pn = unfactored[i];
+      const auto& pr = factored[i];
 
-      CComPtr<IPoint2d> pr;
-      factored->get_Item(i,&pr);
+      auto Mn = pn.first;
+      auto Pn = pn.second;
 
-      Float64 Mn,Pn;
-      pn->get_X(&Mn);
-      pn->get_Y(&Pn);
-
-      Float64 Mr,Pr;
-      pr->get_X(&Mr);
-      pr->get_Y(&Pr);
+      auto Mr = pr.first;
+      auto Pr = pr.second;
 
       Float64 phi = Pr/Pn;
       ATLASSERT( IsEqual(phi,Mr/Mn) );
@@ -174,7 +161,7 @@ CChapterBuilder* CUltColChapterBuilder::Clone() const
    return new CUltColChapterBuilder(m_pDoc);
 }
 
-rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IPoint2dCollection* factored) const
+rptRcImage* CUltColChapterBuilder::CreateImage(const std::vector<std::pair<Float64, Float64>>& unfactored,const std::vector<std::pair<Float64, Float64>>& factored) const
 {
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -223,26 +210,20 @@ rptRcImage* CUltColChapterBuilder::CreateImage(IPoint2dCollection* unfactored,IP
    IndexType series1 = graph.CreateDataSeries(_T(""),PS_SOLID,1,BLUE);
    IndexType series2 = graph.CreateDataSeries(_T(""),PS_SOLID,1,GREEN);
 
-   CollectionIndexType nPoints;
-   unfactored->get_Count(&nPoints);
-   for ( CollectionIndexType i = 0; i < nPoints; i++ )
+   IndexType nPoints = factored.size();
+   for ( IndexType i = 0; i < nPoints; i++ )
    {
-      CComPtr<IPoint2d> pn;
-      unfactored->get_Item(i,&pn);
+      const auto& pn = unfactored[i];
+      const auto& pr = factored[i];
 
-      Float64 Mn,Pn;
-      pn->get_X(&Mn);
-      pn->get_Y(&Pn);
+      auto Mn = pn.first;
+      auto Pn = pn.second;
+
+      auto Mr = pr.first;
+      auto Pr = pr.second;
 
       Mn = WBFL::Units::ConvertFromSysUnits(Mn,pDispUnits->Moment.UnitOfMeasure);
       Pn = WBFL::Units::ConvertFromSysUnits(Pn,pDispUnits->GeneralForce.UnitOfMeasure);
-
-      CComPtr<IPoint2d> pr;
-      factored->get_Item(i,&pr);
-
-      Float64 Mr,Pr;
-      pr->get_X(&Mr);
-      pr->get_Y(&Pr);
 
       Mr = WBFL::Units::ConvertFromSysUnits(Mr,pDispUnits->Moment.UnitOfMeasure);
       Pr = WBFL::Units::ConvertFromSysUnits(Pr,pDispUnits->GeneralForce.UnitOfMeasure);

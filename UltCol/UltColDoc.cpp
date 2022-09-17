@@ -91,33 +91,18 @@ void CUltColDoc::Dump(CDumpContext& dc) const
 #endif
 #endif //_DEBUG
 
-BOOL CUltColDoc::CreateColumn()
-{
-   AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-   if ( m_Column )
-      m_Column.Release();
-
-   m_Column.CoCreateInstance(CLSID_RoundColumn);
-
-   return (m_Column == nullptr ? FALSE : TRUE);
-}
-
 BOOL CUltColDoc::Init()
 {
    if ( !CBEToolboxDoc::Init() )
       return FALSE;
 
-   if ( !CreateColumn() )
-      return FALSE;
-
    // initialize with some defaults
-   m_Column->put_Diameter( WBFL::Units::ConvertToSysUnits(72.0,WBFL::Units::Measure::Inch) );
-   m_Column->put_Cover( WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch));
-   m_Column->put_As( WBFL::Units::ConvertToSysUnits(10.0,WBFL::Units::Measure::Inch2));
-   m_Column->put_fc( WBFL::Units::ConvertToSysUnits(4.0,WBFL::Units::Measure::KSI));
-   m_Column->put_fy( WBFL::Units::ConvertToSysUnits(60.0,WBFL::Units::Measure::KSI));
-   m_Column->put_Es( WBFL::Units::ConvertToSysUnits(29000.0,WBFL::Units::Measure::KSI));
+   m_Column.SetDiameter( WBFL::Units::ConvertToSysUnits(72.0,WBFL::Units::Measure::Inch) );
+   m_Column.SetCover( WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch));
+   m_Column.SetAs( WBFL::Units::ConvertToSysUnits(10.0,WBFL::Units::Measure::Inch2));
+   m_Column.SetFc( WBFL::Units::ConvertToSysUnits(4.0,WBFL::Units::Measure::KSI));
+   m_Column.SetFy( WBFL::Units::ConvertToSysUnits(60.0,WBFL::Units::Measure::KSI));
+   m_Column.SetEs( WBFL::Units::ConvertToSysUnits(29000.0,WBFL::Units::Measure::KSI));
 
    m_ecl = 0.0020;
    m_etl = 0.0050;
@@ -125,10 +110,25 @@ BOOL CUltColDoc::Init()
    return TRUE;
 }
 
-void CUltColDoc::OnCloseDocument()
+void CUltColDoc::SetColumn(const WBFL::RCSection::CircularColumn& column, Float64 ecl, Float64 etl)
 {
-   m_Column.Release();
-   CBEToolboxDoc::OnCloseDocument();
+   m_Column = column;
+   m_ecl = ecl;
+   m_etl = etl;
+   SetModifiedFlag();
+   UpdateAllViews(nullptr);
+}
+
+void CUltColDoc::GetColumn(WBFL::RCSection::CircularColumn& column, Float64& ecl, Float64& etl) const
+{
+   column = m_Column;
+   ecl = m_ecl;
+   etl = m_etl;
+}
+
+CReportBuilderManager& CUltColDoc::GetReportManager()
+{
+   return m_RptMgr;
 }
 
 void CUltColDoc::OnRefreshReport()
@@ -142,13 +142,12 @@ HRESULT CUltColDoc::WriteTheDocument(IStructuredSave* pStrSave)
    if ( FAILED(hr) )
       return hr;
 
-   Float64 diameter, cover, As, fc, fy, Es;
-   m_Column->get_Diameter(&diameter);
-   m_Column->get_Cover(&cover);
-   m_Column->get_As(&As);
-   m_Column->get_fc(&fc);
-   m_Column->get_fy(&fy);
-   m_Column->get_Es(&Es);
+   Float64 diameter = m_Column.GetDiameter();
+   Float64 cover = m_Column.GetCover();
+   Float64 As = m_Column.GetAs();
+   Float64 fc = m_Column.GetFc();
+   Float64 fy = m_Column.GetFy();
+   Float64 Es = m_Column.GetEs();
 
    CEAFApp* pApp = EAFGetApp();
 
@@ -217,32 +216,32 @@ HRESULT CUltColDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    hr = pStrLoad->get_Property(_T("Diameter"),&var);
    if ( FAILED(hr) )
       return hr;
-   m_Column->put_Diameter(var.dblVal);
+   m_Column.SetDiameter(var.dblVal);
 
    hr = pStrLoad->get_Property(_T("Cover"),&var);
    if ( FAILED(hr) )
       return hr;
-   m_Column->put_Cover(var.dblVal);
+   m_Column.SetCover(var.dblVal);
 
    hr = pStrLoad->get_Property(_T("As"),&var);
    if ( FAILED(hr) )
       return hr;
-   m_Column->put_As(var.dblVal);
+   m_Column.SetAs(var.dblVal);
 
    hr = pStrLoad->get_Property(_T("fc"),&var);
    if ( FAILED(hr) )
       return hr;
-   m_Column->put_fc(var.dblVal);
+   m_Column.SetFc(var.dblVal);
 
    hr = pStrLoad->get_Property(_T("fy"),&var);
    if ( FAILED(hr) )
       return hr;
-   m_Column->put_fy(var.dblVal);
+   m_Column.SetFy(var.dblVal);
 
    hr = pStrLoad->get_Property(_T("Es"),&var);
    if ( FAILED(hr) )
       return hr;
-   m_Column->put_Es(var.dblVal);
+   m_Column.SetEs(var.dblVal);
 
    Float64 version;
    pStrLoad->get_Version(&version);

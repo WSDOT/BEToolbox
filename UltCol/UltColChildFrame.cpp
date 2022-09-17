@@ -57,14 +57,14 @@ LRESULT CUltColChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
    return TRUE;
 }
 
-void CUltColChildFrame::SetColumnParameters(Float64 diameter, Float64 fc, Float64 cover, Float64 As, Float64 Es, Float64 fy,Float64 ecl,Float64 etl)
+void CUltColChildFrame::SetColumnParameters(const WBFL::RCSection::CircularColumn& column,Float64 ecl,Float64 etl)
 {
-   m_DlgBar.m_Diameter = diameter;
-   m_DlgBar.m_Fc = fc;
-   m_DlgBar.m_Cover = cover;
-   m_DlgBar.m_As = As;
-   m_DlgBar.m_Es = Es;
-   m_DlgBar.m_Fy = fy;
+   m_DlgBar.m_Diameter = column.GetDiameter();
+   m_DlgBar.m_Fc = column.GetFc();
+   m_DlgBar.m_Cover = column.GetCover();
+   m_DlgBar.m_As = column.GetAs();
+   m_DlgBar.m_Es = column.GetEs();
+   m_DlgBar.m_Fy = column.GetFy();
    m_DlgBar.m_ecl = ecl;
    m_DlgBar.m_etl = etl;
 
@@ -112,41 +112,16 @@ void CUltColChildFrame::OnUpdate()
    CUltColDoc* pDoc = (CUltColDoc*)GetActiveDocument();
    if ( pDoc )
    {
-      BOOL bModified = FALSE;
-      Float64 dia, fc, cover, as, es, fy, ecl, etl;
-      pDoc->m_Column->get_As(&as);
-      pDoc->m_Column->get_Cover(&cover);
-      pDoc->m_Column->get_Diameter(&dia);
-      pDoc->m_Column->get_Es(&es);
-      pDoc->m_Column->get_fc(&fc);
-      pDoc->m_Column->get_fy(&fy);
-      ecl = pDoc->m_ecl;
-      etl = pDoc->m_etl;
-      if ( !IsEqual(dia,m_DlgBar.m_Diameter) ||
-           !IsEqual(fc,m_DlgBar.m_Fc) ||
-           !IsEqual(cover,m_DlgBar.m_Cover) ||
-           !IsEqual(as,m_DlgBar.m_As) ||
-           !IsEqual(es,m_DlgBar.m_Es) ||
-           !IsEqual(fy,m_DlgBar.m_Fy) ||
-           !IsEqual(ecl,m_DlgBar.m_ecl) ||
-           !IsEqual(etl,m_DlgBar.m_etl))
-      {
-         bModified = TRUE;
-      }
-
-      pDoc->m_Column->put_Diameter( m_DlgBar.m_Diameter );
-      pDoc->m_Column->put_fc(       m_DlgBar.m_Fc );
-      pDoc->m_Column->put_Cover(    m_DlgBar.m_Cover );
-      pDoc->m_Column->put_As(       m_DlgBar.m_As );
-      pDoc->m_Column->put_Es(       m_DlgBar.m_Es );
-      pDoc->m_Column->put_fy(       m_DlgBar.m_Fy );
-      pDoc->m_ecl = m_DlgBar.m_ecl;
-      pDoc->m_etl = m_DlgBar.m_etl;
-
-      if ( pDoc->IsModified() || bModified )
-         pDoc->SetModifiedFlag();
-
-      pDoc->UpdateAllViews(nullptr);
+      WBFL::RCSection::CircularColumn column;
+      column.SetDiameter( m_DlgBar.m_Diameter );
+      column.SetFc(       m_DlgBar.m_Fc );
+      column.SetCover(    m_DlgBar.m_Cover );
+      column.SetAs(       m_DlgBar.m_As );
+      column.SetEs(       m_DlgBar.m_Es );
+      column.SetFy(       m_DlgBar.m_Fy );
+      Float64 ecl = m_DlgBar.m_ecl;
+      Float64 etl = m_DlgBar.m_etl;
+      pDoc->SetColumn(column, ecl, etl);
    }
 }
 

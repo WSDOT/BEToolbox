@@ -24,6 +24,7 @@
 #include <EAF\EAFChildFrame.h>
 #include <EAF\EAFTypes.h>
 #include "UltColDlgBar.h"
+#include <RCSection/CircularColumn.h>
 
 class CUltColChildFrame :
    public CEAFChildFrame
@@ -31,7 +32,7 @@ class CUltColChildFrame :
 public:
 	DECLARE_DYNCREATE(CUltColChildFrame)
 
-   void SetColumnParameters(Float64 diameter, Float64 fc, Float64 cover, Float64 As, Float64 Es, Float64 fy,Float64 ecl,Float64 etl);
+   void SetColumnParameters(const WBFL::RCSection::CircularColumn& column,Float64 ecl,Float64 etl);
    void SetUnitsMode(eafTypes::UnitMode um);
 
 protected:
