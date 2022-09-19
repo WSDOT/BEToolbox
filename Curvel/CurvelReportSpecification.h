@@ -24,22 +24,22 @@
 #include <ReportManager\ReportSpecification.h>
 
 class CCurvelReportSpecification :
-   public CReportSpecification
+   public WBFL::Reporting::ReportSpecification
 {
 public:
-	CCurvelReportSpecification(LPCTSTR strReportName);
+	CCurvelReportSpecification(const std::_tstring& strReportName);
    ~CCurvelReportSpecification(void);
 
    void SetVerticalCurveParameters(Float64 g1,Float64 g2,Float64 PVIStation,Float64 PVIElevation,Float64 length);
    void GetVerticalCurveParameters(Float64* g1,Float64* g2,Float64* PVIStation,Float64* PVIElevation,Float64* length) const;
 
-   bool CorrectForSuperelevation();
+   bool CorrectForSuperelevation() const;
    void CorrectForSuperelevation(bool bCorrect);
 
    void SetProfileGradeOffset(Float64 offset);
-   Float64 GetProfileGradeOffset();
+   Float64 GetProfileGradeOffset() const;
 
-   SuperelevationProfilePoint GetSuperelevationPoint(IndexType idx);
+   SuperelevationProfilePoint GetSuperelevationPoint(IndexType idx) const;
    void SetSuperelevationPoint(IndexType idx,SuperelevationProfilePoint& point);
 
    const std::vector<IndividualStation>& GetIndividualStations() const;
@@ -51,7 +51,7 @@ public:
    const std::vector<SkewLine>& GetSkewLines() const;
    void SetSkewLines(const std::vector<SkewLine>& skewLines);
 
-   virtual HRESULT Validate() const override;
+   virtual bool IsValid() const override;
 
 protected:
 

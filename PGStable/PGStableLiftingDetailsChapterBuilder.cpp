@@ -51,7 +51,7 @@ Uint16 CPGStableLiftingDetailsChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CPGStableLiftingDetailsChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CPGStableLiftingDetailsChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    GirderType girderType = m_pDoc->GetGirderType();
    WBFL::Stability::Girder girder = m_pDoc->GetGirder(girderType);
@@ -65,7 +65,7 @@ rptChapter* CPGStableLiftingDetailsChapterBuilder::Build(CReportSpecification* p
    return pChapter;
 }
 
-CChapterBuilder* CPGStableLiftingDetailsChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CPGStableLiftingDetailsChapterBuilder::Clone() const
 {
-   return new CPGStableLiftingDetailsChapterBuilder(m_pDoc);
+   return std::make_unique<CPGStableLiftingDetailsChapterBuilder>(m_pDoc);
 }

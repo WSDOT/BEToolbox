@@ -44,17 +44,16 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CUltColDoc, CBEToolboxDoc)
 
-CUltColDoc::CUltColDoc()
+CUltColDoc::CUltColDoc() : CBEToolboxDoc()
 {
-   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("UltCol")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("UltCol")));
+   GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CUltColTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CUltColTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CUltColChapterBuilder>(this) );
+   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CUltColChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
-
-   m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
    EnableUIHints(FALSE); // not using UIHints feature
 }
@@ -124,11 +123,6 @@ void CUltColDoc::GetColumn(WBFL::RCSection::CircularColumn& column, Float64& ecl
    column = m_Column;
    ecl = m_ecl;
    etl = m_etl;
-}
-
-CReportBuilderManager& CUltColDoc::GetReportManager()
-{
-   return m_RptMgr;
 }
 
 void CUltColDoc::OnRefreshReport()

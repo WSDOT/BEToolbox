@@ -54,34 +54,33 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPGStableDoc, CBEToolboxDoc)
 
-CPGStableDoc::CPGStableDoc()
+CPGStableDoc::CPGStableDoc() : CBEToolboxDoc()
 {
-   std::shared_ptr<CTitlePageBuilder> pLiftingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pLiftingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::unique_ptr<CReportBuilder> pLiftingReportBuilder(std::make_unique<CReportBuilder>(_T("Lifting")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pLiftingReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Lifting")));
    pLiftingReportBuilder->AddTitlePageBuilder(pLiftingTitlePageBuilder);
-   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableLiftingSummaryChapterBuilder>(this)));
-   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableLiftingDetailsChapterBuilder>(this)));
+   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableLiftingSummaryChapterBuilder>(this)));
+   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableLiftingDetailsChapterBuilder>(this)));
+   GetReportManager()->AddReportBuilder(pLiftingReportBuilder);
 
-   m_RptMgr.AddReportBuilder(pLiftingReportBuilder.release());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pHaulingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::shared_ptr<CTitlePageBuilder> pHaulingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
-
-   std::unique_ptr<CReportBuilder> pHaulingReportBuilder(std::make_unique<CReportBuilder>(_T("Hauling")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pHaulingReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Hauling")));
    pHaulingReportBuilder->AddTitlePageBuilder(pHaulingTitlePageBuilder);
-   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableHaulingSummaryChapterBuilder>(this)));
-   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableHaulingDetailsChapterBuilder>(this)));
+   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableHaulingSummaryChapterBuilder>(this)));
+   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableHaulingDetailsChapterBuilder>(this)));
 
-   m_RptMgr.AddReportBuilder(pHaulingReportBuilder.release());
+   GetReportManager()->AddReportBuilder(pHaulingReportBuilder);
 
-   std::shared_ptr<CTitlePageBuilder> pOneEndSeatedTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pOneEndSeatedTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::unique_ptr<CReportBuilder> pOneEndSeatedReportBuilder(std::make_unique<CReportBuilder>(_T("OneEndSeated")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pOneEndSeatedReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("OneEndSeated")));
    pOneEndSeatedReportBuilder->AddTitlePageBuilder(pOneEndSeatedTitlePageBuilder);
-   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableOneEndSeatedSummaryChapterBuilder>(this)));
-   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableOneEndSeatedDetailsChapterBuilder>(this)));
+   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedSummaryChapterBuilder>(this)));
+   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedDetailsChapterBuilder>(this)));
 
-   m_RptMgr.AddReportBuilder(pOneEndSeatedReportBuilder.release());
+   GetReportManager()->AddReportBuilder(pOneEndSeatedReportBuilder);
 
    m_strProjectCriteria = gs_strCriteria;
    m_strHaulTruck = gs_strHaulTruck;
@@ -893,12 +892,12 @@ CString CPGStableDoc::UpdateEc(const CString& strFc)
    return strEc;
 }
 
-void CPGStableDoc::ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt)
+void CPGStableDoc::ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt) const
 {
    m_Model.ResolveStrandLocations(strands,girder,pXs,pYs,pXh,pXh1,pYh1,pXh2,pYh2,pXh3,pYh3,pXh4,pYh4,pXt,pYt);
 }
 
-void CPGStableDoc::GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp)
+void CPGStableDoc::GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const
 {
    m_Model.GetStrandProfiles(strands,girder,pvStraight,pvHarped,pvTemp);
 }

@@ -39,7 +39,7 @@ CGirCompTitlePageBuilder::CGirCompTitlePageBuilder(void)
 }
 
 CGirCompTitlePageBuilder::CGirCompTitlePageBuilder(const CGirCompTitlePageBuilder& other) :
-CTitlePageBuilder(other)
+WBFL::Reporting::TitlePageBuilder(other)
 {
 }
 
@@ -47,7 +47,7 @@ CGirCompTitlePageBuilder::~CGirCompTitlePageBuilder(void)
 {
 }
 
-rptChapter* CGirCompTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CGirCompTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -97,7 +97,7 @@ rptChapter* CGirCompTitlePageBuilder::Build(std::shared_ptr<CReportSpecification
    return pTitlePage;
 }
 
-CTitlePageBuilder* CGirCompTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CGirCompTitlePageBuilder::Clone() const
 {
-   return new CGirCompTitlePageBuilder(*this);
+   return std::make_unique<CGirCompTitlePageBuilder>(*this);
 }

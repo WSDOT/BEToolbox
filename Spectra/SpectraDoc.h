@@ -68,7 +68,7 @@ protected:
    afx_msg void OnHelpFinder();
 	DECLARE_MESSAGE_MAP()
 
-   CString GetResourcePath();
+   CString GetResourcePath() const;
    bool LoadSpectralData();
 
    SpecificationType m_SpecType;
@@ -97,8 +97,6 @@ public:
    const WBFL::Math::PiecewiseFunction* GetLongPeriodSiteFactors(SpecificationType specType, SiteClass siteClass) const;
 
    virtual void OnCloseDocument() override;
-
-   CReportBuilderManager m_RptMgr;
 
 protected:
    void GetSpectralValues(Float64 lat,Float64 lng,Float64* pS1,Float64* pSs,Float64* pPGA) const;

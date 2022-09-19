@@ -57,7 +57,7 @@ Uint16 CUltColChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CUltColChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
@@ -156,9 +156,9 @@ rptChapter* CUltColChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    return pChapter;
 }
 
-CChapterBuilder* CUltColChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CUltColChapterBuilder::Clone() const
 {
-   return new CUltColChapterBuilder(m_pDoc);
+   return std::make_unique<CUltColChapterBuilder>(m_pDoc);
 }
 
 rptRcImage* CUltColChapterBuilder::CreateImage(const std::vector<std::pair<Float64, Float64>>& unfactored,const std::vector<std::pair<Float64, Float64>>& factored) const

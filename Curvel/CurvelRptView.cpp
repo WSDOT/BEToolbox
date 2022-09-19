@@ -53,13 +53,13 @@ BEGIN_MESSAGE_MAP(CCurvelRptView, CEAFReportView)
    ON_COMMAND(ID_FILE_PRINT_DIRECT,&CCurvelRptView::OnFilePrint)
 END_MESSAGE_MAP()
 
-std::shared_ptr<CReportBrowser> CCurvelRptView::CreateReportBrowser()
+std::shared_ptr<WBFL::Reporting::ReportBrowser> CCurvelRptView::CreateReportBrowser()
 {
    if (m_pReportSpec == nullptr)
       return nullptr;
 
    CCurvelDoc* pDoc = (CCurvelDoc*)GetDocument();
-   return pDoc->GetReportBuilderManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<CReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 // CCurvelRptView diagnostics
@@ -90,7 +90,7 @@ void CCurvelRptView::OnInitialUpdate()
    data.m_bInitializeOnly = false;
    data.m_pRptSpecification = pDoc->GetDefaultReportSpecification();
    data.m_pRptSpecificationBuilder = pDoc->GetReportSpecificationBuilder();
-   data.m_pReportBuilderMgr = pDoc->GetReportBuilderManager();
+   data.m_pReportBuilderMgr = pDoc->GetReportManager();
    CEAFDocTemplate* pDocTemplate = (CEAFDocTemplate*)pDoc->GetDocTemplate();
    pDocTemplate->SetViewCreationData((void*)&data);
 

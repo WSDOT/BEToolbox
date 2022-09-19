@@ -58,7 +58,7 @@ Uint16 CBoxGdrChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CBoxGdrChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
@@ -167,16 +167,15 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
       (*pTable)(row,col++) << shortLength.SetValue(problem.CR);
       (*pTable)(row,col++) << longLength.SetValue(problem.BR);
 
-      CComPtr<IShapeProperties> shapeProperties;
-      m_pDoc->ComputeShapeProperties(idx,&shapeProperties);
+      auto shapeProperties = m_pDoc->ComputeShapeProperties(idx);
 
-      Float64 Area,Ix,Yt,Yb,St,Sb;
-      shapeProperties->get_Area(&Area);
-      shapeProperties->get_Ixx(&Ix);
-      shapeProperties->get_Ytop(&Yt);
-      shapeProperties->get_Ybottom(&Yb);
-      St = IsZero(Yt) ? 0 : Ix/Yt;
-      Sb = IsZero(Yb) ? 0 : Ix/Yb;
+      Float64 Area = shapeProperties.GetArea();
+      Float64 Ix = shapeProperties.GetIxx();
+      Float64 Yt = shapeProperties.GetYtop();
+      Float64 Yb = shapeProperties.GetYbottom();
+
+      Float64 St = IsZero(Yt) ? 0 : Ix/Yt;
+      Float64 Sb = IsZero(Yb) ? 0 : Ix/Yb;
 
       Float64 Weight;
       Weight = Area*WBFL::Units::ConvertToSysUnits(160.0,WBFL::Units::Measure::PCF);
@@ -193,7 +192,7 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    return pChapter;
 }
 
-CChapterBuilder* CBoxGdrChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CBoxGdrChapterBuilder::Clone() const
 {
-   return new CBoxGdrChapterBuilder(m_pDoc);
+   return std::make_unique<CBoxGdrChapterBuilder>(m_pDoc);
 }

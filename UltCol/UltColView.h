@@ -35,8 +35,8 @@ protected:
 	CUltColView();           // protected constructor used by dynamic creation
 	virtual ~CUltColView();
 
-   virtual std::shared_ptr<CReportSpecification> CreateReportSpecification();
-   virtual std::shared_ptr<CReportBrowser> CreateReportBrowser();
+   virtual std::shared_ptr<const WBFL::Reporting::ReportSpecification> CreateReportSpecification() const;
+   virtual std::shared_ptr<WBFL::Reporting::ReportBrowser> CreateReportBrowser();
    virtual void RefreshReport() override;
 
 #ifdef _DEBUG

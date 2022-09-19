@@ -56,7 +56,7 @@ Uint16 CSpectraChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CSpectraChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    Float64 lat,lng;
    m_pDoc->GetLocation(&lat,&lng);
@@ -434,9 +434,9 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    return pChapter;
 }
 
-CChapterBuilder* CSpectraChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CSpectraChapterBuilder::Clone() const
 {
-   return new CSpectraChapterBuilder(m_pDoc);
+   return std::make_unique<CSpectraChapterBuilder>(m_pDoc);
 }
 
 rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Float64,Float64>>& values) const

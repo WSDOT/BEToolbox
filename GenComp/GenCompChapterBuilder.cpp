@@ -23,10 +23,13 @@
 #include "stdafx.h"
 #include "GenCompChapterBuilder.h"
 #include "..\BEToolboxUtilities.h"
-#include <Reporter\Reporter.h>
 #include "..\BEToolboxColors.h"
 
+#include <Reporter\Reporter.h>
 #include <Graphing/GraphXY.h>
+
+#include <GeomModel/ElasticProperties.h>
+#include <GeomModel/ShapeProperties.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -61,7 +64,7 @@ Uint16 CGenCompChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CGenCompChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
@@ -121,19 +124,15 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    }
 
    // Properties
-   CComPtr<IPolyShape> primaryShape(m_pDoc->GetPrimaryShape());
-   CComQIPtr<IShape> shape(primaryShape);
-   CComPtr<IShapeProperties> shapeProps;
-   shape->get_ShapeProperties(&shapeProps);
+   auto primaryShape(m_pDoc->GetPrimaryShape());
+   auto shapeProps = primaryShape.GetProperties();
+
    (*pLayoutTable)(0,2) << Bold(_T("Basic Section Properties")) << rptNewLine;
    WriteSectionProperties((*pLayoutTable)(0,2),shapeProps);
 
-   CComPtr<ICompositeSectionEx> compSection(m_pDoc->GetCompositeSection());
-   CComQIPtr<ISection> section(compSection);
-   CComQIPtr<IElasticProperties> elasticProperties;
-   section->get_ElasticProperties(&elasticProperties);
-   CComPtr<IShapeProperties> compositeProperties;
-   elasticProperties->TransformProperties(1.0,&compositeProperties);
+   auto compSection(m_pDoc->GetCompositeSection());
+   auto elasticProperties = compSection.GetElasticProperties();
+   auto compositeProperties = elasticProperties.TransformProperties(1.0);
 
    (*pLayoutTable)(0,3) << Bold(_T("Composite Section Properties")) << rptNewLine;
    (*pLayoutTable)(0,3) << _T("Modular Ratio, n = ") << m_pDoc->GetModularRatio() << rptNewLine;
@@ -149,7 +148,7 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    return pChapter;
 }
 
-void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,IShapeProperties* pShapeProp) const
+void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,WBFL::Geometry::ShapeProperties& shapeProps) const
 {
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
@@ -158,15 +157,14 @@ void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,IShapePro
    INIT_UV_PROTOTYPE( rptLength2UnitValue,  area, pDispUnits->Area, true);
    INIT_UV_PROTOTYPE( rptLength4UnitValue,  momentOfInertia, pDispUnits->MomentOfInertia, true);
 
-   Float64 Area,Ixx,Iyy,Ixy,yt,yb,xl,xr;
-   pShapeProp->get_Area(&Area);
-   pShapeProp->get_Ixx(&Ixx);
-   pShapeProp->get_Iyy(&Iyy);
-   pShapeProp->get_Ixy(&Ixy);
-   pShapeProp->get_Ybottom(&yb);
-   pShapeProp->get_Ytop(&yt);
-   pShapeProp->get_Xleft(&xl);
-   pShapeProp->get_Xright(&xr);
+   Float64 Area = shapeProps.GetArea();
+   Float64 Ixx = shapeProps.GetIxx();
+   Float64 Iyy = shapeProps.GetIyy();
+   Float64 Ixy = shapeProps.GetIxy();
+   Float64 yt = shapeProps.GetYtop();
+   Float64 yb = shapeProps.GetYbottom();
+   Float64 xl = shapeProps.GetXleft();
+   Float64 xr = shapeProps.GetXright();
 
    para << _T("Area = ") << area.SetValue(Area) << rptNewLine;
    para << _T("Xl = ") << length.SetValue(xl) << rptNewLine;
@@ -178,9 +176,9 @@ void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,IShapePro
    para << _T("Ixy = ") << momentOfInertia.SetValue(Ixy) << rptNewLine;
 }
 
-CChapterBuilder* CGenCompChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CGenCompChapterBuilder::Clone() const
 {
-   return new CGenCompChapterBuilder(m_pDoc);
+   return std::make_unique<CGenCompChapterBuilder>(m_pDoc);
 }
 
 rptRcImage* CGenCompChapterBuilder::CreateImage() const

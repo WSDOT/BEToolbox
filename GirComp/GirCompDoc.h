@@ -25,9 +25,11 @@
 // CGirCompDoc document
 #include "..\BEToolboxDoc.h"
 #include <WBFLTools.h>
-#include <WBFLGeometry.h>
 #include <WBFLUnitServer.h>
 #include <ReportManager\ReportManager.h>
+#include <GeomModel/ShapeProperties.h>
+#include <GeomModel/PlateGirder.h>
+#include <GeomModel/CompositeBeam.h>
 
 struct ROLLEDSECTION
 {
@@ -84,15 +86,13 @@ public:
    void AddProblem(const GIRCOMPDIMENSIONS& problem);
    void AddProblems(const std::vector<GIRCOMPDIMENSIONS>& problems);
    void RemoveProblem(IndexType idx);
-   const GIRCOMPDIMENSIONS& GetProblem(IndexType idx);
+   const GIRCOMPDIMENSIONS& GetProblem(IndexType idx) const;
    void ClearProblems();
-
-   void ComputeShapeProperties(IndexType idx,IShapeProperties** ppShapeProperties);
 
    const std::vector<ROLLEDSECTION>& GetRolledSections() const;
 
-   void GetBuiltUpGirder(IndexType idx,IPlateGirder** ppGirder);
-   void GetCompositeBeam(IndexType idx,int n,ICompositeBeam** ppCompBeam);
+   WBFL::Geometry::PlateGirder GetBuiltUpGirder(IndexType idx) const;
+   WBFL::Geometry::CompositeBeam GetCompositeBeam(IndexType idx,int n) const;
 
 #ifdef _DEBUG
 	virtual void AssertValid() const override;
@@ -118,19 +118,13 @@ protected:
 
    std::vector<GIRCOMPDIMENSIONS> m_Problems;
 
-   void ComputeRollSectionProperties(const GIRCOMPDIMENSIONS& dimensions,IShapeProperties** ppShapeProperties);
-   void ComputeGeneralSectionProperties(const GIRCOMPDIMENSIONS& dimensions,IShapeProperties** ppShapeProperties);
-   void ComputeBuiltUpSectionProperties(const GIRCOMPDIMENSIONS& dimensions,IShapeProperties** ppShapeProperties);
-
    std::vector<ROLLEDSECTION> m_RolledSections;
    void InitRolledSections();
 
    afx_msg void OnHelpFinder();
 	DECLARE_MESSAGE_MAP()
-public:
 
+public:
    // over-ride default behavior by destroying column
    virtual void OnCloseDocument() override;
-
-   CReportBuilderManager m_RptMgr;
 };

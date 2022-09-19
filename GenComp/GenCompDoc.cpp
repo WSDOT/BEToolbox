@@ -45,7 +45,7 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CGenCompDoc, CBEToolboxDoc)
 
-CGenCompDoc::CGenCompDoc()
+CGenCompDoc::CGenCompDoc() : CBEToolboxDoc()
 {
    // The reporting sub-system doesn't use the WBFLUnitServer implementation. It uses the old regular C++
    // units sytem. That system is in kms units, so we will create a unit server here also in the kms system
@@ -62,15 +62,14 @@ CGenCompDoc::CGenCompDoc()
    m_DocUnitServer->QueryInterface(&m_DocConvert);
 
 
-   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("GenComp")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("GenComp")));
+   GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CGenCompTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CGenCompTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CGenCompChapterBuilder>(this) );
+   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CGenCompChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
-
-   m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
    EnableUIHints(FALSE); // not using UIHints feature
 }
@@ -206,15 +205,15 @@ void CGenCompDoc::AddPrimaryPoints(const std::vector<std::pair<Float64,Float64>>
    }
 }
 
-const std::vector<std::pair<Float64,Float64>>& CGenCompDoc::GetPrimaryPoints()
+std::vector<std::pair<Float64,Float64>> CGenCompDoc::GetPrimaryPoints() const
 {
-   m_PrimaryPoints.clear();
+   std::vector<std::pair<Float64, Float64>> primary_points;
    ShapeType::Point_sequence& points(m_GenCompXML->PrimaryShape().Point());
    for ( const auto& point : points)
    {
-      m_PrimaryPoints.emplace_back(point.X(),point.Y());
+      primary_points.emplace_back(point.X(),point.Y());
    }
-   return m_PrimaryPoints;
+   return primary_points;
 }
 
 void CGenCompDoc::ClearSecondaryPoints()
@@ -238,55 +237,48 @@ void CGenCompDoc::AddSecondaryPoints(const std::vector<std::pair<Float64,Float64
    }
 }
 
-const std::vector<std::pair<Float64,Float64>>& CGenCompDoc::GetSecondaryPoints()
+std::vector<std::pair<Float64,Float64>> CGenCompDoc::GetSecondaryPoints() const
 {
-   m_SecondaryPoints.clear();
+   std::vector<std::pair<Float64, Float64>> secondary_points;
    ShapeType::Point_sequence& points(m_GenCompXML->SecondaryShape().Point());
    for ( const auto& point : points)
    {
-      m_SecondaryPoints.emplace_back(point.X(),point.Y());
+      secondary_points.emplace_back(point.X(),point.Y());
    }
-   return m_SecondaryPoints;
+   return secondary_points;
 }
 
-CComPtr<IPolyShape> CGenCompDoc::GetPrimaryShape()
+WBFL::Geometry::Polygon CGenCompDoc::GetPrimaryShape() const
 {
-   CComPtr<IPolyShape> polyShape;
-   polyShape.CoCreateInstance(CLSID_PolyShape);
+   WBFL::Geometry::Polygon polygon;
 
    ShapeType::Point_sequence& points(m_GenCompXML->PrimaryShape().Point());
    ShapeType::Point_sequence::iterator iter(points.begin());
    ShapeType::Point_sequence::iterator end(points.end());
    for ( ; iter != end; iter++ )
    {
-      polyShape->AddPoint(iter->X(),iter->Y());
+      polygon.AddPoint(iter->X(),iter->Y());
    }
 
-   return polyShape;
+   return polygon;
 }
 
-CComPtr<ICompositeSectionEx> CGenCompDoc::GetCompositeSection()
+WBFL::Geometry::Section CGenCompDoc::GetCompositeSection() const
 {
-   CComPtr<IPolyShape> primaryShape(GetPrimaryShape());
-   CComPtr<IPolyShape> secondaryShape;
-   secondaryShape.CoCreateInstance(CLSID_PolyShape);
+   auto primaryShape(GetPrimaryShape());
+   WBFL::Geometry::Polygon secondaryShape;
 
    ShapeType::Point_sequence& points(m_GenCompXML->SecondaryShape().Point());
    ShapeType::Point_sequence::iterator iter(points.begin());
    ShapeType::Point_sequence::iterator end(points.end());
    for ( ; iter != end; iter++ )
    {
-      secondaryShape->AddPoint(iter->X(),iter->Y());
+      secondaryShape.AddPoint(iter->X(),iter->Y());
    }
 
-   CComPtr<ICompositeSectionEx> section;
-   section.CoCreateInstance(CLSID_CompositeSectionEx);
-
-   CComQIPtr<IShape> shape1(primaryShape);
-   section->AddSection(shape1,1.0,1.0,0.0,0.0,VARIANT_TRUE);
-
-   CComQIPtr<IShape> shape2(secondaryShape);
-   section->AddSection(shape2,m_GenCompXML->ModularRatio(),1.0, 0.0, 0.0,VARIANT_TRUE);
+   WBFL::Geometry::Section section;
+   section.AddComponent(primaryShape,   1.0, 1.0, 0.0, 0.0, WBFL::Geometry::SectionComponent::ComponentType::Structural);
+   section.AddComponent(secondaryShape, m_GenCompXML->ModularRatio(), 1.0, 0.0, 0.0, WBFL::Geometry::SectionComponent::ComponentType::Structural);
 
    return section;
 }

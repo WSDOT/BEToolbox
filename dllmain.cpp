@@ -37,8 +37,6 @@
 #include <WBFLGeometry.h>
 #include <WBFLGeometry_i.c>
 #include <EAF\EAFComponentInfo.h>
-#include <WBFLRCCapacity.h>
-#include <WBFLRCCapacity_i.c>
 #include <WBFLCogo.h>
 #include <WBFLCogo_i.c>
 

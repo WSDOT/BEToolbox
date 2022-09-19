@@ -24,14 +24,14 @@
 #include <ReportManager\TitlePageBuilder.h>
 
 class CUltColTitlePageBuilder :
-   public CTitlePageBuilder
+   public WBFL::Reporting::TitlePageBuilder
 {
 public:
    CUltColTitlePageBuilder(void);
    CUltColTitlePageBuilder(const CUltColTitlePageBuilder& other);
    ~CUltColTitlePageBuilder(void);
 
-   virtual rptChapter* Build(std::shared_ptr<CReportSpecification>& pRptSpec) override;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const override;
 
-   virtual CTitlePageBuilder* Clone() const override;
+   virtual std::unique_ptr<WBFL::Reporting::TitlePageBuilder> Clone() const override;
 };

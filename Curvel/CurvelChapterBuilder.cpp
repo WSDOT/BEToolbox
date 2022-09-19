@@ -60,9 +60,9 @@ Uint16 CCurvelChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
-   CCurvelReportSpecification* pTheRptSpec = (CCurvelReportSpecification*)pRptSpec;
+   auto pTheRptSpec = std::dynamic_pointer_cast<const CCurvelReportSpecification>(pRptSpec);
    Init(pTheRptSpec);
 
    CEAFApp* pApp = EAFGetApp();
@@ -547,12 +547,12 @@ rptChapter* CCurvelChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    return pChapter;
 }
 
-CChapterBuilder* CCurvelChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CCurvelChapterBuilder::Clone() const
 {
-   return new CCurvelChapterBuilder(m_pDoc);
+   return std::make_unique<CCurvelChapterBuilder>(m_pDoc);
 }
 
-void CCurvelChapterBuilder::Init(CCurvelReportSpecification* pRptSpec) const
+void CCurvelChapterBuilder::Init(const std::shared_ptr<const CCurvelReportSpecification>& pRptSpec) const
 {
    m_Alignment.Release();
    m_Profile.Release();

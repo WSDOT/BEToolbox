@@ -40,8 +40,6 @@ public:
    void SetColumn(const WBFL::RCSection::CircularColumn& column,Float64 ecl,Float64 etl);
    void GetColumn(WBFL::RCSection::CircularColumn& column, Float64& ecl, Float64& etl) const;
 
-   CReportBuilderManager& GetReportManager();
-
 #ifdef _DEBUG
 	virtual void AssertValid() const override;
 #ifndef _WIN32_WCE
@@ -70,5 +68,4 @@ private:
    WBFL::RCSection::CircularColumn m_Column;
    Float64 m_ecl;
    Float64 m_etl;
-   CReportBuilderManager m_RptMgr;
 };

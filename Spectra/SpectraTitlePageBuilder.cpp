@@ -39,7 +39,7 @@ CSpectraTitlePageBuilder::CSpectraTitlePageBuilder(void)
 }
 
 CSpectraTitlePageBuilder::CSpectraTitlePageBuilder(const CSpectraTitlePageBuilder& other) :
-CTitlePageBuilder(other)
+WBFL::Reporting::TitlePageBuilder(other)
 {
 }
 
@@ -47,7 +47,7 @@ CSpectraTitlePageBuilder::~CSpectraTitlePageBuilder(void)
 {
 }
 
-rptChapter* CSpectraTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CSpectraTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -99,7 +99,7 @@ rptChapter* CSpectraTitlePageBuilder::Build(std::shared_ptr<CReportSpecification
    return pTitlePage;
 }
 
-CTitlePageBuilder* CSpectraTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CSpectraTitlePageBuilder::Clone() const
 {
-   return new CSpectraTitlePageBuilder(*this);
+   return std::make_unique<CSpectraTitlePageBuilder>(*this);
 }

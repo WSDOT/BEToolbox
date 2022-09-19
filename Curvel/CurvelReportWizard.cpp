@@ -39,7 +39,7 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNAMIC(CCurvelReportWizard, CPropertySheet)
 
-CCurvelReportWizard::CCurvelReportWizard(std::shared_ptr<CCurvelReportSpecification>& pRptSpec, CWnd* pParentWnd, UINT iSelectPage)
+CCurvelReportWizard::CCurvelReportWizard(const std::shared_ptr<CCurvelReportSpecification>& pRptSpec, CWnd* pParentWnd, UINT iSelectPage)
 	:CPropertySheet(_T(""), pParentWnd, iSelectPage),
    m_pRptSpec(pRptSpec)
 {

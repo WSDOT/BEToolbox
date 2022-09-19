@@ -34,8 +34,6 @@
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 
-#include <WBFLGeometry.h>
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -47,17 +45,16 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CSpectraDoc, CBEToolboxDoc)
 
-CSpectraDoc::CSpectraDoc()
+CSpectraDoc::CSpectraDoc() : CBEToolboxDoc()
 {
-   std::unique_ptr<CReportBuilder> pRptBuilder(std::make_unique<CReportBuilder>(_T("Spectra")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Spectra")));
+   GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CSpectraTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CSpectraTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CSpectraChapterBuilder>(this) );
+   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CSpectraChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
-
-   m_RptMgr.AddReportBuilder(pRptBuilder.release());
 
    EnableUIHints(FALSE); // not using UIHints feature
 
@@ -659,7 +656,7 @@ CString CSpectraDoc::GetDocumentationRootLocation()
    return pApp->GetDocumentationRootLocation();
 }
 
-CString CSpectraDoc::GetResourcePath()
+CString CSpectraDoc::GetResourcePath() const
 {
    TCHAR szBuff[_MAX_PATH];
    ::GetModuleFileName(::GetModuleHandle(nullptr), szBuff, _MAX_PATH);

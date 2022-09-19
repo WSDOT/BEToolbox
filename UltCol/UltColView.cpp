@@ -52,29 +52,28 @@ BEGIN_MESSAGE_MAP(CUltColView, CEAFReportView)
    ON_COMMAND(ID_FILE_PRINT_DIRECT,&CUltColView::OnFilePrint)
 END_MESSAGE_MAP()
 
-std::shared_ptr<CReportSpecification> CUltColView::CreateReportSpecification()
+std::shared_ptr<const WBFL::Reporting::ReportSpecification> CUltColView::CreateReportSpecification() const
 {
    CUltColDoc* pDoc = (CUltColDoc*)GetDocument();
 
-   std::shared_ptr<CReportSpecification> pRptSpec;
-   std::vector<std::_tstring> rptNames = pDoc->GetReportManager().GetReportNames();
+   std::vector<std::_tstring> rptNames = pDoc->GetReportManager()->GetReportNames();
 
-   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->GetReportManager().GetReportBuilder(rptNames.front());
-   CReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   auto pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(rptNames.front());
+   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
-   std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
-   pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
+   auto pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   auto pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
 
    return pRptSpec;
 }
 
-std::shared_ptr<CReportBrowser> CUltColView::CreateReportBrowser()
+std::shared_ptr<WBFL::Reporting::ReportBrowser> CUltColView::CreateReportBrowser()
 {
    if (m_pReportSpec == nullptr)
       return nullptr;
 
    CUltColDoc* pDoc = (CUltColDoc*)GetDocument();
-   return pDoc->GetReportManager().CreateReportBrowser(GetSafeHwnd(), m_pReportSpec, std::shared_ptr<CReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CUltColView::RefreshReport()
@@ -85,13 +84,13 @@ void CUltColView::RefreshReport()
    CEAFReportViewCreationData data;
    data.m_RptIdx = 0;
    data.m_bPromptForSpec = false;
-   data.m_pReportBuilderMgr = &pDoc->GetReportManager();
+   data.m_pReportBuilderMgr = pDoc->GetReportManager();
    CEAFDocTemplate* pDocTemplate = (CEAFDocTemplate*)pDoc->GetDocTemplate();
    pDocTemplate->SetViewCreationData((void*)&data);
 
    // refresh the report
-   std::shared_ptr<CReportBuilder> pBuilder = pDoc->GetReportManager().GetReportBuilder(m_pReportSpec->GetReportName());
-   std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pReportSpec );
+   auto pBuilder = pDoc->GetReportManager()->GetReportBuilder(m_pReportSpec->GetReportName());
+   auto pReport = pBuilder->CreateReport( m_pReportSpec );
    m_pReportBrowser->UpdateReport( pReport, true );
 }
 
@@ -121,7 +120,7 @@ void CUltColView::OnInitialUpdate()
    CEAFReportViewCreationData data;
    data.m_RptIdx = 0;
    data.m_bPromptForSpec = false;
-   data.m_pReportBuilderMgr = &pDoc->GetReportManager();
+   data.m_pReportBuilderMgr = pDoc->GetReportManager();
    CEAFDocTemplate* pDocTemplate = (CEAFDocTemplate*)pDoc->GetDocTemplate();
    pDocTemplate->SetViewCreationData((void*)&data);
 

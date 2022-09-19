@@ -237,3 +237,13 @@ BOOL CBEToolboxDoc::GetToolTipMessageString(UINT nID, CString& rMessage) const
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    return __super::GetToolTipMessageString(nID,rMessage);
 }
+
+const std::shared_ptr<WBFL::Reporting::ReportBuilderManager>& CBEToolboxDoc::GetReportManager()
+{
+   return m_pRptMgr;
+}
+
+const std::shared_ptr<const WBFL::Reporting::ReportBuilderManager>& CBEToolboxDoc::GetReportManager() const
+{
+   return m_pConstRptMgr;
+}

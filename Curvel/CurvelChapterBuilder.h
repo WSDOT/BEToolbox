@@ -28,7 +28,7 @@
 class CCurvelReportSpecification;
 
 class CCurvelChapterBuilder :
-   public CChapterBuilder
+   public WBFL::Reporting::ChapterBuilder
 {
 public:
    CCurvelChapterBuilder(CCurvelDoc* pDoc);
@@ -36,9 +36,9 @@ public:
 
    virtual LPCTSTR GetName() const override;
    virtual Uint16 GetMaxLevel() const override;
-   virtual rptChapter* Build(CReportSpecification* pRptSpec,Uint16 level) const override;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const override;
    virtual bool Select() const override { return true; }
-   virtual CChapterBuilder* Clone() const override;
+   virtual std::unique_ptr<WBFL::Reporting::ChapterBuilder> Clone() const override;
 
 private:
    CCurvelDoc* m_pDoc;
@@ -47,7 +47,7 @@ private:
    CComPtr<IAngleDisplayUnitFormatter> m_AngleFormatter;
    CComBSTR m_bstrAngleFormat;
 
-   void Init(CCurvelReportSpecification* pRptSpec) const;
+   void Init(const std::shared_ptr<const CCurvelReportSpecification>& pRptSpec) const;
    void UpdateAlignment(const SkewLine& skewLine) const;
    mutable CComPtr<IAlignment> m_Alignment;
    mutable CComPtr<IProfile> m_Profile;

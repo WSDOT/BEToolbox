@@ -22,7 +22,10 @@
 
 #include "stdafx.h"
 #include "SpectraValues.h"
-#include <WBFLGeometry.h>
+#include <GeomModel/GeomOp2d.h>
+#include <GeomModel/Primitives.h>
+#include <GeomModel/Primitives3d.h>
+#include <GeomModel/Plane3d.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -73,82 +76,65 @@ void GetSpectralValues(Float64 lat,Float64 lng,SpectralValues* pValues,Float64* 
    //  3          4
    //
 
-   CComPtr<IGeomUtil2d> geomUtil;
-   geomUtil.CoCreateInstance(CLSID_GeomUtil);
-
-   CComPtr<IPoint2d> pnt;
-   pnt.CoCreateInstance(CLSID_Point2d);
-   pnt->Move(lng,lat);
+   WBFL::Geometry::Point2d pnt(lng, lat);
    
-   CComPtr<IPoint2d> pnt1, pnt2, pnt3, pnt4;
-   pnt1.CoCreateInstance(CLSID_Point2d);
-   pnt2.CoCreateInstance(CLSID_Point2d);
-   pnt3.CoCreateInstance(CLSID_Point2d);
-   pnt4.CoCreateInstance(CLSID_Point2d);
+   WBFL::Geometry::Point2d pnt1(pValues[i1].lng,pValues[i1].lat);
+   WBFL::Geometry::Point2d pnt2(pValues[i2].lng,pValues[i2].lat);
+   WBFL::Geometry::Point2d pnt3(pValues[i3].lng,pValues[i3].lat);
+   WBFL::Geometry::Point2d pnt4(pValues[i4].lng,pValues[i4].lat);
 
-   pnt1->Move(pValues[i1].lng,pValues[i1].lat);
-   pnt2->Move(pValues[i2].lng,pValues[i2].lat);
-   pnt3->Move(pValues[i3].lng,pValues[i3].lat);
-   pnt4->Move(pValues[i4].lng,pValues[i4].lat);
+   bool bPntInTriangle = WBFL::Geometry::GeometricOperations::IsPointInTriangle(pnt, pnt1, pnt2, pnt3);
 
-   CComPtr<IPoint3d> pntA, pntB, pntC;
-   pntA.CoCreateInstance(CLSID_Point3d);
-   pntB.CoCreateInstance(CLSID_Point3d);
-   pntC.CoCreateInstance(CLSID_Point3d);
+   WBFL::Geometry::Point3d pntA, pntB, pntC;
 
-   VARIANT_BOOL bPntInTriangle;
-   geomUtil->PointInTriangle(pnt,pnt1,pnt2,pnt3,&bPntInTriangle);
-   if ( bPntInTriangle == VARIANT_TRUE )
+   if ( bPntInTriangle )
    {
-      pntA->Move(pValues[i1].lng,pValues[i1].lat,pValues[i1].v1hz);
-      pntB->Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].v1hz);
-      pntC->Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].v1hz);
+      pntA.Move(pValues[i1].lng,pValues[i1].lat,pValues[i1].v1hz);
+      pntB.Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].v1hz);
+      pntC.Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].v1hz);
    }
    else
    {
 #if defined _DEBUG
-      VARIANT_BOOL bResult;
-      geomUtil->PointInTriangle(pnt,pnt2,pnt3,pnt4,&bResult);
-      ATLASSERT(bResult == VARIANT_TRUE);
+      bool bResult = WBFL::Geometry::GeometricOperations::IsPointInTriangle(pnt, pnt2, pnt3, pnt4);
+      ATLASSERT(bResult);
 #endif
-      pntA->Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].v1hz);
-      pntB->Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].v1hz);
-      pntC->Move(pValues[i4].lng,pValues[i4].lat,pValues[i4].v1hz);
+      pntA.Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].v1hz);
+      pntB.Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].v1hz);
+      pntC.Move(pValues[i4].lng,pValues[i4].lat,pValues[i4].v1hz);
    }
 
-   CComPtr<IPlane3d> plane;
-   plane.CoCreateInstance(CLSID_Plane3d);
+   WBFL::Geometry::Plane3d plane;
+   plane.ThroughPoints(pntA,pntB,pntC);
+   *pS1 = plane.GetZ(lng,lat);
 
-   plane->ThroughPoints(pntA,pntB,pntC);
-   plane->GetZ(lng,lat,pS1);
-
-   if ( bPntInTriangle == VARIANT_TRUE )
+   if ( bPntInTriangle )
    {
-      pntA->Move(pValues[i1].lng,pValues[i1].lat,pValues[i1].v5hz);
-      pntB->Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].v5hz);
-      pntC->Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].v5hz);
+      pntA.Move(pValues[i1].lng,pValues[i1].lat,pValues[i1].v5hz);
+      pntB.Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].v5hz);
+      pntC.Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].v5hz);
    }
    else
    {
-      pntA->Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].v5hz);
-      pntB->Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].v5hz);
-      pntC->Move(pValues[i4].lng,pValues[i4].lat,pValues[i4].v5hz);
+      pntA.Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].v5hz);
+      pntB.Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].v5hz);
+      pntC.Move(pValues[i4].lng,pValues[i4].lat,pValues[i4].v5hz);
    }
-   plane->ThroughPoints(pntA,pntB,pntC);
-   plane->GetZ(lng,lat,pSs);
+   plane.ThroughPoints(pntA,pntB,pntC);
+   *pSs = plane.GetZ(lng,lat);
 
-   if ( bPntInTriangle == VARIANT_TRUE )
+   if ( bPntInTriangle )
    {
-      pntA->Move(pValues[i1].lng,pValues[i1].lat,pValues[i1].vpga);
-      pntB->Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].vpga);
-      pntC->Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].vpga);
+      pntA.Move(pValues[i1].lng,pValues[i1].lat,pValues[i1].vpga);
+      pntB.Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].vpga);
+      pntC.Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].vpga);
    }
    else
    {
-      pntA->Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].vpga);
-      pntB->Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].vpga);
-      pntC->Move(pValues[i4].lng,pValues[i4].lat,pValues[i4].vpga);
+      pntA.Move(pValues[i2].lng,pValues[i2].lat,pValues[i2].vpga);
+      pntB.Move(pValues[i3].lng,pValues[i3].lat,pValues[i3].vpga);
+      pntC.Move(pValues[i4].lng,pValues[i4].lat,pValues[i4].vpga);
    }
-   plane->ThroughPoints(pntA,pntB,pntC);
-   plane->GetZ(lng,lat,pPGA);
+   plane.ThroughPoints(pntA,pntB,pntC);
+   *pPGA = plane.GetZ(lng,lat);
 }
