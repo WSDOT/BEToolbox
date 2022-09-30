@@ -75,7 +75,7 @@ void CPGStableOneEndSeatedView::DoDataExchange(CDataExchange* pDX)
    Float64 windLoad;
    problem.GetWindLoading(&windLoadType,&windLoad);
    DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
-   if ( windLoadType == WBFL::Stability::Speed )
+   if ( windLoadType == WBFL::Stability::WindType::Speed )
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
    }
@@ -556,8 +556,8 @@ void CPGStableOneEndSeatedView::OnInitialUpdate()
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::Speed);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::Pressure);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::WindType::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::WindType::Pressure);
 
    CPGStableFormView::OnInitialUpdate();
 
@@ -683,7 +683,7 @@ void CPGStableOneEndSeatedView::OnWindTypeChanged()
    CDataExchange dx(this,false);
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   if ( windType == WBFL::Stability::Speed )
+   if ( windType == WBFL::Stability::WindType::Speed )
    {
       DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
    }
@@ -802,13 +802,13 @@ void CPGStableOneEndSeatedView::OnCopy()
    const auto* pHaulingTensionStressLimit = dynamic_cast<const WBFL::Stability::CCHaulingTensionStressLimit*>(hauling_criteria.TensionStressLimit.get());
    auto* pOneEndSeatedTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(criteria.TensionStressLimit.get());
    pOneEndSeatedTensionStressLimit->Lambda = pHaulingTensionStressLimit->Lambda;
-   pOneEndSeatedTensionStressLimit->TensionCoefficient = pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->bMaxTension = pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->MaxTension = pHaulingTensionStressLimit->MaxTension[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->AllowableTension = pHaulingTensionStressLimit->AllowableTension[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->bWithRebarLimit = pHaulingTensionStressLimit->bWithRebarLimit[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->AllowableTensionWithRebar = pHaulingTensionStressLimit->AllowableTensionWithRebar[WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->TensionCoefficient = pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->bMaxTension = pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->MaxTension = pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->AllowableTension = pHaulingTensionStressLimit->AllowableTension[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->bWithRebarLimit = pHaulingTensionStressLimit->bWithRebarLimit[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->AllowableTensionWithRebar = pHaulingTensionStressLimit->AllowableTensionWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope];
 
    pDoc->SetOneEndSeatedCriteria(criteria);
 

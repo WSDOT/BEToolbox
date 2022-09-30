@@ -124,7 +124,7 @@ CPGStableModel::CPGStableModel()
    m_HaulingStabilityProblem.SetSupportWidth(WBFL::Units::ConvertToSysUnits(72.,WBFL::Units::Measure::Inch));
    m_HaulingStabilityProblem.SetHeightOfRollAxis(WBFL::Units::ConvertToSysUnits(24.,WBFL::Units::Measure::Inch));
    m_HaulingStabilityProblem.SetImpact(0,0);
-   m_HaulingStabilityProblem.SetImpactUsage(WBFL::Stability::NormalCrown);
+   m_HaulingStabilityProblem.SetImpactUsage(WBFL::Stability::HaulingImpact::NormalCrown);
    m_HaulingStabilityProblem.SetVelocity(0);
    m_HaulingStabilityProblem.SetTurningRadius(WBFL::Units::ConvertToSysUnits(100,WBFL::Units::Measure::Feet));
 
@@ -151,7 +151,7 @@ CPGStableModel::CPGStableModel()
 
    auto* pHaulingTensionStressLimit = new WBFL::Stability::CCHaulingTensionStressLimit;
    m_HaulingCriteria.TensionStressLimit.reset(pHaulingTensionStressLimit);
-   pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope] = true;
+   pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] = true;
 
    auto* pOneEndSeatedTensionStressLimit = new WBFL::Stability::CCOneEndSeatedTensionStressLimit;
    m_OneEndSeatedCriteria.TensionStressLimit.reset(pOneEndSeatedTensionStressLimit);
@@ -318,7 +318,7 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    m_HaulingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L-Lr)));
 
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot;
-   pGirder->GetSectionProperties(0,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtop,&Wbot);
+   pGirder->GetSectionProperties(0,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtop,&Wbot);
    Float64 Yra = -(Hg + m_Hgb) + m_HaulingStabilityProblem.GetHeightOfRollAxis();
    ATLASSERT(Yra < 0);
    m_HaulingStabilityProblem.SetYRollAxis(Yra); // location of roll axes relative to the top of girder
@@ -328,19 +328,19 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    m_HaulingCriteria.AllowableCompression_GlobalStress = -m_HaulingCriteria.CompressionCoefficient_GlobalStress*fc;
    m_HaulingCriteria.AllowableCompression_PeakStress = -m_HaulingCriteria.CompressionCoefficient_PeakStress*fc;
 
-   pTensionStressLimit->AllowableTension[WBFL::Stability::CrownSlope] = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope]*sqrt(fc);
-   if (pTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope] )
+   pTensionStressLimit->AllowableTension[+WBFL::Stability::HaulingSlope::CrownSlope] = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope]*sqrt(fc);
+   if (pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] )
    {
-      pTensionStressLimit->AllowableTension[WBFL::Stability::CrownSlope] = Min(pTensionStressLimit->AllowableTension[WBFL::Stability::CrownSlope], pTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope]);
+      pTensionStressLimit->AllowableTension[+WBFL::Stability::HaulingSlope::CrownSlope] = Min(pTensionStressLimit->AllowableTension[+WBFL::Stability::HaulingSlope::CrownSlope], pTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope]);
    }
-   pTensionStressLimit->AllowableTensionWithRebar[WBFL::Stability::CrownSlope] = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope]*sqrt(fc);
+   pTensionStressLimit->AllowableTensionWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope] = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope]*sqrt(fc);
 
 
-   pTensionStressLimit->AllowableTension[WBFL::Stability::MaxSuper] = concrete.GetFlexureFr();
-   pTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper] = m_HaulingFrCoefficient;
-   pTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper] = false;
-   pTensionStressLimit->AllowableTensionWithRebar[WBFL::Stability::MaxSuper] = concrete.GetFlexureFr();
-   pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = m_HaulingFrCoefficient;
+   pTensionStressLimit->AllowableTension[+WBFL::Stability::HaulingSlope::Superelevation] = concrete.GetFlexureFr();
+   pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::Superelevation] = m_HaulingFrCoefficient;
+   pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::Superelevation] = false;
+   pTensionStressLimit->AllowableTensionWithRebar[+WBFL::Stability::HaulingSlope::Superelevation] = concrete.GetFlexureFr();
+   pTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::Superelevation] = m_HaulingFrCoefficient;
 
    WBFL::Stability::StabilityEngineer stabilityEngineer;
    WBFL::Stability::HaulingCheckArtifact artifact = stabilityEngineer.CheckHauling(pGirder,&m_HaulingStabilityProblem,m_HaulingCriteria);
@@ -391,7 +391,7 @@ WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckA
    m_OneEndSeatedStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - Lr)));
 
    Float64 Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtop, Wbot;
-   pGirder->GetSectionProperties(0, WBFL::Stability::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtop, &Wbot);
+   pGirder->GetSectionProperties(0, WBFL::Stability::Section::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtop, &Wbot);
    Float64 Yra = -(Hg + m_Hgb) + m_OneEndSeatedStabilityProblem.GetHeightOfRollAxis();
    ATLASSERT(Yra < 0);
    m_OneEndSeatedStabilityProblem.SetYRollAxis(Yra); // location of roll axes relative to the top of girder
@@ -634,7 +634,7 @@ void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStran
    Float64 L = pGirder->GetGirderLength();
 
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   pGirder->GetSectionProperties(0,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   pGirder->GetSectionProperties(0,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 XpsStraight = Xleft + pStrands->ex;
    Float64 XpsHarped = Xleft + pStrands->ex;
@@ -1199,7 +1199,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       pStrSave->put_Property(_T("L"),CComVariant(L));
 
       Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      m_Girder[m_GirderType].GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+      m_Girder[m_GirderType].GetSectionProperties(sectIdx,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
       pStrSave->BeginUnit(_T("StartFace"),2.0);
       pStrSave->put_Property(_T("Ag"),CComVariant(Ag));
       pStrSave->put_Property(_T("Ix"),CComVariant(Ixx));
@@ -1217,7 +1217,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
          pStrSave->BeginUnit(_T("StressPoints"), 1.0);
 
          WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
-         m_Girder[m_GirderType].GetStressPoints(sectIdx, WBFL::Stability::Start, &pntTL, &pntTR, &pntBL, &pntBR);
+         m_Girder[m_GirderType].GetStressPoints(sectIdx, WBFL::Stability::Section::Start, &pntTL, &pntTR, &pntBL, &pntBR);
          pStrSave->BeginUnit(_T("TopLeft"), 1.0);
          pStrSave->put_Property(_T("X"), CComVariant(pntTL.X()));
          pStrSave->put_Property(_T("Y"), CComVariant(pntTL.Y()));
@@ -1243,7 +1243,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 
       pStrSave->EndUnit(); // LeftFace
 
-      m_Girder[m_GirderType].GetSectionProperties(sectIdx,WBFL::Stability::End,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+      m_Girder[m_GirderType].GetSectionProperties(sectIdx,WBFL::Stability::Section::End,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
       pStrSave->BeginUnit(_T("EndFace"),2.0);
       pStrSave->put_Property(_T("Ag"),CComVariant(Ag));
       pStrSave->put_Property(_T("Ix"),CComVariant(Ixx));
@@ -1261,7 +1261,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
          pStrSave->BeginUnit(_T("StressPoints"), 1.0);
 
          WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
-         m_Girder[m_GirderType].GetStressPoints(sectIdx, WBFL::Stability::End, &pntTL, &pntTR, &pntBL, &pntBR);
+         m_Girder[m_GirderType].GetStressPoints(sectIdx, WBFL::Stability::Section::End, &pntTL, &pntTR, &pntBL, &pntBR);
          pStrSave->BeginUnit(_T("TopLeft"), 1.0);
          pStrSave->put_Property(_T("X"), CComVariant(pntTL.X()));
          pStrSave->put_Property(_T("Y"), CComVariant(pntTL.Y()));
@@ -1360,7 +1360,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    WBFL::Stability::WindType windLoadType;
    Float64 windLoad;
    liftingProblem.GetWindLoading(&windLoadType,&windLoad);
-   pStrSave->put_Property(_T("WindLoadType"),CComVariant(windLoadType));
+   pStrSave->put_Property(_T("WindLoadType"),CComVariant(+windLoadType));
    pStrSave->put_Property(_T("WindLoad"),CComVariant(windLoad));
 
    // added in version 6 of this datablock
@@ -1416,7 +1416,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->put_Property(_T("ImpactDown"),CComVariant(imdn));
 
    WBFL::Stability::HaulingImpact impactUsage = haulingProblem.GetImpactUsage();
-   pStrSave->put_Property(_T("ImpactUsage"),CComVariant(impactUsage));
+   pStrSave->put_Property(_T("ImpactUsage"),CComVariant(+impactUsage));
 
    // added in version 2, removed in version 4
    //bool bEvaluateStressesAtEquilibriumAngle = haulingProblem.EvaluateStressesAtEquilibriumAngle(WBFL::Stability::CrownSlope);
@@ -1425,7 +1425,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    WBFL::Stability::WindType windLoadType;
    Float64 windLoad;
    haulingProblem.GetWindLoading(&windLoadType,&windLoad);
-   pStrSave->put_Property(_T("WindLoadType"),CComVariant(windLoadType));
+   pStrSave->put_Property(_T("WindLoadType"),CComVariant(+windLoadType));
    pStrSave->put_Property(_T("WindLoad"),CComVariant(windLoad));
 
    // added in version 6 of this datablock
@@ -1449,7 +1449,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    Float64 Radius = haulingProblem.GetTurningRadius();
    pStrSave->put_Property(_T("Radius"),CComVariant(Radius));
    WBFL::Stability::CFType cfType = haulingProblem.GetCentrifugalForceType();
-   pStrSave->put_Property(_T("CFType"),CComVariant(cfType));
+   pStrSave->put_Property(_T("CFType"),CComVariant(+cfType));
 
    const WBFL::Materials::SimpleConcrete& concrete = haulingProblem.GetConcrete();
    pStrSave->put_Property(_T("FrCoefficient"),CComVariant(m_HaulingFrCoefficient));
@@ -1501,7 +1501,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       WBFL::Stability::WindType windLoadType;
       Float64 windLoad;
       oneEndSeatedProblem.GetWindLoading(&windLoadType, &windLoad);
-      pStrSave->put_Property(_T("WindLoadType"), CComVariant(windLoadType));
+      pStrSave->put_Property(_T("WindLoadType"), CComVariant(+windLoadType));
       pStrSave->put_Property(_T("WindLoad"), CComVariant(windLoad));
 
       Float64 eb, wb;
@@ -1620,59 +1620,59 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
          pStrLoad->get_Version(&face_version);
 
          hr = pStrLoad->get_Property(_T("Ag"),&var);
-         Ag[WBFL::Stability::Start] = var.dblVal;
+         Ag[+WBFL::Stability::Section::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Ix"),&var);
-         Ixx[WBFL::Stability::Start] = var.dblVal;
+         Ixx[+WBFL::Stability::Section::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Iy"),&var);
-         Iyy[WBFL::Stability::Start] = var.dblVal;
+         Iyy[+WBFL::Stability::Section::Start] = var.dblVal;
 
          if (1 < face_version)
          {
             // added in version 2
             hr = pStrLoad->get_Property(_T("Ixy"), &var);
-            Ixy[WBFL::Stability::Start] = var.dblVal;
+            Ixy[+WBFL::Stability::Section::Start] = var.dblVal;
          }
 
          bool bApproximateXleft = false;
          if (face_version < 2)
          {
             bApproximateXleft = true;
-            Xleft[WBFL::Stability::Start] = 0.0;
+            Xleft[+WBFL::Stability::Section::Start] = 0.0;
 
             hr = pStrLoad->get_Property(_T("Yt"), &var);
-            Ytop[WBFL::Stability::Start] = var.dblVal;
+            Ytop[+WBFL::Stability::Section::Start] = var.dblVal;
          }
          else
          {
             hr = pStrLoad->get_Property(_T("Xleft"), &var);
-            Xleft[WBFL::Stability::Start] = var.dblVal;
+            Xleft[+WBFL::Stability::Section::Start] = var.dblVal;
 
             hr = pStrLoad->get_Property(_T("Ytop"), &var);
-            Ytop[WBFL::Stability::Start] = var.dblVal;
+            Ytop[+WBFL::Stability::Section::Start] = var.dblVal;
          }
 
          hr = pStrLoad->get_Property(_T("Hg"),&var);
-         Hg[WBFL::Stability::Start] = var.dblVal;
+         Hg[+WBFL::Stability::Section::Start] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Wtf"),&var);
-         Wtf[WBFL::Stability::Start] = var.dblVal;
+         Wtf[+WBFL::Stability::Section::Start] = var.dblVal;
 
          if (bApproximateXleft)
          {
-            Xleft[WBFL::Stability::Start] = Wtf[WBFL::Stability::Start] / 2;
+            Xleft[+WBFL::Stability::Section::Start] = Wtf[+WBFL::Stability::Section::Start] / 2;
          }
 
          hr = pStrLoad->get_Property(_T("Wbf"),&var);
-         Wbf[WBFL::Stability::Start] = var.dblVal;
+         Wbf[+WBFL::Stability::Section::Start] = var.dblVal;
 
 
          if (1 < face_version && m_StressPointType == DEFINE_STRESS_POINTS)
          {
             // added in version 2
 
-            WBFL::Stability::Section section = WBFL::Stability::Start;
+            WBFL::Stability::Section section = WBFL::Stability::Section::Start;
             CComVariant varX, varY;
             varX.vt = VT_R8;
             varY.vt = VT_R8;
@@ -1680,29 +1680,29 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
             pStrLoad->BeginUnit(_T("TopLeft"));
             pStrLoad->get_Property(_T("X"), &varX);
             pStrLoad->get_Property(_T("Y"), &varY);
-            pntTL[section].X() = varX.dblVal;
-            pntTL[section].Y() = varY.dblVal;
+            pntTL[+section].X() = varX.dblVal;
+            pntTL[+section].Y() = varY.dblVal;
             pStrLoad->EndUnit(); // TopLeft
 
             pStrLoad->BeginUnit(_T("TopRight"));
             pStrLoad->get_Property(_T("X"), &varX);
             pStrLoad->get_Property(_T("Y"), &varY);
-            pntTR[section].X() = varX.dblVal;
-            pntTR[section].Y() = varY.dblVal;
+            pntTR[+section].X() = varX.dblVal;
+            pntTR[+section].Y() = varY.dblVal;
             pStrLoad->EndUnit(); // TopRight
 
             pStrLoad->BeginUnit(_T("BottomLeft"));
             pStrLoad->get_Property(_T("X"), &varX);
             pStrLoad->get_Property(_T("Y"), &varY);
-            pntBL[section].X() = varX.dblVal;
-            pntBL[section].Y() = varY.dblVal;
+            pntBL[+section].X() = varX.dblVal;
+            pntBL[+section].Y() = varY.dblVal;
             pStrLoad->EndUnit(); // BottomLeft
 
             pStrLoad->BeginUnit(_T("BottomRight"));
             pStrLoad->get_Property(_T("X"), &varX);
             pStrLoad->get_Property(_T("Y"), &varY);
-            pntBR[section].X() = varX.dblVal;
-            pntBR[section].Y() = varY.dblVal;
+            pntBR[+section].X() = varX.dblVal;
+            pntBR[+section].Y() = varY.dblVal;
             pStrLoad->EndUnit(); // BottomRight
 
             pStrLoad->EndUnit(); // StressPoints
@@ -1716,58 +1716,58 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
          pStrLoad->get_Version(&face_version);
 
          hr = pStrLoad->get_Property(_T("Ag"),&var);
-         Ag[WBFL::Stability::End] = var.dblVal;
+         Ag[+WBFL::Stability::Section::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Ix"),&var);
-         Ixx[WBFL::Stability::End] = var.dblVal;
+         Ixx[+WBFL::Stability::Section::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Iy"),&var);
-         Iyy[WBFL::Stability::End] = var.dblVal;
+         Iyy[+WBFL::Stability::Section::End] = var.dblVal;
 
          if (1 < face_version)
          {
             // added in version 2
             hr = pStrLoad->get_Property(_T("Ixy"), &var);
-            Ixy[WBFL::Stability::End] = var.dblVal;
+            Ixy[+WBFL::Stability::Section::End] = var.dblVal;
          }
 
          bApproximateXleft = false;
          if (face_version < 2)
          {
             bApproximateXleft = true;
-            Xleft[WBFL::Stability::End] = 0.0;
+            Xleft[+WBFL::Stability::Section::End] = 0.0;
 
             hr = pStrLoad->get_Property(_T("Yt"), &var);
-            Ytop[WBFL::Stability::End] = var.dblVal;
+            Ytop[+WBFL::Stability::Section::End] = var.dblVal;
          }
          else
          {
             hr = pStrLoad->get_Property(_T("Xleft"), &var);
-            Xleft[WBFL::Stability::End] = var.dblVal;
+            Xleft[+WBFL::Stability::Section::End] = var.dblVal;
 
             hr = pStrLoad->get_Property(_T("Ytop"), &var);
-            Ytop[WBFL::Stability::End] = var.dblVal;
+            Ytop[+WBFL::Stability::Section::End] = var.dblVal;
          }
 
          hr = pStrLoad->get_Property(_T("Hg"),&var);
-         Hg[WBFL::Stability::End] = var.dblVal;
+         Hg[+WBFL::Stability::Section::End] = var.dblVal;
 
          hr = pStrLoad->get_Property(_T("Wtf"),&var);
-         Wtf[WBFL::Stability::End] = var.dblVal;
+         Wtf[+WBFL::Stability::Section::End] = var.dblVal;
 
          if (bApproximateXleft)
          {
-            Xleft[WBFL::Stability::End] = Wtf[WBFL::Stability::End] / 2;
+            Xleft[+WBFL::Stability::Section::End] = Wtf[+WBFL::Stability::Section::End] / 2;
          }
 
          hr = pStrLoad->get_Property(_T("Wbf"),&var);
-         Wbf[WBFL::Stability::End] = var.dblVal;
+         Wbf[+WBFL::Stability::Section::End] = var.dblVal;
 
          if (1 < face_version && m_StressPointType == DEFINE_STRESS_POINTS)
          {
             // added in version 2
 
-            WBFL::Stability::Section section = WBFL::Stability::End;
+            WBFL::Stability::Section section = WBFL::Stability::Section::End;
             CComVariant varX, varY;
             varX.vt = VT_R8;
             varY.vt = VT_R8;
@@ -1775,29 +1775,29 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
             pStrLoad->BeginUnit(_T("TopLeft"));
             pStrLoad->get_Property(_T("X"), &varX);
             pStrLoad->get_Property(_T("Y"), &varY);
-            pntTL[section].X() = varX.dblVal;
-            pntTL[section].Y() = varY.dblVal;
+            pntTL[+section].X() = varX.dblVal;
+            pntTL[+section].Y() = varY.dblVal;
             pStrLoad->EndUnit(); // TopLeft
 
             pStrLoad->BeginUnit(_T("TopRight"));
             pStrLoad->get_Property(_T("X"), &varX);
             pStrLoad->get_Property(_T("Y"), &varY);
-            pntTR[section].X() = varX.dblVal;
-            pntTR[section].Y() = varY.dblVal;
+            pntTR[+section].X() = varX.dblVal;
+            pntTR[+section].Y() = varY.dblVal;
             pStrLoad->EndUnit(); // TopRight
 
             pStrLoad->BeginUnit(_T("BottomLeft"));
             pStrLoad->get_Property(_T("X"), &varX);
             pStrLoad->get_Property(_T("Y"), &varY);
-            pntBL[section].X() = varX.dblVal;
-            pntBL[section].Y() = varY.dblVal;
+            pntBL[+section].X() = varX.dblVal;
+            pntBL[+section].Y() = varY.dblVal;
             pStrLoad->EndUnit(); // BottomLeft
 
             pStrLoad->BeginUnit(_T("BottomRight"));
             pStrLoad->get_Property(_T("X"), &varX);
             pStrLoad->get_Property(_T("Y"), &varY);
-            pntBR[section].X() = varX.dblVal;
-            pntBR[section].Y() = varY.dblVal;
+            pntBR[+section].X() = varX.dblVal;
+            pntBR[+section].Y() = varY.dblVal;
             pStrLoad->EndUnit(); // BottomRight
 
             pStrLoad->EndUnit(); // StressPoints
@@ -1805,28 +1805,28 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
          hr = pStrLoad->EndUnit(); // EndFace
 
-         IndexType sectIdx = m_Girder[m_GirderType].AddSection(L,Ag[WBFL::Stability::Start],
-                                                            Ixx[WBFL::Stability::Start],
-                                                            Iyy[WBFL::Stability::Start],
-                                                            Ixy[WBFL::Stability::Start],
-                                                            Xleft[WBFL::Stability::Start],
-                                                            Ytop[WBFL::Stability::Start],
-                                                            Hg[WBFL::Stability::Start],
-                                                            Wtf[WBFL::Stability::Start],
-                                                            Wbf[WBFL::Stability::Start],
-                                                            Ag[WBFL::Stability::End],
-                                                            Ixx[WBFL::Stability::End],
-                                                            Iyy[WBFL::Stability::End],
-                                                            Ixy[WBFL::Stability::End],
-                                                            Xleft[WBFL::Stability::End],
-                                                            Ytop[WBFL::Stability::End],
-                                                            Hg[WBFL::Stability::End],
-                                                            Wtf[WBFL::Stability::End],
-                                                            Wbf[WBFL::Stability::End]);
+         IndexType sectIdx = m_Girder[m_GirderType].AddSection(L,Ag[+WBFL::Stability::Section::Start],
+                                                            Ixx[+WBFL::Stability::Section::Start],
+                                                            Iyy[+WBFL::Stability::Section::Start],
+                                                            Ixy[+WBFL::Stability::Section::Start],
+                                                            Xleft[+WBFL::Stability::Section::Start],
+                                                            Ytop[+WBFL::Stability::Section::Start],
+                                                            Hg[+WBFL::Stability::Section::Start],
+                                                            Wtf[+WBFL::Stability::Section::Start],
+                                                            Wbf[+WBFL::Stability::Section::Start],
+                                                            Ag[+WBFL::Stability::Section::End],
+                                                            Ixx[+WBFL::Stability::Section::End],
+                                                            Iyy[+WBFL::Stability::Section::End],
+                                                            Ixy[+WBFL::Stability::Section::End],
+                                                            Xleft[+WBFL::Stability::Section::End],
+                                                            Ytop[+WBFL::Stability::Section::End],
+                                                            Hg[+WBFL::Stability::Section::End],
+                                                            Wtf[+WBFL::Stability::Section::End],
+                                                            Wbf[+WBFL::Stability::Section::End]);
 
          if (m_StressPointType == DEFINE_STRESS_POINTS)
          {
-            m_Girder[m_GirderType].SetStressPoints(sectIdx, pntTL[WBFL::Stability::Start], pntTR[WBFL::Stability::Start], pntBL[WBFL::Stability::Start], pntBR[WBFL::Stability::Start], pntTL[WBFL::Stability::End], pntTR[WBFL::Stability::End], pntBL[WBFL::Stability::End], pntBR[WBFL::Stability::End]);
+            m_Girder[m_GirderType].SetStressPoints(sectIdx, pntTL[+WBFL::Stability::Section::Start], pntTR[+WBFL::Stability::Section::Start], pntBL[+WBFL::Stability::Section::Start], pntBR[+WBFL::Stability::Section::Start], pntTL[+WBFL::Stability::Section::End], pntTR[+WBFL::Stability::Section::End], pntBL[+WBFL::Stability::Section::End], pntBR[+WBFL::Stability::Section::End]);
          }
 
 
@@ -2275,7 +2275,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       Float64 L = m_Girder[GirderType::Nonprismatic].GetSectionLength(0);
       Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      m_Girder[GirderType::Nonprismatic].GetSectionProperties(0,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+      m_Girder[GirderType::Nonprismatic].GetSectionProperties(0,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
       m_Girder[GirderType::Prismatic].ClearSections();
       m_Girder[GirderType::Prismatic].AddSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf);

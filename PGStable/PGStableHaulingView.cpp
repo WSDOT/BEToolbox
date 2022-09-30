@@ -78,7 +78,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    Float64 windLoad;
    problem.GetWindLoading(&windLoadType,&windLoad);
    DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
-   if ( windLoadType == WBFL::Stability::Speed )
+   if ( windLoadType == WBFL::Stability::WindType::Speed )
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
    }
@@ -213,18 +213,18 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
    auto* pHaulingTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(m_HaulingCriteria.TensionStressLimit.get());
 
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_CROWN, pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
+   DDX_UnitValue(pDX, IDC_HAULING_TENSION_CROWN, pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope], pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_CROWN_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN, pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope]);
-   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT, pHaulingTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope],pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN, pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope],pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_CROWN, pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope]);
+   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_CROWN,IDC_HAULING_TENSION_MAX_CROWN_UNIT, pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope],pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN, pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,tag);
 
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_SUPER, pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_SUPER, pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::Superelevation],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_SUPER_UNIT,tag);
-   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_SUPER, pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper]);
-   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT, pHaulingTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper],pDispUnits->Stress);
-   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER, pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper],pDispUnits->SqrtPressure);
+   DDX_Check_Bool(pDX,IDC_CHECK_HAULING_TENSION_MAX_SUPER, pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::Superelevation]);
+   DDX_UnitValueAndTag(pDX,IDC_HAULING_TENSION_MAX_SUPER,IDC_HAULING_TENSION_MAX_SUPER_UNIT, pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::Superelevation],pDispUnits->Stress);
+   DDX_UnitValue(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER, pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::Superelevation],pDispUnits->SqrtPressure);
    DDX_Text(pDX,IDC_HAULING_TENSION_WITH_REBAR_SUPER_UNIT,tag);
 
    if ( pDX->m_bSaveAndValidate )
@@ -586,17 +586,17 @@ void CPGStableHaulingView::OnInitialUpdate()
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbImpactUsage = (CComboBox*)GetDlgItem(IDC_IMPACT_USAGE);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope and Max. Superelevation Cases")),(DWORD_PTR)WBFL::Stability::Both);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope Case Only")),(DWORD_PTR)WBFL::Stability::NormalCrown);
-   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Max. Superelevation Case Only")),(DWORD_PTR)WBFL::Stability::MaxSuper);
+   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope and Max. Superelevation Cases")),(DWORD_PTR)+WBFL::Stability::HaulingImpact::Both);
+   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope Case Only")),(DWORD_PTR)+WBFL::Stability::HaulingImpact::NormalCrown);
+   pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Max. Superelevation Case Only")),(DWORD_PTR)+WBFL::Stability::HaulingImpact::MaxSuper);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::Speed);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::Pressure);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)+WBFL::Stability::WindType::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)+WBFL::Stability::WindType::Pressure);
 
    CComboBox* pcbCFType = (CComboBox*)GetDlgItem(IDC_CF_TYPE);
-   pcbCFType->SetItemData(pcbCFType->AddString(_T("Adverse")),(DWORD_PTR)WBFL::Stability::Adverse);
-   pcbCFType->SetItemData(pcbCFType->AddString(_T("Favorable")),(DWORD_PTR)WBFL::Stability::Favorable);
+   pcbCFType->SetItemData(pcbCFType->AddString(_T("Adverse")),(DWORD_PTR)+WBFL::Stability::CFType::Adverse);
+   pcbCFType->SetItemData(pcbCFType->AddString(_T("Favorable")),(DWORD_PTR)+WBFL::Stability::CFType::Favorable);
 
    CPGStableFormView::OnInitialUpdate();
 
@@ -731,7 +731,7 @@ void CPGStableHaulingView::OnWindTypeChanged()
    CDataExchange dx(this,false);
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   if ( windType == WBFL::Stability::Speed )
+   if ( windType == WBFL::Stability::WindType::Speed )
    {
       DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
    }

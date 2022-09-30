@@ -207,7 +207,7 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
          IndexType sectIdx = 0;
          for (const auto& sp : vStressPoints)
          {
-            girder.SetStressPoints(sectIdx, sp.pntTL[WBFL::Stability::Start], sp.pntTR[WBFL::Stability::Start], sp.pntBL[WBFL::Stability::Start], sp.pntBR[WBFL::Stability::Start], sp.pntTL[WBFL::Stability::End], sp.pntTR[WBFL::Stability::End], sp.pntBL[WBFL::Stability::End], sp.pntBR[WBFL::Stability::End]);
+            girder.SetStressPoints(sectIdx, sp.pntTL[+WBFL::Stability::Section::Start], sp.pntTR[+WBFL::Stability::Section::Start], sp.pntBL[+WBFL::Stability::Section::Start], sp.pntBR[+WBFL::Stability::Section::Start], sp.pntTL[+WBFL::Stability::Section::End], sp.pntTR[+WBFL::Stability::Section::End], sp.pntBL[+WBFL::Stability::Section::End], sp.pntBR[+WBFL::Stability::Section::End]);
             sectIdx++;
          }
       }
@@ -548,8 +548,8 @@ void CPGStableNonprismaticGirder::InitStressPointCache(const WBFL::Stability::Gi
    for (IndexType sectIdx = 0; sectIdx < nSections; sectIdx++)
    {
       StressPoints sp;
-      girder.GetStressPoints(sectIdx, WBFL::Stability::Start, &sp.pntTL[WBFL::Stability::Start], &sp.pntTR[WBFL::Stability::Start], &sp.pntBL[WBFL::Stability::Start], &sp.pntBR[WBFL::Stability::Start]);
-      girder.GetStressPoints(sectIdx, WBFL::Stability::End,   &sp.pntTL[WBFL::Stability::End],   &sp.pntTR[WBFL::Stability::End],   &sp.pntBL[WBFL::Stability::End],   &sp.pntBR[WBFL::Stability::End]);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Section::Start, &sp.pntTL[+WBFL::Stability::Section::Start], &sp.pntTR[+WBFL::Stability::Section::Start], &sp.pntBL[+WBFL::Stability::Section::Start], &sp.pntBR[+WBFL::Stability::Section::Start]);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Section::End,   &sp.pntTL[+WBFL::Stability::Section::End],   &sp.pntTR[+WBFL::Stability::Section::End],   &sp.pntBL[+WBFL::Stability::Section::End],   &sp.pntBR[+WBFL::Stability::Section::End]);
       m_StressPointCache.push_back(sp);
    }
 }

@@ -47,7 +47,7 @@ void DDX_Girder(CDataExchange* pDX,WBFL::Stability::Girder& girder)
    ATLASSERT(girder.GetSectionCount() == 1); // prismatic girders have only one section
    IndexType sectIdx = 0;
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   girder.GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   girder.GetSectionProperties(sectIdx,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 L = girder.GetSectionLength(sectIdx);
 
@@ -330,7 +330,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    const WBFL::Stability::Girder& girder = pDoc->GetGirder(GirderType::Prismatic);
    IndexType sectIdx = 0;
    Float64 Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtf, Wbf;
-   girder.GetSectionProperties(sectIdx, WBFL::Stability::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf);
+   girder.GetSectionProperties(sectIdx, WBFL::Stability::Section::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf);
    Ytop *= -1; //this is in girder section coordinates, convert to Y positive down coordinates
 
    if (pDoc->GetStressPointType() == COMPUTE_STRESS_POINTS)
@@ -339,7 +339,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    }
    else
    {
-      girder.GetStressPoints(sectIdx, WBFL::Stability::Start, &m_pntTL, &m_pntTR, &m_pntBL, &m_pntBR);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Section::Start, &m_pntTL, &m_pntTR, &m_pntBL, &m_pntBR);
    }
    m_pntTLCache = m_pntTL;
    m_pntTRCache = m_pntTR;
@@ -457,7 +457,7 @@ std::vector<std::pair<Float64,Float64>> CPGStablePrismaticGirder::GetGirderProfi
 
    IndexType sectIdx = 0;
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   girder.GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   girder.GetSectionProperties(sectIdx,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 Lg = girder.GetGirderLength();
    vProfile.emplace_back(0,0);
