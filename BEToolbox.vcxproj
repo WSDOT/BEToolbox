@@ -193,6 +193,13 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
+    <ClCompile Include="Bearing\BearingChapterBuilder.cpp" />
+    <ClCompile Include="Bearing\BearingChildFrame.cpp" />
+    <ClCompile Include="Bearing\BearingDlgBar.cpp" />
+    <ClCompile Include="Bearing\BearingDoc.cpp" />
+    <ClCompile Include="Bearing\BearingDocTemplate.cpp" />
+    <ClCompile Include="Bearing\BearingRptView.cpp" />
+    <ClCompile Include="Bearing\BearingTitlePageBuilder.cpp" />
     <ClCompile Include="BEToolbox.cpp" />
     <ClCompile Include="BEToolboxComponentInfo.cpp" />
     <ClCompile Include="BEToolboxDoc.cpp" />
@@ -309,6 +316,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClCompile Include=".\UltCol\UltColView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Bearing\BearingTool.rgs" />
     <None Include="BEToolbox.def" />
     <None Include="BEToolbox.rgs" />
     <None Include="BEToolbox.tip" />
@@ -338,6 +346,13 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="AutoLib.h" />
+    <ClInclude Include="Bearing\BearingChapterBuilder.h" />
+    <ClInclude Include="Bearing\BearingChildFrame.h" />
+    <ClInclude Include="Bearing\BearingDlgBar.h" />
+    <ClInclude Include="Bearing\BearingDoc.h" />
+    <ClInclude Include="Bearing\BearingDocTemplate.h" />
+    <ClInclude Include="Bearing\BearingRptView.h" />
+    <ClInclude Include="Bearing\BearingTitlePageBuilder.h" />
     <ClInclude Include="BEToolboxApp.h" />
     <ClInclude Include="BEToolboxColors.h" />
     <ClInclude Include="BEToolboxComponentInfo.h" />
@@ -448,6 +463,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include=".\UltCol\UltColView.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\Bearing.bmp" />
+    <Image Include="res\Bearing.ico" />
     <Image Include="res\BEToolbox.ico" />
     <Image Include="res\BoxGdr.ico" />
     <Image Include="res\Curvel.bmp" />

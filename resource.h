@@ -28,6 +28,9 @@
 #define IDD_SPECTRA                     115
 #define IDR_SPECTRA                     116
 #define IDB_SPECTRA                     117
+#define IDD_BEARING                     118
+#define IDR_BEARING                     119
+#define IDB_BEARING                     120
 #define IDI_WSDOT                       200
 #define IDC_UPDATE                      201
 #define IDC_EXPORT                      202
@@ -417,6 +420,7 @@
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
 #define ID_OPTIONS_AUTOSAVE             36871
+#define IDR_BEARINGTOOL                 260
 
 // Next default values for new objects
 // 

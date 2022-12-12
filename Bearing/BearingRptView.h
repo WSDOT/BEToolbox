@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2020  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -20,27 +20,43 @@
 // Bridge_Support@wsdot.wa.gov
 ///////////////////////////////////////////////////////////////////////
 
-#define IDH_BETOOLBOX      100
-
-#define IDH_CURVEL         101
-#define IDH_CURVEL_STEP1   102
-#define IDH_CURVEL_STEP2   103
-#define IDH_CURVEL_STEP3   104
-
-#define IDH_BOXGDR 200
-#define IDH_ULTCOL 300
-#define IDH_GIRCOMP 400
-#define IDH_GENCOMP 500
+#pragma once
 
 
-#define IDH_PGSTABLE                            600
-#define IDH_PGSTABLE_PRISMATIC_GIRDER_VIEW      601
-#define IDH_PGSTABLE_NONPRISMATIC_GIRDER_VIEW   602
-#define IDH_PGSTABLE_LIFTING_VIEW               603
-#define IDH_PGSTABLE_HAULING_VIEW               604
-#define IDH_PGSTABLE_ONEENDSEATED_VIEW          605
+// CBearingRptView view
 
-#define IDH_SPECTRA                             700
+#include <EAF\EAFReportView.h>
+#include "BearingChildFrame.h"
 
-#define IDH_BEARING                             800
+class CBearingRptView : public CEAFReportView
+{
+	DECLARE_DYNCREATE(CBearingRptView)
+
+protected:
+	CBearingRptView();           // protected constructor used by dynamic creation
+	virtual ~CBearingRptView();
+
+   virtual std::shared_ptr<const WBFL::Reporting::ReportSpecification> CreateReportSpecification() const;
+   virtual std::shared_ptr<WBFL::Reporting::ReportBrowser> CreateReportBrowser();
+   virtual void RefreshReport() override;
+
+#ifdef _DEBUG
+	virtual void AssertValid() const override;
+#ifndef _WIN32_WCE
+	virtual void Dump(CDumpContext& dc) const override;
+#endif
+#endif
+
+   virtual BOOL CanEditReport() override { return FALSE; }
+
+protected:
+
+   CBearingChildFrame* m_pFrame;
+
+	DECLARE_MESSAGE_MAP()
+public:
+   virtual void OnInitialUpdate() override;
+   virtual void OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint) override;
+};
+
 

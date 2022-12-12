@@ -18,3 +18,5 @@ IDH_PGSTABLE_HAULING_VIEW=pgstable_hauling_view.html
 IDH_PGSTABLE_ONEENDSEATED_VIEW=pgstable_oneendseated_view.html
 
 IDH_SPECTRA=spectra.html
+
+IDH_BEARING=bearing.html

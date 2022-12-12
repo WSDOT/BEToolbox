@@ -183,6 +183,12 @@ HRESULT Register(bool bRegister)
       return hr;
    }
 
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_BearingTool, CATID_BEToolboxTool, bRegister);
+   if (FAILED(hr))
+   {
+      return hr;
+   }
+
 
    return S_OK;
 }

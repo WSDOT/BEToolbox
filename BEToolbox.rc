@@ -144,6 +144,8 @@ IDR_PGSTABLETOOL        REGISTRY                ".\\PGStable\\PGStableTool.rgs"
 
 IDR_SPECTRATOOL         REGISTRY                ".\\Spectra\\SpectraTool.rgs"
 
+IDR_BEARINGTOOL         REGISTRY                ".\\Bearing\\BearingTool.rgs"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -254,6 +256,13 @@ BEGIN
     LTEXT           "Static",IDC_DESCRIPTION,532,37,89,8
     DEFPUSHBUTTON   "Update",IDC_UPDATE,645,7,50,14
     PUSHBUTTON      "Export",IDC_EXPORT,645,25,50,14
+END
+
+IDD_BEARING DIALOGEX 0, 0, 705, 54
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "Update",IDC_UPDATE,645,7,50,14
 END
 
 IDD_CURVEL_WIZ_1 DIALOGEX 0, 0, 316, 182
@@ -1020,6 +1029,38 @@ BEGIN
     END
 END
 
+IDR_BEARING MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM "Help Source",                 EAFID_HELP_SOURCE
+        MENUITEM SEPARATOR
+        MENUITEM "&About BridgeLink...",        ID_APP_ABOUT
+        MENUITEM "About &BEToolbox...",         ID_HELP_ABOUTBETOOLBOX
+    END
+END
+
 IDR_GENCOMP MENU
 BEGIN
     POPUP "&File"
@@ -1234,6 +1275,14 @@ BEGIN
         BOTTOMMARGIN, 47
     END
 
+    IDD_BEARING, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 695
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 47
+    END
+
     IDD_CURVEL_WIZ_1, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1345,6 +1394,8 @@ IDI_WSDOT               ICON                    "res\\WSDOT.ico"
 
 IDR_SPECTRA             ICON                    "res\\Spectra.ico"
 
+IDR_BEARING             ICON                    "res\\Bearing.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1366,6 +1417,8 @@ IDB_CURVEL              BITMAP                  "res\\Curvel.bmp"
 IDB_GENCOMP             BITMAP                  "res\\GenComp.bmp"
 
 IDB_SPECTRA             BITMAP                  "res\\Spectra.bmp"
+
+IDB_BEARING             BITMAP                  "res\\Bearing.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1442,6 +1495,11 @@ BEGIN
     0
 END
 
+IDD_BEARING AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1460,6 +1518,11 @@ END
 STRINGTABLE
 BEGIN
     IDR_SPECTRA             "Spectra\nSpectra\nBEToolbox\nSpectra (*.Spectra)\n.Spectra\nSpectra.Document\nSpectra Document"
+END
+
+STRINGTABLE
+BEGIN
+IDR_BEARING             "Bearing\nBearing\nBEToolbox\nBearing (*.bearing)\n.Bearing\nBearing.Document\nBearing Document"
 END
 
 STRINGTABLE
