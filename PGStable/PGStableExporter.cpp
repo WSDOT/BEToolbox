@@ -126,9 +126,9 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
    }
 
    GET_IFACE2(pBroker, IMaterials, pMaterials);
-   if (pMaterials->GetSegmentConcreteType(segmentKey) == pgsTypes::PCI_UHPC)
+   if (::IsUHPC(pMaterials->GetSegmentConcreteType(segmentKey)))
    {
-      AfxMessageBox(_T("Cannot export. PGStable does not support PCI UHPC concrete."));
+      AfxMessageBox(_T("Cannot export. PGStable does not support UHPC concrete."));
       return S_FALSE;
    }
 
@@ -298,15 +298,15 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
          Yt = WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch);
       }
 
-      Float64 Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftingIntervalIdx,pgsTypes::Start);
-      Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start);
-      Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start);
+      Float64 Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
+      Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
+      Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
 
       liftingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
 
-      Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start);
-      Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start);
-      Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start);
+      Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
+      Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
+      Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
 
       haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
       oneEndSeatedStrands.m_vFpe.insert(CPGStableFpe(X, Ps, Xs, Ys, TOP, Ph, Xh, Yh, TOP, Pt, Xt, Yt, TOP));
