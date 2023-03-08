@@ -543,6 +543,11 @@ void CPGStableLiftingView::OnCmenuSelected(UINT id)
   case CCS_RB_SELECT_ALL:
      m_pBrowser->SelectAll();
      break;
+
+  case CCS_RB_COPY:
+     m_pBrowser->Copy();
+  break;
+
   case CCS_RB_PRINT:
      m_pBrowser->Print(true);
      break;
