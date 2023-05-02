@@ -32,6 +32,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+CogoObjectID g_SurfaceID = 999;
+
 
 //////////////////////////////////
 CCurvelChapterBuilder::CCurvelChapterBuilder(CCurvelDoc* pDoc)
@@ -164,9 +166,8 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
    // Report BVC
    CComPtr<IProfileElement> profileElement;
    m_Profile->get_Item(0,&profileElement);
-   CComPtr<IUnknown> pUnk;
-   profileElement->get_Value(&pUnk);
-   CComQIPtr<IVertCurve> vc(pUnk);
+   CComQIPtr<IVerticalCurve> vc(profileElement);
+   ATLASSERT(vc);
    CComPtr<IProfilePoint> bvc;
    vc->get_BVC(&bvc);
    CComPtr<IStation> bvcStation;
@@ -192,14 +193,14 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
       (*pTable)(row,col++) << RPT_OFFSET(offset,alignment);
 
       Float64 elevation;
-      m_Profile->Elevation(CComVariant(bvcStation),offset,&elevation);
+      m_Profile->Elevation(g_SurfaceID,CComVariant(bvcStation), offset,&elevation);
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(bvcStation),1,&slope);
+      m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(bvcStation),1,&slope);
       (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(bvcStation),2,&slope);
+      m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(bvcStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -231,14 +232,14 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
       (*pTable)(row,col++) << RPT_OFFSET(offset,alignment);
 
       Float64 elevation;
-      m_Profile->Elevation(CComVariant(evcStation),offset,&elevation);
+      m_Profile->Elevation(g_SurfaceID, CComVariant(evcStation), offset,&elevation);
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(evcStation),1,&slope);
+      m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(evcStation),1,&slope);
       (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(evcStation),2,&slope);
+      m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(evcStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -270,14 +271,14 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
       (*pTable)(row,col++) << RPT_OFFSET(offset,alignment);
 
       Float64 elevation;
-      m_Profile->Elevation(CComVariant(lpStation),offset,&elevation);
+      m_Profile->Elevation(g_SurfaceID, CComVariant(lpStation), offset,&elevation);
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(lpStation),1,&slope);
+      m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(lpStation),1,&slope);
       (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(lpStation),2,&slope);
+      m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(lpStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -308,14 +309,14 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
       (*pTable)(row,col++) << RPT_OFFSET(offset,alignment);
 
       Float64 elevation;
-      m_Profile->Elevation(CComVariant(hpStation),offset,&elevation);
+      m_Profile->Elevation(g_SurfaceID, CComVariant(hpStation), offset,&elevation);
       (*pTable)(row,col++) << alignment.SetValue(elevation);
 
       Float64 slope;
-      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(hpStation),1,&slope);
+      m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(hpStation),1,&slope);
       (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-      m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(hpStation),2,&slope);
+      m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(hpStation),2,&slope);
       (*pTable)(row,col++) << scalar.SetValue(slope);
    }
 
@@ -358,7 +359,7 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
          (*pTable)(row,col++) << rptRcStation(station.Station,&pDispUnits->StationFormat);
 
          Float64 elevation;
-         m_Profile->Elevation(CComVariant(station.Station),profileGradeOffset,&elevation);
+         m_Profile->Elevation(g_SurfaceID, CComVariant(station.Station), profileGradeOffset,&elevation);
          (*pTable)(row,col++) << alignment.SetValue(elevation);
 
          Float64 grade;
@@ -369,14 +370,14 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
          {
             (*pTable)(row,col++) << RPT_OFFSET(station.Offset,alignment);
 
-            m_Profile->Elevation(CComVariant(station.Station),station.Offset,&elevation);
+            m_Profile->Elevation(g_SurfaceID, CComVariant(station.Station), station.Offset,&elevation);
             (*pTable)(row,col++) << alignment.SetValue(elevation);
 
             Float64 slope;
-            m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(station.Station),1,&slope);
+            m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(station.Station),1,&slope);
             (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-            m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(station.Station),2,&slope);
+            m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(station.Station),2,&slope);
             (*pTable)(row,col++) << scalar.SetValue(slope);
          }
       }
@@ -394,7 +395,7 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
             (*pTable)(row,col++) << rptRcStation(station,&pDispUnits->StationFormat);
 
             Float64 elevation;
-            m_Profile->Elevation(CComVariant(station),profileGradeOffset,&elevation);
+            m_Profile->Elevation(g_SurfaceID, CComVariant(station), profileGradeOffset,&elevation);
             (*pTable)(row,col++) << alignment.SetValue(elevation);
 
             Float64 grade;
@@ -405,14 +406,14 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
             {
                (*pTable)(row,col++) << RPT_OFFSET(range.Offset,alignment);
 
-               m_Profile->Elevation(CComVariant(station),range.Offset,&elevation);
+               m_Profile->Elevation(g_SurfaceID, CComVariant(station), range.Offset,&elevation);
                (*pTable)(row,col++) << alignment.SetValue(elevation);
 
                Float64 slope;
-               m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(station),1,&slope);
+               m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(station),1,&slope);
                (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-               m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(station),2,&slope);
+               m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(station),2,&slope);
                (*pTable)(row,col++) << scalar.SetValue(slope);
            }
          }
@@ -473,7 +474,7 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
 
          // Get the direction of the skew line
          CComPtr<IDirection> direction;
-         m_Alignment->Normal(CComVariant(skewLine.Station),&direction);
+         m_Alignment->GetNormal(CComVariant(skewLine.Station),&direction);
          direction->IncrementBy(CComVariant(m_SkewAngle));
 
          Float64 skewDistance = skewLine.Offset;
@@ -515,7 +516,7 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
          // Get station and offset of offsetPoint
          CComPtr<IStation> offsetStation;
          Float64 offsetDistance;
-         m_Alignment->Offset(offsetPoint,&offsetStation,&offsetDistance);
+         m_Alignment->StationAndOffset(offsetPoint,&offsetStation,&offsetDistance);
 
          Float64 offsetStationValue;
          offsetStation->get_Value(&offsetStationValue);
@@ -523,7 +524,7 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
          (*pTable)(row,col++) << rptRcStation(offsetStationValue,&pDispUnits->StationFormat);
 
          Float64 elevation;
-         m_Profile->Elevation(CComVariant(offsetStation),profileGradeOffset,&elevation);
+         m_Profile->Elevation(g_SurfaceID, CComVariant(offsetStation), profileGradeOffset,&elevation);
          (*pTable)(row,col++) << alignment.SetValue(elevation);
 
          Float64 grade;
@@ -532,14 +533,14 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
 
          (*pTable)(row,col++) << RPT_OFFSET(offsetDistance+skewLine.CrownOffset,alignment);
 
-         m_Profile->Elevation(CComVariant(offsetStation),offsetDistance+skewLine.CrownOffset,&elevation);
+         m_Profile->Elevation(g_SurfaceID, CComVariant(offsetStation), offsetDistance+skewLine.CrownOffset,&elevation);
          (*pTable)(row,col++) << alignment.SetValue(elevation);
 
          Float64 slope;
-         m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(offsetStation),1,&slope);
+         m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(offsetStation),1,&slope);
          (*pTable)(row,col++) << scalar.SetValue(-slope);
 
-         m_Profile->TemplateSegmentSlope(COGO_FINISHED_SURFACE_ID,CComVariant(offsetStation),2,&slope);
+         m_Profile->SurfaceTemplateSegmentSlope(g_SurfaceID,CComVariant(offsetStation),2,&slope);
          (*pTable)(row,col++) << scalar.SetValue(slope);
       }
    }
@@ -558,11 +559,12 @@ void CCurvelChapterBuilder::Init(const std::shared_ptr<const CCurvelReportSpecif
    m_Profile.Release();
 
    m_Alignment.CoCreateInstance(CLSID_Alignment);
-   m_Alignment->get_Profile(&m_Profile);
+   m_Profile.CoCreateInstance(CLSID_Profile);
+   m_Alignment->AddProfile(m_ProfileID, m_Profile);
 
    // Build the profile
-   CComPtr<IVertCurve> vertCurve;
-   vertCurve.CoCreateInstance(CLSID_VertCurve);
+   CComPtr<IVerticalCurve> vertCurve;
+   vertCurve.CoCreateInstance(CLSID_VerticalCurve);
 
    Float64 g1,g2,pviStation,pviElevation,length;
    pRptSpec->GetVerticalCurveParameters(&g1,&g2,&pviStation,&pviElevation,&length);
@@ -588,29 +590,23 @@ void CCurvelChapterBuilder::Init(const std::shared_ptr<const CCurvelReportSpecif
    PVI->put_Station(CComVariant(pviStation));
    PVI->put_Elevation(pviElevation);
 
-   vertCurve->putref_PBG(PBG);
-   vertCurve->putref_PVI(PVI);
-   vertCurve->putref_PFG(PFG);
+   vertCurve->put_PBG(PBG);
+   vertCurve->put_PVI(PVI);
+   vertCurve->put_PFG(PFG);
    vertCurve->put_L1(length/2);
    vertCurve->put_L2(length/2);
 
-   m_Profile->AddEx(vertCurve);
+   CComQIPtr<IProfileElement> element(vertCurve);
+   m_Profile->AddProfileElement(element);
 
    Float64 profileGradeOffset = pRptSpec->GetProfileGradeOffset();
 
    // Create the roadway surface model
-   CComPtr<ISurfaceCollection> surfaces;
-   m_Profile->get_Surfaces(&surfaces);
-
    CComPtr<ISurface> surface;
    surface.CoCreateInstance(CLSID_Surface);
-   surfaces->Add(surface);
-   surface->put_ID(COGO_FINISHED_SURFACE_ID);
-
-   CComPtr<ISurfaceTemplateCollection> templates;
-   surface->get_SurfaceTemplates(&templates);
-
+   surface->put_SurfaceTemplateSegmentCount(4);
    surface->put_AlignmentPoint(2);
+
    if ( 0 < profileGradeOffset )
    {
       surface->put_ProfileGradePoint(3);
@@ -623,6 +619,8 @@ void CCurvelChapterBuilder::Init(const std::shared_ptr<const CCurvelReportSpecif
    {
       surface->put_ProfileGradePoint(2);
    }
+
+   m_Profile->AddSurface(g_SurfaceID, surface);
 
    // determine the size of the surface
    Float64 minStation = DBL_MAX;
@@ -674,47 +672,41 @@ void CCurvelChapterBuilder::Init(const std::shared_ptr<const CCurvelReportSpecif
    {
       SuperelevationProfilePoint superelevationPoint = pRptSpec->GetSuperelevationPoint(i);
 
+      IndexType segmentIdx = 0;
       if ( i == 0 )
       {
          CComPtr<ISurfaceTemplate> surfaceTemplate;
-         surfaceTemplate.CoCreateInstance(CLSID_SurfaceTemplate);
-         surfaceTemplate->put_Station(CComVariant(minStation));
-         surfaceTemplate->AddSegment(width,-superelevationPoint.LeftSlope,tsHorizontal);
-         surfaceTemplate->AddSegment(fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
-         surfaceTemplate->AddSegment(fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
-         surfaceTemplate->AddSegment(width, superelevationPoint.RightSlope,tsHorizontal);
-
-         templates->Add(surfaceTemplate);
+         surface->CreateSurfaceTemplate(CComVariant(minStation), &surfaceTemplate);
+         surfaceTemplate->UpdateSegmentParameters(segmentIdx++, width,-superelevationPoint.LeftSlope,tsHorizontal);
+         surfaceTemplate->UpdateSegmentParameters(segmentIdx++, fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
+         surfaceTemplate->UpdateSegmentParameters(segmentIdx++, fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
+         surfaceTemplate->UpdateSegmentParameters(segmentIdx++, width, superelevationPoint.RightSlope,tsHorizontal);
       }
 
       CComPtr<ISurfaceTemplate> surfaceTemplate;
-      surfaceTemplate.CoCreateInstance(CLSID_SurfaceTemplate);
-      surfaceTemplate->put_Station(CComVariant(superelevationPoint.Station));
-      surfaceTemplate->AddSegment(width,-superelevationPoint.LeftSlope,tsHorizontal);
-      surfaceTemplate->AddSegment(fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
-      surfaceTemplate->AddSegment(fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
-      surfaceTemplate->AddSegment(width, superelevationPoint.RightSlope,tsHorizontal);
-
-      templates->Add(surfaceTemplate);
+      surface->CreateSurfaceTemplate(CComVariant(superelevationPoint.Station), &surfaceTemplate);
+      segmentIdx = 0;
+      surfaceTemplate->UpdateSegmentParameters(segmentIdx++, width,-superelevationPoint.LeftSlope,tsHorizontal);
+      surfaceTemplate->UpdateSegmentParameters(segmentIdx++, fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
+      surfaceTemplate->UpdateSegmentParameters(segmentIdx++, fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
+      surfaceTemplate->UpdateSegmentParameters(segmentIdx++, width, superelevationPoint.RightSlope,tsHorizontal);
 
       if ( i == 2 )
       {
          CComPtr<ISurfaceTemplate> surfaceTemplate;
-         surfaceTemplate.CoCreateInstance(CLSID_SurfaceTemplate);
-         surfaceTemplate->put_Station(CComVariant(maxStation));
-         surfaceTemplate->AddSegment(width,-superelevationPoint.LeftSlope,tsHorizontal);
-         surfaceTemplate->AddSegment(fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
-         surfaceTemplate->AddSegment(fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
-         surfaceTemplate->AddSegment(width, superelevationPoint.RightSlope,tsHorizontal);
-
-         templates->Add(surfaceTemplate);
+         surface->CreateSurfaceTemplate(CComVariant(maxStation), &surfaceTemplate);
+         segmentIdx = 0;
+         surfaceTemplate->UpdateSegmentParameters(segmentIdx++, width,-superelevationPoint.LeftSlope,tsHorizontal);
+         surfaceTemplate->UpdateSegmentParameters(segmentIdx++, fabs(profileGradeOffset),-superelevationPoint.LeftSlope,tsHorizontal);
+         surfaceTemplate->UpdateSegmentParameters(segmentIdx++, fabs(profileGradeOffset), superelevationPoint.RightSlope,tsHorizontal);
+         surfaceTemplate->UpdateSegmentParameters(segmentIdx++, width, superelevationPoint.RightSlope,tsHorizontal);
       }
    }
 }
 
 void CCurvelChapterBuilder::UpdateAlignment(const SkewLine& skewLine) const
 {
-   m_Alignment->Clear();
+   m_Alignment->ClearPathElements();
 
    if ( IsZero(skewLine.Radius) )
    {
@@ -735,9 +727,13 @@ void CCurvelChapterBuilder::UpdateAlignment(const SkewLine& skewLine) const
    PI->Move(3*fabs(skewLine.Radius),0);
    PFT->Move(3*fabs(skewLine.Radius) + 3*fabs(skewLine.Radius)*cos(angle),-3*skewLine.Radius*sin(angle));
 
+   hc->put_PBT(PBT);
+   hc->put_PI(PI);
+   hc->put_PFT(PFT);
    hc->put_Radius(fabs(skewLine.Radius));
 
-   m_Alignment->AddEx(hc);
+   CComQIPtr<IPathElement> element(hc);
+   m_Alignment->AddPathElement(element);
 
    Float64 Length;
    hc->get_TotalLength(&Length);

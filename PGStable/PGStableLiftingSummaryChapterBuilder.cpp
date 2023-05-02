@@ -60,7 +60,8 @@ rptChapter* CPGStableLiftingSummaryChapterBuilder::Build(const std::shared_ptr<c
 
    rptChapter* pChapter = new rptChapter;
    WBFL::Stability::LiftingStabilityReporter reporter;
-   reporter.BuildSpecCheckChapter(&girder,&problem,&artifact,pChapter);
+   auto* pApp = EAFGetApp();
+   reporter.BuildSpecCheckChapter(&girder,&problem,&artifact,pChapter,pApp->GetDisplayUnits());
 
    return pChapter;
 }

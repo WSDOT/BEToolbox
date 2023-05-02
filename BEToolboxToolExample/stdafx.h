@@ -8,6 +8,7 @@
 #define STRICT
 #endif
 
+#include <WBFLMFC.h>
 #include <WBFLAll.h>
 
 #define _ATL_APARTMENT_THREADED

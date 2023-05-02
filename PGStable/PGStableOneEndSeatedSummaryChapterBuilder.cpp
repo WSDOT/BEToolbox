@@ -60,7 +60,8 @@ rptChapter* CPGStableOneEndSeatedSummaryChapterBuilder::Build(const std::shared_
 
    rptChapter* pChapter = new rptChapter;
    WBFL::Stability::OneEndSeatedStabilityReporter reporter;
-   reporter.BuildSpecCheckChapter(&girder,&problem,&artifact,pChapter);
+   auto* pApp = EAFGetApp();
+   reporter.BuildSpecCheckChapter(&girder,&problem,&artifact,pChapter,pApp->GetDisplayUnits());
 
    return pChapter;
 }

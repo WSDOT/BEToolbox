@@ -51,4 +51,5 @@ private:
    void UpdateAlignment(const SkewLine& skewLine) const;
    mutable CComPtr<IAlignment> m_Alignment;
    mutable CComPtr<IProfile> m_Profile;
+   IDType m_ProfileID = 0;
 };
