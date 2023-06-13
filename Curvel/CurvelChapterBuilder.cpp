@@ -32,7 +32,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-CogoObjectID g_SurfaceID = 999;
+IDType g_SurfaceID = 999;
 
 
 //////////////////////////////////
