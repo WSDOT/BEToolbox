@@ -180,7 +180,7 @@ rptRcImage* CUltColChapterBuilder::CreateImage(const std::vector<std::pair<Float
 
    WBFL::Units::MomentTool momentTool(pDispUnits->Moment);
    WBFL::Units::AxialTool  axialTool(pDispUnits->GeneralForce);
-   WBFL::Graphing::GraphXY graph(momentTool,axialTool);
+   WBFL::Graphing::GraphXY graph(&momentTool,&axialTool);
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);

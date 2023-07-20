@@ -253,11 +253,11 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
       n = ::RoundOff(n,0.001);
       genCompXML->ModularRatio(n);
 
-      CollectionIndexType nPoints;
+      IndexType nPoints;
       if ( primaryShapePoints )
       {
          primaryShapePoints->get_Count(&nPoints);
-         for ( CollectionIndexType i = 0; i < nPoints; i++ )
+         for ( IndexType i = 0; i < nPoints; i++ )
          {
             CComPtr<IPoint2d> pnt;
             primaryShapePoints->get_Item(i,&pnt);
@@ -274,7 +274,7 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
       if ( secondaryShapePoints )
       {
          secondaryShapePoints->get_Count(&nPoints);
-         for ( CollectionIndexType i = 0; i < nPoints; i++ )
+         for ( IndexType i = 0; i < nPoints; i++ )
          {
             CComPtr<IPoint2d> pnt;
             secondaryShapePoints->get_Item(i,&pnt);

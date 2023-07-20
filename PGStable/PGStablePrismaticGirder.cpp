@@ -315,7 +315,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    CComboBox* pcbGirders = (CComboBox*)GetDlgItem(IDC_GIRDER_LIST);
    pcbGirders->AddString(gs_strGirder);
    const GirderLibrary* pLib = pDoc->GetGirderLibrary();
-   libKeyListType keyList;
+   WBFL::Library::KeyListType keyList;
    pLib->KeyList(keyList);
    for (const auto& key : keyList)
    {

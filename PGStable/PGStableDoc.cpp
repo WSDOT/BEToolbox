@@ -884,7 +884,7 @@ CString CPGStableDoc::UpdateEc(const CString& strFc)
 
          fc       = WBFL::Units::ConvertToSysUnits(fc,      stress_unit);
 
-         ec = m_Model.GetK1()*m_Model.GetK2()*lrfdConcreteUtil::ModE(m_Model.GetConcreteType(),fc,m_Model.GetDensity(),false);
+         ec = m_Model.GetK1()*m_Model.GetK2()*WBFL::LRFD::ConcreteUtil::ModE(m_Model.GetConcreteType(),fc,m_Model.GetDensity(),false);
 
          strEc.Format(_T("%s"),FormatDimension(ec,pDispUnits->ModE,false));
    }

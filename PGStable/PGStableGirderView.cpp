@@ -186,7 +186,7 @@ void CPGStableGirderView::OnInitialUpdate()
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    const SpecLibrary* pSpecLib = pDoc->GetSpecLibrary();
-   libKeyListType keyList;
+   WBFL::Library::KeyListType keyList;
    pSpecLib->KeyList(keyList);
    CComboBox* pcbSpec = (CComboBox*)GetDlgItem(IDC_SPEC);
    pcbSpec->AddString(gs_strCriteria);

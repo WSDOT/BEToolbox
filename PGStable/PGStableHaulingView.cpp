@@ -127,7 +127,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
 
    DDX_UnitValueAndTag(pDX,IDC_FR_COEFFICIENT,IDC_FR_COEFFICIENT_UNIT,frCoefficient,pDispUnits->SqrtPressure);
    CString tag;
-   if ( lrfdVersionMgr::GetVersion() < lrfdVersionMgr::SeventhEditionWith2016Interims )
+   if ( WBFL::LRFD::LRFDVersionMgr::GetVersion() < WBFL::LRFD::LRFDVersionMgr::Version::SeventhEditionWith2016Interims )
    {
       tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("sqrt(f'c (MPa))") : _T("sqrt(f'c (KSI))");
    }
@@ -568,7 +568,7 @@ void CPGStableHaulingView::OnInitialUpdate()
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    const HaulTruckLibrary* pLib = pDoc->GetHaulTruckLibrary();
-   libKeyListType keyList;
+   WBFL::Library::KeyListType keyList;
    pLib->KeyList(keyList);
    CComboBox* pcbHaulTruck = (CComboBox*)GetDlgItem(IDC_HAUL_TRUCK);
    pcbHaulTruck->AddString(gs_strHaulTruck);

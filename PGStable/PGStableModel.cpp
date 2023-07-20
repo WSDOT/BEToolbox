@@ -83,8 +83,8 @@ CPGStableModel::CPGStableModel()
    haulingConcrete.SetFc(fc);
    oneEndSeatedConcrete.SetFc(fc);
 
-   Float64 Eci = ::lrfdConcreteUtil::ModE(liftingConcrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
-   Float64 Ec  = ::lrfdConcreteUtil::ModE(liftingConcrete.GetType(), fc, density,false/*ignore LRFD range checks*/);
+   Float64 Eci = ::WBFL::LRFD::ConcreteUtil::ModE(liftingConcrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
+   Float64 Ec  = ::WBFL::LRFD::ConcreteUtil::ModE(liftingConcrete.GetType(), fc, density,false/*ignore LRFD range checks*/);
 
    liftingConcrete.SetE(Eci);
    haulingConcrete.SetE(Ec);
@@ -193,21 +193,21 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
    if ( m_bComputeEci )
    {
       Float64 density = concrete.GetDensity();
-      Float64 Ec = lrfdConcreteUtil::ModE(concrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
-      if ( lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion() )
+      Float64 Ec = WBFL::LRFD::ConcreteUtil::ModE(concrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
+      if ( WBFL::LRFD::LRFDVersionMgr::Version::ThirdEditionWith2005Interims <= WBFL::LRFD::LRFDVersionMgr::GetVersion() )
       {
          Ec *= m_K1*m_K2;
       }
       concrete.SetE(Ec);
    }
 
-   Float64 lambda = lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
+   Float64 lambda = WBFL::LRFD::ConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
    concrete.SetLambda(lambda);
 
    auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(m_LiftingCriteria.TensionStressLimit.get());
    pTensionStressLimit->Lambda = concrete.GetLambda();
 
-   Float64 fr = ::lrfdConcreteUtil::ModRupture(fci,m_LiftingFrCoefficient);
+   Float64 fr = ::WBFL::LRFD::ConcreteUtil::ModRupture(fci,m_LiftingFrCoefficient);
    concrete.SetFlexureFr(lambda*fr);
 
 
@@ -281,8 +281,8 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    if ( m_bComputeEc )
    {
       Float64 density = concrete.GetDensity();
-      Float64 Ec = ::lrfdConcreteUtil::ModE(concrete.GetType(),fc,density,false/*ignore LRFD range checks*/);
-      if ( lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion() )
+      Float64 Ec = ::WBFL::LRFD::ConcreteUtil::ModE(concrete.GetType(),fc,density,false/*ignore LRFD range checks*/);
+      if ( WBFL::LRFD::LRFDVersionMgr::Version::ThirdEditionWith2005Interims <= WBFL::LRFD::LRFDVersionMgr::GetVersion() )
       {
          Ec *= m_K1*m_K2;
       }
@@ -290,13 +290,13 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
       concrete.SetE(Ec);
    }
 
-   Float64 lambda = lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
+   Float64 lambda = WBFL::LRFD::ConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
    concrete.SetLambda(lambda);
 
    auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(m_HaulingCriteria.TensionStressLimit.get());
    pTensionStressLimit->Lambda = concrete.GetLambda();
 
-   Float64 fr = ::lrfdConcreteUtil::ModRupture(fc,m_HaulingFrCoefficient);
+   Float64 fr = ::WBFL::LRFD::ConcreteUtil::ModRupture(fc,m_HaulingFrCoefficient);
    concrete.SetFlexureFr(lambda*fr);
 
 
@@ -354,8 +354,8 @@ WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckA
    if (m_bComputeEc)
    {
       Float64 density = concrete.GetDensity();
-      Float64 Ec = ::lrfdConcreteUtil::ModE(concrete.GetType(), fc, density, false/*ignore LRFD range checks*/);
-      if (lrfdVersionMgr::ThirdEditionWith2005Interims <= lrfdVersionMgr::GetVersion())
+      Float64 Ec = ::WBFL::LRFD::ConcreteUtil::ModE(concrete.GetType(), fc, density, false/*ignore LRFD range checks*/);
+      if (WBFL::LRFD::LRFDVersionMgr::Version::ThirdEditionWith2005Interims <= WBFL::LRFD::LRFDVersionMgr::GetVersion())
       {
          Ec *= m_K1 * m_K2;
       }
@@ -363,13 +363,13 @@ WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckA
       concrete.SetE(Ec);
    }
 
-   Float64 lambda = lrfdConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
+   Float64 lambda = WBFL::LRFD::ConcreteUtil::ComputeConcreteDensityModificationFactor(concrete.GetType(), concrete.GetDensity(), false, 0, 0);
    concrete.SetLambda(lambda);
 
    auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(m_OneEndSeatedCriteria.TensionStressLimit.get());
    pTensionStressLimit->Lambda = concrete.GetLambda();
 
-   Float64 fr = ::lrfdConcreteUtil::ModRupture(fc, m_OneEndSeatedFrCoefficient);
+   Float64 fr = ::WBFL::LRFD::ConcreteUtil::ModRupture(fc, m_OneEndSeatedFrCoefficient);
    concrete.SetFlexureFr(lambda * fr);
 
 

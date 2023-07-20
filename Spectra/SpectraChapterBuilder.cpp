@@ -457,7 +457,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
    WBFL::Units::TimeTool   TimeTool(pDispUnits->Time3);
    WBFL::Units::ScalarTool SaTool(pDispUnits->Scalar);
-   WBFL::Graphing::GraphXY graph(TimeTool,SaTool);
+   WBFL::Graphing::GraphXY graph(&TimeTool,&SaTool);
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);

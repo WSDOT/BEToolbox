@@ -199,7 +199,7 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    pDC->SelectObject(pOldBrush);
 
    WBFL::Units::LengthTool lengthTool(pDispUnits->ComponentDim);
-   WBFL::Graphing::GraphXY graph(lengthTool,lengthTool);
+   WBFL::Graphing::GraphXY graph(&lengthTool,&lengthTool);
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
