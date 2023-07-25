@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2023  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -129,10 +129,24 @@ void CBearingRptView::OnInitialUpdate()
    CEAFDocTemplate* pDocTemplate = (CEAFDocTemplate*)pDoc->GetDocTemplate();
    pDocTemplate->SetViewCreationData((void*)&data);
 
+
+   CEAFReportView::OnInitialUpdate();
+
+
    m_pFrame = (CBearingChildFrame*)GetParentFrame();
    m_pFrame->UpdateData(FALSE);
 
-   CEAFReportView::OnInitialUpdate();
+   
+
+   WBFL::EngTools::Bearing brg;
+   WBFL::EngTools::BearingLoads brg_loads;
+   pDoc->GetBearing(brg, brg_loads);
+
+
+   CBearingChildFrame* pFrame = (CBearingChildFrame*)GetParentFrame();
+   pFrame->SetBearingParameters(brg,brg_loads);
+
+
 }
 
 void CBearingRptView::OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint)

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2023  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -33,6 +33,11 @@
 
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
+#include <BEToolbox.hh>
+#include <EAF/EAFHelp.h>
+
+using namespace WBFL::EngTools;
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -72,6 +77,26 @@ BEGIN_MESSAGE_MAP(CBearingDoc, CBEToolboxDoc)
    ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
 END_MESSAGE_MAP()
 
+
+void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads)
+{
+	m_bearing = brg;
+	m_bearing_loads = brg_loads;
+	UpdateAllViews(NULL);
+}
+
+void CBearingDoc::GetBearing(Bearing& brg, BearingLoads& brg_loads) const
+{
+    brg = m_bearing;
+    brg_loads = m_bearing_loads;
+}
+
+void CBearingDoc::GetBearingCalculator(BearingCalculator& brg_calc) const
+{
+    brg_calc = m_bearing_calculator;
+}
+
+
 void CBearingDoc::OnHelpFinder()
 {
    EAFHelp(EAFGetDocument()->GetDocumentationSetName(),IDH_BEARING);
@@ -99,6 +124,30 @@ BOOL CBearingDoc::Init()
    if ( !CBEToolboxDoc::Init() )
       return FALSE;
 
+   // initialize with some defaults
+   m_bearing.SetLength(WBFL::Units::ConvertToSysUnits(11.0, WBFL::Units::Measure::Inch));
+   m_bearing.SetWidth(WBFL::Units::ConvertToSysUnits(27.0, WBFL::Units::Measure::Inch));
+   m_bearing.SetShearModulusMinimum(WBFL::Units::ConvertToSysUnits(140, WBFL::Units::Measure::PSI));
+   m_bearing.SetShearModulusMaximum(WBFL::Units::ConvertToSysUnits(190, WBFL::Units::Measure::PSI));
+   m_bearing.SetIntermediateLayerThickness(WBFL::Units::ConvertToSysUnits(0.5, WBFL::Units::Measure::Inch));
+   m_bearing.SetCoverThickness(WBFL::Units::ConvertToSysUnits(0.25, WBFL::Units::Measure::Inch));
+   m_bearing.SetSteelShimThickness(WBFL::Units::ConvertToSysUnits(0.0747, WBFL::Units::Measure::Inch));
+   m_bearing.SetYieldStrength(WBFL::Units::ConvertToSysUnits(36, WBFL::Units::Measure::KSI));
+   m_bearing.SetFatigueThreshold(WBFL::Units::ConvertToSysUnits(24, WBFL::Units::Measure::KSI));
+   m_bearing.SetNumIntLayers(4);
+   m_bearing.SetDensityElastomer(WBFL::Units::ConvertToSysUnits(74.93, WBFL::Units::Measure::LbfPerFeet3));
+   m_bearing.SetDensitySteel(WBFL::Units::ConvertToSysUnits(490.0, WBFL::Units::Measure::LbfPerFeet3));
+
+   m_bearing_loads.SetDeadLoad(WBFL::Units::ConvertToSysUnits(86.0, WBFL::Units::Measure::Kip));
+   m_bearing_loads.SetLiveLoad(WBFL::Units::ConvertToSysUnits(47.0, WBFL::Units::Measure::Kip));
+   m_bearing_loads.SetShearDeformation(WBFL::Units::ConvertToSysUnits(0.47, WBFL::Units::Measure::Inch));
+   m_bearing_loads.SetRotationX(0.014);
+   m_bearing_loads.SetRotationY(0.005);
+   m_bearing_loads.SetStaticRotation(0.008);
+   m_bearing_loads.SetCyclicRotation(0.006);
+   m_bearing_loads.SetFixedTranslationX(BearingLoads::FixedTranslationX::No);
+   m_bearing_loads.SetFixedTranslationY(BearingLoads::FixedTranslationY::Yes);
+
    return TRUE;
 }
 
@@ -114,12 +163,194 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
       return hr;
 
 
-   hr = pStrSave->EndUnit(); // Bearing
-   if ( FAILED(hr) )
-      return hr;
+   CEAFApp* pApp = EAFGetApp();
+
+   BearingLoads::FixedTranslationX fixed_translation_x = m_bearing_loads.GetFixedTranslationX();
+   BearingLoads::FixedTranslationY fixed_translation_y = m_bearing_loads.GetFixedTranslationY();
+
+   Float64 length = m_bearing.GetLength();
+   Float64 width = m_bearing.GetWidth();
+   Float64 Gmin = m_bearing.GetShearModulusMinimum();
+   Float64 Gmax = m_bearing.GetShearModulusMaximum();
+   Float64 tlayer = m_bearing.GetIntermediateLayerThickness();
+   Float64 tcover = m_bearing.GetCoverThickness();
+   Float64 tshim = m_bearing.GetSteelShimThickness();
+   Float64 fy = m_bearing.GetYieldStrength();
+   Float64 fth = m_bearing.GetFatigueThreshold();
+   IndexType n = m_bearing.GetNumIntLayers();
+   Float64 ps = m_bearing.GetDensitySteel();
+   Float64 pe = m_bearing.GetDensityElastomer();
+   Float64 Area = m_bearing.GetArea();
+   Float64 tltotal = m_bearing.GetTotalElastomerThickness();
+   Float64 tstotal = m_bearing.GetTotalSteelShimThickness();
+   IndexType stotal = m_bearing.GetTotalSteelShims();
+   Float64 S = m_bearing.GetShapeFactor();
+
+   Float64 DL = m_bearing_loads.GetDeadLoad();
+   Float64 LL = m_bearing_loads.GetLiveLoad();
+   Float64 TL = m_bearing_loads.GetTotalLoad();
+   Float64 rotx = m_bearing_loads.GetRotationX();
+   Float64 roty = m_bearing_loads.GetRotationY();
+   Float64 rot_static = m_bearing_loads.GetStaticRotation();
+   Float64 rot_cyclic = m_bearing_loads.GetCyclicRotation();
+   Float64 shear_def = m_bearing_loads.GetShearDeformation();
+
+  Float64 EcA = m_bearing_calculator.GetConcreteElasticModulusMethodA(m_bearing);
+  Float64 EcB = m_bearing_calculator.GetConcreteElasticModulusMethodB(m_bearing);
+  Float64 DL_initial_deflection_A = m_bearing_calculator.GetInitialDeadLoadDeflectionMethodA(m_bearing, m_bearing_loads);
+  Float64 DL_initial_deflection_B = m_bearing_calculator.GetInitialDeadLoadDeflectionMethodB(m_bearing, m_bearing_loads);
+  Float64 LL_instantaneous_deflection_A = m_bearing_calculator.GetInstantaneousLiveLoadDeflectionMethodA(m_bearing, m_bearing_loads);
+  Float64 LL_instantaneous_deflection_B = m_bearing_calculator.GetInstantaneousLiveLoadDeflectionMethodB(m_bearing, m_bearing_loads);
+  Float64 Stress_TL = m_bearing_calculator.GetTotalLoadStress(m_bearing, m_bearing_loads);
+  Float64 Stress_LL = m_bearing_calculator.GetLiveLoadStress(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_X_disp_static = m_bearing_calculator.GetStaticDisplacementPrimaryShearStrain(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_X_disp_cyclic = m_bearing_calculator.GetCyclicDisplacementPrimaryShearStrain(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_X_axial_static = m_bearing_calculator.GetStaticAxialPrimaryShearStrain(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_X_axial_cyclic = m_bearing_calculator.GetCyclicAxialPrimaryShearStrain(m_bearing,m_bearing_loads);
+  Float64 Shear_Strain_X_rot_static =  m_bearing_calculator.GetStaticRotationalPrimaryShearStrain(m_bearing,m_bearing_loads);
+  Float64 Shear_Strain_X_rot_cyclic = m_bearing_calculator.GetCyclicRotationalPrimaryShearStrain(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_X_combo_sum = m_bearing_calculator.GetPrimaryShearStrainComboSum(m_bearing,m_bearing_loads);
+  Float64 Shear_Strain_Y_disp_static = m_bearing_calculator.GetStaticDisplacementSecondaryShearStrain();
+  Float64 Shear_Strain_Y_disp_cyclic = m_bearing_calculator.GetCyclicDisplacementSecondaryShearStrain();
+  Float64 Shear_Strain_Y_axial_static = m_bearing_calculator.GetStaticAxialSecondaryShearStrain(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_Y_axial_cyclic = m_bearing_calculator.GetCyclicAxialSecondaryShearStrain(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_Y_rot_static = m_bearing_calculator.GetStaticRotationalSecondaryShearStrain(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_Y_rot_cyclic = m_bearing_calculator.GetCyclicRotationalSecondaryShearStrain(m_bearing, m_bearing_loads);
+  Float64 Shear_Strain_Combo_Sum =   m_bearing_calculator.GetSecondaryShearStrainComboSum(m_bearing,m_bearing_loads);
+  Float64 Static_Stress = m_bearing_calculator.GetStaticStress(m_bearing, m_bearing_loads);
+  Float64 Cyclic_Stress = m_bearing_calculator.GetCyclicStress(m_bearing, m_bearing_loads);
+  Float64 Total_Stress = m_bearing_calculator.GetTotalStress(m_bearing, m_bearing_loads);
+  Float64 Ax = m_bearing_calculator.GetPrimaryIntermediateCalculationA(m_bearing);
+  Float64 Ay = m_bearing_calculator.GetSecondaryIntermediateCalculationA(m_bearing);
+  Float64 Bx = m_bearing_calculator.GetPrimaryIntermediateCalculationB(m_bearing);
+  Float64 By = m_bearing_calculator.GetSecondaryIntermediateCalculationB(m_bearing);
+  Float64 i = m_bearing_calculator.GetCompressibilityIndex(m_bearing);
+  Float64 Cx_axial = m_bearing_calculator.GetPrimaryShearStrainAxialCoefficient(m_bearing);
+  Float64 Cy_axial = m_bearing_calculator.GetSecondaryShearStrainAxialCoefficient(m_bearing);
+  Float64 Cx_rot = m_bearing_calculator.GetPrimaryShearStrainRotationCoefficient(m_bearing);
+  Float64 Cy_rot = m_bearing_calculator.GetSecondaryShearStrainRotationCoefficient(m_bearing);
+  Float64 Stress_peak_hydro = m_bearing_calculator.GetPeakHydrostaticStressCoefficient(m_bearing);
+  Float64 Total_axial_strain = m_bearing_calculator.GetTotalAxialStrain(m_bearing,m_bearing_loads);
+  Float64 alpha = m_bearing_calculator.GetAlphaCoefficient(m_bearing,m_bearing_loads);
+  Float64 Ca = m_bearing_calculator.GetCaCoefficient(m_bearing,m_bearing_loads);
+  Float64 Stress_hydro = m_bearing_calculator.GetHydrostaticStress(m_bearing,m_bearing_loads);
+  Float64 max_stress = m_bearing_calculator.GetMaximumStress(m_bearing);
+  Float64 minimum_allowable_area = m_bearing_calculator.GetMinimumAllowableArea(m_bearing,m_bearing_loads);
+  Float64 minimum_allowable_length = m_bearing_calculator.GetMinimumAllowableLength(m_bearing,m_bearing_loads);
+  Float64 minimum_allowable_width = m_bearing_calculator.GetMinimumAllowableWidth(m_bearing,m_bearing_loads);
+  Float64 maximum_allowable_tlayer = m_bearing_calculator.GetMaximumAllowableIntermediateLayerThickness(m_bearing,m_bearing_loads);
+  Float64 minimum_allowable_S = m_bearing_calculator.GetMinimumAllowableShapeFactor(m_bearing,m_bearing_loads);
+  Float64 maximum_allowable_S = m_bearing_calculator.GetMaximumAllowableShapeFactor(m_bearing,m_bearing_loads);
+  Float64 minimum_allowable_n_sheardef = m_bearing_calculator.GetMinimumAllowableNumLayersShearDeformation(m_bearing,m_bearing_loads);
+  Float64 minimum_allowable_n_Xrot = m_bearing_calculator.GetMinimumAllowableNumLayersRotationX(m_bearing,m_bearing_loads);
+  Float64 minimum_allowable_n_RotY = m_bearing_calculator.GetMinimumAllowableNumLayersRotationY(m_bearing,m_bearing_loads);
+  Float64 maximum_allowable_n_stabilityX = m_bearing_calculator.GetMaximumAllowableNumLayersStabilityX(m_bearing,m_bearing_loads);
+  Float64 maximum_allowable_n_stabilityY = m_bearing_calculator.GetMaximumAllowableNumLayersStabilityY(m_bearing,m_bearing_loads);
+
+
+   hr = pStrSave->put_Property(_T("Units"), CComVariant(pApp->GetUnitsMode()));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("Fixed_X_Translation"), CComVariant((int)fixed_translation_x));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("Fixed_Y_Translation"), CComVariant((int)fixed_translation_y));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("Length"), CComVariant(length));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("Width"), CComVariant(width));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("Gmin"), CComVariant(Gmin));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("Gmax"), CComVariant(Gmax));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("tlayer"), CComVariant(tlayer));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("tcover"), CComVariant(tcover));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("tshim"), CComVariant(tshim));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("fy"), CComVariant(fy));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("fth"), CComVariant(fth));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("n"), CComVariant(n));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("ps"), CComVariant(ps));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("pe"), CComVariant(pe));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("DL"), CComVariant(DL));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("LL"), CComVariant(LL));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("rotx"), CComVariant(rotx));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("roty"), CComVariant(roty));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("rot_static"), CComVariant(rot_static));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("rot_cyclic"), CComVariant(rot_cyclic));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("shear_def"), CComVariant(shear_def));
+   if (FAILED(hr))
+       return hr;
+
+
+   hr = pStrSave->EndUnit();
+   if (FAILED(hr))
+       return hr;
+
 
    return S_OK;
-}
+
+
+} // End Bearing Data
+
+
+
+
+
 
 HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
 {
@@ -132,6 +363,204 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
 
    CComVariant var;
 
+   CEAFApp* pApp = EAFGetApp();
+
+   IndexType fixed_translation_x = m_bearing_loads.GetEffectiveKFactorX();
+   IndexType fixed_translation_y = m_bearing_loads.GetEffectiveKFactorY();
+
+   Float64 length = m_bearing.GetLength();
+   Float64 width = m_bearing.GetWidth();
+   Float64 Gmin = m_bearing.GetShearModulusMinimum();
+   Float64 Gmax = m_bearing.GetShearModulusMaximum();
+   Float64 tlayer = m_bearing.GetIntermediateLayerThickness();
+   Float64 tcover = m_bearing.GetCoverThickness();
+   Float64 tshim = m_bearing.GetSteelShimThickness();
+   Float64 fy = m_bearing.GetYieldStrength();
+   Float64 fth = m_bearing.GetFatigueThreshold();
+   IndexType n = m_bearing.GetNumIntLayers();
+   Float64 ps = m_bearing.GetDensitySteel();
+   Float64 pe = m_bearing.GetDensityElastomer();
+   Float64 Area = m_bearing.GetArea();
+   Float64 tltotal = m_bearing.GetTotalElastomerThickness();
+   Float64 tstotal = m_bearing.GetTotalSteelShimThickness();
+   IndexType stotal = m_bearing.GetTotalSteelShims();
+   Float64 S = m_bearing.GetShapeFactor();
+
+   Float64 DL = m_bearing_loads.GetDeadLoad();
+   Float64 LL = m_bearing_loads.GetLiveLoad();
+   Float64 TL = m_bearing_loads.GetTotalLoad();
+   Float64 rotx = m_bearing_loads.GetRotationX();
+   Float64 roty = m_bearing_loads.GetRotationY();
+   Float64 rot_static = m_bearing_loads.GetStaticRotation();
+   Float64 rot_cyclic = m_bearing_loads.GetCyclicRotation();
+   Float64 shear_def = m_bearing_loads.GetShearDeformation();
+
+   Float64 EcA = m_bearing_calculator.GetConcreteElasticModulusMethodA(m_bearing);
+   Float64 EcB = m_bearing_calculator.GetConcreteElasticModulusMethodB(m_bearing);
+   Float64 DL_initial_deflection_A = m_bearing_calculator.GetInitialDeadLoadDeflectionMethodA(m_bearing, m_bearing_loads);
+   Float64 DL_initial_deflection_B = m_bearing_calculator.GetInitialDeadLoadDeflectionMethodB(m_bearing, m_bearing_loads);
+   Float64 LL_instantaneous_deflection_A = m_bearing_calculator.GetInstantaneousLiveLoadDeflectionMethodA(m_bearing, m_bearing_loads);
+   Float64 LL_instantaneous_deflection_B = m_bearing_calculator.GetInstantaneousLiveLoadDeflectionMethodB(m_bearing, m_bearing_loads);
+   Float64 Stress_TL = m_bearing_calculator.GetTotalLoadStress(m_bearing, m_bearing_loads);
+   Float64 Stress_LL = m_bearing_calculator.GetLiveLoadStress(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_X_disp_static = m_bearing_calculator.GetStaticDisplacementPrimaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_X_disp_cyclic = m_bearing_calculator.GetCyclicDisplacementPrimaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_X_axial_static = m_bearing_calculator.GetStaticAxialPrimaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_X_axial_cyclic = m_bearing_calculator.GetCyclicAxialPrimaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_X_rot_static = m_bearing_calculator.GetStaticRotationalPrimaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_X_rot_cyclic = m_bearing_calculator.GetCyclicRotationalPrimaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_X_combo_sum = m_bearing_calculator.GetPrimaryShearStrainComboSum(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_Y_disp_static = m_bearing_calculator.GetStaticDisplacementSecondaryShearStrain();
+   Float64 Shear_Strain_Y_disp_cyclic = m_bearing_calculator.GetCyclicDisplacementSecondaryShearStrain();
+   Float64 Shear_Strain_Y_axial_static = m_bearing_calculator.GetStaticAxialSecondaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_Y_axial_cyclic = m_bearing_calculator.GetCyclicAxialSecondaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_Y_rot_static = m_bearing_calculator.GetStaticRotationalSecondaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_Y_rot_cyclic = m_bearing_calculator.GetCyclicRotationalSecondaryShearStrain(m_bearing, m_bearing_loads);
+   Float64 Shear_Strain_Combo_Sum = m_bearing_calculator.GetSecondaryShearStrainComboSum(m_bearing, m_bearing_loads);
+   Float64 Static_Stress = m_bearing_calculator.GetStaticStress(m_bearing, m_bearing_loads);
+   Float64 Cyclic_Stress = m_bearing_calculator.GetCyclicStress(m_bearing, m_bearing_loads);
+   Float64 Total_Stress = m_bearing_calculator.GetTotalStress(m_bearing, m_bearing_loads);
+   Float64 Ax = m_bearing_calculator.GetPrimaryIntermediateCalculationA(m_bearing);
+   Float64 Ay = m_bearing_calculator.GetSecondaryIntermediateCalculationA(m_bearing);
+   Float64 Bx = m_bearing_calculator.GetPrimaryIntermediateCalculationB(m_bearing);
+   Float64 By = m_bearing_calculator.GetSecondaryIntermediateCalculationB(m_bearing);
+   Float64 i = m_bearing_calculator.GetCompressibilityIndex(m_bearing);
+   Float64 Cx_axial = m_bearing_calculator.GetPrimaryShearStrainAxialCoefficient(m_bearing);
+   Float64 Cy_axial = m_bearing_calculator.GetSecondaryShearStrainAxialCoefficient(m_bearing);
+   Float64 Cx_rot = m_bearing_calculator.GetPrimaryShearStrainRotationCoefficient(m_bearing);
+   Float64 Cy_rot = m_bearing_calculator.GetSecondaryShearStrainRotationCoefficient(m_bearing);
+   Float64 Stress_peak_hydro = m_bearing_calculator.GetPeakHydrostaticStressCoefficient(m_bearing);
+   Float64 Total_axial_strain = m_bearing_calculator.GetTotalAxialStrain(m_bearing, m_bearing_loads);
+   Float64 alpha = m_bearing_calculator.GetAlphaCoefficient(m_bearing, m_bearing_loads);
+   Float64 Ca = m_bearing_calculator.GetCaCoefficient(m_bearing, m_bearing_loads);
+   Float64 Stress_hydro = m_bearing_calculator.GetHydrostaticStress(m_bearing, m_bearing_loads);
+   Float64 max_stress = m_bearing_calculator.GetMaximumStress(m_bearing);
+   Float64 minimum_allowable_area = m_bearing_calculator.GetMinimumAllowableArea(m_bearing, m_bearing_loads);
+   Float64 minimum_allowable_length = m_bearing_calculator.GetMinimumAllowableLength(m_bearing, m_bearing_loads);
+   Float64 minimum_allowable_width = m_bearing_calculator.GetMinimumAllowableWidth(m_bearing, m_bearing_loads);
+   Float64 maximum_allowable_tlayer = m_bearing_calculator.GetMaximumAllowableIntermediateLayerThickness(m_bearing, m_bearing_loads);
+   Float64 minimum_allowable_S = m_bearing_calculator.GetMinimumAllowableShapeFactor(m_bearing, m_bearing_loads);
+   Float64 maximum_allowable_S = m_bearing_calculator.GetMaximumAllowableShapeFactor(m_bearing, m_bearing_loads);
+   Float64 minimum_allowable_n_sheardef = m_bearing_calculator.GetMinimumAllowableNumLayersShearDeformation(m_bearing, m_bearing_loads);
+   Float64 minimum_allowable_n_Xrot = m_bearing_calculator.GetMinimumAllowableNumLayersRotationX(m_bearing, m_bearing_loads);
+   Float64 minimum_allowable_n_RotY = m_bearing_calculator.GetMinimumAllowableNumLayersRotationY(m_bearing, m_bearing_loads);
+   Float64 maximum_allowable_n_stabilityX = m_bearing_calculator.GetMaximumAllowableNumLayersStabilityX(m_bearing, m_bearing_loads);
+   Float64 maximum_allowable_n_stabilityY = m_bearing_calculator.GetMaximumAllowableNumLayersStabilityY(m_bearing, m_bearing_loads);
+
+
+   var.vt = VT_I4;
+   hr = pStrLoad->get_Property(_T("Units"), &var);
+   if (FAILED(hr))
+       return hr;
+   pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
+
+   hr = pStrLoad->get_Property(_T("Fixed_X_Translation"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetFixedTranslationX((BearingLoads::FixedTranslationX)var.lVal);
+
+   hr = pStrLoad->get_Property(_T("Fixed_Y_Translation"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetFixedTranslationY((BearingLoads::FixedTranslationY)var.lVal);
+
+   var.vt = VT_R8;
+   hr = pStrLoad->get_Property(_T("Length"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetLength(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("Width"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetWidth(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("Gmin"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetShearModulusMinimum(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("Gmax"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetShearModulusMaximum(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("tlayer"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetIntermediateLayerThickness(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("tcover"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetCoverThickness(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("tshim"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetSteelShimThickness(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("fy"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetYieldStrength(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("fth"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetFatigueThreshold(var.dblVal);
+   
+   var.vt = VT_I4;
+   hr = pStrLoad->get_Property(_T("n"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetNumIntLayers(var.lVal);
+
+   var.vt = VT_R8;
+   hr = pStrLoad->get_Property(_T("ps"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetDensitySteel(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("pe"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing.SetDensityElastomer(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("DL"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetDeadLoad(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("LL"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetLiveLoad(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("rotx"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetRotationX(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("roty"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetRotationY(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("rot_static"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetStaticRotation(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("rot_cyclic"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetCyclicRotation(var.dblVal);
+
+   hr = pStrLoad->get_Property(_T("shear_def"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_loads.SetShearDeformation(var.dblVal);
 
    hr = pStrLoad->EndUnit(); // Bearing
    if ( FAILED(hr) )
@@ -157,3 +586,4 @@ CString CBearingDoc::GetDocumentationRootLocation()
    CEAFApp* pApp = EAFGetApp();
    return pApp->GetDocumentationRootLocation();
 }
+

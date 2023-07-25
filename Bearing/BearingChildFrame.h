@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2023  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 #pragma once
 #include <EAF\EAFChildFrame.h>
 #include <EAF\EAFTypes.h>
+#include "BearingDoc.h"
 #include "BearingDlgBar.h"
 
 class CBearingChildFrame :
@@ -31,6 +32,26 @@ class CBearingChildFrame :
 public:
 	DECLARE_DYNCREATE(CBearingChildFrame)
 
+	void SetBearingParameters(WBFL::EngTools::Bearing& brg, WBFL::EngTools::BearingLoads& brg_loads);
+
+
+	enum class BearingAnalysisMethod
+	{
+		MethodA,
+		MethodB
+	};
+
+	BearingAnalysisMethod m_analysis_method{ BearingAnalysisMethod::MethodA };
+
+	BearingAnalysisMethod GetAnalysisMethod()
+	{
+		return m_analysis_method;
+	}
+
+   void SetUnitsMode(eafTypes::UnitMode um);
+   void SetAnalysisMethod(BearingAnalysisMethod& method);
+
+
    void UpdateData(BOOL bUpdate);
 
 protected:
@@ -38,10 +59,15 @@ protected:
    ~CBearingChildFrame(void);
 
    afx_msg void OnUpdate();
+   afx_msg void OnUSUnits();
+   afx_msg void OnSIUnits();
+
    afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
 
    DECLARE_MESSAGE_MAP()
    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+
+
 
 protected:
    CBearingDialogBar m_DlgBar;

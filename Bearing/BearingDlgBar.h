@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2023  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,28 @@ class CBearingDialogBar : public CDialogBar
 public:
 	CBearingDialogBar();
 	virtual ~CBearingDialogBar();
+
+	int m_method;
+	Float64 m_length;
+	Float64 m_width;
+	Float64 m_cover;
+	Float64 m_layer;
+	Float64 m_shim;
+	IndexType m_n_layers;
+	Float64 m_Gmin;
+	Float64 m_Gmax;
+	Float64 m_Fy;
+	Float64 m_Fth;
+	Float64 m_DL;
+	Float64 m_LL;
+	Float64 m_rot_st;
+	Float64 m_rot_cy;
+	Float64 m_rot_x;
+	Float64 m_rot_y;
+	Float64 m_shear_def;
+	int m_fixed_x;
+	int m_fixed_y;
+
 
 protected:
 	DECLARE_MESSAGE_MAP()

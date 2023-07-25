@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2023  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -28,6 +28,10 @@
 #include <WBFLUnitServer.h>
 #include <ReportManager\ReportManager.h>
 #include <Math\PiecewiseFunction.h>
+#include <EngTools\Bearing.h>
+#include <EngTools\BearingLoads.h>
+#include <EngTools\BearingCalculator.h>
+
 
 class CBearingDoc : public CBEToolboxDoc
 {
@@ -68,4 +72,16 @@ protected:
 
 public:
    virtual void OnCloseDocument() override;
+
+   void SetBearing(const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads);
+   void GetBearing(WBFL::EngTools::Bearing& brg, WBFL::EngTools::BearingLoads& brg_loads) const;
+   void GetBearingCalculator(WBFL::EngTools::BearingCalculator& brg_calc) const;
+
+private:
+
+
+	WBFL::EngTools::Bearing m_bearing;
+	WBFL::EngTools::BearingLoads m_bearing_loads;
+	WBFL::EngTools::BearingCalculator m_bearing_calculator;
+
 };

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2023  Washington State Department of Transportation
+// Copyright © 1999-2022  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 #include "..\resource.h"
 #include "BearingChildFrame.h"
 #include "BearingDoc.h"
+#include <BEToolbox.hh>
+#include <EAF/EAFHelp.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -52,6 +54,65 @@ LRESULT CBearingChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
    EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_BEARING );
    return TRUE;
 }
+
+void CBearingChildFrame::SetAnalysisMethod(BearingAnalysisMethod& method)
+{
+    if (CBearingChildFrame::GetAnalysisMethod() == CBearingChildFrame::BearingAnalysisMethod::MethodA)
+    {
+        m_DlgBar.m_method = 1;
+    }
+    else
+    {
+        m_DlgBar.m_method = 0;
+    }
+}
+
+
+void CBearingChildFrame::SetBearingParameters(WBFL::EngTools::Bearing& brg, WBFL::EngTools::BearingLoads& brg_loads)
+{
+
+    m_DlgBar.m_length = brg.GetLength();
+    m_DlgBar.m_width = brg.GetWidth();
+    m_DlgBar.m_cover = brg.GetCoverThickness();
+    m_DlgBar.m_layer = brg.GetIntermediateLayerThickness();
+    m_DlgBar.m_shim = brg.GetSteelShimThickness();
+    m_DlgBar.m_n_layers = brg.GetNumIntLayers();
+    m_DlgBar.m_Gmin = brg.GetShearModulusMinimum();
+    m_DlgBar.m_Gmax = brg.GetShearModulusMaximum();
+    m_DlgBar.m_Fy = brg.GetYieldStrength();
+    m_DlgBar.m_Fth = brg.GetFatigueThreshold();
+    m_DlgBar.m_DL = brg_loads.GetDeadLoad();
+    m_DlgBar.m_LL = brg_loads.GetLiveLoad();
+    m_DlgBar.m_rot_x = brg_loads.GetRotationX();
+    m_DlgBar.m_rot_y = brg_loads.GetRotationY();
+    m_DlgBar.m_rot_st = brg_loads.GetStaticRotation();
+    m_DlgBar.m_rot_cy = brg_loads.GetCyclicRotation();
+    m_DlgBar.m_shear_def = brg_loads.GetShearDeformation();
+    if (brg_loads.GetFixedTranslationX() == WBFL::EngTools::BearingLoads::FixedTranslationX::No)
+    {
+        m_DlgBar.m_fixed_x = 1;
+    }
+    else
+    {
+        m_DlgBar.m_fixed_x = 0;
+    }
+    if (brg_loads.GetFixedTranslationY() == WBFL::EngTools::BearingLoads::FixedTranslationY::No)
+    {
+        m_DlgBar.m_fixed_y = 1;
+    }
+    else
+    {
+        m_DlgBar.m_fixed_y = 0;
+    }
+
+
+    m_DlgBar.UpdateData(FALSE);
+}
+
+
+
+
+
 
 BOOL CBearingChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
@@ -96,12 +157,66 @@ void CBearingChildFrame::OnUpdate()
    CBearingDoc* pDoc = (CBearingDoc*)GetActiveDocument();
    if ( pDoc )
    {
+       WBFL::EngTools::Bearing brg;
+       WBFL::EngTools::BearingLoads brg_loads;
+
+       brg.SetLength(m_DlgBar.m_length);
+       brg.SetWidth(m_DlgBar.m_width);
+       brg.SetShearModulusMinimum(m_DlgBar.m_Gmin);
+       brg.SetShearModulusMaximum(m_DlgBar.m_Gmax);
+       brg.SetIntermediateLayerThickness(m_DlgBar.m_layer);
+       brg.SetCoverThickness(m_DlgBar.m_cover);
+       brg.SetSteelShimThickness(m_DlgBar.m_shim);
+       brg.SetYieldStrength(m_DlgBar.m_Fy);
+       brg.SetFatigueThreshold(m_DlgBar.m_Fth);
+       brg.SetNumIntLayers(m_DlgBar.m_n_layers);
+       brg_loads.SetDeadLoad(m_DlgBar.m_DL);
+       brg_loads.SetLiveLoad(m_DlgBar.m_LL);
+       brg_loads.SetShearDeformation(m_DlgBar.m_shear_def);
+       brg_loads.SetRotationX(m_DlgBar.m_rot_x);
+       brg_loads.SetRotationY(m_DlgBar.m_rot_y);
+       brg_loads.SetStaticRotation(m_DlgBar.m_rot_st);
+       brg_loads.SetCyclicRotation(m_DlgBar.m_rot_cy);
+       brg_loads.SetFixedTranslationX((WBFL::EngTools::BearingLoads::FixedTranslationX)m_DlgBar.m_fixed_x);
+       brg_loads.SetFixedTranslationY((WBFL::EngTools::BearingLoads::FixedTranslationY)m_DlgBar.m_fixed_y);
+
+      pDoc->SetBearing(brg,brg_loads);
       pDoc->SetModifiedFlag();
       pDoc->UpdateAllViews(nullptr);
    }
 
    AfxMessageBox(_T("Dummy Dialog"));
 }
+
+
+
+void CBearingChildFrame::OnUSUnits()
+{
+    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == 1);
+    m_DlgBar.UpdateData(TRUE);
+    SetUnitsMode(eafTypes::umUS);
+    m_DlgBar.UpdateData(FALSE);
+    OnUpdate();
+}
+
+void CBearingChildFrame::OnSIUnits()
+{
+    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == 1);
+    m_DlgBar.UpdateData(TRUE);
+    SetUnitsMode(eafTypes::umSI);
+    m_DlgBar.UpdateData(FALSE);
+    OnUpdate();
+}
+
+void CBearingChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+{
+    CEAFApp* pApp = EAFGetApp();
+    pApp->SetUnitsMode(um);
+}
+
+
+
+
 
 #if defined _DEBUG
 void CBearingChildFrame::AssertValid() const
