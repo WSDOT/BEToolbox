@@ -21,8 +21,10 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-
+#include <EngTools\Bearing.h>
+#include <EngTools\BearingLoads.h>
 #include <MfcTools\MetaFileStatic.h>
+
 
 // CBearingDialogBar
 class CBearingDialogBar : public CDialogBar
@@ -55,6 +57,10 @@ public:
 	int m_fixed_y;
 
 
+	//void SetBearingParameters(CBearingDialogBar&,
+	//	const WBFL::EngTools::Bearing&, const WBFL::EngTools::BearingLoads&);
+
+
 protected:
 	DECLARE_MESSAGE_MAP()
 
@@ -66,4 +72,5 @@ protected:
 
 public:
    virtual BOOL Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID) override;
+
 };

@@ -55,7 +55,7 @@ LRESULT CBearingChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
    return TRUE;
 }
 
-void CBearingChildFrame::SetAnalysisMethod(BearingAnalysisMethod& method)
+void CBearingChildFrame::SetAnalysisMethod()
 {
     if (CBearingChildFrame::GetAnalysisMethod() == CBearingChildFrame::BearingAnalysisMethod::MethodA)
     {
@@ -68,9 +68,15 @@ void CBearingChildFrame::SetAnalysisMethod(BearingAnalysisMethod& method)
 }
 
 
-void CBearingChildFrame::SetBearingParameters(WBFL::EngTools::Bearing& brg, WBFL::EngTools::BearingLoads& brg_loads)
+const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
 {
+    return m_DlgBar;
+}
 
+
+void CBearingChildFrame::SetBearingParameters(WBFL::EngTools::Bearing& brg,
+    WBFL::EngTools::BearingLoads& brg_loads)
+{
     m_DlgBar.m_length = brg.GetLength();
     m_DlgBar.m_width = brg.GetWidth();
     m_DlgBar.m_cover = brg.GetCoverThickness();
@@ -88,6 +94,8 @@ void CBearingChildFrame::SetBearingParameters(WBFL::EngTools::Bearing& brg, WBFL
     m_DlgBar.m_rot_st = brg_loads.GetStaticRotation();
     m_DlgBar.m_rot_cy = brg_loads.GetCyclicRotation();
     m_DlgBar.m_shear_def = brg_loads.GetShearDeformation();
+    //m_DlgBar.SetBearingParameters(m_DlgBar,brg,brg_loads);
+
     if (brg_loads.GetFixedTranslationX() == WBFL::EngTools::BearingLoads::FixedTranslationX::No)
     {
         m_DlgBar.m_fixed_x = 1;
@@ -105,8 +113,8 @@ void CBearingChildFrame::SetBearingParameters(WBFL::EngTools::Bearing& brg, WBFL
         m_DlgBar.m_fixed_y = 0;
     }
 
-
     m_DlgBar.UpdateData(FALSE);
+
 }
 
 
@@ -180,9 +188,9 @@ void CBearingChildFrame::OnUpdate()
        brg_loads.SetFixedTranslationX((WBFL::EngTools::BearingLoads::FixedTranslationX)m_DlgBar.m_fixed_x);
        brg_loads.SetFixedTranslationY((WBFL::EngTools::BearingLoads::FixedTranslationY)m_DlgBar.m_fixed_y);
 
-      pDoc->SetBearing(brg,brg_loads);
-      pDoc->SetModifiedFlag();
-      pDoc->UpdateAllViews(nullptr);
+       pDoc->SetBearing(brg,brg_loads);
+       pDoc->SetModifiedFlag();
+       pDoc->UpdateAllViews(nullptr);
    }
 
    AfxMessageBox(_T("Dummy Dialog"));
@@ -192,7 +200,7 @@ void CBearingChildFrame::OnUpdate()
 
 void CBearingChildFrame::OnUSUnits()
 {
-    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == 1);
+    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == TRUE);
     m_DlgBar.UpdateData(TRUE);
     SetUnitsMode(eafTypes::umUS);
     m_DlgBar.UpdateData(FALSE);
@@ -201,7 +209,7 @@ void CBearingChildFrame::OnUSUnits()
 
 void CBearingChildFrame::OnSIUnits()
 {
-    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == 1);
+    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == TRUE);
     m_DlgBar.UpdateData(TRUE);
     SetUnitsMode(eafTypes::umSI);
     m_DlgBar.UpdateData(FALSE);

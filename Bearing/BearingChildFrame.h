@@ -32,8 +32,8 @@ class CBearingChildFrame :
 public:
 	DECLARE_DYNCREATE(CBearingChildFrame)
 
-	void SetBearingParameters(WBFL::EngTools::Bearing& brg, WBFL::EngTools::BearingLoads& brg_loads);
-
+	void SetBearingParameters(WBFL::EngTools::Bearing&,
+		WBFL::EngTools::BearingLoads&);
 
 	enum class BearingAnalysisMethod
 	{
@@ -49,7 +49,7 @@ public:
 	}
 
    void SetUnitsMode(eafTypes::UnitMode um);
-   void SetAnalysisMethod(BearingAnalysisMethod& method);
+   void SetAnalysisMethod();
 
 
    void UpdateData(BOOL bUpdate);
@@ -83,4 +83,7 @@ public:
    // Must over-ride this method and call AFX_MANAGE_STATE(AfxGetStaticModuleState()) before
    // calling base class method
    virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
+
+   const CBearingDialogBar& GetDialogBar() const;
+
 };

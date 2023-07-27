@@ -42,6 +42,23 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNAMIC(CBearingDialogBar, CDialogBar)
 
 CBearingDialogBar::CBearingDialogBar()
+    //: m_length{ 0 },
+    //m_width{ 0 },
+    //m_cover{ 0 },
+    //m_layer{ 0 },
+    //m_shim{ 0 },
+    //m_n_layers{ 0 },
+    //m_Gmin{ 0 },
+    //m_Gmax{ 0 },
+    //m_Fy{ 0 },
+    //m_Fth{ 0 },
+    //m_DL{ 0 },
+    //m_LL{ 0 },
+    //m_rot_x{ 0 },
+    //m_rot_y{ 0 },
+    //m_rot_st{ 0 },
+    //m_rot_cy{ 0 },
+    //m_shear_def{ 0 }
 {
 }
 
@@ -93,6 +110,49 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
    DDX_Radio(pDX, IDC_FIXED_X_YES, m_fixed_x);
    DDX_Radio(pDX, IDC_FIXED_Y_YES, m_fixed_y);
 }
+
+
+//void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
+//    const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads)
+//{
+//    dlgBar.m_length = brg.GetLength();
+//    dlgBar.m_width = brg.GetWidth();
+//    dlgBar.m_cover = brg.GetCoverThickness();
+//    dlgBar.m_layer = brg.GetIntermediateLayerThickness();
+//    dlgBar.m_shim = brg.GetSteelShimThickness();
+//    dlgBar.m_n_layers = brg.GetNumIntLayers();
+//    dlgBar.m_Gmin = brg.GetShearModulusMinimum();
+//    dlgBar.m_Gmax = brg.GetShearModulusMaximum();
+//    dlgBar.m_Fy = brg.GetYieldStrength();
+//    dlgBar.m_Fth = brg.GetFatigueThreshold();
+//    dlgBar.m_DL = brg_loads.GetDeadLoad();
+//    dlgBar.m_LL = brg_loads.GetLiveLoad();
+//    dlgBar.m_rot_x = brg_loads.GetRotationX();
+//    dlgBar.m_rot_y = brg_loads.GetRotationY();
+//    dlgBar.m_rot_st = brg_loads.GetStaticRotation();
+//    dlgBar.m_rot_cy = brg_loads.GetCyclicRotation();
+//    dlgBar.m_shear_def = brg_loads.GetShearDeformation();
+//
+//    if (brg_loads.GetFixedTranslationX() == WBFL::EngTools::BearingLoads::FixedTranslationX::No)
+//    {
+//        m_fixed_x = 1;
+//    }
+//    else
+//    {
+//        m_fixed_x = 0;
+//    }
+//    if (brg_loads.GetFixedTranslationY() == WBFL::EngTools::BearingLoads::FixedTranslationY::No)
+//    {
+//        m_fixed_y = 1;
+//    }
+//    else
+//    {
+//        m_fixed_y = 0;
+//    }
+
+
+//    UpdateData(FALSE);
+//}
 
 #if defined _DEBUG
 void CBearingDialogBar::AssertValid() const

@@ -69,8 +69,8 @@ rptChapter* CBearingChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
    WBFL::EngTools::Bearing brg;
    WBFL::EngTools::BearingLoads brg_loads;
    WBFL::EngTools::BearingCalculator brg_calc;
-   m_pDoc->GetBearing(brg, brg_loads);
-   m_pDoc->GetBearingCalculator(brg_calc);
+   m_pDoc->GetBearing(brg,brg_loads);
+   m_pDoc->GetBearingCalculator();
 
    Float64 l = brg.GetLength();
    Float64 l_min = brg_calc.GetMinimumAllowableLength(brg, brg_loads);
