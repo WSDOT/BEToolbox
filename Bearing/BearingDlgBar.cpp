@@ -42,23 +42,23 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNAMIC(CBearingDialogBar, CDialogBar)
 
 CBearingDialogBar::CBearingDialogBar()
-    //: m_length{ 0 },
-    //m_width{ 0 },
-    //m_cover{ 0 },
-    //m_layer{ 0 },
-    //m_shim{ 0 },
-    //m_n_layers{ 0 },
-    //m_Gmin{ 0 },
-    //m_Gmax{ 0 },
-    //m_Fy{ 0 },
-    //m_Fth{ 0 },
-    //m_DL{ 0 },
-    //m_LL{ 0 },
-    //m_rot_x{ 0 },
-    //m_rot_y{ 0 },
-    //m_rot_st{ 0 },
-    //m_rot_cy{ 0 },
-    //m_shear_def{ 0 }
+    : m_length{ 0 },
+    m_width{ 0 },
+    m_cover{ 0 },
+    m_layer{ 0 },
+    m_shim{ 0 },
+    m_n_layers{ 0 },
+    m_Gmin{ 0 },
+    m_Gmax{ 0 },
+    m_Fy{ 0 },
+    m_Fth{ 0 },
+    m_DL{ 0 },
+    m_LL{ 0 },
+    m_rot_x{ 0 },
+    m_rot_y{ 0 },
+    m_rot_st{ 0 },
+    m_rot_cy{ 0 },
+    m_shear_def{ 0 }
 {
 }
 
