@@ -55,18 +55,6 @@ LRESULT CBearingChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
    return TRUE;
 }
 
-void CBearingChildFrame::SetAnalysisMethod()
-{
-    if (CBearingChildFrame::GetAnalysisMethod() == CBearingChildFrame::BearingAnalysisMethod::MethodA)
-    {
-        m_DlgBar.m_method = 1;
-    }
-    else
-    {
-        m_DlgBar.m_method = 0;
-    }
-}
-
 
 const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
 {
@@ -77,41 +65,8 @@ const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
 void CBearingChildFrame::SetBearingParameters(const WBFL::EngTools::Bearing& brg,
     const WBFL::EngTools::BearingLoads& brg_loads)
 {
-    m_DlgBar.m_length = brg.GetLength();
-    m_DlgBar.m_width = brg.GetWidth();
-    m_DlgBar.m_cover = brg.GetCoverThickness();
-    m_DlgBar.m_layer = brg.GetIntermediateLayerThickness();
-    m_DlgBar.m_shim = brg.GetSteelShimThickness();
-    m_DlgBar.m_n_layers = brg.GetNumIntLayers();
-    m_DlgBar.m_Gmin = brg.GetShearModulusMinimum();
-    m_DlgBar.m_Gmax = brg.GetShearModulusMaximum();
-    m_DlgBar.m_Fy = brg.GetYieldStrength();
-    m_DlgBar.m_Fth = brg.GetFatigueThreshold();
-    m_DlgBar.m_DL = brg_loads.GetDeadLoad();
-    m_DlgBar.m_LL = brg_loads.GetLiveLoad();
-    m_DlgBar.m_rot_x = brg_loads.GetRotationX();
-    m_DlgBar.m_rot_y = brg_loads.GetRotationY();
-    m_DlgBar.m_rot_st = brg_loads.GetStaticRotation();
-    m_DlgBar.m_rot_cy = brg_loads.GetCyclicRotation();
-    m_DlgBar.m_shear_def = brg_loads.GetShearDeformation();
-    //m_DlgBar.SetBearingParameters(m_DlgBar,brg,brg_loads);
 
-    if (brg_loads.GetFixedTranslationX() == WBFL::EngTools::BearingLoads::FixedTranslationX::No)
-    {
-        m_DlgBar.m_fixed_x = 1;
-    }
-    else
-    {
-        m_DlgBar.m_fixed_x = 0;
-    }
-    if (brg_loads.GetFixedTranslationY() == WBFL::EngTools::BearingLoads::FixedTranslationY::No)
-    {
-        m_DlgBar.m_fixed_y = 1;
-    }
-    else
-    {
-        m_DlgBar.m_fixed_y = 0;
-    }
+    m_DlgBar.SetBearingParameters(m_DlgBar,brg,brg_loads);
 
     m_DlgBar.UpdateData(FALSE);
 

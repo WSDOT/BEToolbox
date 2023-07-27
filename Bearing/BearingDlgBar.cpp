@@ -112,47 +112,45 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
 }
 
 
-//void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
-//    const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads)
-//{
-//    dlgBar.m_length = brg.GetLength();
-//    dlgBar.m_width = brg.GetWidth();
-//    dlgBar.m_cover = brg.GetCoverThickness();
-//    dlgBar.m_layer = brg.GetIntermediateLayerThickness();
-//    dlgBar.m_shim = brg.GetSteelShimThickness();
-//    dlgBar.m_n_layers = brg.GetNumIntLayers();
-//    dlgBar.m_Gmin = brg.GetShearModulusMinimum();
-//    dlgBar.m_Gmax = brg.GetShearModulusMaximum();
-//    dlgBar.m_Fy = brg.GetYieldStrength();
-//    dlgBar.m_Fth = brg.GetFatigueThreshold();
-//    dlgBar.m_DL = brg_loads.GetDeadLoad();
-//    dlgBar.m_LL = brg_loads.GetLiveLoad();
-//    dlgBar.m_rot_x = brg_loads.GetRotationX();
-//    dlgBar.m_rot_y = brg_loads.GetRotationY();
-//    dlgBar.m_rot_st = brg_loads.GetStaticRotation();
-//    dlgBar.m_rot_cy = brg_loads.GetCyclicRotation();
-//    dlgBar.m_shear_def = brg_loads.GetShearDeformation();
-//
-//    if (brg_loads.GetFixedTranslationX() == WBFL::EngTools::BearingLoads::FixedTranslationX::No)
-//    {
-//        m_fixed_x = 1;
-//    }
-//    else
-//    {
-//        m_fixed_x = 0;
-//    }
-//    if (brg_loads.GetFixedTranslationY() == WBFL::EngTools::BearingLoads::FixedTranslationY::No)
-//    {
-//        m_fixed_y = 1;
-//    }
-//    else
-//    {
-//        m_fixed_y = 0;
-//    }
+void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
+    const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads)
+{
+    dlgBar.m_length = brg.GetLength();
+    dlgBar.m_width = brg.GetWidth();
+    dlgBar.m_cover = brg.GetCoverThickness();
+    dlgBar.m_layer = brg.GetIntermediateLayerThickness();
+    dlgBar.m_shim = brg.GetSteelShimThickness();
+    dlgBar.m_n_layers = brg.GetNumIntLayers();
+    dlgBar.m_Gmin = brg.GetShearModulusMinimum();
+    dlgBar.m_Gmax = brg.GetShearModulusMaximum();
+    dlgBar.m_Fy = brg.GetYieldStrength();
+    dlgBar.m_Fth = brg.GetFatigueThreshold();
+    dlgBar.m_DL = brg_loads.GetDeadLoad();
+    dlgBar.m_LL = brg_loads.GetLiveLoad();
+    dlgBar.m_rot_x = brg_loads.GetRotationX();
+    dlgBar.m_rot_y = brg_loads.GetRotationY();
+    dlgBar.m_rot_st = brg_loads.GetStaticRotation();
+    dlgBar.m_rot_cy = brg_loads.GetCyclicRotation();
+    dlgBar.m_shear_def = brg_loads.GetShearDeformation();
 
+    if (brg_loads.GetFixedTranslationX() == WBFL::EngTools::BearingLoads::FixedTranslationX::No)
+    {
+        dlgBar.m_fixed_x = 1;
+    }
+    else
+    {
+        dlgBar.m_fixed_x = 0;
+    }
+    if (brg_loads.GetFixedTranslationY() == WBFL::EngTools::BearingLoads::FixedTranslationY::No)
+    {
+        dlgBar.m_fixed_y = 1;
+    }
+    else
+    {
+        dlgBar.m_fixed_y = 0;
+    }
 
-//    UpdateData(FALSE);
-//}
+}
 
 #if defined _DEBUG
 void CBearingDialogBar::AssertValid() const

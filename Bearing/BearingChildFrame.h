@@ -49,7 +49,7 @@ public:
 	}
 
    void SetUnitsMode(eafTypes::UnitMode um);
-   void SetAnalysisMethod();
+
 
 
    void UpdateData(BOOL bUpdate);

@@ -57,8 +57,8 @@ public:
 	int m_fixed_y;
 
 
-	//void SetBearingParameters(CBearingDialogBar&,
-	//	const WBFL::EngTools::Bearing&, const WBFL::EngTools::BearingLoads&);
+	void SetBearingParameters(CBearingDialogBar&,
+		const WBFL::EngTools::Bearing&, const WBFL::EngTools::BearingLoads&);
 
 
 protected:
