@@ -74,8 +74,8 @@ const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
 }
 
 
-void CBearingChildFrame::SetBearingParameters(WBFL::EngTools::Bearing& brg,
-    WBFL::EngTools::BearingLoads& brg_loads)
+void CBearingChildFrame::SetBearingParameters(const WBFL::EngTools::Bearing& brg,
+    const WBFL::EngTools::BearingLoads& brg_loads)
 {
     m_DlgBar.m_length = brg.GetLength();
     m_DlgBar.m_width = brg.GetWidth();

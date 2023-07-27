@@ -32,8 +32,8 @@ class CBearingChildFrame :
 public:
 	DECLARE_DYNCREATE(CBearingChildFrame)
 
-	void SetBearingParameters(WBFL::EngTools::Bearing&,
-		WBFL::EngTools::BearingLoads&);
+	void SetBearingParameters(const WBFL::EngTools::Bearing&,
+		const WBFL::EngTools::BearingLoads&);
 
 	enum class BearingAnalysisMethod
 	{

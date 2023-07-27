@@ -66,10 +66,9 @@ rptChapter* CBearingChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
    INIT_UV_PROTOTYPE(rptStressUnitValue, E, pDispUnits->ModE, true);
 
 
-   WBFL::EngTools::Bearing brg;
-   WBFL::EngTools::BearingLoads brg_loads;
+   const auto brg{ m_pDoc->GetBearing().first };
+   const auto brg_loads{ m_pDoc->GetBearing().second };
    WBFL::EngTools::BearingCalculator brg_calc;
-   m_pDoc->GetBearing(brg,brg_loads);
    m_pDoc->GetBearingCalculator();
 
    Float64 l = brg.GetLength();
