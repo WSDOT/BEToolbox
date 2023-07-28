@@ -67,7 +67,6 @@ void CBearingChildFrame::SetBearingParameters(const WBFL::EngTools::Bearing& brg
 {
 
     m_DlgBar.SetBearingParameters(m_DlgBar,brg,brg_loads);
-
     m_DlgBar.UpdateData(FALSE);
 
 }
