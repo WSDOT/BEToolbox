@@ -60,6 +60,9 @@ public:
 	void SetBearingParameters(CBearingDialogBar&,
 		const WBFL::EngTools::Bearing&, const WBFL::EngTools::BearingLoads&);
 
+	void SetBearing(
+		WBFL::EngTools::Bearing& brg,
+		WBFL::EngTools::BearingLoads& brg_loads);
 
 protected:
 	DECLARE_MESSAGE_MAP()

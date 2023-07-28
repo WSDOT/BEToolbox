@@ -65,10 +65,8 @@ const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
 void CBearingChildFrame::SetBearingParameters(const WBFL::EngTools::Bearing& brg,
     const WBFL::EngTools::BearingLoads& brg_loads)
 {
-
     m_DlgBar.SetBearingParameters(m_DlgBar,brg,brg_loads);
     m_DlgBar.UpdateData(FALSE);
-
 }
 
 
@@ -121,28 +119,8 @@ void CBearingChildFrame::OnUpdate()
    {
        WBFL::EngTools::Bearing brg;
        WBFL::EngTools::BearingLoads brg_loads;
-
-       brg.SetLength(m_DlgBar.m_length);
-       brg.SetWidth(m_DlgBar.m_width);
-       brg.SetShearModulusMinimum(m_DlgBar.m_Gmin);
-       brg.SetShearModulusMaximum(m_DlgBar.m_Gmax);
-       brg.SetIntermediateLayerThickness(m_DlgBar.m_layer);
-       brg.SetCoverThickness(m_DlgBar.m_cover);
-       brg.SetSteelShimThickness(m_DlgBar.m_shim);
-       brg.SetYieldStrength(m_DlgBar.m_Fy);
-       brg.SetFatigueThreshold(m_DlgBar.m_Fth);
-       brg.SetNumIntLayers(m_DlgBar.m_n_layers);
-       brg_loads.SetDeadLoad(m_DlgBar.m_DL);
-       brg_loads.SetLiveLoad(m_DlgBar.m_LL);
-       brg_loads.SetShearDeformation(m_DlgBar.m_shear_def);
-       brg_loads.SetRotationX(m_DlgBar.m_rot_x);
-       brg_loads.SetRotationY(m_DlgBar.m_rot_y);
-       brg_loads.SetStaticRotation(m_DlgBar.m_rot_st);
-       brg_loads.SetCyclicRotation(m_DlgBar.m_rot_cy);
-       brg_loads.SetFixedTranslationX((WBFL::EngTools::BearingLoads::FixedTranslationX)m_DlgBar.m_fixed_x);
-       brg_loads.SetFixedTranslationY((WBFL::EngTools::BearingLoads::FixedTranslationY)m_DlgBar.m_fixed_y);
-
-       pDoc->SetBearing(brg,brg_loads);
+       m_DlgBar.SetBearing(brg,brg_loads);
+       pDoc->SetBearing(brg, brg_loads);
        pDoc->SetModifiedFlag();
        pDoc->UpdateAllViews(nullptr);
    }

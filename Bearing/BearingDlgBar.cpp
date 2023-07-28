@@ -152,6 +152,31 @@ void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
 
 }
 
+void CBearingDialogBar::SetBearing(
+    WBFL::EngTools::Bearing& brg,
+    WBFL::EngTools::BearingLoads& brg_loads)
+{
+    brg.SetLength(m_length);
+    brg.SetWidth(m_width);
+    brg.SetShearModulusMinimum(m_Gmin);
+    brg.SetShearModulusMaximum(m_Gmax);
+    brg.SetIntermediateLayerThickness(m_layer);
+    brg.SetCoverThickness(m_cover);
+    brg.SetSteelShimThickness(m_shim);
+    brg.SetYieldStrength(m_Fy);
+    brg.SetFatigueThreshold(m_Fth);
+    brg.SetNumIntLayers(m_n_layers);
+    brg_loads.SetDeadLoad(m_DL);
+    brg_loads.SetLiveLoad(m_LL);
+    brg_loads.SetShearDeformation(m_shear_def);
+    brg_loads.SetRotationX(m_rot_x);
+    brg_loads.SetRotationY(m_rot_y);
+    brg_loads.SetStaticRotation(m_rot_st);
+    brg_loads.SetCyclicRotation(m_rot_cy);
+    brg_loads.SetFixedTranslationX((WBFL::EngTools::BearingLoads::FixedTranslationX)m_fixed_x);
+    brg_loads.SetFixedTranslationY((WBFL::EngTools::BearingLoads::FixedTranslationY)m_fixed_y);
+}
+
 #if defined _DEBUG
 void CBearingDialogBar::AssertValid() const
 {
