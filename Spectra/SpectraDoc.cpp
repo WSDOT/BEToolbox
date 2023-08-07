@@ -686,7 +686,7 @@ CString CSpectraDoc::GetResourcePath() const
 bool CSpectraDoc::LoadSpectralData()
 {
    m_pValues = new SpectralValues[SPECTRAL_VALUE_COUNT];
-   std::_tstring strResourceFile = GetResourcePath() + _T("us_hazard_7pc75.2014.bin");
+   std::_tstring strResourceFile = LPCTSTR(GetResourcePath() + _T("us_hazard_7pc75.2014.bin"));
    std::ifstream ifile(strResourceFile.c_str(),std::ios::binary);
    if ( ifile.bad() || ifile.fail() )
    {

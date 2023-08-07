@@ -103,7 +103,7 @@ BOOL CBEToolboxApp::InitInstance()
    printOnly.SetMediaType(rptRiStyle::Print);
    pStyleLib->AddNamedStyle(_T("BEToolboxPrintOnly"), printOnly);
 
-   WBFL::System::ComCatMgr::CreateCategory(L"PGStable Plugins", CATID_PGStablePlugin);
+   WBFL::System::ComCatMgr::CreateCategory(CComBSTR("PGStable Plugins"), CATID_PGStablePlugin);
 
    return CWinApp::InitInstance();
 }

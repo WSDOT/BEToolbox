@@ -61,6 +61,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\;$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\BridgeLink\Include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -108,6 +110,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\;$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\BridgeLink\Include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
