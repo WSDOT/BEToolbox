@@ -28,6 +28,8 @@
 #include "..\BEToolboxUtilities.h"
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
+#include <CoordGeom/Station.h>
+#include <CoordGeom/Angle.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -43,8 +45,6 @@ static char THIS_FILE[] = __FILE__;
 CCurvelSkewLineGrid::CCurvelSkewLineGrid()
 {
 //   RegisterClass();
-   m_objStation.CoCreateInstance(CLSID_Station);
-   m_objAngle.CoCreateInstance(CLSID_Angle);
 }
 
 CCurvelSkewLineGrid::~CCurvelSkewLineGrid()
@@ -150,14 +150,9 @@ void CCurvelSkewLineGrid::GetSkewLine(ROWCOL row,SkewLine& skewLine)
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ROWCOL col = 1;
-   CString strStation = GetCellValue(row,col++);
-   HRESULT hr = m_objStation->FromString(CComBSTR(strStation),umUS);
-   ATLASSERT(SUCCEEDED(hr));
-
-   Float64 station_value;
-   m_objStation->get_Value(&station_value);
-   station_value = WBFL::Units::ConvertToSysUnits(station_value,pDispUnits->AlignmentLength.UnitOfMeasure);
-   skewLine.Station = station_value;
+   std::_tstring strStation(GetCellValue(row,col++));
+   WBFL::COGO::Station station(strStation, WBFL::Units::StationFormats::US);
+   skewLine.Station = station.GetValue();
 
    skewLine.OffsetType = (SkewLine::Type)_tstoi(GetCellValue(row,col++));
 
@@ -181,10 +176,10 @@ void CCurvelSkewLineGrid::InsertSkewLine(const SkewLine& skewLine)
 	InsertRows(nRow, 1);
 
    ROWCOL col = 1;
-   CString strStation = FormatStation(pDispUnits->StationFormat,skewLine.Station);
+   WBFL::COGO::Station station(skewLine.Station);
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(strStation)
+      .SetValue(station.AsString(pDispUnits->StationFormat, false).c_str())
          );
 
    SetStyleRange(CGXRange(nRow,col++), CGXStyle()
@@ -198,11 +193,10 @@ void CCurvelSkewLineGrid::InsertSkewLine(const SkewLine& skewLine)
       .SetValue(GetOffset(skewLine.Offset,pDispUnits->AlignmentLength))
          );
 
-   m_objAngle->FromString(CComBSTR(skewLine.strSkewAngle.c_str()));
-
-   SetStyleRange(CGXRange(nRow,col++), CGXStyle()
+   WBFL::COGO::Angle angle(skewLine.strSkewAngle);
+   SetStyleRange(CGXRange(nRow, col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(FormatAngle(m_objAngle))
+      .SetValue(angle.AsString(_T(",,")).c_str())
       );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
@@ -254,34 +248,38 @@ BOOL CCurvelSkewLineGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
       // station
       CEAFApp* pApp = EAFGetApp();
 
-      HRESULT hr = m_objStation->FromString( CComBSTR(s), pApp->GetUnitsMode() == eafTypes::umUS ? umUS : umSI);
-      if ( FAILED(hr) )
+      try
+      {
+         std::_tstring strStation(s);
+         WBFL::COGO::Station station(strStation, pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::StationFormats::US : WBFL::Units::StationFormats::SI);
+      }
+      catch (...)
       {
          if ( pApp->GetUnitsMode() == eafTypes::umUS )
-            SetWarningText (_T("Invalid station value. Enter the station in the following format: xx+yy.zz"));
+            SetWarningText(_T("Invalid station value. Enter the station in the following format: xx+yy.zz"));
          else
-            SetWarningText (_T("Invalid station value. Enter the station in the following format: xx+yyy.zz"));
+            SetWarningText(_T("Invalid station value. Enter the station in the following format: xx+yyy.zz"));
          return FALSE;
       }
-      else
-      {
-         return TRUE;
-      }
+
+      return TRUE;
    }
 
    if ( nCol == 4 )
    {
       // angle
-      HRESULT hr = m_objAngle->FromString(CComBSTR(s));
-      if ( FAILED(hr) )
+      std::_tstring strAngle(s);
+      try
+      {
+         WBFL::COGO::Angle angle(strAngle);
+      }
+      catch(...)
       {
          SetWarningText(_T("Invalid skew angle value. Enter skew angle in one of the following formats:\n(+|-)dd.ddd\ndd.ddd L|R\n(+|-)dd mm ss.ss\ndd mm ss.ss L|R"));
          return FALSE;
       }
-      else
-      {
-         return TRUE;
-      }
+
+      return TRUE;
    }
 
 	return CGXGridWnd::OnValidateCell(nRow, nCol);

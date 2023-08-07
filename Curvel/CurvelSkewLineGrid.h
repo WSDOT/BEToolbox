@@ -22,8 +22,6 @@
 
 #pragma once
 
-#include <WBFLCogo.h>
-
 // CurvelSkewLineGrid.h : header file
 //
 
@@ -66,9 +64,6 @@ protected:
    virtual BOOL OnEndEditing(ROWCOL nRow,ROWCOL nCol) override;
 
    void UpdateColumnHeaders();
-
-   CComPtr<IStation> m_objStation;
-   CComPtr<IAngle> m_objAngle;
 
 public:
    // custom stuff for grid
