@@ -42,7 +42,7 @@ CCurvelReportSpecificationBuilder::~CCurvelReportSpecificationBuilder(void)
 {
 }
 
-std::shared_ptr<WBFL::Reporting::ReportSpecification> CCurvelReportSpecificationBuilder::CreateReportSpec(const WBFL::Reporting::ReportDescription& rptDesc,std::shared_ptr<WBFL::Reporting::ReportSpecification>& pRptSpec) const
+std::shared_ptr<WBFL::Reporting::ReportSpecification> CCurvelReportSpecificationBuilder::CreateReportSpec(const WBFL::Reporting::ReportDescription& rptDesc,std::shared_ptr<WBFL::Reporting::ReportSpecification> pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
