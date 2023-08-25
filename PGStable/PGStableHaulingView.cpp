@@ -74,11 +74,11 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    WBFL::Stability::HaulingImpact impactUsage = problem.GetImpactUsage();
    DDX_CBItemData(pDX,IDC_IMPACT_USAGE,impactUsage);
 
-   WBFL::Stability::WindType windLoadType;
+   WBFL::Stability::WindLoadType windLoadType;
    Float64 windLoad;
    problem.GetWindLoading(&windLoadType,&windLoad);
    DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
-   if ( windLoadType == WBFL::Stability::WindType::Speed )
+   if ( windLoadType == WBFL::Stability::WindLoadType::Speed )
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
    }
@@ -596,8 +596,8 @@ void CPGStableHaulingView::OnInitialUpdate()
    pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Max. Superelevation Case Only")),(DWORD_PTR)+WBFL::Stability::HaulingImpact::MaxSuper);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)+WBFL::Stability::WindType::Speed);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)+WBFL::Stability::WindType::Pressure);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)+WBFL::Stability::WindLoadType::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)+WBFL::Stability::WindLoadType::Pressure);
 
    CComboBox* pcbCFType = (CComboBox*)GetDlgItem(IDC_CF_TYPE);
    pcbCFType->SetItemData(pcbCFType->AddString(_T("Adverse")),(DWORD_PTR)+WBFL::Stability::CFType::Adverse);
@@ -732,11 +732,11 @@ void CPGStableHaulingView::OnWindTypeChanged()
 {
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    int curSel = pcbWindType->GetCurSel();
-   WBFL::Stability::WindType windType = (WBFL::Stability::WindType)pcbWindType->GetItemData(curSel);
+   WBFL::Stability::WindLoadType windType = (WBFL::Stability::WindLoadType)pcbWindType->GetItemData(curSel);
    CDataExchange dx(this,false);
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   if ( windType == WBFL::Stability::WindType::Speed )
+   if ( windType == WBFL::Stability::WindLoadType::Speed )
    {
       DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
    }

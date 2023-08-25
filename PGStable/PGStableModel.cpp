@@ -1357,7 +1357,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    //bool bEvaluateStressesAtEquilibriumAngle = liftingProblem.EvaluateStressesAtEquilibriumAngle();
    //pStrSave->put_Property(_T("EvaluateStressesAtEquilibriumAngle"), CComVariant(bEvaluateStressesAtEquilibriumAngle));
 
-   WBFL::Stability::WindType windLoadType;
+   WBFL::Stability::WindLoadType windLoadType;
    Float64 windLoad;
    liftingProblem.GetWindLoading(&windLoadType,&windLoad);
    pStrSave->put_Property(_T("WindLoadType"),CComVariant(+windLoadType));
@@ -1422,7 +1422,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    //bool bEvaluateStressesAtEquilibriumAngle = haulingProblem.EvaluateStressesAtEquilibriumAngle(WBFL::Stability::CrownSlope);
    //pStrSave->put_Property(_T("EvaluateStressesAtEquilibriumAngle"), CComVariant(bEvaluateStressesAtEquilibriumAngle));
 
-   WBFL::Stability::WindType windLoadType;
+   WBFL::Stability::WindLoadType windLoadType;
    Float64 windLoad;
    haulingProblem.GetWindLoading(&windLoadType,&windLoad);
    pStrSave->put_Property(_T("WindLoadType"),CComVariant(+windLoadType));
@@ -1498,7 +1498,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       pStrSave->put_Property(_T("ImpactUp"), CComVariant(imup));
       pStrSave->put_Property(_T("ImpactDown"), CComVariant(imdn));
 
-      WBFL::Stability::WindType windLoadType;
+      WBFL::Stability::WindLoadType windLoadType;
       Float64 windLoad;
       oneEndSeatedProblem.GetWindLoading(&windLoadType, &windLoad);
       pStrSave->put_Property(_T("WindLoadType"), CComVariant(+windLoadType));
@@ -1953,7 +1953,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       var.vt = VT_I4;
       hr = pStrLoad->get_Property(_T("WindLoadType"),&var);
-      WBFL::Stability::WindType windLoadType = (WBFL::Stability::WindType)var.lVal;
+      WBFL::Stability::WindLoadType windLoadType = (WBFL::Stability::WindLoadType)var.lVal;
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("WindLoad"),&var);
@@ -2070,7 +2070,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
       var.vt = VT_I4;
       hr = pStrLoad->get_Property(_T("WindLoadType"),&var);
-      WBFL::Stability::WindType windLoadType = (WBFL::Stability::WindType)var.lVal;
+      WBFL::Stability::WindLoadType windLoadType = (WBFL::Stability::WindLoadType)var.lVal;
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("WindLoad"),&var);
@@ -2188,7 +2188,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
 
          var.vt = VT_I4;
          hr = pStrLoad->get_Property(_T("WindLoadType"), &var);
-         WBFL::Stability::WindType windLoadType = (WBFL::Stability::WindType)var.lVal;
+         WBFL::Stability::WindLoadType windLoadType = (WBFL::Stability::WindLoadType)var.lVal;
 
          var.vt = VT_R8;
          hr = pStrLoad->get_Property(_T("WindLoad"), &var);

@@ -43,6 +43,9 @@
 #include "PGStableOneEndSeatedSummaryChapterBuilder.h"
 #include "PGStableOneEndSeatedDetailsChapterBuilder.h"
 
+#include <psgLib/LiftingCriteria.h>
+#include <psgLib/HaulingCriteria.h>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -435,105 +438,112 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
    {
       // update input parameters to match library
       const SpecLibraryEntry* pSpec = GetSpecLibraryEntry();
+      const auto& lifting_criteria = pSpec->GetLiftingCriteria();
+      const auto& hauling_criteria = pSpec->GetHaulingCriteria();
 
       // lifting
       WBFL::Stability::LiftingStabilityProblem liftingProblem = GetLiftingStabilityProblem();
-      liftingProblem.SetImpact(pSpec->GetLiftingUpwardImpactFactor(),pSpec->GetLiftingDownwardImpactFactor());
+      liftingProblem.SetImpact(lifting_criteria.ImpactUp,lifting_criteria.ImpactDown);
 
-      liftingProblem.SetSupportPlacementTolerance(pSpec->GetLiftingLoopTolerance());
-      liftingProblem.SetLiftAngle(pSpec->GetMinCableInclination());
-      liftingProblem.SetSweepTolerance(pSpec->GetLiftingMaximumGirderSweepTolerance());
+      liftingProblem.SetSupportPlacementTolerance(lifting_criteria.LiftingLoopTolerance);
+      liftingProblem.SetLiftAngle(lifting_criteria.MinCableInclination);
+      liftingProblem.SetSweepTolerance(lifting_criteria.SweepTolerance);
       liftingProblem.SetSweepGrowth(0); // no sweep growth for initial lifting problem
-      liftingProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetLiftingWindType(),pSpec->GetLiftingWindLoad());
-      liftingProblem.SetYRollAxis(pSpec->GetPickPointHeight());
+      liftingProblem.SetWindLoading(lifting_criteria.WindLoadType,lifting_criteria.WindLoad);
+      liftingProblem.SetYRollAxis(lifting_criteria.PickPointHeight);
       SetLiftingStabilityProblem(liftingProblem);
 
       CPGStableLiftingCriteria liftingCriteria = GetLiftingCriteria();
-      liftingCriteria.MinFSf = pSpec->GetLiftingFailureFOS();
-      liftingCriteria.MinFScr = pSpec->GetCrackingFOSLifting();
-      liftingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetLiftingCompressionGlobalStressFactor();
-      liftingCriteria.CompressionCoefficient_PeakStress = pSpec->GetLiftingCompressionPeakStressFactor();
+      liftingCriteria.MinFSf = lifting_criteria.FsFailure;
+      liftingCriteria.MinFScr = lifting_criteria.FsCracking;
+      liftingCriteria.CompressionCoefficient_GlobalStress = lifting_criteria.CompressionStressCoefficient_GlobalStress;
+      liftingCriteria.CompressionCoefficient_PeakStress = lifting_criteria.CompressionStressCoefficient_PeakStress;
 
       auto* pLiftingTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(liftingCriteria.TensionStressLimit.get());
 
-      pLiftingTensionStressLimit->TensionCoefficient = pSpec->GetLiftingTensionStressFactor();
-      pSpec->GetLiftingMaximumTensionStress(&pLiftingTensionStressLimit->bMaxTension,&pLiftingTensionStressLimit->MaxTension);
-      pLiftingTensionStressLimit->TensionCoefficientWithRebar = pSpec->GetLiftingTensionStressFactorWithRebar();
+      pLiftingTensionStressLimit->TensionCoefficient = lifting_criteria.TensionStressLimitWithoutReinforcement.Coefficient;
+      pLiftingTensionStressLimit->bMaxTension = lifting_criteria.TensionStressLimitWithoutReinforcement.bHasMaxValue;
+      pLiftingTensionStressLimit->MaxTension = lifting_criteria.TensionStressLimitWithoutReinforcement.MaxValue;
+      pLiftingTensionStressLimit->TensionCoefficientWithRebar = lifting_criteria.TensionStressLimitWithReinforcement.Coefficient;
       SetLiftingCriteria(liftingCriteria);
 
 
       Float64 Fc,FrCoefficient;
       bool bComputeEc;
       GetLiftingMaterials(&Fc,&bComputeEc,&FrCoefficient);
-      SetLiftingMaterials(Fc,bComputeEc,pSpec->GetLiftingModulusOfRuptureFactor(pgsTypes::Normal));
+      SetLiftingMaterials(Fc, bComputeEc, lifting_criteria.ModulusOfRuptureCoefficient[pgsTypes::Normal]);
 
       // Hauling
       WBFL::Stability::HaulingStabilityProblem haulingProblem = GetHaulingStabilityProblem();
-      haulingProblem.SetImpactUsage((WBFL::Stability::HaulingImpact)pSpec->GetHaulingImpactUsage());
-      haulingProblem.SetImpact(pSpec->GetHaulingUpwardImpactFactor(),pSpec->GetHaulingDownwardImpactFactor());
-      haulingProblem.SetSupportSlope(pSpec->GetRoadwayCrownSlope());
-      haulingProblem.SetSuperelevation(pSpec->GetRoadwaySuperelevation());
+      haulingProblem.SetImpactUsage(hauling_criteria.WSDOT.ImpactUsage);
+      haulingProblem.SetImpact(hauling_criteria.WSDOT.ImpactUp,hauling_criteria.WSDOT.ImpactDown);
+      haulingProblem.SetSupportSlope(hauling_criteria.WSDOT.RoadwayCrownSlope);
+      haulingProblem.SetSuperelevation(hauling_criteria.WSDOT.RoadwaySuperelevation);
 
-      haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
-      haulingProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
-      haulingProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
-      haulingProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
-      haulingProblem.SetCentrifugalForceType((WBFL::Stability::CFType)pSpec->GetCentrifugalForceType());
-      haulingProblem.SetVelocity(pSpec->GetHaulingSpeed());
-      haulingProblem.SetTurningRadius(pSpec->GetTurningRadius());
+      haulingProblem.SetSupportPlacementTolerance(hauling_criteria.WSDOT.SupportPlacementTolerance);
+      haulingProblem.SetSweepTolerance(hauling_criteria.WSDOT.SweepTolerance);
+      haulingProblem.SetSweepGrowth(hauling_criteria.WSDOT.SweepGrowth);
+      haulingProblem.SetWindLoading(hauling_criteria.WSDOT.WindLoadType, hauling_criteria.WSDOT.WindLoad);
+      haulingProblem.SetCentrifugalForceType(hauling_criteria.WSDOT.CentrifugalForceType);
+      haulingProblem.SetVelocity(hauling_criteria.WSDOT.HaulingSpeed);
+      haulingProblem.SetTurningRadius(hauling_criteria.WSDOT.TurningRadius);
       SetHaulingStabilityProblem(haulingProblem);
 
       CPGStableHaulingCriteria haulingCriteria = GetHaulingCriteria();
-      haulingCriteria.MinFSf = pSpec->GetHaulingFailureFOS();
-      haulingCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
-      haulingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
-      haulingCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
+      haulingCriteria.MinFSf = hauling_criteria.WSDOT.FsFailure;
+      haulingCriteria.MinFScr = hauling_criteria.WSDOT.FsCracking;
+      haulingCriteria.CompressionCoefficient_GlobalStress = hauling_criteria.WSDOT.CompressionStressCoefficient_GlobalStress;
+      haulingCriteria.CompressionCoefficient_PeakStress = hauling_criteria.WSDOT.CompressionStressCoefficient_PeakStress;
       
       auto* pHaulingTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(haulingCriteria.TensionStressLimit.get());
 
-      pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope] = pSpec->GetHaulingTensionStressFactor(pgsTypes::CrownSlope);
+      pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].Coefficient;
+      pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].bHasMaxValue;
+      pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].MaxValue;
+
+      pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope] = hauling_criteria.WSDOT.TensionStressLimitWithReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].Coefficient;
+
+      pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::Superelevation] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::Superelevation].Coefficient;
+      pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::Superelevation] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::Superelevation].bHasMaxValue;
+      pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::Superelevation] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::Superelevation].MaxValue;
 
 
-      pSpec->GetHaulingMaximumTensionStress(pgsTypes::CrownSlope, &pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope],&pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope]);
-      pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::CrownSlope);
-      pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::Superelevation] = pSpec->GetHaulingTensionStressFactor(pgsTypes::Superelevation);
-      
-      pSpec->GetHaulingMaximumTensionStress(pgsTypes::Superelevation, &pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::Superelevation],&pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::Superelevation]);
-      pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::Superelevation] = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::Superelevation);
+      pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::Superelevation] = hauling_criteria.WSDOT.TensionStressLimitWithReinforcement[+WBFL::Stability::HaulingSlope::Superelevation].Coefficient;
+
       SetHaulingCriteria(haulingCriteria);
 
       GetHaulingMaterials(&Fc,&bComputeEc,&FrCoefficient);
-      SetHaulingMaterials(Fc,bComputeEc,pSpec->GetHaulingModulusOfRuptureFactor(pgsTypes::Normal));
+      SetHaulingMaterials(Fc, bComputeEc, hauling_criteria.WSDOT.ModulusOfRuptureCoefficient[pgsTypes::Normal]);
 
 
       // One end seated - PGSuper/PGSplice project spec criteria doesn't have values for one end seated analysis so we will use some of the hauling values
       WBFL::Stability::OneEndSeatedStabilityProblem OneEndSeatedProblem = GetOneEndSeatedStabilityProblem();
       OneEndSeatedProblem.SetImpact(0.0, 0.0);
-      OneEndSeatedProblem.SetSupportSlope(pSpec->GetRoadwayCrownSlope());
+      OneEndSeatedProblem.SetSupportSlope(hauling_criteria.WSDOT.RoadwayCrownSlope);
 
-      OneEndSeatedProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
-      OneEndSeatedProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
-      OneEndSeatedProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
-      OneEndSeatedProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetHaulingWindType(), pSpec->GetHaulingWindLoad());
+      OneEndSeatedProblem.SetSupportPlacementTolerance(hauling_criteria.WSDOT.SupportPlacementTolerance);
+      OneEndSeatedProblem.SetSweepTolerance(hauling_criteria.WSDOT.SweepTolerance);
+      OneEndSeatedProblem.SetSweepGrowth(hauling_criteria.WSDOT.SweepGrowth);
+      OneEndSeatedProblem.SetWindLoading(hauling_criteria.WSDOT.WindLoadType, hauling_criteria.WSDOT.WindLoad);
       SetOneEndSeatedStabilityProblem(OneEndSeatedProblem);
 
       CPGStableOneEndSeatedCriteria OneEndSeatedCriteria = GetOneEndSeatedCriteria();
-      OneEndSeatedCriteria.MinFSf = pSpec->GetHaulingFailureFOS();
-      OneEndSeatedCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
-      OneEndSeatedCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
-      OneEndSeatedCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
+      OneEndSeatedCriteria.MinFSf = hauling_criteria.WSDOT.FsFailure;
+      OneEndSeatedCriteria.MinFScr = hauling_criteria.WSDOT.FsCracking;
+      OneEndSeatedCriteria.CompressionCoefficient_GlobalStress = hauling_criteria.WSDOT.CompressionStressCoefficient_GlobalStress;
+      OneEndSeatedCriteria.CompressionCoefficient_PeakStress = hauling_criteria.WSDOT.CompressionStressCoefficient_PeakStress;
 
       auto* pOneEndSeatedTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(OneEndSeatedCriteria.TensionStressLimit.get());
 
-      pOneEndSeatedTensionStressLimit->TensionCoefficient = pSpec->GetHaulingTensionStressFactor(pgsTypes::CrownSlope);
+      pOneEndSeatedTensionStressLimit->TensionCoefficient = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].Coefficient;
+      pOneEndSeatedTensionStressLimit->bMaxTension = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].bHasMaxValue;
+      pOneEndSeatedTensionStressLimit->bMaxTension = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].MaxValue;
 
-
-      pSpec->GetHaulingMaximumTensionStress(pgsTypes::CrownSlope, &pOneEndSeatedTensionStressLimit->bMaxTension, &pOneEndSeatedTensionStressLimit->MaxTension);
-      pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::CrownSlope);
+      pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = hauling_criteria.WSDOT.TensionStressLimitWithReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].Coefficient;
       SetOneEndSeatedCriteria(OneEndSeatedCriteria);
 
       GetOneEndSeatedMaterials(&Fc, &bComputeEc, &FrCoefficient);
-      SetOneEndSeatedMaterials(Fc, bComputeEc, pSpec->GetHaulingModulusOfRuptureFactor(pgsTypes::Normal));
+      SetOneEndSeatedMaterials(Fc, bComputeEc, hauling_criteria.WSDOT.ModulusOfRuptureCoefficient[pgsTypes::Normal]);
    }
 
    SetModifiedFlag();

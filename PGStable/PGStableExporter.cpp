@@ -298,15 +298,15 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
          Yt = WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch);
       }
 
-      Float64 Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
-      Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
-      Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
+      Float64 Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
+      Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
+      Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
 
       liftingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
 
-      Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
-      Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
-      Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start, pgsTypes::tltMinimum);
+      Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
+      Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
+      Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
 
       haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
       oneEndSeatedStrands.m_vFpe.insert(CPGStableFpe(X, Ps, Xs, Ys, TOP, Ph, Xh, Yh, TOP, Pt, Xt, Yt, TOP));
