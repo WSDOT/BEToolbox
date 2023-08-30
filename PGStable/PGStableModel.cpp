@@ -194,7 +194,7 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
    {
       Float64 density = concrete.GetDensity();
       Float64 Ec = WBFL::LRFD::ConcreteUtil::ModE(concrete.GetType(),fci,density,false/*ignore LRFD range checks*/);
-      if ( WBFL::LRFD::LRFDVersionMgr::Version::ThirdEditionWith2005Interims <= WBFL::LRFD::LRFDVersionMgr::GetVersion() )
+      if ( WBFL::LRFD::BDSManager::Edition::ThirdEditionWith2005Interims <= WBFL::LRFD::BDSManager::GetEdition() )
       {
          Ec *= m_K1*m_K2;
       }
@@ -282,7 +282,7 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    {
       Float64 density = concrete.GetDensity();
       Float64 Ec = ::WBFL::LRFD::ConcreteUtil::ModE(concrete.GetType(),fc,density,false/*ignore LRFD range checks*/);
-      if ( WBFL::LRFD::LRFDVersionMgr::Version::ThirdEditionWith2005Interims <= WBFL::LRFD::LRFDVersionMgr::GetVersion() )
+      if ( WBFL::LRFD::BDSManager::Edition::ThirdEditionWith2005Interims <= WBFL::LRFD::BDSManager::GetEdition() )
       {
          Ec *= m_K1*m_K2;
       }
@@ -355,7 +355,7 @@ WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckA
    {
       Float64 density = concrete.GetDensity();
       Float64 Ec = ::WBFL::LRFD::ConcreteUtil::ModE(concrete.GetType(), fc, density, false/*ignore LRFD range checks*/);
-      if (WBFL::LRFD::LRFDVersionMgr::Version::ThirdEditionWith2005Interims <= WBFL::LRFD::LRFDVersionMgr::GetVersion())
+      if (WBFL::LRFD::BDSManager::Edition::ThirdEditionWith2005Interims <= WBFL::LRFD::BDSManager::GetEdition())
       {
          Ec *= m_K1 * m_K2;
       }
