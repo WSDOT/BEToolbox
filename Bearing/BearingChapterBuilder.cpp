@@ -1180,19 +1180,8 @@ void ReportBearingSpecificationCheck(rptChapter* pChapter, rptParagraph* pPara,
 
 rptChapter* CBearingChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
-
-
-   CEAFApp* pApp = EAFGetApp();
-   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   INIT_UV_PROTOTYPE(rptLengthUnitValue, length, pDispUnits->ComponentDim, true);
-   INIT_UV_PROTOTYPE(rptAreaUnitValue, area, pDispUnits->Area, true);
-   INIT_UV_PROTOTYPE(rptForceUnitValue, force, pDispUnits->GeneralForce, true);
-   INIT_UV_PROTOTYPE(rptStressUnitValue, stress, pDispUnits->Stress, true);
-   INIT_UV_PROTOTYPE(rptStressUnitValue, E, pDispUnits->ModE, true);
-
-
-   const auto brg{ m_pDoc->GetBearing().first };
-   const auto brg_loads{ m_pDoc->GetBearing().second };
+   const auto& brg{ m_pDoc->GetBearing().first };
+   const auto& brg_loads{ m_pDoc->GetBearing().second };
    WBFL::EngTools::BearingCalculator brg_calc;
    m_pDoc->GetBearingCalculator();
 
