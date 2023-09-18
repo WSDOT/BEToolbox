@@ -497,11 +497,10 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
                Float64 k2 = -2*B*cos(a);
                Float64 k3 = B*B - A*A;
 
-               WBFL::Math::QuadraticSolver qSolver(k1,k2,k3);
-               Float64 C1,C2;
-               auto nRoots = qSolver.Solve(&C1,&C2);
-               ATLASSERT(nRoots == 2);
-               Float64 C = (skewLine.Radius < 0 ? C2 : C1);
+               WBFL::Math::QuadraticSolver qSolver(k1, k2, k3);
+               auto roots = qSolver.Solve();
+               ATLASSERT(roots.size() == 2);
+               Float64 C = (skewLine.Radius < 0 ? roots[0] : roots[1]);
 
                skewDistance = -C;
             }
