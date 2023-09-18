@@ -44,9 +44,11 @@ CBearingChildFrame::~CBearingChildFrame(void)
 }
 
 BEGIN_MESSAGE_MAP(CBearingChildFrame, CEAFChildFrame)
-   ON_WM_CREATE()
-   ON_BN_CLICKED(IDC_UPDATE, OnUpdate)
-	ON_MESSAGE(WM_HELP, OnCommandHelp)
+    ON_WM_CREATE()
+    ON_BN_CLICKED(IDC_UPDATE, OnUpdate)
+    ON_MESSAGE(WM_HELP, OnCommandHelp)
+    ON_BN_CLICKED(IDC_US, OnUSUnits)
+    ON_BN_CLICKED(IDC_SI, OnSIUnits)
 END_MESSAGE_MAP()
 
 LRESULT CBearingChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
