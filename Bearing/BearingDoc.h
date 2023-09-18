@@ -74,7 +74,7 @@ public:
    virtual void OnCloseDocument() override;
 
    void SetBearing(const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads);
-   std::pair<const WBFL::EngTools::Bearing&, const WBFL::EngTools::BearingLoads&> CBearingDoc::GetBearing() const;
+   std::pair<const WBFL::EngTools::Bearing&, const WBFL::EngTools::BearingLoads&> GetBearing() const;
    const WBFL::EngTools::BearingCalculator& GetBearingCalculator() const;
 
 private:
