@@ -126,8 +126,6 @@ void CBearingChildFrame::OnUpdate()
        pDoc->SetModifiedFlag();
        pDoc->UpdateAllViews(nullptr);
    }
-
-   AfxMessageBox(_T("Dummy Dialog"));
 }
 
 
