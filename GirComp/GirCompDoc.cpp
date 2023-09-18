@@ -529,7 +529,7 @@ WBFL::Geometry::CompositeBeam CGirCompDoc::GetCompositeBeam(IndexType idx,int n)
       genericShape.SetArea(dimensions.Area);
       genericShape.SetIxx(dimensions.MomentOfInertia);
       
-      auto& centroid = genericShape.GetCentroid();
+      auto centroid = genericShape.GetCentroid();
       centroid->Move(0,dimensions.D/2);
       genericShape.SetCentroid(centroid);
 

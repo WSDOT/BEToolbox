@@ -22,8 +22,6 @@
 
 #pragma once
 
-#include <WBFLCogo.h>
-
 // StationRangeGrid.h : header file
 //
 
@@ -66,8 +64,6 @@ protected:
    virtual BOOL OnEndEditing(ROWCOL nRow,ROWCOL nCol) override;
 
    void UpdateColumnHeaders();
-
-   CComPtr<IStation> m_objStation;
 
 public:
    // custom stuff for grid
