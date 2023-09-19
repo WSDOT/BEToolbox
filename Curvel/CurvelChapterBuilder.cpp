@@ -25,9 +25,7 @@
 #include "CurvelReportSpecification.h"
 #include "..\BEToolboxUtilities.h"
 
-#if (201703L <= _MSVC_LANG )
 #include <Math\QuadraticSolver.h>
-#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
