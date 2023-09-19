@@ -301,21 +301,21 @@ BEGIN
     EDITTEXT        IDC_FATIGUE,281,121,40,14,ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_FATIGUE_UNIT,325,124,22,10
     GROUPBOX        "Applied Deflections",IDC_STATIC,430,5,130,108
-    LTEXT           "Static Rotation:",IDC_LENGTH6,437,18,49,8
+    LTEXT           "Static Rotation:",IDC_LENGTH6,435,18,49,8
     EDITTEXT        IDC_ROT_STATIC,490,17,40,14,ES_AUTOHSCROLL
     LTEXT           "rad",IDC_LENGTH11,536,18,11,8
-    LTEXT           "Cyclic Rotation:",IDC_LENGTH7,437,36,50,8
+    LTEXT           "Cyclic Rotation:",IDC_LENGTH7,435,36,50,8
     EDITTEXT        IDC_ROT_CYCLIC,490,35,40,14,ES_AUTOHSCROLL
     LTEXT           "rad",IDC_LENGTH12,536,36,11,8
-    LTEXT           "X Rotation:",IDC_LENGTH8,437,57,36,8
+    LTEXT           "X Rotation:",IDC_LENGTH8,435,57,36,8
     EDITTEXT        IDC_ROT_X,491,54,40,14,ES_AUTOHSCROLL
     LTEXT           "rad",IDC_LENGTH13,536,57,11,8
-    LTEXT           "Y Rotation:",IDC_LENGTH9,437,75,37,8
+    LTEXT           "Y Rotation:",IDC_LENGTH9,435,75,37,8
     EDITTEXT        IDC_ROT_Y,491,72,40,14,ES_AUTOHSCROLL
     LTEXT           "rad",IDC_LENGTH14,536,75,11,8
-    LTEXT           "Shear \nDeformation:",IDC_LENGTH10,437,91,42,16
+    LTEXT           "Shear \nDeformation:",IDC_LENGTH10,435,91,42,16
     EDITTEXT        IDC_SHEAR_DEF,491,96,40,14,ES_AUTOHSCROLL
-    LTEXT           "Unit",IDC_SHEAR_DEF_UNIT,533,98,17,10
+    LTEXT           "Unit",IDC_SHEAR_DEF_UNIT,536,98,17,10
     GROUPBOX        "Applied Loads",IDC_STATIC,599,5,122,52
     LTEXT           "Dead Load:",IDC_ROTxxx,602,19,37,8
     EDITTEXT        IDC_DL,655,18,40,14,ES_AUTOHSCROLL

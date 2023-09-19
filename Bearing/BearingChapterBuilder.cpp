@@ -155,10 +155,10 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	*pPara << _T("Minimum Shear Modulus, ") << Sub2(_T("G"), _T("min")) << _T(" = ") << E.SetValue(Gmin) << rptNewLine;
 	*pPara << _T("Maximum Shear Modulus (Method A only), ") << Sub2(_T("G"), _T("max")) << _T(" = ") << E.SetValue(Gmax) << rptNewLine;
 	*pPara << _T("Shear Deformation, ") << Sub2(symbol(DELTA), _T("s")) << _T(" = ") << length.SetValue(sdef) << rptNewLine;
-	*pPara << _T("X Rotation, ") << Sub2(symbol(theta), _T("x")) << _T(" = ") << x_rotation << rptNewLine;
-	*pPara << _T("Y Rotation, ") << Sub2(symbol(theta), _T("y")) << _T(" = ") << y_rotation << rptNewLine;
-	*pPara << _T("Static Rotation, ") << Sub2(symbol(theta), _T("st")) << _T(" = ") << static_rotation << rptNewLine;
-	*pPara << _T("Cyclic Rotation, ") << Sub2(symbol(theta), _T("cy")) << _T(" = ") << cyclic_rotation << rptNewLine << rptNewLine;
+	*pPara << _T("X Rotation, ") << Sub2(symbol(theta), _T("x")) << _T(" = ") << x_rotation << _T(" rad") << rptNewLine;
+	*pPara << _T("Y Rotation, ") << Sub2(symbol(theta), _T("y")) << _T(" = ") << y_rotation << _T(" rad") << rptNewLine;
+	*pPara << _T("Static Rotation, ") << Sub2(symbol(theta), _T("st")) << _T(" = ") << static_rotation << _T(" rad") << rptNewLine;
+	*pPara << _T("Cyclic Rotation, ") << Sub2(symbol(theta), _T("cy")) << _T(" = ") << cyclic_rotation << _T(" rad") << rptNewLine << rptNewLine;
 
 }
 
