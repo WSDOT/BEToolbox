@@ -86,11 +86,16 @@ void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads)
 }
 
 
-std::pair<const Bearing&, const BearingLoads&> CBearingDoc::GetBearing() const
+const Bearing& CBearingDoc::GetBearing() const
 {
-    return std::make_pair(m_bearing, m_bearing_loads);
+    return m_bearing;
 }
 
+
+const BearingLoads& CBearingDoc::GetBearingLoads() const
+{
+    return m_bearing_loads;
+}
 
 
 const BearingCalculator& CBearingDoc::GetBearingCalculator() const

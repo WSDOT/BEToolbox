@@ -137,8 +137,8 @@ void CBearingRptView::OnInitialUpdate()
    m_pFrame->UpdateData(FALSE);
 
 
-   const auto brg{ pDoc->GetBearing().first };
-   const auto brg_loads{ pDoc->GetBearing().second };
+   const auto brg{ pDoc->GetBearing() };
+   const auto brg_loads{ pDoc->GetBearingLoads()};
    CBearingChildFrame* pFrame = (CBearingChildFrame*)GetParentFrame();
    pFrame->SetBearingParameters(brg,brg_loads);
    

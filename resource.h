@@ -46,8 +46,8 @@
 #define IDC_US                          216
 #define IDD_NONPRISMATIC_GIRDER         216
 #define IDB_PGSTABLE                    217
-#define IDC_B                           218
 #define IDC_SI                          217
+#define IDC_B                           218
 #define IDC_SCHEMATIC                   219
 #define IDC_A                           219
 #define IDC_ADD                         220
@@ -128,10 +128,14 @@
 #define IDC_LEFT_SLOPE_LABEL_2          257
 #define IDC_LL_UNIT                     257
 #define IDC_LEFT_SLOPE_LABEL_3          258
+#define IDC_LENGTH11                    258
 #define IDC_INDIVIDUAL_STATIONS         259
+#define IDC_LENGTH12                    259
 #define IDC_INDIVIDUAL_STATION_ADD      260
 #define IDR_BEARINGTOOL                 260
+#define IDC_LENGTH13                    260
 #define IDC_INDIVIDUAL_STATION_REMOVE   261
+#define IDC_LENGTH14                    261
 #define IDC_STATION_RANGE               262
 #define IDC_IMAGE                       262
 #define IDC_SHEAR_DEF_UNIT              262
@@ -471,7 +475,6 @@
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
 #define ID_OPTIONS_AUTOSAVE             36871
-#define IDR_BEARINGTOOL                 260
 
 // Next default values for new objects
 // 

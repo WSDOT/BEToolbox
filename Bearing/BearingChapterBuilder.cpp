@@ -1180,24 +1180,20 @@ void ReportBearingSpecificationCheck(rptChapter* pChapter, rptParagraph* pPara,
 
 rptChapter* CBearingChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
-   const auto& brg{ m_pDoc->GetBearing().first };
-   const auto& brg_loads{ m_pDoc->GetBearing().second };
-   WBFL::EngTools::BearingCalculator brg_calc;
-   m_pDoc->GetBearingCalculator();
 
+	const auto& brg{ m_pDoc->GetBearing()};
+	const auto& brg_loads{ m_pDoc->GetBearingLoads()};
+	const auto& brg_calc{m_pDoc->GetBearingCalculator()};
 
-   rptChapter* pChapter = new rptChapter;
-   rptParagraph* pPara = new rptParagraph;
-   (*pChapter) << pPara;
+	rptChapter* pChapter = new rptChapter;
+	rptParagraph* pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
-   ReportIntroduction(pPara);
-   ReportBearingProperties(pChapter,pPara,brg,brg_loads,brg_calc);
-   ReportBearingSpecificationCheck(pChapter, pPara, brg, brg_loads, brg_calc);
+	ReportIntroduction(pPara);
+	ReportBearingProperties(pChapter, pPara, brg, brg_loads, brg_calc);
+	ReportBearingSpecificationCheck(pChapter, pPara, brg, brg_loads, brg_calc);
 
-
-
-
-   return pChapter;
+	return pChapter;
 }
 
 std::unique_ptr<WBFL::Reporting::ChapterBuilder> CBearingChapterBuilder::Clone() const
