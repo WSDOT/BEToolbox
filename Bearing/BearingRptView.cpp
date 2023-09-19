@@ -129,10 +129,20 @@ void CBearingRptView::OnInitialUpdate()
    CEAFDocTemplate* pDocTemplate = (CEAFDocTemplate*)pDoc->GetDocTemplate();
    pDocTemplate->SetViewCreationData((void*)&data);
 
+
+   CEAFReportView::OnInitialUpdate();
+
+
    m_pFrame = (CBearingChildFrame*)GetParentFrame();
    m_pFrame->UpdateData(FALSE);
 
-   CEAFReportView::OnInitialUpdate();
+
+   const auto brg{ pDoc->GetBearing() };
+   const auto brg_loads{ pDoc->GetBearingLoads()};
+   CBearingChildFrame* pFrame = (CBearingChildFrame*)GetParentFrame();
+   pFrame->SetBearingParameters(brg,brg_loads);
+   
+
 }
 
 void CBearingRptView::OnUpdate(CView* pSender,LPARAM lHint,CObject* pHint)

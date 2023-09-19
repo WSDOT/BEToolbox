@@ -24,6 +24,8 @@
 #include "..\resource.h"
 #include "BearingChildFrame.h"
 #include "BearingDoc.h"
+#include <BEToolbox.hh>
+#include <EAF/EAFHelp.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -42,9 +44,11 @@ CBearingChildFrame::~CBearingChildFrame(void)
 }
 
 BEGIN_MESSAGE_MAP(CBearingChildFrame, CEAFChildFrame)
-   ON_WM_CREATE()
-   ON_BN_CLICKED(IDC_UPDATE, OnUpdate)
-	ON_MESSAGE(WM_HELP, OnCommandHelp)
+    ON_WM_CREATE()
+    ON_BN_CLICKED(IDC_UPDATE, OnUpdate)
+    ON_MESSAGE(WM_HELP, OnCommandHelp)
+    ON_BN_CLICKED(IDC_US, OnUSUnits)
+    ON_BN_CLICKED(IDC_SI, OnSIUnits)
 END_MESSAGE_MAP()
 
 LRESULT CBearingChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
@@ -52,6 +56,25 @@ LRESULT CBearingChildFrame::OnCommandHelp(WPARAM, LPARAM lParam)
    EAFHelp( EAFGetDocument()->GetDocumentationSetName(), IDH_BEARING );
    return TRUE;
 }
+
+
+const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
+{
+    return m_DlgBar;
+}
+
+
+void CBearingChildFrame::SetBearingParameters(const WBFL::EngTools::Bearing& brg,
+    const WBFL::EngTools::BearingLoads& brg_loads)
+{
+    m_DlgBar.SetBearingParameters(m_DlgBar,brg,brg_loads);
+    m_DlgBar.UpdateData(FALSE);
+}
+
+
+
+
+
 
 BOOL CBearingChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
@@ -96,12 +119,44 @@ void CBearingChildFrame::OnUpdate()
    CBearingDoc* pDoc = (CBearingDoc*)GetActiveDocument();
    if ( pDoc )
    {
-      pDoc->SetModifiedFlag();
-      pDoc->UpdateAllViews(nullptr);
+       WBFL::EngTools::Bearing brg;
+       WBFL::EngTools::BearingLoads brg_loads;
+       m_DlgBar.SetBearing(brg,brg_loads);
+       pDoc->SetBearing(brg, brg_loads);
+       pDoc->SetModifiedFlag();
+       pDoc->UpdateAllViews(nullptr);
    }
-
-   AfxMessageBox(_T("Dummy Dialog"));
 }
+
+
+
+void CBearingChildFrame::OnUSUnits()
+{
+    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == TRUE);
+    m_DlgBar.UpdateData(TRUE);
+    SetUnitsMode(eafTypes::umUS);
+    m_DlgBar.UpdateData(FALSE);
+    OnUpdate();
+}
+
+void CBearingChildFrame::OnSIUnits()
+{
+    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == TRUE);
+    m_DlgBar.UpdateData(TRUE);
+    SetUnitsMode(eafTypes::umSI);
+    m_DlgBar.UpdateData(FALSE);
+    OnUpdate();
+}
+
+void CBearingChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+{
+    CEAFApp* pApp = EAFGetApp();
+    pApp->SetUnitsMode(um);
+}
+
+
+
+
 
 #if defined _DEBUG
 void CBearingChildFrame::AssertValid() const

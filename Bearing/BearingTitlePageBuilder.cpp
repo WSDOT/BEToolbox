@@ -59,7 +59,7 @@ rptChapter* CBearingTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Re
 
    pPara = new rptParagraph(_T("BEToolboxReportSubtitle"));
    *pTitlePage << pPara;
-   (*pPara) << _T("Bearing") << rptNewLine;
+   (*pPara) << _T("BrgCalc") << rptNewLine;
 
    pPara = new rptParagraph(_T("BEToolboxCopyright"));
    *pTitlePage << pPara;
@@ -92,10 +92,10 @@ rptChapter* CBearingTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Re
 
    *pPara << rptNewLine;
 
-   //*pPara << rptRcImage(std::_tstring(rptStyleManager::GetImagePath()) + _T("Bearing.png"));
+   *pPara << rptRcImage(std::_tstring(rptStyleManager::GetImagePath()) + _T("Bearing.PNG"));
 
    (*pPara) << rptNewPage;
-
+ 
    return pTitlePage;
 }
 

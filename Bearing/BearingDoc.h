@@ -28,6 +28,10 @@
 #include <WBFLUnitServer.h>
 #include <ReportManager\ReportManager.h>
 #include <Math\PiecewiseFunction.h>
+#include <EngTools\Bearing.h>
+#include <EngTools\BearingLoads.h>
+#include <EngTools\BearingCalculator.h>
+
 
 class CBearingDoc : public CBEToolboxDoc
 {
@@ -68,4 +72,17 @@ protected:
 
 public:
    virtual void OnCloseDocument() override;
+
+   void SetBearing(const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads);
+   const WBFL::EngTools::Bearing& GetBearing() const;
+   const WBFL::EngTools::BearingLoads& GetBearingLoads() const;
+   const WBFL::EngTools::BearingCalculator& GetBearingCalculator() const;
+
+private:
+
+
+	WBFL::EngTools::Bearing m_bearing;
+	WBFL::EngTools::BearingLoads m_bearing_loads;
+	WBFL::EngTools::BearingCalculator m_bearing_calculator;
+
 };

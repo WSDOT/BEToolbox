@@ -9,7 +9,8 @@ The standard BEToolbox tools are:
 * GirComp - computes the geometric section properties of a built-up or rolled steel section with a composite concrete slab.
 * PGStable - analyzes precast-prestressed girders for lateral stability.
 * Spectra - generates a design response spectra.
-* UltCol - computes axial/bending interaction for a circular reinforced concrete column. 
+* UltCol - computes axial/bending interaction for a circular reinforced concrete column.
+* * BrgCalc - analyzes rectangular elastomeric bearing pads.
 
 BEToolbox tools have a plug-in architecture. This makes it easy for third-parties to easily add new tools. See BEToolboxToolExample for details.
 

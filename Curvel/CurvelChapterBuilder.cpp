@@ -24,6 +24,7 @@
 #include "CurvelChapterBuilder.h"
 #include "CurvelReportSpecification.h"
 #include "..\BEToolboxUtilities.h"
+
 #include <Math\QuadraticSolver.h>
 
 #ifdef _DEBUG
