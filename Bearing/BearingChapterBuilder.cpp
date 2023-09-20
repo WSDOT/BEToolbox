@@ -86,7 +86,7 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	Float64 w = brg.GetWidth();
 	Float64 a = brg.GetArea();
 	Float64 Gmin = brg.GetShearModulusMinimum();
-	Float64 Gmax = brg.GetShearModulusMaximum();
+	
 	Float64 K = brg_calc.GetElastomerBulkModulus();
 	Float64 dl = brg_loads.GetDeadLoad();
 	Float64 ll = brg_loads.GetLiveLoad();
@@ -102,10 +102,8 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	IndexType n = brg.GetNumIntLayers();
 	Float64 tcover = brg.GetCoverThickness();
 	Float64 sdef = brg_loads.GetShearDeformation();
-	Float64 static_rotation = brg_loads.GetStaticRotation();
-	Float64 cyclic_rotation = brg_loads.GetCyclicRotation();
-	Float64 x_rotation = brg_loads.GetRotationX();
-	Float64 y_rotation = brg_loads.GetRotationY();
+
+
 	Float64 total_elastomer_thickness = brg.GetTotalElastomerThickness();
 	Float64 tlayer = brg.GetIntermediateLayerThickness();
 	Float64 tshim = brg.GetSteelShimThickness();
@@ -153,12 +151,10 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	*pPara << _T("Yield Strength, ") << Sub2(_T("f"), _T("y")) << _T(" = ") << stress.SetValue(fy) << rptNewLine;
 	*pPara << _T("Fatigue Threshold, ") << Sub2(_T("f"), _T("th")) << _T(" = ") << stress.SetValue(fth) << rptNewLine;
 	*pPara << _T("Minimum Shear Modulus, ") << Sub2(_T("G"), _T("min")) << _T(" = ") << E.SetValue(Gmin) << rptNewLine;
-	*pPara << _T("Maximum Shear Modulus (Method A only), ") << Sub2(_T("G"), _T("max")) << _T(" = ") << E.SetValue(Gmax) << rptNewLine;
+
 	*pPara << _T("Shear Deformation, ") << Sub2(symbol(DELTA), _T("s")) << _T(" = ") << length.SetValue(sdef) << rptNewLine;
-	*pPara << _T("X Rotation, ") << Sub2(symbol(theta), _T("x")) << _T(" = ") << x_rotation << _T(" rad") << rptNewLine;
-	*pPara << _T("Y Rotation, ") << Sub2(symbol(theta), _T("y")) << _T(" = ") << y_rotation << _T(" rad") << rptNewLine;
-	*pPara << _T("Static Rotation, ") << Sub2(symbol(theta), _T("st")) << _T(" = ") << static_rotation << _T(" rad") << rptNewLine;
-	*pPara << _T("Cyclic Rotation, ") << Sub2(symbol(theta), _T("cy")) << _T(" = ") << cyclic_rotation << _T(" rad") << rptNewLine << rptNewLine;
+
+
 
 }
 
@@ -193,15 +189,13 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	Float64 tl_stress = brg_calc.GetTotalLoadStress(brg, brg_loads);
 	Float64 fy = brg.GetYieldStrength();
 	Float64 fth = brg.GetFatigueThreshold();
-	Float64 Sstatic = brg_calc.GetStaticStress(brg, brg_loads);
-	Float64 Scyclic = brg_calc.GetCyclicStress(brg, brg_loads);
+
 	Float64 n_multiplier = brg_calc.GetNlayMultiplier(brg);
 	Float64 s = brg.GetShapeFactor();
 	IndexType n = brg.GetNumIntLayers();
 	Float64 tcover = brg.GetCoverThickness();
 	Float64 sdef = brg_loads.GetShearDeformation();
-	Float64 static_rotation = brg_loads.GetStaticRotation();
-	Float64 cyclic_rotation = brg_loads.GetCyclicRotation();
+
 	Float64 x_rotation = brg_loads.GetRotationX();
 	Float64 y_rotation = brg_loads.GetRotationY();
 	Float64 total_elastomer_thickness = brg.GetTotalElastomerThickness();
@@ -299,8 +293,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	bool hydrostatic_check = brg_calc.HydrostaticStressCheck(brg, brg_loads);
 	Float64 KeffX = brg_loads.GetEffectiveKFactorX();
 	Float64 KeffY = brg_loads.GetEffectiveKFactorY();
-	auto fixed_x = brg_loads.GetFixedTranslationX();
-	auto fixed_y = brg_loads.GetFixedTranslationY();
+
 	Float64 Ax = brg_calc.GetPrimaryIntermediateCalculationA(brg);
 	Float64 Ay = brg_calc.GetSecondaryIntermediateCalculationA(brg);
 	Float64 Bx = brg_calc.GetPrimaryIntermediateCalculationB(brg);
@@ -324,7 +317,9 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-
+	*pPara << _T("Maximum Shear Modulus (Method A only), ") << Sub2(_T("G"), _T("max")) << _T(" = ") << E.SetValue(Gmax) << rptNewLine;
+	*pPara << _T("X Rotation, ") << Sub2(symbol(theta), _T("x")) << _T(" = ") << x_rotation << _T(" rad") << rptNewLine;
+	*pPara << _T("Y Rotation, ") << Sub2(symbol(theta), _T("y")) << _T(" = ") << y_rotation << _T(" rad") << rptNewLine;
 
 	rptParagraph* pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
 	(*pChapter) << pSubHeading;
@@ -714,12 +709,11 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	INIT_UV_PROTOTYPE(rptStressUnitValue, stress, pDispUnits->Stress, true);
 	INIT_UV_PROTOTYPE(rptStressUnitValue, E, pDispUnits->ModE, true);
 
-
 	Float64 l = brg.GetLength();
 	Float64 w = brg.GetWidth();
 	Float64 a = brg.GetArea();
 	Float64 Gmin = brg.GetShearModulusMinimum();
-	Float64 Gmax = brg.GetShearModulusMaximum();
+
 	Float64 K = brg_calc.GetElastomerBulkModulus();
 	Float64 dl = brg_loads.GetDeadLoad();
 	Float64 ll = brg_loads.GetLiveLoad();
@@ -737,8 +731,6 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	Float64 sdef = brg_loads.GetShearDeformation();
 	Float64 static_rotation = brg_loads.GetStaticRotation();
 	Float64 cyclic_rotation = brg_loads.GetCyclicRotation();
-	Float64 x_rotation = brg_loads.GetRotationX();
-	Float64 y_rotation = brg_loads.GetRotationY();
 	Float64 total_elastomer_thickness = brg.GetTotalElastomerThickness();
 	Float64 tlayer = brg.GetIntermediateLayerThickness();
 	Float64 tshim = brg.GetSteelShimThickness();
@@ -859,6 +851,11 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
+	*pPara << _T("Static Rotation, ") << Sub2(symbol(theta), _T("st")) << _T(" = ") << static_rotation << _T(" rad") << rptNewLine;
+	*pPara << _T("Cyclic Rotation, ") << Sub2(symbol(theta), _T("cy")) << _T(" = ") << cyclic_rotation << _T(" rad") << rptNewLine;
+
+
+
 
 
 	rptParagraph* pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
@@ -935,6 +932,10 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pSubHeading << _T("Minimum Allowable Shear Deformation Check:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
+
+
+
+
 
 	*pPara << _T("2") << symbol(TIMES) << Sub2(symbol(DELTA), _T("s-st")) << _T(" = 2(") << length.SetValue(sdef);
 	*pPara << _T(") = ") << length.SetValue(2 * sdef) << rptNewLine;

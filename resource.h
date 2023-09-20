@@ -51,6 +51,7 @@
 #define IDC_SCHEMATIC                   219
 #define IDC_A                           219
 #define IDC_ADD                         220
+#define IDC_METHOD_A                    220
 #define IDC_REMOVE                      221
 #define IDC_SI2                         221
 #define IDC_METHOD_B                    221
@@ -301,7 +302,6 @@
 #define IDC_HGB_UNIT                    380
 #define IDC_USE_PGS_CRITERIA            381
 #define IDC_BRACKET_ECCENTRICITY        381
-#define IDC_METHOD_A                    381
 #define IDC_PROJECT_CRITERIA            382
 #define IDC_LIFTING_FS_FAILURE          383
 #define IDC_HAULING_FS_FAILURE          385
@@ -427,6 +427,8 @@
 #define IDC_FIXED_Y_YES                 490
 #define IDC_FIXED_X_NO2                 491
 #define IDC_FIXED_Y_NO                  491
+#define IDC_FIXED_X                     492
+#define IDC_FIXED_Y                     493
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -485,7 +487,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        227
 #define _APS_NEXT_COMMAND_VALUE         36873
-#define _APS_NEXT_CONTROL_VALUE         491
+#define _APS_NEXT_CONTROL_VALUE         494
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

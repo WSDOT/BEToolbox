@@ -40,6 +40,8 @@ public:
 
    void SetUnitsMode(eafTypes::UnitMode um);
 
+   
+
 
 
    void UpdateData(BOOL bUpdate);
@@ -48,11 +50,17 @@ protected:
    CBearingChildFrame(void);
    ~CBearingChildFrame(void);
 
+
    afx_msg void OnUpdate();
    afx_msg void OnUSUnits();
    afx_msg void OnSIUnits();
 
+
+   afx_msg void MethodAControls(int);
+   afx_msg void MethodBControls(int);
    afx_msg void OnMethodA();
+   afx_msg void OnMethodB();
+
 
    afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
 
