@@ -47,6 +47,7 @@ BEGIN_MESSAGE_MAP(CBearingChildFrame, CEAFChildFrame)
     ON_WM_CREATE()
     ON_BN_CLICKED(IDC_UPDATE, OnUpdate)
     ON_MESSAGE(WM_HELP, OnCommandHelp)
+    ON_BN_CLICKED(IDC_METHOD_A, OnMethodA)
     ON_BN_CLICKED(IDC_US, OnUSUnits)
     ON_BN_CLICKED(IDC_SI, OnSIUnits)
 END_MESSAGE_MAP()
@@ -65,9 +66,10 @@ const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
 
 
 void CBearingChildFrame::SetBearingParameters(const WBFL::EngTools::Bearing& brg,
-    const WBFL::EngTools::BearingLoads& brg_loads)
+    const WBFL::EngTools::BearingLoads& brg_loads,
+    const WBFL::EngTools::BearingCalculator& brg_calc)
 {
-    m_DlgBar.SetBearingParameters(m_DlgBar,brg,brg_loads);
+    m_DlgBar.SetBearingParameters(m_DlgBar,brg,brg_loads,brg_calc);
     m_DlgBar.UpdateData(FALSE);
 }
 
@@ -121,8 +123,9 @@ void CBearingChildFrame::OnUpdate()
    {
        WBFL::EngTools::Bearing brg;
        WBFL::EngTools::BearingLoads brg_loads;
-       m_DlgBar.SetBearing(brg,brg_loads);
-       pDoc->SetBearing(brg, brg_loads);
+       WBFL::EngTools::BearingCalculator brg_calc;
+       m_DlgBar.SetBearing(brg,brg_loads,brg_calc);
+       pDoc->SetBearing(brg, brg_loads, brg_calc);
        pDoc->SetModifiedFlag();
        pDoc->UpdateAllViews(nullptr);
    }
@@ -152,6 +155,13 @@ void CBearingChildFrame::SetUnitsMode(eafTypes::UnitMode um)
 {
     CEAFApp* pApp = EAFGetApp();
     pApp->SetUnitsMode(um);
+}
+
+
+void CBearingChildFrame::OnMethodA()
+{
+    CWnd* w = GetDlgItem(IDC_texts);
+    w->ShowWindow(SW_HIDE);
 }
 
 

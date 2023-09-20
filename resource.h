@@ -52,6 +52,8 @@
 #define IDC_A                           219
 #define IDC_ADD                         220
 #define IDC_REMOVE                      221
+#define IDC_SI2                         221
+#define IDC_METHOD_B                    221
 #define IDC_PRIMARY_SHAPE_GRID          222
 #define IDC_SECONDARY_SHAPE_GRID        223
 #define IDC_ADD_PRIMARY                 224
@@ -299,6 +301,7 @@
 #define IDC_HGB_UNIT                    380
 #define IDC_USE_PGS_CRITERIA            381
 #define IDC_BRACKET_ECCENTRICITY        381
+#define IDC_METHOD_A                    381
 #define IDC_PROJECT_CRITERIA            382
 #define IDC_LIFTING_FS_FAILURE          383
 #define IDC_HAULING_FS_FAILURE          385

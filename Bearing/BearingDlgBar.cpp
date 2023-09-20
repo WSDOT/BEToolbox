@@ -89,7 +89,7 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
 
    int i = (pApp->GetUnitsMode() == eafTypes::umUS ? 0 : 1);
    DDX_Radio(pDX, IDC_US, i);
-   //DDX_Radio(pDX, IDC_A, m_method);
+   DDX_Radio(pDX, IDC_METHOD_A, m_method_a);
    DDX_UnitValueAndTag(pDX, IDC_BLENGTH, IDC_BLENGTH_UNIT, m_length, pDispUnits->ComponentDim);
    DDX_UnitValueAndTag(pDX, IDC_BWIDTH, IDC_BWIDTH_UNIT, m_width, pDispUnits->ComponentDim);
    DDX_UnitValueAndTag(pDX, IDC_COVER, IDC_COVER_UNIT, m_cover, pDispUnits->ComponentDim);
@@ -113,8 +113,21 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
 
 
 void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
-    const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads)
+    const WBFL::EngTools::Bearing& brg, 
+    const WBFL::EngTools::BearingLoads& brg_loads,
+    const WBFL::EngTools::BearingCalculator& brg_calc)
 {
+
+    if (brg_calc.GetAnalysisMethodA() == WBFL::EngTools::BearingCalculator::AnalysisMethodA::Yes)
+    {
+        dlgBar.m_method_a = 0;
+    }
+    else
+    {
+        dlgBar.m_method_a = 1;
+    }
+
+
     dlgBar.m_length = brg.GetLength();
     dlgBar.m_width = brg.GetWidth();
     dlgBar.m_cover = brg.GetCoverThickness();
@@ -154,8 +167,10 @@ void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
 
 void CBearingDialogBar::SetBearing(
     WBFL::EngTools::Bearing& brg,
-    WBFL::EngTools::BearingLoads& brg_loads)
+    WBFL::EngTools::BearingLoads& brg_loads,
+    WBFL::EngTools::BearingCalculator& brg_calc)
 {
+    brg_calc.SetMethodA((WBFL::EngTools::BearingCalculator::AnalysisMethodA)m_method_a);
     brg.SetLength(m_length);
     brg.SetWidth(m_width);
     brg.SetShearModulusMinimum(m_Gmin);

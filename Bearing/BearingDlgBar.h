@@ -23,6 +23,7 @@
 #pragma once
 #include <EngTools\Bearing.h>
 #include <EngTools\BearingLoads.h>
+#include <EngTools\BearingCalculator.h>
 #include <MfcTools\MetaFileStatic.h>
 
 
@@ -35,7 +36,7 @@ public:
 	CBearingDialogBar();
 	virtual ~CBearingDialogBar();
 
-	int m_method;
+	int m_method_a;
 	Float64 m_length;
 	Float64 m_width;
 	Float64 m_cover;
@@ -58,11 +59,14 @@ public:
 
 
 	void SetBearingParameters(CBearingDialogBar&,
-		const WBFL::EngTools::Bearing&, const WBFL::EngTools::BearingLoads&);
+		const WBFL::EngTools::Bearing&,
+		const WBFL::EngTools::BearingLoads&,
+		const WBFL::EngTools::BearingCalculator&);
 
 	void SetBearing(
 		WBFL::EngTools::Bearing& brg,
-		WBFL::EngTools::BearingLoads& brg_loads);
+		WBFL::EngTools::BearingLoads& brg_loads,
+		WBFL::EngTools::BearingCalculator& brg_calc);
 
 protected:
 	DECLARE_MESSAGE_MAP()
