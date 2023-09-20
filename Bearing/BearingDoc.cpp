@@ -78,10 +78,11 @@ BEGIN_MESSAGE_MAP(CBearingDoc, CBEToolboxDoc)
 END_MESSAGE_MAP()
 
 
-void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads)
+void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads, const BearingCalculator& brg_calc)
 {
 	m_bearing = brg;
 	m_bearing_loads = brg_loads;
+    m_bearing_calculator = brg_calc;
 	UpdateAllViews(NULL);
 }
 
@@ -132,6 +133,9 @@ BOOL CBearingDoc::Init()
       return FALSE;
 
    // initialize with some defaults
+
+   m_bearing_calculator.SetMethodA(BearingCalculator::AnalysisMethodA::Yes);
+
    m_bearing.SetLength(WBFL::Units::ConvertToSysUnits(11.0, WBFL::Units::Measure::Inch));
    m_bearing.SetWidth(WBFL::Units::ConvertToSysUnits(27.0, WBFL::Units::Measure::Inch));
    m_bearing.SetShearModulusMinimum(WBFL::Units::ConvertToSysUnits(140, WBFL::Units::Measure::PSI));
@@ -172,6 +176,7 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
 
    CEAFApp* pApp = EAFGetApp();
 
+   BearingCalculator::AnalysisMethodA m_method_a = m_bearing_calculator.GetAnalysisMethodA();
    BearingLoads::FixedTranslationX fixed_translation_x = m_bearing_loads.GetFixedTranslationX();
    BearingLoads::FixedTranslationY fixed_translation_y = m_bearing_loads.GetFixedTranslationY();
    Float64 length = m_bearing.GetLength();
@@ -198,6 +203,10 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
   
 
    hr = pStrSave->put_Property(_T("Units"), CComVariant(pApp->GetUnitsMode()));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("Analysis_Method_A"), CComVariant((int)m_method_a));
    if (FAILED(hr))
        return hr;
 
@@ -319,6 +328,11 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    if (FAILED(hr))
        return hr;
    pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
+
+   hr = pStrLoad->get_Property(_T("Analysis_Method_A"), &var);
+   if (FAILED(hr))
+       return hr;
+   m_bearing_calculator.SetMethodA((BearingCalculator::AnalysisMethodA)var.lVal);
 
    hr = pStrLoad->get_Property(_T("Fixed_X_Translation"), &var);
    if (FAILED(hr))

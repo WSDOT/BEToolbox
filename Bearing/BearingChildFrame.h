@@ -33,22 +33,14 @@ public:
 	DECLARE_DYNCREATE(CBearingChildFrame)
 
 	void SetBearingParameters(const WBFL::EngTools::Bearing&,
-		const WBFL::EngTools::BearingLoads&);
+		const WBFL::EngTools::BearingLoads&,
+		const WBFL::EngTools::BearingCalculator&);
 
-	enum class BearingAnalysisMethod
-	{
-		MethodA,
-		MethodB
-	};
 
-	BearingAnalysisMethod m_analysis_method{ BearingAnalysisMethod::MethodA };
-
-	BearingAnalysisMethod GetAnalysisMethod()
-	{
-		return m_analysis_method;
-	}
 
    void SetUnitsMode(eafTypes::UnitMode um);
+
+   
 
 
 
@@ -58,9 +50,17 @@ protected:
    CBearingChildFrame(void);
    ~CBearingChildFrame(void);
 
+
    afx_msg void OnUpdate();
    afx_msg void OnUSUnits();
    afx_msg void OnSIUnits();
+
+
+   afx_msg void MethodAControls(int);
+   afx_msg void MethodBControls(int);
+   afx_msg void OnMethodA();
+   afx_msg void OnMethodB();
+
 
    afx_msg LRESULT OnCommandHelp(WPARAM, LPARAM lParam);
 
