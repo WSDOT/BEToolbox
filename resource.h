@@ -132,6 +132,7 @@
 #define IDC_LL_UNIT                     257
 #define IDC_LEFT_SLOPE_LABEL_3          258
 #define IDC_LENGTH11                    258
+#define IDC_LENGTH5                     258
 #define IDC_INDIVIDUAL_STATIONS         259
 #define IDC_LENGTH12                    259
 #define IDC_INDIVIDUAL_STATION_ADD      260

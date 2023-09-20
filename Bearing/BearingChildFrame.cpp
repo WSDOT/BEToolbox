@@ -180,14 +180,10 @@ void CBearingChildFrame::MethodAControls(int s)
     w_xrot_text->ShowWindow(s);
     CWnd* w_xrot_window = m_DlgBar.GetDlgItem(IDC_ROT_X);
     w_xrot_window->ShowWindow(s);
-    CWnd* w_xrot_unit = m_DlgBar.GetDlgItem(IDC_LENGTH13);
-    w_xrot_unit->ShowWindow(s);
     CWnd* w_yrot_text = m_DlgBar.GetDlgItem(IDC_LENGTH9);
     w_yrot_text->ShowWindow(s);
     CWnd* w_yrot_window = m_DlgBar.GetDlgItem(IDC_ROT_Y);
     w_yrot_window->ShowWindow(s);
-    CWnd* w_yrot_unit = m_DlgBar.GetDlgItem(IDC_LENGTH14);
-    w_yrot_unit->ShowWindow(s);
 }
 
 
@@ -198,14 +194,10 @@ void CBearingChildFrame::MethodBControls(int s)
     w_rot_st_text->ShowWindow(s);
     CWnd* w_rot_st_window = m_DlgBar.GetDlgItem(IDC_ROT_STATIC);
     w_rot_st_window->ShowWindow(s);
-    CWnd* w_rot_st_unit = m_DlgBar.GetDlgItem(IDC_LENGTH11);
-    w_rot_st_unit->ShowWindow(s);
     CWnd* w_rot_cy_text = m_DlgBar.GetDlgItem(IDC_LENGTH7);
     w_rot_cy_text->ShowWindow(s);
     CWnd* w_rot_cy_window = m_DlgBar.GetDlgItem(IDC_ROT_CYCLIC);
     w_rot_cy_window->ShowWindow(s);
-    CWnd* w_rot_cy_unit = m_DlgBar.GetDlgItem(IDC_LENGTH12);
-    w_rot_cy_unit->ShowWindow(s);
     CWnd* w_fixed_x = m_DlgBar.GetDlgItem(IDC_FIXED_X);
     w_fixed_x->ShowWindow(s);
     CWnd* w_fixed_x_yes = m_DlgBar.GetDlgItem(IDC_FIXED_X_YES);
