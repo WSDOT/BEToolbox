@@ -170,31 +170,33 @@ void CBearingChildFrame::SetUnitsMode(eafTypes::UnitMode um)
 
 void CBearingChildFrame::MethodAControls(int s)
 {
-    CWnd* w_gmax_text = m_DlgBar.GetDlgItem(IDC_texts);
+    CWnd* w_gmax_text = m_DlgBar.GetDlgItem(IDC_GMAX_TEXT2);
     w_gmax_text->ShowWindow(s);
-    CWnd* w_gmax_window = m_DlgBar.GetDlgItem(IDC_SHEAR_MOD_MAX);
+    CWnd* w_gmax_window = m_DlgBar.GetDlgItem(IDC_GMAX_WINDOW);
     w_gmax_window->ShowWindow(s);
     CWnd* w_gmax_unit = m_DlgBar.GetDlgItem(IDC_SHEAR_MOD_MAX_UNIT);
     w_gmax_unit->ShowWindow(s);
-    CWnd* w_xrot_text = m_DlgBar.GetDlgItem(IDC_LENGTH8);
+    CWnd* w_xrot_text = m_DlgBar.GetDlgItem(IDC_X_ROT_TEXT);
     w_xrot_text->ShowWindow(s);
-    CWnd* w_xrot_window = m_DlgBar.GetDlgItem(IDC_ROT_X);
+    CWnd* w_xrot_window = m_DlgBar.GetDlgItem(IDC_X_ROT_WINDOW);
     w_xrot_window->ShowWindow(s);
-    CWnd* w_yrot_text = m_DlgBar.GetDlgItem(IDC_LENGTH9);
+    CWnd* w_yrot_text = m_DlgBar.GetDlgItem(IDC_Y_ROT_TEXT);
     w_yrot_text->ShowWindow(s);
     CWnd* w_yrot_window = m_DlgBar.GetDlgItem(IDC_ROT_Y);
     w_yrot_window->ShowWindow(s);
+    CWnd* design_prop_group = m_DlgBar.GetDlgItem(IDC_DESIGN_PROP_A2);
+    design_prop_group->ShowWindow(s);
 }
 
 
 void CBearingChildFrame::MethodBControls(int s)
 {
 
-    CWnd* w_rot_st_text = m_DlgBar.GetDlgItem(IDC_LENGTH6);
+    CWnd* w_rot_st_text = m_DlgBar.GetDlgItem(IDC_STATIC_ROT_TEXT);
     w_rot_st_text->ShowWindow(s);
     CWnd* w_rot_st_window = m_DlgBar.GetDlgItem(IDC_ROT_STATIC);
     w_rot_st_window->ShowWindow(s);
-    CWnd* w_rot_cy_text = m_DlgBar.GetDlgItem(IDC_LENGTH7);
+    CWnd* w_rot_cy_text = m_DlgBar.GetDlgItem(IDC_CYCLIC_ROT_TEXT);
     w_rot_cy_text->ShowWindow(s);
     CWnd* w_rot_cy_window = m_DlgBar.GetDlgItem(IDC_ROT_CYCLIC);
     w_rot_cy_window->ShowWindow(s);
@@ -210,7 +212,8 @@ void CBearingChildFrame::MethodBControls(int s)
     w_fixed_y_yes->ShowWindow(s);
     CWnd* w_fixed_y_no = m_DlgBar.GetDlgItem(IDC_FIXED_Y_NO);
     w_fixed_y_no->ShowWindow(s);
-
+    CWnd* design_prop_group = m_DlgBar.GetDlgItem(IDC_DESIGN_PROP_B);
+    design_prop_group->ShowWindow(s);
 }
 
 

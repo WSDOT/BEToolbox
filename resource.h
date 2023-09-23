@@ -91,10 +91,13 @@
 #define IDC_LENGTH4                     240
 #define IDC_RIGHT_SLOPE_UNIT_1          241
 #define IDC_texts                       241
+#define IDC_GMAX_TEXT2                  241
 #define IDC_STATION_LABEL_2             242
 #define IDC_LENGTH6                     242
+#define IDC_STATIC_ROT_TEXT             242
 #define IDC_STATION_2                   243
 #define IDC_LENGTH7                     243
+#define IDC_CYCLIC_ROT_TEXT             243
 #define IDC_LEFT_SLOPE_2                244
 #define IDC_ROTxxx                      244
 #define IDC_LEFT_SLOPE_UNIT_2           245
@@ -103,8 +106,10 @@
 #define IDC_SHIMX2                      246
 #define IDC_RIGHT_SLOPE_2               247
 #define IDC_LENGTH8                     247
+#define IDC_X_ROT_TEXT                  247
 #define IDC_RIGHT_SLOPE_UNIT_2          248
 #define IDC_LENGTH9                     248
+#define IDC_Y_ROT_TEXT                  248
 #define IDC_STATION_LABEL_3             249
 #define IDC_LENGTH10                    249
 #define IDC_STATION_3                   250
@@ -397,6 +402,7 @@
 #define IDC_SHEAR_MOD_MIN               469
 #define IDC_HAULING_PEAK_COMPRESSION    470
 #define IDC_SHEAR_MOD_MAX               470
+#define IDC_GMAX_WINDOW                 470
 #define IDC_HAULING_GLOBAL_COMPRESSION_UNIT2 471
 #define IDC_HAULING_PEAK_COMPRESSION_UNIT 471
 #define IDC_ROT_STATIC                  471
@@ -410,6 +416,7 @@
 #define IDC_LL                          474
 #define IDC_LWC                         475
 #define IDC_ROT_X                       475
+#define IDC_X_ROT_WINDOW                475
 #define IDC_ATTACHMENT_WEIGHT_UNIT      476
 #define IDC_ROT_Y                       476
 #define IDC_ECCENTRICITY                477
@@ -430,6 +437,8 @@
 #define IDC_FIXED_Y_NO                  491
 #define IDC_FIXED_X                     492
 #define IDC_FIXED_Y                     493
+#define IDC_DESIGN_PROP_B               494
+#define IDC_DESIGN_PROP_A2              495
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -488,7 +497,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        227
 #define _APS_NEXT_COMMAND_VALUE         36873
-#define _APS_NEXT_CONTROL_VALUE         494
+#define _APS_NEXT_CONTROL_VALUE         496
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif
