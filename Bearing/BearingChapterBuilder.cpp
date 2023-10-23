@@ -548,7 +548,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << stress.SetValue(tl_stress) << _T(") ") << symbol(TIMES) << _T(" (") << length.SetValue(l) << _T("/") << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
 		*pPara << _T(" - ") << n_multiplier << _T(" = ") << n_lay_r_x_calc << rptNewLine;
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << n_lay_r_x_calc << _T(" < ") << _T(" 0 ") << symbol(RIGHT_SINGLE_ARROW);
-		*pPara << Sub2(_T("n"), _T("max")) << _T("(") << Sub2(symbol(theta), _T("x")) << _T(") = 0") << rptNewLine;
+		*pPara << Sub2(_T("n"), _T("min")) << _T("(") << Sub2(symbol(theta), _T("x")) << _T(") = 0") << rptNewLine;
 	}
 	else
 	{
@@ -560,7 +560,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << stress.SetValue(tl_stress) << _T(") ") << symbol(TIMES) << _T(" (") << length.SetValue(l) << _T(" / ") << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
 		*pPara << _T(" - ") << n_multiplier << _T(" = ") << n_lay_r_x_calc << rptNewLine;
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << n_lay_r_x_calc << _T(" > 0 ") << symbol(RIGHT_SINGLE_ARROW);
-		*pPara << Sub2(_T("n"), _T("max")) << _T("(") << Sub2(symbol(theta), _T("x")) << _T(") = ") << n_min_rot_x << rptNewLine;
+		*pPara << Sub2(_T("n"), _T("min")) << _T("(") << Sub2(symbol(theta), _T("x")) << _T(") = ") << n_min_rot_x << rptNewLine;
 	}
 	if (n_min_rot_x_check == true)
 	{
@@ -585,7 +585,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	else
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" > ") << n_max_stab_x << _T(" ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" > ") << n_max_stab_x << _T(" ") << RPT_FAIL;
 	}
 	*pPara << _T(" (SECTION 14.7.6.3.6)") << rptNewLine;
 
@@ -620,7 +620,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
 		*pPara << _T(" - ") << n_multiplier << _T(" = ") << n_lay_r_y_calc << rptNewLine;
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << n_lay_r_y_calc << _T(" > 0 ") << symbol(RIGHT_SINGLE_ARROW);
-		*pPara << Sub2(_T("n"), _T("max")) << _T("(") << Sub2(symbol(theta), _T("y")) << _T(") = ") << n_min_rot_y << rptNewLine;
+		*pPara << Sub2(_T("n"), _T("min")) << _T("(") << Sub2(symbol(theta), _T("y")) << _T(") = ") << n_min_rot_y << rptNewLine;
 	}
 	if (n_min_rot_y_check == true)
 	{
@@ -645,7 +645,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	else
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" > ") << n_max_stab_y << _T(" ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" > ") << n_max_stab_y << _T(" ") << RPT_FAIL;
 	}
 	*pPara << _T(" (SECTION 14.7.6.3.6)");
 
