@@ -62,7 +62,7 @@ void ReportIntroduction(rptParagraph* pPara)
 	*pPara << Bold(_T("Bearing Orientation:")) << rptNewLine;
 	*pPara << rptRcImage(std::_tstring(rptStyleManager::GetImagePath()) + _T("BearingOrientation.png")) << rptNewLine;
 	*pPara << Bold(_T("-The primary rotation axis is about the axis parallel to the tranverse axis of the bridge")) << rptNewLine;
-	*pPara << Bold(_T("-x, L are perpendicular; y,W are parallel, to the primary rotation axis. Usually W>L")) << rptNewLine << rptNewLine;
+	*pPara << Bold(_T("-x, L are perpendicular; y,W are parallel, to the primary rotation axis. Usually W>L")) << rptNewLine << rptNewLine << rptNewLine;
 }
 
 void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
@@ -153,7 +153,6 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	*pPara << _T("Minimum Shear Modulus, ") << Sub2(_T("G"), _T("min")) << _T(" = ") << E.SetValue(Gmin) << rptNewLine;
 	*pPara << _T("Shear Deformation, ") << Sub2(symbol(DELTA), _T("s")) << _T(" = ") << length.SetValue(sdef) << rptNewLine;
 
-	*pPara << rptNewPage;
 
 }
 
@@ -308,20 +307,19 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	auto deltaLLiB = brg_calc.GetInstantaneousLiveLoadDeflectionMethodB(brg, brg_loads);
 	auto deltaLLiA = brg_calc.GetInstantaneousLiveLoadDeflectionMethodA(brg, brg_loads);
 
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
+	*pPara << _T("Maximum Shear Modulus (Method A only), ") << Sub2(_T("G"), _T("max")) << _T(" = ") << E.SetValue(Gmax) << rptNewLine;
+	*pPara << _T("X Rotation, ") << Sub2(symbol(theta), _T("x")) << _T(" = ") << x_rotation << _T(" rad") << rptNewLine;
+	*pPara << _T("Y Rotation, ") << Sub2(symbol(theta), _T("y")) << _T(" = ") << y_rotation << _T(" rad") << rptNewLine << rptNewLine;
+
+	*pPara << rptNewPage;
 
 	rptParagraph* pHeading = new rptParagraph(rptStyleManager::GetHeadingStyle());
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Bearing Specification Check"));
 	*pHeading << _T("SPECIFICATION CHECK:");
-	pPara = new rptParagraph;
-	(*pChapter) << pPara;
-
-	*pPara << rptNewLine;
-
-	*pPara << _T("Maximum Shear Modulus (Method A only), ") << Sub2(_T("G"), _T("max")) << _T(" = ") << E.SetValue(Gmax) << rptNewLine;
-	*pPara << _T("X Rotation, ") << Sub2(symbol(theta), _T("x")) << _T(" = ") << x_rotation << _T(" rad") << rptNewLine;
-	*pPara << _T("Y Rotation, ") << Sub2(symbol(theta), _T("y")) << _T(" = ") << y_rotation << _T(" rad") << rptNewLine << rptNewLine;
 
 	rptParagraph* pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
 	(*pChapter) << pSubHeading;
@@ -857,22 +855,20 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	auto deltaLLiB = brg_calc.GetInstantaneousLiveLoadDeflectionMethodB(brg, brg_loads);
 	auto deltaLLiA = brg_calc.GetInstantaneousLiveLoadDeflectionMethodA(brg, brg_loads);
 
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
+
+	*pPara << _T("Static Rotation, ") << Sub2(symbol(theta), _T("st")) << _T(" = ") << static_rotation << _T(" rad") << rptNewLine;
+	*pPara << _T("Cyclic Rotation, ") << Sub2(symbol(theta), _T("cy")) << _T(" = ") << cyclic_rotation << _T(" rad");
+
+	*pPara << rptNewPage;
 
 	rptParagraph* pHeading = new rptParagraph(rptStyleManager::GetHeadingStyle());
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Bearing Specification Check"));
 	*pHeading << _T("SPECIFICATION CHECK:");
-	pPara = new rptParagraph;
-	(*pChapter) << pPara;
 
 	*pPara << rptNewLine;
-
-	*pPara << _T("Static Rotation, ") << Sub2(symbol(theta), _T("st")) << _T(" = ") << static_rotation << _T(" rad") << rptNewLine;
-	*pPara << _T("Cyclic Rotation, ") << Sub2(symbol(theta), _T("cy")) << _T(" = ") << cyclic_rotation << _T(" rad") << rptNewLine;
-
-
-	*pPara << rptNewLine;
-
 
 	rptParagraph* pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
 	(*pChapter) << pSubHeading;
