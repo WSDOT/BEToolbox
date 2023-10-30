@@ -190,15 +190,15 @@ BOOL CBEToolboxPlugin::GetToolTipMessageString(UINT nID, CString& rMessage) cons
 
 void CBEToolboxPlugin::ManagePlugins()
 {
-   std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage BEToolbox Tools"), _T("Select the BEToolbox Tools that you want to be available"), CATID_BEToolboxTool, EAFGetMainFrame());
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   CWinApp* pApp = AfxGetApp();
+
+   std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage BEToolbox Tools"), _T("Select the BEToolbox Tools that you want to be available"), CATID_BEToolboxTool, EAFGetMainFrame(), pApp);
 
    if (pluginStates.size() == 0)
    {
       return;
    }
-
-   // Find our document template
-   CEAFApp* pApp = EAFGetApp();
 
    // write the plugin states into the registry
    for(auto& state : pluginStates)
@@ -209,15 +209,15 @@ void CBEToolboxPlugin::ManagePlugins()
 
 void CBEToolboxPlugin::ManagePGStablePlugins()
 {
-   std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage PGStable plugins"), _T("Select the PGStable plugins that you want to be available"), CATID_PGStablePlugin, EAFGetMainFrame());
+   AFX_MANAGE_STATE(AfxGetStaticModuleState());
+   CWinApp* pApp = AfxGetApp();
+
+   std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage PGStable plugins"), _T("Select the PGStable plugins that you want to be available"), CATID_PGStablePlugin, EAFGetMainFrame(), pApp);
 
    if (pluginStates.size() == 0)
    {
       return;
    }
-
-   // Find our document template
-   CEAFApp* pApp = EAFGetApp();
 
    // write the plugin states into the registry
    for (auto& state : pluginStates)
