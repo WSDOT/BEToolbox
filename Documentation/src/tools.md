@@ -4,9 +4,11 @@ The tools in the BEToolbox provide quick and easy engineering calculations. The 
 
 > The names of the BEToolbox tools are shortened to conform to the seven letter character limit of the 1960's era FORTRAN programming language that was used to write the original versions of these programs.
 
+@subpage bearing <br>
+Analyzes elastomeric bearing pads.
+
 @subpage boxgdr <br>
 BoxGdr computes the geometric section properties of a box girder including cross sectional area, moment of inertia, and centroid. 
-
 @subpage curvel <br>
 Curvel computes roadway elevations, grade, and crown slope with respect to a given vertical curve and superelevation transition. Alignment information can be transferred between Curvel, PGSuper and PGSplice.
 
@@ -24,4 +26,3 @@ Spectra generates a design response spectra.
 
 @subpage ultcol <br>
 UltCol computes axial/bending interaction for a circular reinforced concrete column.
-

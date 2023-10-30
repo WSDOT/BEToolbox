@@ -22,5 +22,5 @@
 
 #pragma once
 
-Float64 GetOffset(CString strOffset,const unitmgtLengthData& displayUnit);
-CString GetOffset(Float64 value,const unitmgtLengthData& displayUnit);
+Float64 GetOffset(CString strOffset,const WBFL::Units::LengthData& displayUnit);
+CString GetOffset(Float64 value,const WBFL::Units::LengthData& displayUnit);

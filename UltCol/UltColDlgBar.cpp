@@ -63,7 +63,7 @@ void CUltColDlgBar::DoDataExchange(CDataExchange* pDX)
    CDialogBar::DoDataExchange(pDX);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    int i = (pApp->GetUnitsMode() == eafTypes::umUS ? 0 : 1);
    DDX_Radio(pDX,IDC_US,i);

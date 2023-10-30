@@ -40,7 +40,7 @@ CGenCompTitlePageBuilder::CGenCompTitlePageBuilder(void)
 }
 
 CGenCompTitlePageBuilder::CGenCompTitlePageBuilder(const CGenCompTitlePageBuilder& other) :
-CTitlePageBuilder(other)
+WBFL::Reporting::TitlePageBuilder(other)
 {
 }
 
@@ -48,7 +48,7 @@ CGenCompTitlePageBuilder::~CGenCompTitlePageBuilder(void)
 {
 }
 
-rptChapter* CGenCompTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CGenCompTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -64,7 +64,7 @@ rptChapter* CGenCompTitlePageBuilder::Build(std::shared_ptr<CReportSpecification
 
    pPara = new rptParagraph(_T("BEToolboxCopyright"));
    *pTitlePage << pPara;
-   *pPara << _T("Copyright ") << symbol(COPYRIGHT) << _T(" ") << sysDate().Year() << _T(", WSDOT, All Rights Reserved") << rptNewLine;
+   *pPara << _T("Copyright ") << symbol(COPYRIGHT) << _T(" ") << WBFL::System::Date().Year() << _T(", WSDOT, All Rights Reserved") << rptNewLine;
 
    pPara = new rptParagraph(_T("BEToolboxReportSubtitle"));
    *pTitlePage << pPara;
@@ -94,7 +94,7 @@ rptChapter* CGenCompTitlePageBuilder::Build(std::shared_ptr<CReportSpecification
    return pTitlePage;
 }
 
-CTitlePageBuilder* CGenCompTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CGenCompTitlePageBuilder::Clone() const
 {
-   return new CGenCompTitlePageBuilder(*this);
+   return std::make_unique<CGenCompTitlePageBuilder>(*this);
 }

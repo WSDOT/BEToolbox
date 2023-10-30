@@ -26,7 +26,7 @@ HRESULT Register(bool bRegister)
 {
    HRESULT hr = S_OK;
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_ExampleTool, CATID_BEToolboxTool, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_ExampleTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;

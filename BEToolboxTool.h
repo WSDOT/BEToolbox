@@ -36,10 +36,20 @@ DEFINE_GUID(IID_IBEToolboxTool,
    0x80a75731, 0xdfd6, 0x40c2, 0x8f, 0xa0, 0x20, 0xe8, 0xda, 0xdd, 0x99, 0x32);
 struct __declspec(uuid("{80A75731-DFD6-40C2-8FA0-20E8DADD9932}")) IBEToolboxTool;// for __uuidof
 
+/// Interface for all BEToolbox tools
 interface IBEToolboxTool : IUnknown
 {
-   virtual BOOL Init(CEAFApp* pParent) = 0;
+   /// Called from the framework to initialize the tool.
+   virtual BOOL Init(
+      CEAFApp* pParent ///< pointer to the main application object
+   ) = 0;
+
+   /// Called by the framework when the tool is being shutdown and destroyed
    virtual void Terminate() = 0;
+
+   /// Returns the name of the tool
    virtual CString GetName() const = 0;
+
+   /// Factory method to create a CEAFDocTemplate for the tool
    virtual CEAFDocTemplate* CreateDocumentTemplate() const = 0;
 };

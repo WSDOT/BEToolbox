@@ -25,7 +25,7 @@
 #include "UltColDoc.h"
 
 class CUltColChapterBuilder :
-   public CChapterBuilder
+   public WBFL::Reporting::ChapterBuilder
 {
 public:
    CUltColChapterBuilder(CUltColDoc* pDoc);
@@ -33,9 +33,9 @@ public:
 
    virtual LPCTSTR GetName() const override;
    virtual Uint16 GetMaxLevel() const override;
-   virtual rptChapter* Build(CReportSpecification* pRptSpec,Uint16 level) const override;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const override;
    virtual bool Select() const override { return true; }
-   virtual CChapterBuilder* Clone() const override;
+   virtual std::unique_ptr<WBFL::Reporting::ChapterBuilder> Clone() const override;
 
 private:
    CUltColDoc* m_pDoc;
@@ -44,5 +44,5 @@ private:
    // Delete them in the destructor
    std::vector<std::_tstring> m_TemporaryFiles;
 
-   rptRcImage* CreateImage(IPoint2dCollection* unfactored,IPoint2dCollection* factored) const;
+   rptRcImage* CreateImage(const std::vector<std::pair<Float64, Float64>>& unfactored,const std::vector<std::pair<Float64, Float64>>& factored) const;
 };

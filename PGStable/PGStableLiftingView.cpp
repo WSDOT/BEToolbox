@@ -59,17 +59,17 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    DDX_Control(pDX, IDC_FC, m_ctrlFc);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    WBFL::Stability::LiftingStabilityProblem problem = pDoc->GetLiftingStabilityProblem();
 
-   WBFL::Stability::WindType windLoadType;
+   WBFL::Stability::WindLoadType windLoadType;
    Float64 windLoad;
    problem.GetWindLoading(&windLoadType,&windLoad);
    DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
-   if ( windLoadType == WBFL::Stability::Speed )
+   if ( windLoadType == WBFL::Stability::WindLoadType::Speed )
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
    }
@@ -161,7 +161,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
 
    DDX_UnitValueAndTag(pDX,IDC_FR_COEFFICIENT,IDC_FR_COEFFICIENT_UNIT,frCoefficient,pDispUnits->SqrtPressure);
    CString tag;
-   if ( lrfdVersionMgr::GetVersion() < lrfdVersionMgr::SeventhEditionWith2016Interims )
+   if ( WBFL::LRFD::BDSManager::GetEdition() < WBFL::LRFD::BDSManager::Edition::SeventhEditionWith2016Interims )
    {
       tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("sqrt(f'ci (MPa))") : _T("sqrt(f'ci (KSI))");
    }
@@ -417,7 +417,7 @@ void CPGStableLiftingView::OnEditFpe()
       GetMaxFpe(&Fs,&Fh,&Ft);
       CDataExchange dx(this,FALSE);
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
       DDX_UnitValueAndTag(&dx,IDC_FPE_STRAIGHT,IDC_FPE_STRAIGHT_UNIT,Fs,pDispUnits->GeneralForce);
       DDX_UnitValueAndTag(&dx,IDC_FPE_HARPED,IDC_FPE_HARPED_UNIT,Fh,pDispUnits->GeneralForce);
       DDX_UnitValueAndTag(&dx,IDC_FPE_TEMP,IDC_FPE_TEMP_UNIT,Ft,pDispUnits->GeneralForce);
@@ -431,20 +431,19 @@ void CPGStableLiftingView::OnInitialUpdate()
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
    pWnd->ShowWindow(SW_HIDE);
 
-   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(_T("Lifting"));
-   CReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("Lifting"));
+   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
-   std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
    m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
 
-   std::shared_ptr<CReportSpecificationBuilder> nullSpecBuilder;
-   m_pBrowser = pDoc->m_RptMgr.CreateReportBrowser(GetSafeHwnd(),m_pRptSpec,nullSpecBuilder);
+   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::Speed);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::Pressure);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::WindLoadType::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::WindLoadType::Pressure);
 
    CPGStableFormView::OnInitialUpdate();
 
@@ -462,7 +461,7 @@ void CPGStableLiftingView::RefreshReport()
 
    // refresh the report
    m_pRptSpec = m_pBrowser->GetReportSpecification();
-   std::shared_ptr<CReportBuilder> pBuilder = pDoc->m_RptMgr.GetReportBuilder( m_pRptSpec->GetReportName() );
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pBuilder = pDoc->GetReportManager()->GetReportBuilder( m_pRptSpec->GetReportName() );
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 
@@ -544,6 +543,11 @@ void CPGStableLiftingView::OnCmenuSelected(UINT id)
   case CCS_RB_SELECT_ALL:
      m_pBrowser->SelectAll();
      break;
+
+  case CCS_RB_COPY:
+     m_pBrowser->Copy();
+  break;
+
   case CCS_RB_PRINT:
      m_pBrowser->Print(true);
      break;
@@ -616,11 +620,11 @@ void CPGStableLiftingView::OnWindTypeChanged()
 {
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    int curSel = pcbWindType->GetCurSel();
-   WBFL::Stability::WindType windType = (WBFL::Stability::WindType)pcbWindType->GetItemData(curSel);
+   WBFL::Stability::WindLoadType windType = (WBFL::Stability::WindLoadType)pcbWindType->GetItemData(curSel);
    CDataExchange dx(this,false);
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   if ( windType == WBFL::Stability::Speed )
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   if ( windType == WBFL::Stability::WindLoadType::Speed )
    {
       DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
    }

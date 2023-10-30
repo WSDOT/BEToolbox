@@ -31,7 +31,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-Float64 GetOffset(CString strOffset,const unitmgtLengthData& displayUnit)
+Float64 GetOffset(CString strOffset,const WBFL::Units::LengthData& displayUnit)
 {
    strOffset.MakeUpper();
    strOffset.Trim();
@@ -39,11 +39,11 @@ Float64 GetOffset(CString strOffset,const unitmgtLengthData& displayUnit)
    Float64 sign = (cDir == 'L' ? -1 : 1);
    Float64 value = _tstof(strOffset);
    value *= sign;
-   value = ::ConvertToSysUnits(value,displayUnit.UnitOfMeasure);
+   value = WBFL::Units::ConvertToSysUnits(value,displayUnit.UnitOfMeasure);
    return value;
 }
 
-CString GetOffset(Float64 value,const unitmgtLengthData& displayUnit)
+CString GetOffset(Float64 value,const WBFL::Units::LengthData& displayUnit)
 {
    CString strOffset = FormatOffset(value,displayUnit.UnitOfMeasure,false);
    return strOffset;

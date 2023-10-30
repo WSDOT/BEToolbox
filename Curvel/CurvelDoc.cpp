@@ -48,7 +48,7 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CCurvelDoc, CBEToolboxDoc)
 
-CCurvelDoc::CCurvelDoc()
+CCurvelDoc::CCurvelDoc() : CBEToolboxDoc()
 {
    // The reporting sub-system doesn't use the WBFLUnitServer implementation. It uses the old regular C++
    // units sytem. That system is in kms units, so we will create a unit server here also in the kms system
@@ -57,32 +57,30 @@ CCurvelDoc::CCurvelDoc()
    // CurvelXML instance document would work throughout this program because Curvel works exclusively in
    // consistent units.
    m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
-   m_DocUnitServer->SetBaseUnits(CComBSTR(unitSysUnitsMgr::GetMassUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetLengthUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetTimeUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetTemperatureUnit().UnitTag().c_str()),
-                            CComBSTR(unitSysUnitsMgr::GetAngleUnit().UnitTag().c_str()));  
+   m_DocUnitServer->SetSystemUnits(CComBSTR(WBFL::Units::System::GetMassUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetLengthUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetTimeUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetTemperatureUnit().UnitTag().c_str()),
+                            CComBSTR(WBFL::Units::System::GetAngleUnit().UnitTag().c_str()));  
    m_DocUnitServer->QueryInterface(&m_DocConvert);
 
    // Setup the reporting mechanism
-   std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder( std::make_shared<CCurvelReportSpecificationBuilder>() );
+   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder( std::make_shared<CCurvelReportSpecificationBuilder>() );
    m_pRptSpecBuilder = pRptSpecBuilder;
 
-   std::shared_ptr<CReportBuilder> pRptBuilder(std::make_shared<CReportBuilder>(_T("Curvel")));
-   
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Curvel")));
    pRptBuilder->SetReportSpecificationBuilder(pRptSpecBuilder);
+   GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CCurvelTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CCurvelTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CCurvelChapterBuilder>(this) );
+   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CCurvelChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
-   m_RptMgr.AddReportBuilder(pRptBuilder);
-
-   CReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
    std::shared_ptr<CCurvelReportSpecification> pCurvelRptSpec(std::make_shared<CCurvelReportSpecification>(rptDesc.GetReportName()) );
-   std::shared_ptr<CReportSpecification> pRptSpec = std::dynamic_pointer_cast<CReportSpecification,CCurvelReportSpecification>(pCurvelRptSpec);
+   std::shared_ptr<WBFL::Reporting::ReportSpecification> pRptSpec = std::dynamic_pointer_cast<WBFL::Reporting::ReportSpecification,CCurvelReportSpecification>(pCurvelRptSpec);
    rptDesc.ConfigureReportSpecification(pRptSpec);
 
    m_pDefaultRptSpec = pCurvelRptSpec;
@@ -178,17 +176,12 @@ void CCurvelDoc::OnOldFormat(LPCTSTR lpszPathName)
    AfxMessageBox(_T("Error: Invalid file format.\n\nThis is not a Curvel file or it is in a legacy format that is not supported"),MB_OK | MB_ICONEXCLAMATION);
 }
 
-CReportBuilderManager* CCurvelDoc::GetReportBuilderManager()
-{
-   return &m_RptMgr;
-}
-
-std::shared_ptr<CReportSpecificationBuilder> CCurvelDoc::GetReportSpecificationBuilder()
+const std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder>& CCurvelDoc::GetReportSpecificationBuilder() const
 {
    return m_pRptSpecBuilder;
 }
 
-std::shared_ptr<CReportSpecification> CCurvelDoc::GetDefaultReportSpecification()
+const std::shared_ptr<WBFL::Reporting::ReportSpecification>& CCurvelDoc::GetDefaultReportSpecification() const
 {
    return m_pDefaultRptSpec;
 }

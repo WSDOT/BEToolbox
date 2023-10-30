@@ -77,8 +77,8 @@ PRISMATICSTRANDLAYOUT   METAFILE                "res\\PrismaticStrandLayout.emf"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 7,0,5,0
- PRODUCTVERSION 7,0,5,0
+ FILEVERSION 8,0,0,4
+ PRODUCTVERSION 8,0,0,4
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -96,12 +96,12 @@ BEGIN
             VALUE "Comments", "A member of the Alternate Route Project"
             VALUE "CompanyName", "Washington State Department of Transportation"
             VALUE "FileDescription", "WSDOT BEToolbox"
-            VALUE "FileVersion", "7.0.5.0"
+            VALUE "FileVersion", "8.0.0.4"
             VALUE "InternalName", "BEToolbox.dll"
             VALUE "LegalCopyright", "Copyright © 1999-2023, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
-            VALUE "ProductVersion", "7.0.5.0"
+            VALUE "ProductVersion", "8.0.0.4"
         END
     END
     BLOCK "VarFileInfo"
@@ -143,6 +143,8 @@ IDR_CURVELTOOL          REGISTRY                ".\\Curvel\\CurvelTool.rgs"
 IDR_PGSTABLETOOL        REGISTRY                ".\\PGStable\\PGStableTool.rgs"
 
 IDR_SPECTRATOOL         REGISTRY                ".\\Spectra\\SpectraTool.rgs"
+
+IDR_BEARINGTOOL         REGISTRY                ".\\Bearing\\BearingTool.rgs"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -254,6 +256,79 @@ BEGIN
     LTEXT           "Static",IDC_DESCRIPTION,532,37,89,8
     DEFPUSHBUTTON   "Update",IDC_UPDATE,645,7,50,14
     PUSHBUTTON      "Export",IDC_EXPORT,645,25,50,14
+END
+
+IDD_BEARING DIALOGEX 0, 0, 737, 151
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    GROUPBOX        "Geometric Properties",IDC_STATIC,25,5,155,47
+    LTEXT           "Length:",IDC_LENGTH,83,16,25,8
+    EDITTEXT        IDC_BLENGTH,111,16,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_BLENGTH_UNIT,157,18,14,8
+    LTEXT           "Width:",IDC_WIDTH,83,34,22,8
+    EDITTEXT        IDC_BWIDTH,111,34,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_BWIDTH_UNIT,157,36,14,8
+    GROUPBOX        "Layer Properties",IDC_STATIC,25,53,155,88
+    LTEXT           "Cover Thickness:",IDC_WIDTH2,31,63,55,8
+    EDITTEXT        IDC_COVER,111,60,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_COVER_UNIT,157,63,14,8
+    LTEXT           "Intermediate Elastomer \n Layer Thickness:",IDC_LAYERx,31,78,78,18
+    EDITTEXT        IDC_LAYER,111,78,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_LAYER_UNIT,157,81,14,8
+    LTEXT           "Steel Shim Thickness:",IDC_SHIMX,31,99,78,18
+    EDITTEXT        IDC_SHIM,111,99,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_SHIM_UNIT,157,102,14,8
+    LTEXT           "Number of \nIntermediate \nElastomer Layers:",IDC_SHIMX2,31,112,66,26
+    EDITTEXT        IDC_N_LAYERS,111,120,40,14,ES_AUTOHSCROLL
+    GROUPBOX        "Design Properties",IDC_DESIGN_PROP_A2,228,5,146,89
+    LTEXT           "Fy:",IDC_LENGTH2,233,17,11,8
+    EDITTEXT        IDC_YIELD,278,17,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_YIELD_UNIT,322,20,18,10
+    LTEXT           "Fth:",IDC_LENGTH3,233,38,13,8
+    EDITTEXT        IDC_FATIGUE,278,36,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_FATIGUE_UNIT,322,38,22,10
+    LTEXT           "Min. Shear \n Modulus:",IDC_LENGTH4,233,57,40,24
+    EDITTEXT        IDC_SHEAR_MOD_MIN,278,55,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_SHEAR_MOD_MIN_UNIT,322,56,25,12
+    LTEXT           "Max. Shear \n Modulus:",IDC_GMAX_TEXT2,233,73,40,18
+    EDITTEXT        IDC_GMAX_WINDOW,278,74,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_SHEAR_MOD_MAX_UNIT,322,76,20,12
+    GROUPBOX        "Applied Deflections",IDC_STATIC,423,5,137,72
+    LTEXT           "Static Rotation:",IDC_STATIC_ROT_TEXT,428,24,56,8
+    LTEXT           "X Rotation:",IDC_X_ROT_TEXT,428,24,36,8
+    EDITTEXT        IDC_ROT_STATIC,490,23,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_X_ROT_WINDOW,491,23,40,14,ES_AUTOHSCROLL
+    LTEXT           "rad",IDC_LENGTH5,536,24,11,8
+    LTEXT           "Cyclic Rotation:",IDC_CYCLIC_ROT_TEXT,428,42,50,8
+    LTEXT           "Y Rotation:",IDC_Y_ROT_TEXT,428,42,37,8
+    EDITTEXT        IDC_ROT_CYCLIC,490,41,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ROT_Y,491,41,40,14,ES_AUTOHSCROLL
+    LTEXT           "rad",IDC_LENGTH12,537,42,11,8
+    LTEXT           "Shear \nDeformation:",IDC_LENGTH10,428,54,42,16
+    EDITTEXT        IDC_SHEAR_DEF,491,59,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_SHEAR_DEF_UNIT,536,61,17,10
+    GROUPBOX        "Fixed X Translation",IDC_FIXED_X,420,83,70,47
+    CONTROL         "Yes",IDC_FIXED_X_YES,"Button",BS_AUTORADIOBUTTON | WS_GROUP,429,94,27,10
+    CONTROL         "No",IDC_FIXED_X_NO,"Button",BS_AUTORADIOBUTTON,429,112,25,10
+    GROUPBOX        "Fixed Y Translation",IDC_FIXED_Y,496,83,70,47
+    CONTROL         "Yes",IDC_FIXED_Y_YES,"Button",BS_AUTORADIOBUTTON | WS_GROUP,503,94,27,10
+    CONTROL         "No",IDC_FIXED_Y_NO,"Button",BS_AUTORADIOBUTTON,503,112,25,10
+    GROUPBOX        "Applied Loads",IDC_STATIC,599,5,122,52
+    LTEXT           "Dead Load:",IDC_ROTxxx,602,19,37,8
+    EDITTEXT        IDC_DL,655,18,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_DL_UNIT,698,19,17,10
+    LTEXT           "Live Load:",IDC_ROTxxx2,602,37,33,8
+    EDITTEXT        IDC_LL,655,36,40,14,ES_AUTOHSCROLL
+    LTEXT           "Unit",IDC_LL_UNIT,698,37,17,10
+    GROUPBOX        "Analysis Method",IDC_STATIC,599,65,65,48
+    CONTROL         "Method A",IDC_METHOD_A,"Button",BS_AUTORADIOBUTTON | WS_GROUP,606,77,46,10
+    CONTROL         "Method B",IDC_METHOD_B,"Button",BS_AUTORADIOBUTTON,606,95,45,10
+    GROUPBOX        "Unit System",IDC_STATIC,671,65,50,48
+    CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON | WS_GROUP,678,78,25,10
+    CONTROL         "SI",IDC_SI,"Button",BS_AUTORADIOBUTTON,678,96,23,10
+    DEFPUSHBUTTON   "Update",IDC_UPDATE,599,122,50,14
+    GROUPBOX        "Design Properties",IDC_DESIGN_PROP_B,228,5,146,70
 END
 
 IDD_CURVEL_WIZ_1 DIALOGEX 0, 0, 316, 182
@@ -395,6 +470,10 @@ BEGIN
     LTEXT           "fr = ",IDC_STATIC,21,134,13,8
     EDITTEXT        IDC_FR_COEFFICIENT,39,133,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_FR_COEFFICIENT_UNIT,83,134,81,8
+    LTEXT           "Averaging Factor, K1",IDC_STATIC,117,100,69,8
+    EDITTEXT        IDC_K1,189,97,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Bounding Factor, K2",IDC_STATIC,117,116,66,8
+    EDITTEXT        IDC_K2,189,114,40,14,ES_RIGHT | ES_AUTOHSCROLL
     GROUPBOX        "Analysis Paramters",IDC_STATIC,7,162,249,198
     LTEXT           "Lift Point",IDC_STATIC,16,176,29,8
     EDITTEXT        IDC_LIFT,46,173,40,14,ES_RIGHT | ES_AUTOHSCROLL
@@ -1016,6 +1095,38 @@ BEGIN
     END
 END
 
+IDR_BEARING MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "AutoSave...",                 EAFID_OPTIONS_AUTOSAVE
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM "Help Source",                 EAFID_HELP_SOURCE
+        MENUITEM SEPARATOR
+        MENUITEM "&About BridgeLink...",        ID_APP_ABOUT
+        MENUITEM "About &BEToolbox...",         ID_HELP_ABOUTBETOOLBOX
+    END
+END
+
 IDR_GENCOMP MENU
 BEGIN
     POPUP "&File"
@@ -1230,6 +1341,14 @@ BEGIN
         BOTTOMMARGIN, 47
     END
 
+    IDD_BEARING, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 727
+        TOPMARGIN, 5
+        BOTTOMMARGIN, 141
+    END
+
     IDD_CURVEL_WIZ_1, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1341,6 +1460,8 @@ IDI_WSDOT               ICON                    "res\\WSDOT.ico"
 
 IDR_SPECTRA             ICON                    "res\\Spectra.ico"
 
+IDR_BEARING             ICON                    "res\\Bearing.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1362,6 +1483,8 @@ IDB_CURVEL              BITMAP                  "res\\Curvel.bmp"
 IDB_GENCOMP             BITMAP                  "res\\GenComp.bmp"
 
 IDB_SPECTRA             BITMAP                  "res\\Spectra.bmp"
+
+IDB_BEARING             BITMAP                  "res\\Bearing.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1438,6 +1561,11 @@ BEGIN
     0
 END
 
+IDD_BEARING AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1456,6 +1584,7 @@ END
 STRINGTABLE
 BEGIN
     IDR_SPECTRA             "Spectra\nSpectra\nBEToolbox\nSpectra (*.Spectra)\n.Spectra\nSpectra.Document\nSpectra Document"
+    IDR_BEARING             "BrgCalc\nBrgCalc\nBEToolbox\nBrgCalc (*.brgcalc)\n.BrgCalc\nBrgCalc.Document\nBrgCalc Document"
 END
 
 STRINGTABLE

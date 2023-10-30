@@ -23,8 +23,7 @@
 #include "stdafx.h"
 #include "SpectraChapterBuilder.h"
 #include <Reporter\Reporter.h>
-
-#include <GraphicsLib\GraphicsLib.h>
+#include <Graphing/GraphXY.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -57,7 +56,7 @@ Uint16 CSpectraChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CSpectraChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    Float64 lat,lng;
    m_pDoc->GetLocation(&lat,&lng);
@@ -65,12 +64,12 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    SpecificationType specType = m_pDoc->GetSpecification();
 
    rptRcScalar scalar;
-   scalar.SetFormat(sysNumericFormatTool::Fixed);
+   scalar.SetFormat(WBFL::System::NumericFormatTool::Format::Fixed);
    scalar.SetWidth(6);
    scalar.SetPrecision(3);
 
    rptRcScalar table_value;
-   table_value.SetFormat(sysNumericFormatTool::Fixed);
+   table_value.SetFormat(WBFL::System::NumericFormatTool::Format::Fixed);
    table_value.SetWidth(4);
    table_value.SetPrecision(1);
 
@@ -267,7 +266,7 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
       SiteClass thisSiteClass = (SiteClass)i;
 
       col = 0;
-      const mathPwLinearFunction2dUsingPoints* pZeroPeriodSiteFactors = m_pDoc->GetZeroPeriodSiteFactors(specType, thisSiteClass);
+      const auto* pZeroPeriodSiteFactors = m_pDoc->GetZeroPeriodSiteFactors(specType, thisSiteClass);
       (*pZeroPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
       (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.1));
       (*pZeroPeriodTable)(row, col++) << table_value.SetValue(pZeroPeriodSiteFactors->Evaluate(0.2));
@@ -280,7 +279,7 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
       }
 
       col = 0;
-      const mathPwLinearFunction2dUsingPoints* pShortPeriodSiteFactors = m_pDoc->GetShortPeriodSiteFactors(specType, thisSiteClass);
+      const auto* pShortPeriodSiteFactors = m_pDoc->GetShortPeriodSiteFactors(specType, thisSiteClass);
       (*pShortPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
       (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.25));
       (*pShortPeriodTable)(row, col++) << table_value.SetValue(pShortPeriodSiteFactors->Evaluate(0.50));
@@ -293,7 +292,7 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
       }
 
       col = 0;
-      const mathPwLinearFunction2dUsingPoints* pLongPeriodSiteFactors = m_pDoc->GetLongPeriodSiteFactors(specType, thisSiteClass);
+      const auto* pLongPeriodSiteFactors = m_pDoc->GetLongPeriodSiteFactors(specType, thisSiteClass);
       (*pLongPeriodTable)(row, col++) << strSiteClass[thisSiteClass];
       (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.1));
       (*pLongPeriodTable)(row, col++) << table_value.SetValue(pLongPeriodSiteFactors->Evaluate(0.2));
@@ -435,9 +434,9 @@ rptChapter* CSpectraChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    return pChapter;
 }
 
-CChapterBuilder* CSpectraChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CSpectraChapterBuilder::Clone() const
 {
-   return new CSpectraChapterBuilder(m_pDoc);
+   return std::make_unique<CSpectraChapterBuilder>(m_pDoc);
 }
 
 rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Float64,Float64>>& values) const
@@ -455,10 +454,10 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    pDC->SelectObject(pOldBrush);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   TimeTool   TimeTool(pDispUnits->Time3);
-   ScalarTool SaTool(pDispUnits->Scalar);
-   grGraphXY graph(TimeTool,SaTool);
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   WBFL::Units::TimeTool   TimeTool(pDispUnits->Time3);
+   WBFL::Units::ScalarTool SaTool(pDispUnits->Scalar);
+   WBFL::Graphing::GraphXY graph(&TimeTool,&SaTool);
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
@@ -470,7 +469,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    CString strPeriod(_T("Period, T (sec)"));
    graph.SetXAxisTitle(strPeriod.LockBuffer());
    strPeriod.UnlockBuffer();
-   graph.SetXAxisNiceRange(true);
+   graph.XAxisNiceRange(true);
    graph.SetXAxisNumberOfMinorTics(0);
    graph.SetXAxisNumberOfMajorTics(11);
 
@@ -479,7 +478,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    strCsm.Format(_T("Response Spectral Acceleration, Sa (g)"));
    graph.SetYAxisTitle(strCsm.LockBuffer());
    strCsm.UnlockBuffer();
-   graph.SetYAxisNiceRange(true);
+   graph.YAxisNiceRange(true);
 
    IndexType series = graph.CreateDataSeries(_T(""),PS_SOLID,1,BLUE);
 
@@ -489,7 +488,7 @@ rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Floa
    {
       Float64 t = iter->first;
       Float64 csm = iter->second;
-      graph.AddPoint(series, GraphPoint(t,csm));
+      graph.AddPoint(series, WBFL::Graphing::Point(t,csm));
    }
 
    graph.UpdateGraphMetrics(pDC->GetSafeHdc());

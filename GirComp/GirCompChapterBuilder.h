@@ -25,7 +25,7 @@
 #include "GirCompDoc.h"
 
 class CGirCompChapterBuilder :
-   public CChapterBuilder
+   public WBFL::Reporting::ChapterBuilder
 {
 public:
    CGirCompChapterBuilder(CGirCompDoc* pDoc);
@@ -33,9 +33,9 @@ public:
 
    virtual LPCTSTR GetName() const override;
    virtual Uint16 GetMaxLevel() const override;
-   virtual rptChapter* Build(CReportSpecification* pRptSpec,Uint16 level) const override;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const override;
    virtual bool Select() const override { return true; }
-   virtual CChapterBuilder* Clone() const override;
+   virtual std::unique_ptr<WBFL::Reporting::ChapterBuilder> Clone() const override;
 
 private:
    CGirCompDoc* m_pDoc;
@@ -45,9 +45,9 @@ private:
    void ReportBuiltUpSectionProperties(rptChapter* pChapter,IndexType idx,const GIRCOMPDIMENSIONS& dimensions) const;
    void ReportCompositeSectionProperties(rptChapter* pChapter,IndexType idx,const GIRCOMPDIMENSIONS& dimensions,int n) const;
 
-   mutable unitmgtIndirectMeasureDataT<unitLength>  m_Length;
-   mutable unitmgtIndirectMeasureDataT<unitLength2> m_Area;
-   mutable unitmgtIndirectMeasureDataT<unitLength3> m_SectionModulus;
-   mutable unitmgtIndirectMeasureDataT<unitLength4> m_MomentOfInertia;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length>  m_Length;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length2> m_Area;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length3> m_SectionModulus;
+   mutable WBFL::Units::IndirectMeasureDataT<WBFL::Units::Length4> m_MomentOfInertia;
 
 };

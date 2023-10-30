@@ -34,7 +34,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 CCurvelReportSpecificationBuilder::CCurvelReportSpecificationBuilder() :
-CReportSpecificationBuilder()
+WBFL::Reporting::ReportSpecificationBuilder()
 {
 }
 
@@ -42,7 +42,7 @@ CCurvelReportSpecificationBuilder::~CCurvelReportSpecificationBuilder(void)
 {
 }
 
-std::shared_ptr<CReportSpecification> CCurvelReportSpecificationBuilder::CreateReportSpec(const CReportDescription& rptDesc,std::shared_ptr<CReportSpecification>& pRptSpec)
+std::shared_ptr<WBFL::Reporting::ReportSpecification> CCurvelReportSpecificationBuilder::CreateReportSpec(const WBFL::Reporting::ReportDescription& rptDesc,std::shared_ptr<WBFL::Reporting::ReportSpecification> pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -54,7 +54,7 @@ std::shared_ptr<CReportSpecification> CCurvelReportSpecificationBuilder::CreateR
    if ( wiz.DoModal() == ID_WIZFINISH )
    {
       std::shared_ptr<CCurvelReportSpecification> pSpec(std::make_shared<CCurvelReportSpecification>(rptDesc.GetReportName()));
-      std::shared_ptr<CReportSpecification> pRptSpec(pSpec);
+      std::shared_ptr<WBFL::Reporting::ReportSpecification> pRptSpec(pSpec);
 
       wiz.UpdateReportSpecification(pSpec);
 

@@ -170,7 +170,7 @@ void CPGStableStressPointGrid::UpdateColumnHeaders()
    GetParam()->EnableUndo(FALSE);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 1;
@@ -267,7 +267,7 @@ void CPGStableStressPointGrid::OnUnitsChanged()
 void CPGStableStressPointGrid::SetStressPoint(ROWCOL row, Float64 x, Float64 y)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 
@@ -307,9 +307,9 @@ Float64 CPGStableStressPointGrid::GetCellValue(ROWCOL nRow, ROWCOL nCol)
    }
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    Float64 value;
-   sysTokenizer::ParseDouble(s, &value);
-   return ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(s, &value);
+   return WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 }

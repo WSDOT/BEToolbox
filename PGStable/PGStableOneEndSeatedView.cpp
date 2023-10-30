@@ -57,7 +57,7 @@ void CPGStableOneEndSeatedView::DoDataExchange(CDataExchange* pDX)
    DDX_Control(pDX, IDC_FC, m_ctrlFc);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
@@ -71,11 +71,11 @@ void CPGStableOneEndSeatedView::DoDataExchange(CDataExchange* pDX)
 
    WBFL::Stability::OneEndSeatedStabilityProblem problem = pDoc->GetOneEndSeatedStabilityProblem();
 
-   WBFL::Stability::WindType windLoadType;
+   WBFL::Stability::WindLoadType windLoadType;
    Float64 windLoad;
    problem.GetWindLoading(&windLoadType,&windLoad);
    DDX_CBEnum(pDX,IDC_WIND_TYPE,windLoadType);
-   if ( windLoadType == WBFL::Stability::Speed )
+   if ( windLoadType == WBFL::Stability::WindLoadType::Speed )
    {
       DDX_UnitValueAndTag(pDX,IDC_WIND_PRESSURE,IDC_WIND_PRESSURE_UNIT,windLoad,pDispUnits->Velocity);
    }
@@ -121,7 +121,7 @@ void CPGStableOneEndSeatedView::DoDataExchange(CDataExchange* pDX)
 
    DDX_UnitValueAndTag(pDX,IDC_FR_COEFFICIENT,IDC_FR_COEFFICIENT_UNIT,frCoefficient,pDispUnits->SqrtPressure);
    CString tag;
-   if ( lrfdVersionMgr::GetVersion() < lrfdVersionMgr::SeventhEditionWith2016Interims )
+   if ( WBFL::LRFD::BDSManager::GetEdition() < WBFL::LRFD::BDSManager::Edition::SeventhEditionWith2016Interims )
    {
       tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("sqrt(f'c (MPa))") : _T("sqrt(f'c (KSI))");
    }
@@ -346,6 +346,11 @@ void CPGStableOneEndSeatedView::OnCmenuSelected(UINT id)
   case CCS_RB_SELECT_ALL:
      m_pBrowser->SelectAll();
      break;
+
+  case CCS_RB_COPY:
+     m_pBrowser->Copy();
+  break;
+
   case CCS_RB_PRINT:
      m_pBrowser->Print(true);
      break;
@@ -521,7 +526,7 @@ void CPGStableOneEndSeatedView::OnEditFpe()
       GetMaxFpe(&Fs,&Fh,&Ft);
       CDataExchange dx(this,FALSE);
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
       DDX_UnitValueAndTag(&dx,IDC_FPE_STRAIGHT,IDC_FPE_STRAIGHT_UNIT,Fs,pDispUnits->GeneralForce);
       DDX_UnitValueAndTag(&dx,IDC_FPE_HARPED,IDC_FPE_HARPED_UNIT,Fh,pDispUnits->GeneralForce);
       DDX_UnitValueAndTag(&dx,IDC_FPE_TEMP,IDC_FPE_TEMP_UNIT,Ft,pDispUnits->GeneralForce);
@@ -533,7 +538,7 @@ void CPGStableOneEndSeatedView::OnInitialUpdate()
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    const HaulTruckLibrary* pLib = pDoc->GetHaulTruckLibrary();
-   libKeyListType keyList;
+   WBFL::Library::KeyListType keyList;
    pLib->KeyList(keyList);
    CComboBox* pcbHaulTruck = (CComboBox*)GetDlgItem(IDC_HAUL_TRUCK);
    pcbHaulTruck->AddString(gs_strHaulTruck);
@@ -545,19 +550,19 @@ void CPGStableOneEndSeatedView::OnInitialUpdate()
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
    pWnd->ShowWindow(SW_HIDE);
 
-   std::shared_ptr<CReportBuilder> pRptBuilder = pDoc->m_RptMgr.GetReportBuilder(_T("OneEndSeated"));
-   CReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("OneEndSeated"));
+   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
-   std::shared_ptr<CReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
    m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
 
-   m_pBrowser = pDoc->m_RptMgr.CreateReportBrowser(GetSafeHwnd(),m_pRptSpec, std::shared_ptr<CReportSpecificationBuilder>());
+   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 
    m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::Speed);
-   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::Pressure);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::WindLoadType::Speed);
+   pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::WindLoadType::Pressure);
 
    CPGStableFormView::OnInitialUpdate();
 
@@ -604,7 +609,7 @@ void CPGStableOneEndSeatedView::RefreshReport()
 
    // refresh the report
    m_pRptSpec = m_pBrowser->GetReportSpecification();
-   std::shared_ptr<CReportBuilder> pBuilder = pDoc->m_RptMgr.GetReportBuilder( m_pRptSpec->GetReportName() );
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pBuilder = pDoc->GetReportManager()->GetReportBuilder( m_pRptSpec->GetReportName() );
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 
@@ -679,11 +684,11 @@ void CPGStableOneEndSeatedView::OnWindTypeChanged()
 {
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    int curSel = pcbWindType->GetCurSel();
-   WBFL::Stability::WindType windType = (WBFL::Stability::WindType)pcbWindType->GetItemData(curSel);
+   WBFL::Stability::WindLoadType windType = (WBFL::Stability::WindLoadType)pcbWindType->GetItemData(curSel);
    CDataExchange dx(this,false);
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
-   if ( windType == WBFL::Stability::Speed )
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   if ( windType == WBFL::Stability::WindLoadType::Speed )
    {
       DDX_Tag(&dx,IDC_WIND_PRESSURE_UNIT,pDispUnits->Velocity);
    }
@@ -721,7 +726,7 @@ void CPGStableOneEndSeatedView::OnHaulTruckChanged()
 
 
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
       CDataExchange dx(this,FALSE);
       DDX_UnitValueAndTag(&dx,IDC_HGB,IDC_HGB_UNIT,Hgb,pDispUnits->ComponentDim);
       DDX_UnitValueAndTag(&dx,IDC_HRC,IDC_HRC_UNIT,Hrc,pDispUnits->ComponentDim);
@@ -750,7 +755,7 @@ void CPGStableOneEndSeatedView::OnCopy()
    problem.SetConcrete(hauling_problem.GetConcrete());
 
    // copy wind loading
-   WBFL::Stability::WindType windType;
+   WBFL::Stability::WindLoadType windType;
    Float64 windLoad;
    hauling_problem.GetWindLoading(&windType, &windLoad);
    problem.SetWindLoading(windType, windLoad);
@@ -802,13 +807,13 @@ void CPGStableOneEndSeatedView::OnCopy()
    const auto* pHaulingTensionStressLimit = dynamic_cast<const WBFL::Stability::CCHaulingTensionStressLimit*>(hauling_criteria.TensionStressLimit.get());
    auto* pOneEndSeatedTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(criteria.TensionStressLimit.get());
    pOneEndSeatedTensionStressLimit->Lambda = pHaulingTensionStressLimit->Lambda;
-   pOneEndSeatedTensionStressLimit->TensionCoefficient = pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->bMaxTension = pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->MaxTension = pHaulingTensionStressLimit->MaxTension[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->AllowableTension = pHaulingTensionStressLimit->AllowableTension[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->bWithRebarLimit = pHaulingTensionStressLimit->bWithRebarLimit[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::HaulingSlope::CrownSlope];
-   pOneEndSeatedTensionStressLimit->AllowableTensionWithRebar = pHaulingTensionStressLimit->AllowableTensionWithRebar[WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->TensionCoefficient = pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->bMaxTension = pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->MaxTension = pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->AllowableTension = pHaulingTensionStressLimit->AllowableTension[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->bWithRebarLimit = pHaulingTensionStressLimit->bWithRebarLimit[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope];
+   pOneEndSeatedTensionStressLimit->AllowableTensionWithRebar = pHaulingTensionStressLimit->AllowableTensionWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope];
 
    pDoc->SetOneEndSeatedCriteria(criteria);
 

@@ -39,7 +39,7 @@ CCurvelTitlePageBuilder::CCurvelTitlePageBuilder(void)
 }
 
 CCurvelTitlePageBuilder::CCurvelTitlePageBuilder(const CCurvelTitlePageBuilder& other) :
-CTitlePageBuilder(other)
+WBFL::Reporting::TitlePageBuilder(other)
 {
 }
 
@@ -47,7 +47,7 @@ CCurvelTitlePageBuilder::~CCurvelTitlePageBuilder(void)
 {
 }
 
-rptChapter* CCurvelTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>& pRptSpec)
+rptChapter* CCurvelTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -63,7 +63,7 @@ rptChapter* CCurvelTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>
 
    pPara = new rptParagraph(_T("BEToolboxCopyright"));
    *pTitlePage << pPara;
-   *pPara << _T("Copyright ") << symbol(COPYRIGHT) << _T(" ") << sysDate().Year() << _T(", WSDOT, All Rights Reserved") << rptNewLine;
+   *pPara << _T("Copyright ") << symbol(COPYRIGHT) << _T(" ") << WBFL::System::Date().Year() << _T(", WSDOT, All Rights Reserved") << rptNewLine;
 
    pPara = new rptParagraph(_T("BEToolboxReportSubtitle"));
    *pTitlePage << pPara;
@@ -99,7 +99,7 @@ rptChapter* CCurvelTitlePageBuilder::Build(std::shared_ptr<CReportSpecification>
    return pTitlePage;
 }
 
-CTitlePageBuilder* CCurvelTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CCurvelTitlePageBuilder::Clone() const
 {
-   return new CCurvelTitlePageBuilder(*this);
+   return std::make_unique<CCurvelTitlePageBuilder>(*this);
 }

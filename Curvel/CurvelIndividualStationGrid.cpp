@@ -28,6 +28,7 @@
 #include "..\BEToolboxUtilities.h"
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
+#include <CoordGeom/Station.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -43,7 +44,6 @@ static char THIS_FILE[] = __FILE__;
 CCurvelIndividualStationGrid::CCurvelIndividualStationGrid()
 {
 //   RegisterClass();
-   m_objStation.CoCreateInstance(CLSID_Station);
 }
 
 CCurvelIndividualStationGrid::~CCurvelIndividualStationGrid()
@@ -138,27 +138,22 @@ void CCurvelIndividualStationGrid::AddStation()
    InsertStation(station);
 }
 
-void CCurvelIndividualStationGrid::GetStation(ROWCOL row,IndividualStation& station)
+void CCurvelIndividualStationGrid::GetStation(ROWCOL row,IndividualStation& individual_station)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   CString strStation = GetCellValue(row,1);
-   HRESULT hr = m_objStation->FromString(CComBSTR(strStation),umUS);
-   ATLASSERT(SUCCEEDED(hr));
+   std::_tstring strStation(GetCellValue(row, 1));
+   WBFL::COGO::Station station(strStation, WBFL::Units::StationFormats::US);
+   individual_station.Station = station.GetValue();
 
-   Float64 station_value;
-   m_objStation->get_Value(&station_value);
-   station_value = ::ConvertToSysUnits(station_value,pDispUnits->AlignmentLength.UnitOfMeasure);
-   station.Station = station_value;
-
-   station.Offset = GetOffset(GetCellValue(row,2),pDispUnits->AlignmentLength);
+   individual_station.Offset = GetOffset(GetCellValue(row,2),pDispUnits->AlignmentLength);
 }
 
-void CCurvelIndividualStationGrid::InsertStation(const IndividualStation& station)
+void CCurvelIndividualStationGrid::InsertStation(const IndividualStation& individual_station)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -166,15 +161,15 @@ void CCurvelIndividualStationGrid::InsertStation(const IndividualStation& statio
 	InsertRows(nRow, 1);
 
    ROWCOL col = 1;
-   CString strStation = FormatStation(pDispUnits->StationFormat,station.Station);
+   WBFL::COGO::Station station(individual_station.Station);
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(strStation)
+      .SetValue(station.AsString(pDispUnits->StationFormat,false).c_str())
          );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(GetOffset(station.Offset,pDispUnits->AlignmentLength))
+      .SetValue(GetOffset(individual_station.Offset,pDispUnits->AlignmentLength))
          );
 
    ResizeColWidthsToFit(CGXRange().SetCols(0,GetColCount()));
@@ -216,19 +211,21 @@ BOOL CCurvelIndividualStationGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
       // station
       CEAFApp* pApp = EAFGetApp();
 
-      HRESULT hr = m_objStation->FromString( CComBSTR(s), pApp->GetUnitsMode() == eafTypes::umUS ? umUS : umSI);
-      if ( FAILED(hr) )
+      try
+      {
+         std::_tstring strStation(s);
+         WBFL::COGO::Station station(strStation, pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::StationFormats::US : WBFL::Units::StationFormats::SI);
+      }
+      catch (...)
       {
          if ( pApp->GetUnitsMode() == eafTypes::umUS )
-            SetWarningText (_T("Invalid station value. Enter the station in the following format: xx+yy.zz"));
+            SetWarningText(_T("Invalid station value. Enter the station in the following format: xx+yy.zz"));
          else
-            SetWarningText (_T("Invalid station value. Enter the station in the following format: xx+yyy.zz"));
+            SetWarningText(_T("Invalid station value. Enter the station in the following format: xx+yyy.zz"));
          return FALSE;
       }
-      else
-      {
-         return TRUE;
-      }
+
+      return TRUE;
    }
 
 
@@ -244,7 +241,7 @@ BOOL CCurvelIndividualStationGrid::OnEndEditing(ROWCOL nRow,ROWCOL nCol)
 void CCurvelIndividualStationGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 1;

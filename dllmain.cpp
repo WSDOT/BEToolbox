@@ -36,11 +36,7 @@
 #include <WBFLUnitServer.h>
 #include <WBFLGeometry.h>
 #include <WBFLGeometry_i.c>
-#include <WBFLSections.h>
-#include <WBFLSections_i.c>
 #include <EAF\EAFComponentInfo.h>
-#include <WBFLRCCapacity.h>
-#include <WBFLRCCapacity_i.c>
 #include <WBFLCogo.h>
 #include <WBFLCogo_i.c>
 
@@ -107,7 +103,7 @@ BOOL CBEToolboxApp::InitInstance()
    printOnly.SetMediaType(rptRiStyle::Print);
    pStyleLib->AddNamedStyle(_T("BEToolboxPrintOnly"), printOnly);
 
-   sysComCatMgr::CreateCategory(L"PGStable Plugins", CATID_PGStablePlugin);
+   WBFL::System::ComCatMgr::CreateCategory(CComBSTR("PGStable Plugins"), CATID_PGStablePlugin);
 
    return CWinApp::InitInstance();
 }

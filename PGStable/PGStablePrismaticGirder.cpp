@@ -42,12 +42,12 @@ static char THIS_FILE[] = __FILE__;
 void DDX_Girder(CDataExchange* pDX,WBFL::Stability::Girder& girder)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ATLASSERT(girder.GetSectionCount() == 1); // prismatic girders have only one section
    IndexType sectIdx = 0;
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   girder.GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   girder.GetSectionProperties(sectIdx,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 L = girder.GetSectionLength(sectIdx);
 
@@ -99,7 +99,7 @@ void DDX_Girder(CDataExchange* pDX,WBFL::Stability::Girder& girder)
 void DDX_PrismaticGirderStrands(CDataExchange* pDX,CPGStableStrands& strands)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    DDX_CBEnum(pDX,IDC_PS_METHOD,strands.strandMethod);
 
@@ -170,7 +170,7 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_Control(pDX,IDC_GIRDER,m_ctrlGirder);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
@@ -219,7 +219,7 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_DENSITY_WITH_REBAR,IDC_DENSITY_WITH_REBAR_UNIT,densityWithRebar,pDispUnits->Density);
    DDV_UnitValueGreaterThanZero(pDX,IDC_DENSITY_WITH_REBAR,densityWithRebar,pDispUnits->Density);
 
-   matConcrete::Type concrete_type = pDoc->GetConcreteType();
+   auto concrete_type = pDoc->GetConcreteType();
    DDX_RadioEnum(pDX, IDC_NWC, concrete_type);
 
    Float64 K1 = pDoc->GetK1();
@@ -315,7 +315,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    CComboBox* pcbGirders = (CComboBox*)GetDlgItem(IDC_GIRDER_LIST);
    pcbGirders->AddString(gs_strGirder);
    const GirderLibrary* pLib = pDoc->GetGirderLibrary();
-   libKeyListType keyList;
+   WBFL::Library::KeyListType keyList;
    pLib->KeyList(keyList);
    for (const auto& key : keyList)
    {
@@ -330,7 +330,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    const WBFL::Stability::Girder& girder = pDoc->GetGirder(GirderType::Prismatic);
    IndexType sectIdx = 0;
    Float64 Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtf, Wbf;
-   girder.GetSectionProperties(sectIdx, WBFL::Stability::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf);
+   girder.GetSectionProperties(sectIdx, WBFL::Stability::Section::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf);
    Ytop *= -1; //this is in girder section coordinates, convert to Y positive down coordinates
 
    if (pDoc->GetStressPointType() == COMPUTE_STRESS_POINTS)
@@ -339,7 +339,7 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    }
    else
    {
-      girder.GetStressPoints(sectIdx, WBFL::Stability::Start, &m_pntTL, &m_pntTR, &m_pntBL, &m_pntBR);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Section::Start, &m_pntTL, &m_pntTR, &m_pntBL, &m_pntBR);
    }
    m_pntTLCache = m_pntTL;
    m_pntTRCache = m_pntTR;
@@ -457,7 +457,7 @@ std::vector<std::pair<Float64,Float64>> CPGStablePrismaticGirder::GetGirderProfi
 
    IndexType sectIdx = 0;
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-   girder.GetSectionProperties(sectIdx,WBFL::Stability::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
+   girder.GetSectionProperties(sectIdx,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
    Float64 Lg = girder.GetGirderLength();
    vProfile.emplace_back(0,0);
@@ -543,7 +543,7 @@ void CPGStablePrismaticGirder::OnGirderChanged()
       shapeProperties->get_Xleft(&Xleft);
 
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
       CDataExchange dx(this,false);
       DDX_UnitValueAndTag(&dx,IDC_HG,IDC_HG_UNIT, Hg, pDispUnits->ComponentDim);
       DDX_UnitValueAndTag(&dx,IDC_WTF,IDC_WTF_UNIT, Wtf, pDispUnits->ComponentDim);
@@ -583,7 +583,7 @@ void CPGStablePrismaticGirder::UpdateStressPoints()
    {
       Float64 Wtf, Wbf, Ytop, Hg;
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
       CDataExchange dx(this, true);
       DDX_UnitValueAndTag(&dx, IDC_HG, IDC_HG_UNIT, Hg, pDispUnits->ComponentDim);
       DDX_UnitValueAndTag(&dx, IDC_WTF, IDC_WTF_UNIT, Wtf, pDispUnits->ComponentDim);

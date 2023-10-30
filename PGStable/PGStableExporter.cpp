@@ -126,9 +126,9 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
    }
 
    GET_IFACE2(pBroker, IMaterials, pMaterials);
-   if (pMaterials->GetSegmentConcreteType(segmentKey) == pgsTypes::PCI_UHPC)
+   if (::IsUHPC(pMaterials->GetSegmentConcreteType(segmentKey)))
    {
-      AfxMessageBox(_T("Cannot export. PGStable does not support PCI UHPC concrete."));
+      AfxMessageBox(_T("Cannot export. PGStable does not support UHPC concrete."));
       return S_FALSE;
    }
 
@@ -279,15 +279,15 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       Float64 Ytop = pSectProps->GetY(releaseIntervalIdx, poi, pgsTypes::TopGirder);
       Float64 Xleft = pSectProps->GetXleft(releaseIntervalIdx, poi);
 
-      gpPoint2d es = pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight);
+      WBFL::Geometry::Point2d es = pStrandGeom->GetEccentricity(releaseIntervalIdx, poi, pgsTypes::Straight);
       Float64 Xs = Xleft - es.X();
       Float64 Ys = Ytop + es.Y();
 
-      gpPoint2d eh = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped);
+      WBFL::Geometry::Point2d eh = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Harped);
       Float64 Xh = Xleft - eh.X();
       Float64 Yh = Ytop + eh.Y();
 
-      gpPoint2d et = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary);
+      WBFL::Geometry::Point2d et = pStrandGeom->GetEccentricity(releaseIntervalIdx,poi,pgsTypes::Temporary);
       Float64 Xt = Xleft - et.X();
       Float64 Yt = Ytop + et.Y();
 
@@ -295,18 +295,18 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       {
          // if there aren't any temporary strands, Yt is zero. This value doesn't
          // work well in PGStable so make it 2"
-         Yt = ::ConvertToSysUnits(2.0,unitMeasure::Inch);
+         Yt = WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch);
       }
 
-      Float64 Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftingIntervalIdx,pgsTypes::Start);
-      Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start);
-      Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start);
+      Float64 Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, liftingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
+      Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
+      Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
 
       liftingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
 
-      Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start);
-      Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start);
-      Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start);
+      Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
+      Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
+      Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
 
       haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
       oneEndSeatedStrands.m_vFpe.insert(CPGStableFpe(X, Ps, Xs, Ys, TOP, Ph, Xh, Yh, TOP, Pt, Xt, Yt, TOP));

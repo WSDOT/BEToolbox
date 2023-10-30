@@ -159,7 +159,7 @@ void CPGStableGirderSectionGrid::CustomInit()
 void CPGStableGirderSectionGrid::AddGirderSection()
 {
    Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot;
-   gpPoint2d pntTL, pntTR, pntBL, pntBR;
+   WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
    GetGirderSection(GetRowCount(),&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtop,&Wbot,&pntTL,&pntTR,&pntBL,&pntBR);
 
    InsertGirderSection(L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot,pntTL,pntTR,pntBL,pntBR);
@@ -170,92 +170,92 @@ void CPGStableGirderSectionGrid::AddGirderSection()
    pDlg->SetGirderLength(GetGirderLength());
 }
 
-void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot, gpPoint2d* pntTL, gpPoint2d* pntTR, gpPoint2d* pntBL, gpPoint2d* pntBR)
+void CPGStableGirderSectionGrid::GetGirderSection(ROWCOL row,Float64* pL,Float64* pAg,Float64* pIxx,Float64* pIyy,Float64* pIxy,Float64* pXcg,Float64* pYcg,Float64* pHg,Float64* pWtop,Float64* pWbot, WBFL::Stability::Point* pntTL, WBFL::Stability::Point* pntTR, WBFL::Stability::Point* pntBL, WBFL::Stability::Point* pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ROWCOL col = 1;
    CString strValue;
    Float64 value;
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pHg = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pHg = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pWtop = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pWtop = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pWbot = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pWbot = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pAg = ::ConvertToSysUnits(value,pDispUnits->Area.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pAg = WBFL::Units::ConvertToSysUnits(value,pDispUnits->Area.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pIxx = ::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pIxx = WBFL::Units::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pIyy = ::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pIyy = WBFL::Units::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pIxy = ::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pIxy = WBFL::Units::ConvertToSysUnits(value, pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pXcg = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pXcg = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pYcg = -1 * ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pYcg = -1 * WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   *pL = ::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   *pL = WBFL::Units::ConvertToSysUnits(value,pDispUnits->SpanLength.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   pntTL->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   pntTL->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   pntTL->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   pntTL->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   pntTR->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   pntTR->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   pntTR->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   pntTR->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   pntBL->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   pntBL->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   pntBL->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   pntBL->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   pntBR->X() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   pntBR->X() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row, col++);
-   sysTokenizer::ParseDouble(strValue, &value);
-   pntBR->Y() = ::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(strValue, &value);
+   pntBR->Y() = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 }
 
-void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf, const gpPoint2d& pntTL, const gpPoint2d& pntTR, const gpPoint2d& pntBL, const gpPoint2d& pntBR)
+void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,Float64 Ixx,Float64 Iyy,Float64 Ixy,Float64 Xleft,Float64 Ytop,Float64 Hg,Float64 Wtf,Float64 Wbf, const WBFL::Stability::Point& pntTL, const WBFL::Stability::Point& pntTR, const WBFL::Stability::Point& pntBL, const WBFL::Stability::Point& pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -337,10 +337,10 @@ void CPGStableGirderSectionGrid::InsertGirderSection(Float64 Length,Float64 Ag,F
    GetParam()->EnableUndo(TRUE);
 }
 
-void CPGStableGirderSectionGrid::SetStressPoints(ROWCOL row,const gpPoint2d& pntTL, const gpPoint2d& pntTR, const gpPoint2d& pntBL, const gpPoint2d& pntBR)
+void CPGStableGirderSectionGrid::SetStressPoints(ROWCOL row,const WBFL::Stability::Point& pntTL, const WBFL::Stability::Point& pntTR, const WBFL::Stability::Point& pntBL, const WBFL::Stability::Point& pntBR)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 
@@ -418,7 +418,7 @@ BOOL CPGStableGirderSectionGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
  //  }
 
  //  Float64 d;
- //  if ( !sysTokenizer::ParseDouble(s,&d) )
+ //  if ( !WBFL::System::Tokenizer::ParseDouble(s,&d) )
  //  {
  //     SetWarningText(_T("Value must be a number"));
  //     return FALSE;
@@ -445,7 +445,7 @@ void CPGStableGirderSectionGrid::OnModifyCell(ROWCOL nRow,ROWCOL nCol)
 void CPGStableGirderSectionGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    SetMergeCellsMode(gxnMergeEvalOnDisplay); // we want to merge cells
    SetFrozenRows(1/*# frozen rows*/, 1/*# extra header rows*/);
@@ -687,7 +687,7 @@ void CPGStableGirderSectionGrid::FillGrid(const WBFL::Stability::Girder& girder)
    {
       Float64 L = girder.GetSectionLength(sectIdx);
       Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      gpPoint2d pntTL, pntTR, pntBL, pntBR;
+      WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
       for ( int s = 0; s < 2; s++ )
       {
          WBFL::Stability::Section section = (WBFL::Stability::Section)s;
@@ -715,61 +715,61 @@ void CPGStableGirderSectionGrid::GetGirderSections(WBFL::Stability::Girder& gird
    for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
       Float64 L[2],Ag[2],Ixx[2],Iyy[2],Ixy[2],Xleft[2],Ytop[2],Hg[2],Wtf[2],Wbf[2];
-      gpPoint2d pntTL[2], pntTR[2], pntBL[2], pntBR[2];
+      WBFL::Stability::Point pntTL[2], pntTR[2], pntBL[2], pntBR[2];
 
-      GetGirderSection(row+1,&L[WBFL::Stability::Start], 
-                             &Ag[WBFL::Stability::Start], 
-                             &Ixx[WBFL::Stability::Start], 
-                             &Iyy[WBFL::Stability::Start], 
-                             &Ixy[WBFL::Stability::Start],
-                             &Xleft[WBFL::Stability::Start],
-                             &Ytop[WBFL::Stability::Start],
-                             &Hg[WBFL::Stability::Start],
-                             &Wtf[WBFL::Stability::Start], 
-                             &Wbf[WBFL::Stability::Start],
-                             &pntTL[WBFL::Stability::Start],
-                             &pntTR[WBFL::Stability::Start],
-                             &pntBL[WBFL::Stability::Start],
-                             &pntBR[WBFL::Stability::Start]
+      GetGirderSection(row+1,&L[+WBFL::Stability::Section::Start], 
+                             &Ag[+WBFL::Stability::Section::Start], 
+                             &Ixx[+WBFL::Stability::Section::Start], 
+                             &Iyy[+WBFL::Stability::Section::Start], 
+                             &Ixy[+WBFL::Stability::Section::Start],
+                             &Xleft[+WBFL::Stability::Section::Start],
+                             &Ytop[+WBFL::Stability::Section::Start],
+                             &Hg[+WBFL::Stability::Section::Start],
+                             &Wtf[+WBFL::Stability::Section::Start], 
+                             &Wbf[+WBFL::Stability::Section::Start],
+                             &pntTL[+WBFL::Stability::Section::Start],
+                             &pntTR[+WBFL::Stability::Section::Start],
+                             &pntBL[+WBFL::Stability::Section::Start],
+                             &pntBR[+WBFL::Stability::Section::Start]
                              );
 
-      GetGirderSection(row+2,&L[WBFL::Stability::End],
-                             &Ag[WBFL::Stability::End],
-                             &Ixx[WBFL::Stability::End],
-                             &Iyy[WBFL::Stability::End],
-                             &Ixy[WBFL::Stability::End],
-                             &Xleft[WBFL::Stability::End],
-                             &Ytop[WBFL::Stability::End],
-                             &Hg[WBFL::Stability::End],
-                             &Wtf[WBFL::Stability::End],
-                             &Wbf[WBFL::Stability::End],
-                             &pntTL[WBFL::Stability::End],
-                             &pntTR[WBFL::Stability::End],
-                             &pntBL[WBFL::Stability::End],
-                             &pntBR[WBFL::Stability::End]
+      GetGirderSection(row+2,&L[+WBFL::Stability::Section::End],
+                             &Ag[+WBFL::Stability::Section::End],
+                             &Ixx[+WBFL::Stability::Section::End],
+                             &Iyy[+WBFL::Stability::Section::End],
+                             &Ixy[+WBFL::Stability::Section::End],
+                             &Xleft[+WBFL::Stability::Section::End],
+                             &Ytop[+WBFL::Stability::Section::End],
+                             &Hg[+WBFL::Stability::Section::End],
+                             &Wtf[+WBFL::Stability::Section::End],
+                             &Wbf[+WBFL::Stability::Section::End],
+                             &pntTL[+WBFL::Stability::Section::End],
+                             &pntTR[+WBFL::Stability::Section::End],
+                             &pntBL[+WBFL::Stability::Section::End],
+                             &pntBR[+WBFL::Stability::Section::End]
                              );
 
-      // NOTE: L[WBFL::Stability::Start] is the valid length... the L cell for the second row is disabled and will be out of date if the length changed
-      IndexType sectIdx = girder.AddSection(L[WBFL::Stability::Start],Ag[WBFL::Stability::Start], 
-                                                    Ixx[WBFL::Stability::Start], 
-                                                    Iyy[WBFL::Stability::Start],
-                                                    Ixy[WBFL::Stability::Start],
-                                                    Xleft[WBFL::Stability::Start],
-                                                    Ytop[WBFL::Stability::Start], 
-                                                    Hg[WBFL::Stability::Start], 
-                                                    Wtf[WBFL::Stability::Start], 
-                                                    Wbf[WBFL::Stability::Start],
-                                                    Ag[WBFL::Stability::End],
-                                                    Ixx[WBFL::Stability::End],
-                                                    Iyy[WBFL::Stability::End],
-                                                    Ixy[WBFL::Stability::End],
-                                                    Xleft[WBFL::Stability::End],
-                                                    Ytop[WBFL::Stability::End],
-                                                    Hg[WBFL::Stability::End],
-                                                    Wtf[WBFL::Stability::End],
-                                                    Wbf[WBFL::Stability::End]);
+      // NOTE: L[WBFL::Stability::Section::Start] is the valid length... the L cell for the second row is disabled and will be out of date if the length changed
+      IndexType sectIdx = girder.AddSection(L[+WBFL::Stability::Section::Start],Ag[+WBFL::Stability::Section::Start], 
+                                                    Ixx[+WBFL::Stability::Section::Start], 
+                                                    Iyy[+WBFL::Stability::Section::Start],
+                                                    Ixy[+WBFL::Stability::Section::Start],
+                                                    Xleft[+WBFL::Stability::Section::Start],
+                                                    Ytop[+WBFL::Stability::Section::Start], 
+                                                    Hg[+WBFL::Stability::Section::Start], 
+                                                    Wtf[+WBFL::Stability::Section::Start], 
+                                                    Wbf[+WBFL::Stability::Section::Start],
+                                                    Ag[+WBFL::Stability::Section::End],
+                                                    Ixx[+WBFL::Stability::Section::End],
+                                                    Iyy[+WBFL::Stability::Section::End],
+                                                    Ixy[+WBFL::Stability::Section::End],
+                                                    Xleft[+WBFL::Stability::Section::End],
+                                                    Ytop[+WBFL::Stability::Section::End],
+                                                    Hg[+WBFL::Stability::Section::End],
+                                                    Wtf[+WBFL::Stability::Section::End],
+                                                    Wbf[+WBFL::Stability::Section::End]);
 
-      girder.SetStressPoints(sectIdx, pntTL[WBFL::Stability::Start], pntTR[WBFL::Stability::Start], pntBL[WBFL::Stability::Start], pntBR[WBFL::Stability::Start], pntTL[WBFL::Stability::End], pntTR[WBFL::Stability::End], pntBL[WBFL::Stability::End], pntBR[WBFL::Stability::End]);
+      girder.SetStressPoints(sectIdx, pntTL[+WBFL::Stability::Section::Start], pntTR[+WBFL::Stability::Section::Start], pntBL[+WBFL::Stability::Section::Start], pntBR[+WBFL::Stability::Section::Start], pntTL[+WBFL::Stability::Section::End], pntTR[+WBFL::Stability::Section::End], pntBL[+WBFL::Stability::Section::End], pntBR[+WBFL::Stability::Section::End]);
    }
 }
 
@@ -780,7 +780,7 @@ Float64 CPGStableGirderSectionGrid::GetGirderLength()
    for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
       Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      gpPoint2d pntTL, pntTR, pntBL, pntBR;
+      WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
       GetGirderSection(row+1,&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf,&pntTL,&pntTR,&pntBL,&pntBR);
       Lg += L;
    }
@@ -795,7 +795,7 @@ std::vector<std::pair<Float64,Float64>> CPGStableGirderSectionGrid::GetGirderPro
    for ( ROWCOL row = 1; row < nRows; row += 2 )
    {
       Float64 L,Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
-      gpPoint2d pntTL, pntTR, pntBL, pntBR;
+      WBFL::Stability::Point pntTL, pntTR, pntBL, pntBR;
       GetGirderSection(row+1,&L,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf, &pntTL, &pntTR, &pntBL, &pntBR);
       vProfile.emplace_back(X,-Hg);
 
@@ -816,8 +816,8 @@ std::vector<StressPoints> CPGStableGirderSectionGrid::GetStressPoints()
       Float64 L, Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtf, Wbf;
 
       StressPoints sp;
-      GetGirderSection(row + 1, &L, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf, &sp.pntTL[WBFL::Stability::Start], &sp.pntTR[WBFL::Stability::Start], &sp.pntBL[WBFL::Stability::Start], &sp.pntBR[WBFL::Stability::Start]);
-      GetGirderSection(row + 2, &L, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf, &sp.pntTL[WBFL::Stability::End], &sp.pntTR[WBFL::Stability::End], &sp.pntBL[WBFL::Stability::End], &sp.pntBR[WBFL::Stability::End]);
+      GetGirderSection(row + 1, &L, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf, &sp.pntTL[+WBFL::Stability::Section::Start], &sp.pntTR[+WBFL::Stability::Section::Start], &sp.pntBL[+WBFL::Stability::Section::Start], &sp.pntBR[+WBFL::Stability::Section::Start]);
+      GetGirderSection(row + 2, &L, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtf, &Wbf, &sp.pntTL[+WBFL::Stability::Section::End], &sp.pntTR[+WBFL::Stability::Section::End], &sp.pntBL[+WBFL::Stability::Section::End], &sp.pntBR[+WBFL::Stability::Section::End]);
 
       vStressPoints.push_back(sp);
    }
@@ -830,8 +830,8 @@ void CPGStableGirderSectionGrid::SetStressPoints(const std::vector<StressPoints>
    ROWCOL row = 2;
    for (const auto& sp : vStressPoints)
    {
-      SetStressPoints(row,   sp.pntTL[WBFL::Stability::Start], sp.pntTR[WBFL::Stability::Start], sp.pntBL[WBFL::Stability::Start], sp.pntBR[WBFL::Stability::Start]);
-      SetStressPoints(row+1, sp.pntTL[WBFL::Stability::End],   sp.pntTR[WBFL::Stability::End],   sp.pntBL[WBFL::Stability::End],   sp.pntBR[WBFL::Stability::End]);
+      SetStressPoints(row,   sp.pntTL[+WBFL::Stability::Section::Start], sp.pntTR[+WBFL::Stability::Section::Start], sp.pntBL[+WBFL::Stability::Section::Start], sp.pntBR[+WBFL::Stability::Section::Start]);
+      SetStressPoints(row+1, sp.pntTL[+WBFL::Stability::Section::End],   sp.pntTR[+WBFL::Stability::Section::End],   sp.pntBL[+WBFL::Stability::Section::End],   sp.pntBR[+WBFL::Stability::Section::End]);
 
       row += 2;
    }
@@ -893,25 +893,25 @@ void CPGStableGirderSectionGrid::ComputeStressPoints()
       Float64 L, Ag[2], Ixx[2], Iyy[2], Ixy[2], Xleft[2], Ytop[2], Hg[2], Wtf[2], Wbf[2];
 
       StressPoints sp;
-      GetGirderSection(row + 1, &L, &Ag[WBFL::Stability::Start], &Ixx[WBFL::Stability::Start], &Iyy[WBFL::Stability::Start], &Ixy[WBFL::Stability::Start], &Xleft[WBFL::Stability::Start], &Ytop[WBFL::Stability::Start], &Hg[WBFL::Stability::Start], &Wtf[WBFL::Stability::Start], &Wbf[WBFL::Stability::Start], &sp.pntTL[WBFL::Stability::Start], &sp.pntTR[WBFL::Stability::Start], &sp.pntBL[WBFL::Stability::Start], &sp.pntBR[WBFL::Stability::Start]);
-      GetGirderSection(row + 2, &L, &Ag[WBFL::Stability::End],   &Ixx[WBFL::Stability::End],   &Iyy[WBFL::Stability::End],   &Ixy[WBFL::Stability::End],   &Xleft[WBFL::Stability::End],   &Ytop[WBFL::Stability::End],   &Hg[WBFL::Stability::End],   &Wtf[WBFL::Stability::End],   &Wbf[WBFL::Stability::End],   &sp.pntTL[WBFL::Stability::End],   &sp.pntTR[WBFL::Stability::End],   &sp.pntBL[WBFL::Stability::End],   &sp.pntBR[WBFL::Stability::End]);
+      GetGirderSection(row + 1, &L, &Ag[+WBFL::Stability::Section::Start], &Ixx[+WBFL::Stability::Section::Start], &Iyy[+WBFL::Stability::Section::Start], &Ixy[+WBFL::Stability::Section::Start], &Xleft[+WBFL::Stability::Section::Start], &Ytop[+WBFL::Stability::Section::Start], &Hg[+WBFL::Stability::Section::Start], &Wtf[+WBFL::Stability::Section::Start], &Wbf[+WBFL::Stability::Section::Start], &sp.pntTL[+WBFL::Stability::Section::Start], &sp.pntTR[+WBFL::Stability::Section::Start], &sp.pntBL[+WBFL::Stability::Section::Start], &sp.pntBR[+WBFL::Stability::Section::Start]);
+      GetGirderSection(row + 2, &L, &Ag[+WBFL::Stability::Section::End],   &Ixx[+WBFL::Stability::Section::End],   &Iyy[+WBFL::Stability::Section::End],   &Ixy[+WBFL::Stability::Section::End],   &Xleft[+WBFL::Stability::Section::End],   &Ytop[+WBFL::Stability::Section::End],   &Hg[+WBFL::Stability::Section::End],   &Wtf[+WBFL::Stability::Section::End],   &Wbf[+WBFL::Stability::Section::End],   &sp.pntTL[+WBFL::Stability::Section::End],   &sp.pntTR[+WBFL::Stability::Section::End],   &sp.pntBL[+WBFL::Stability::Section::End],   &sp.pntBR[+WBFL::Stability::Section::End]);
 
       for (int i = 0; i < 2; i++)
       {
          WBFL::Stability::Section section = (WBFL::Stability::Section)i;
-         sp.pntTL[section].X() = (Wbf[section] < Wtf[section] ? -Xleft[section] : Wbf[section]/2 - Xleft[section] - Wtf[section] / 2);
-         sp.pntTL[section].Y() = -Ytop[section];
+         sp.pntTL[+section].X() = (Wbf[+section] < Wtf[+section] ? -Xleft[+section] : Wbf[+section]/2 - Xleft[+section] - Wtf[+section] / 2);
+         sp.pntTL[+section].Y() = -Ytop[+section];
 
-         sp.pntTR[section].X() = (Wbf[section] < Wtf[section] ? Wtf[section] - Xleft[section] : Wtf[section] / 2 - Xleft[section] + Wbf[section]/2);
-         sp.pntTR[section].Y() = -Ytop[section];
+         sp.pntTR[+section].X() = (Wbf[+section] < Wtf[+section] ? Wtf[+section] - Xleft[+section] : Wtf[+section] / 2 - Xleft[+section] + Wbf[+section]/2);
+         sp.pntTR[+section].Y() = -Ytop[+section];
 
-         sp.pntBL[section].X() = (Wbf[section] < Wtf[section] ? Wtf[section]/2 - Xleft[section] - Wbf[section] / 2 : -Xleft[section]);
-         sp.pntBL[section].Y() = -(Ytop[section] + Hg[section]);
+         sp.pntBL[+section].X() = (Wbf[+section] < Wtf[+section] ? Wtf[+section]/2 - Xleft[+section] - Wbf[+section] / 2 : -Xleft[+section]);
+         sp.pntBL[+section].Y() = -(Ytop[+section] + Hg[+section]);
 
-         sp.pntBR[section].X() = (Wbf[section] < Wtf[section] ? Wbf[section] / 2 - Xleft[section] + Wtf[section]/2 : Wbf[section] - Xleft[section]);
-         sp.pntBR[section].Y() = -(Ytop[section] + Hg[section]);
+         sp.pntBR[+section].X() = (Wbf[+section] < Wtf[+section] ? Wbf[+section] / 2 - Xleft[+section] + Wtf[+section]/2 : Wbf[+section] - Xleft[+section]);
+         sp.pntBR[+section].Y() = -(Ytop[+section] + Hg[+section]);
 
-         SetStressPoints(row + i + 1, sp.pntTL[section], sp.pntTR[section], sp.pntBL[section], sp.pntBR[section]);
+         SetStressPoints(row + i + 1, sp.pntTL[+section], sp.pntTR[+section], sp.pntBL[+section], sp.pntBR[+section]);
       }
    }
 }

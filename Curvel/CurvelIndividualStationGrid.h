@@ -65,8 +65,6 @@ protected:
 
    void UpdateColumnHeaders();
 
-   CComPtr<IStation> m_objStation;
-
 public:
    // custom stuff for grid
    void CustomInit();

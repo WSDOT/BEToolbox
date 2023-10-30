@@ -28,6 +28,7 @@
 #include "..\BEToolboxUtilities.h"
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
+#include <CoordGeom/Station.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -43,7 +44,6 @@ static char THIS_FILE[] = __FILE__;
 CCurvelStationRangeGrid::CCurvelStationRangeGrid()
 {
 //   RegisterClass();
-   m_objStation.CoCreateInstance(CLSID_Station);
 }
 
 CCurvelStationRangeGrid::~CCurvelStationRangeGrid()
@@ -140,43 +140,34 @@ void CCurvelStationRangeGrid::AddStation()
    InsertStation(station);
 }
 
-void CCurvelStationRangeGrid::GetStation(ROWCOL row,StationRange& station)
+void CCurvelStationRangeGrid::GetStation(ROWCOL row,StationRange& station_range)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ROWCOL col = 1;
 
-   CString strStation = GetCellValue(row,col++);
-   HRESULT hr = m_objStation->FromString(CComBSTR(strStation),umUS);
-   ATLASSERT(SUCCEEDED(hr));
-
-   Float64 station_value;
-   m_objStation->get_Value(&station_value);
-   station_value = ::ConvertToSysUnits(station_value,pDispUnits->AlignmentLength.UnitOfMeasure);
-   station.StartStation = station_value;
+   std::_tstring strStation(GetCellValue(row, col++));
+   WBFL::COGO::Station start_station(strStation,WBFL::Units::StationFormats::US);
+   station_range.StartStation = start_station.GetValue();
 
    strStation = GetCellValue(row,col++);
-   hr = m_objStation->FromString(CComBSTR(strStation),umUS);
-   ATLASSERT(SUCCEEDED(hr));
-
-   m_objStation->get_Value(&station_value);
-   station_value = ::ConvertToSysUnits(station_value,pDispUnits->AlignmentLength.UnitOfMeasure);
-   station.EndStation = station_value;
+   WBFL::COGO::Station end_station(strStation,WBFL::Units::StationFormats::US);
+   station_range.EndStation = end_station.GetValue();
 
    CString strValue;
    long nSpaces;
    strValue = GetCellValue(row,col++);
-   sysTokenizer::ParseLong(strValue,&nSpaces);
-   station.nSpaces = nSpaces;
+   WBFL::System::Tokenizer::ParseLong(strValue,&nSpaces);
+   station_range.nSpaces = nSpaces;
 
-   station.Offset = GetOffset(GetCellValue(row,col++),pDispUnits->AlignmentLength);
+   station_range.Offset = GetOffset(GetCellValue(row,col++),pDispUnits->AlignmentLength);
 }
 
-void CCurvelStationRangeGrid::InsertStation(const StationRange& station)
+void CCurvelStationRangeGrid::InsertStation(const StationRange& station_range)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    GetParam()->EnableUndo(FALSE);
 	ROWCOL nRow = GetRowCount()+1;
@@ -185,26 +176,26 @@ void CCurvelStationRangeGrid::InsertStation(const StationRange& station)
 
    ROWCOL col = 1;
 
-   CString strStation = FormatStation(pDispUnits->StationFormat,station.StartStation);
+   WBFL::COGO::Station start_station(station_range.StartStation);
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(strStation)
+      .SetValue(start_station.AsString(pDispUnits->StationFormat).c_str())
          );
 
-   strStation = FormatStation(pDispUnits->StationFormat,station.EndStation);
+   WBFL::COGO::Station end_station(station_range.EndStation);
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(strStation)
+      .SetValue(end_station.AsString(pDispUnits->StationFormat).c_str())
          );
 
    SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue((long)station.nSpaces)
+      .SetValue((long)station_range.nSpaces)
          );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(GetOffset(station.Offset,pDispUnits->AlignmentLength))
+      .SetValue(GetOffset(station_range.Offset,pDispUnits->AlignmentLength))
          );
 
    ResizeColWidthsToFit(CGXRange().SetCols(0,GetColCount()));
@@ -246,19 +237,21 @@ BOOL CCurvelStationRangeGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
       // station
       CEAFApp* pApp = EAFGetApp();
 
-      HRESULT hr = m_objStation->FromString( CComBSTR(s), pApp->GetUnitsMode() == eafTypes::umUS ? umUS : umSI);
-      if ( FAILED(hr) )
+      try
+      {
+         std::_tstring strStation(s);
+         WBFL::COGO::Station station(strStation, pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::StationFormats::US : WBFL::Units::StationFormats::SI);
+      }
+      catch(...)
       {
          if ( pApp->GetUnitsMode() == eafTypes::umUS )
-            SetWarningText (_T("Invalid station value. Enter the station in the following format: xx+yy.zz"));
+            SetWarningText(_T("Invalid station value. Enter the station in the following format: xx+yy.zz"));
          else
-            SetWarningText (_T("Invalid station value. Enter the station in the following format: xx+yyy.zz"));
+            SetWarningText(_T("Invalid station value. Enter the station in the following format: xx+yyy.zz"));
          return FALSE;
       }
-      else
-      {
-         return TRUE;
-      }
+
+      return TRUE;
    }
 
 	return CGXGridWnd::OnValidateCell(nRow, nCol);
@@ -273,7 +266,7 @@ BOOL CCurvelStationRangeGrid::OnEndEditing(ROWCOL nRow,ROWCOL nCol)
 void CCurvelStationRangeGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 1;

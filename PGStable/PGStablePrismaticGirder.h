@@ -53,8 +53,8 @@ protected:
    std::unique_ptr<CPGStablePointLoadGrid> m_pPointLoadGrid;
    std::unique_ptr<CPGStableStressPointGrid> m_pStressPointGrid;
 
-   gpPoint2d m_pntTL, m_pntTR, m_pntBL, m_pntBR;
-   gpPoint2d m_pntTLCache, m_pntTRCache, m_pntBLCache, m_pntBRCache;
+   WBFL::Stability::Point m_pntTL, m_pntTR, m_pntBL, m_pntBR;
+   WBFL::Stability::Point m_pntTLCache, m_pntTRCache, m_pntBLCache, m_pntBRCache;
 
    void InitStressPoints(Float64 Wtf,Float64 Wbf,Float64 Ytop,Float64 Hg);
    void UpdateStressPoints();

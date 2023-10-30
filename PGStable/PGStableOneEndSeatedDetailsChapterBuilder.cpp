@@ -51,7 +51,7 @@ Uint16 CPGStableOneEndSeatedDetailsChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CPGStableOneEndSeatedDetailsChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CPGStableOneEndSeatedDetailsChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    GirderType girderType = m_pDoc->GetGirderType();
    WBFL::Stability::Girder girder = m_pDoc->GetGirder(girderType);
@@ -60,12 +60,13 @@ rptChapter* CPGStableOneEndSeatedDetailsChapterBuilder::Build(CReportSpecificati
 
    rptChapter* pChapter = new rptChapter;
    WBFL::Stability::OneEndSeatedStabilityReporter reporter;
-   reporter.BuildDetailsChapter(&girder,&problem,&results,pChapter);
+   auto* pApp = EAFGetApp();
+   reporter.BuildDetailsChapter(&girder,&problem,&results,pChapter,pApp->GetDisplayUnits());
 
    return pChapter;
 }
 
-CChapterBuilder* CPGStableOneEndSeatedDetailsChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CPGStableOneEndSeatedDetailsChapterBuilder::Clone() const
 {
-   return new CPGStableOneEndSeatedDetailsChapterBuilder(m_pDoc);
+   return std::make_unique<CPGStableOneEndSeatedDetailsChapterBuilder>(m_pDoc);
 }

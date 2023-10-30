@@ -60,6 +60,11 @@
 #include ".\Spectra\SpectraRptView.h"
 #include ".\Spectra\SpectraChildFrame.h"
 
+#include ".\Bearing\BearingDocTemplate.h"
+#include ".\Bearing\BearingDoc.h"
+#include ".\Bearing\BearingRptView.h"
+#include ".\Bearing\BearingChildFrame.h"
+
 // {4C9C743B-199E-43C8-AF13-F1D16669ACC9}
 DEFINE_GUID(CLSID_BoxGdrTool,
    0x4c9c743b, 0x199e, 0x43c8, 0xaf, 0x13, 0xf1, 0xd1, 0x66, 0x69, 0xac, 0xc9);
@@ -135,3 +140,14 @@ public:
    virtual CString GetName() const override { return _T("Spectra"); }
 };
 OBJECT_ENTRY_AUTO(CLSID_SpectraTool, CSpectraTool)
+
+
+// {8D4B1258-B4CF-424D-8CAA-E6664D7141A0}
+DEFINE_GUID(CLSID_BearingTool, 
+0x8d4b1258, 0xb4cf, 0x424d, 0x8c, 0xaa, 0xe6, 0x66, 0x4d, 0x71, 0x41, 0xa0);
+class CBearingTool : public CToolImpl<CBearingTool, &CLSID_BearingTool, IDR_BEARINGTOOL, CBearingDoc, CBearingChildFrame, CBearingRptView, CBearingDocTemplate, IDR_BEARING>
+{
+public:
+   virtual CString GetName() const override { return _T("Bearing"); }
+};
+OBJECT_ENTRY_AUTO(CLSID_BearingTool, CBearingTool)

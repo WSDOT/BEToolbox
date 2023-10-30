@@ -24,8 +24,6 @@
 #include "BoxGdrChapterBuilder.h"
 #include <Reporter\Reporter.h>
 
-#include <GraphicsLib\GraphicsLib.h>
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -35,13 +33,13 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////
 CBoxGdrChapterBuilder::CBoxGdrChapterBuilder(CBoxGdrDoc* pDoc) :
-m_Area(unitMeasure::Feet2,0.001,6,2),
-m_SectionModulus(unitMeasure::Feet3,0.001,10,2),
-m_MomentOfInertia(unitMeasure::Feet4,0.001,10,2)
+m_Area(WBFL::Units::Measure::Feet2,0.001,6,2),
+m_SectionModulus(WBFL::Units::Measure::Feet3,0.001,10,2),
+m_MomentOfInertia(WBFL::Units::Measure::Feet4,0.001,10,2)
 {
-   m_Area.Format = sysNumericFormatTool::Fixed;
-   m_SectionModulus.Format = sysNumericFormatTool::Fixed;
-   m_MomentOfInertia.Format = sysNumericFormatTool::Fixed;
+   m_Area.Format = WBFL::System::NumericFormatTool::Format::Fixed;
+   m_SectionModulus.Format = WBFL::System::NumericFormatTool::Format::Fixed;
+   m_MomentOfInertia.Format = WBFL::System::NumericFormatTool::Format::Fixed;
 
    m_pDoc = pDoc;
 }
@@ -60,7 +58,7 @@ Uint16 CBoxGdrChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CBoxGdrChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
@@ -82,11 +80,11 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    *pPara << pTable << rptNewLine;
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   m_Area.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Feet2 : unitMeasure::Meter2);
-   m_SectionModulus.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Feet3 : unitMeasure::Meter3);
-   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Feet4 : unitMeasure::Meter4);
+   m_Area.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet2 : WBFL::Units::Measure::Meter2);
+   m_SectionModulus.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet3 : WBFL::Units::Measure::Meter3);
+   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet4 : WBFL::Units::Measure::Meter4);
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  longLength,  pDispUnits->SpanLength, false);
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  shortLength, pDispUnits->ComponentDim, false);
@@ -169,19 +167,18 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
       (*pTable)(row,col++) << shortLength.SetValue(problem.CR);
       (*pTable)(row,col++) << longLength.SetValue(problem.BR);
 
-      CComPtr<IShapeProperties> shapeProperties;
-      m_pDoc->ComputeShapeProperties(idx,&shapeProperties);
+      auto shapeProperties = m_pDoc->ComputeShapeProperties(idx);
 
-      Float64 Area,Ix,Yt,Yb,St,Sb;
-      shapeProperties->get_Area(&Area);
-      shapeProperties->get_Ixx(&Ix);
-      shapeProperties->get_Ytop(&Yt);
-      shapeProperties->get_Ybottom(&Yb);
-      St = IsZero(Yt) ? 0 : Ix/Yt;
-      Sb = IsZero(Yb) ? 0 : Ix/Yb;
+      Float64 Area = shapeProperties.GetArea();
+      Float64 Ix = shapeProperties.GetIxx();
+      Float64 Yt = shapeProperties.GetYtop();
+      Float64 Yb = shapeProperties.GetYbottom();
+
+      Float64 St = IsZero(Yt) ? 0 : Ix/Yt;
+      Float64 Sb = IsZero(Yb) ? 0 : Ix/Yb;
 
       Float64 Weight;
-      Weight = Area*::ConvertToSysUnits(160.0,unitMeasure::PCF);
+      Weight = Area*WBFL::Units::ConvertToSysUnits(160.0,WBFL::Units::Measure::PCF);
 
       (*pTable)(row,col++) << momentOfInertia.SetValue(Ix);
       (*pTable)(row,col++) << longLength.SetValue(Yt);
@@ -195,7 +192,7 @@ rptChapter* CBoxGdrChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 l
    return pChapter;
 }
 
-CChapterBuilder* CBoxGdrChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CBoxGdrChapterBuilder::Clone() const
 {
-   return new CBoxGdrChapterBuilder(m_pDoc);
+   return std::make_unique<CBoxGdrChapterBuilder>(m_pDoc);
 }

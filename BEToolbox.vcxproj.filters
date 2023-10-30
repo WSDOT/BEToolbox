@@ -293,6 +293,27 @@
     <ClCompile Include="PGStable\PGStableOneEndSeatedView.cpp">
       <Filter>PGStable\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bearing\BearingChapterBuilder.cpp">
+      <Filter>Bearing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bearing\BearingChildFrame.cpp">
+      <Filter>Bearing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bearing\BearingDlgBar.cpp">
+      <Filter>Bearing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bearing\BearingDoc.cpp">
+      <Filter>Bearing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bearing\BearingDocTemplate.cpp">
+      <Filter>Bearing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bearing\BearingRptView.cpp">
+      <Filter>Bearing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bearing\BearingTitlePageBuilder.cpp">
+      <Filter>Bearing\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BEToolbox_i.h" />
@@ -623,6 +644,27 @@
     <ClInclude Include="PGStable\PGStableOneEndSeatedView.h">
       <Filter>PGStable\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bearing\BearingChapterBuilder.h">
+      <Filter>Bearing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bearing\BearingChildFrame.h">
+      <Filter>Bearing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bearing\BearingDlgBar.h">
+      <Filter>Bearing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bearing\BearingDoc.h">
+      <Filter>Bearing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bearing\BearingDocTemplate.h">
+      <Filter>Bearing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bearing\BearingRptView.h">
+      <Filter>Bearing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bearing\BearingTitlePageBuilder.h">
+      <Filter>Bearing\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\BoxGdr.ico">
@@ -676,6 +718,12 @@
     <Image Include="res\UltCol.ico">
       <Filter>UltCol\Resource Files</Filter>
     </Image>
+    <Image Include="res\Bearing.bmp">
+      <Filter>Bearing\Resource Files</Filter>
+    </Image>
+    <Image Include="res\Bearing.ico">
+      <Filter>Bearing\Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="BEToolbox.idl" />
@@ -713,35 +761,38 @@
     <None Include=".\BoxGdr\BoxGdrTool.rgs">
       <Filter>BoxGdr\Resource Files</Filter>
     </None>
-    <None Include=".\Curvel\CurvelExporter.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include=".\Curvel\CurvelImporter.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include=".\Curvel\CurvelTool.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include=".\GenComp\GenCompExporter.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include=".\GenComp\GenCompTool.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include=".\GirComp\GirCompTool.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include=".\PGStable\PGStableExporter.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include=".\PGStable\PGStableTool.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
+    <None Include=".\UltCol\UltColTool.rgs">
+      <Filter>UltCol\Resource Files</Filter>
     </None>
     <None Include=".\Spectra\SpectraTool.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
+      <Filter>Spectra\Resource Files</Filter>
     </None>
-    <None Include=".\UltCol\UltColTool.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
+    <None Include=".\PGStable\PGStableTool.rgs">
+      <Filter>PGStable\Resource Files</Filter>
+    </None>
+    <None Include=".\PGStable\PGStableExporter.rgs">
+      <Filter>PGStable\Resource Files</Filter>
+    </None>
+    <None Include=".\GirComp\GirCompTool.rgs">
+      <Filter>GirComp\Resource Files</Filter>
+    </None>
+    <None Include=".\GenComp\GenCompTool.rgs">
+      <Filter>GenComp\Resource Files</Filter>
+    </None>
+    <None Include=".\GenComp\GenCompExporter.rgs">
+      <Filter>GenComp\Resource Files</Filter>
+    </None>
+    <None Include=".\Curvel\CurvelExporter.rgs">
+      <Filter>Curvel\Resource Files</Filter>
+    </None>
+    <None Include=".\Curvel\CurvelImporter.rgs">
+      <Filter>Curvel\Resource Files</Filter>
+    </None>
+    <None Include=".\Curvel\CurvelTool.rgs">
+      <Filter>Curvel\Resource Files</Filter>
+    </None>
+    <None Include="Bearing\BearingTool.rgs">
+      <Filter>Bearing\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -860,6 +911,18 @@
     <Filter Include="UltCol\Resource Files">
       <UniqueIdentifier>{198e2cd4-2fe4-4ab4-9665-511260501f81}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Bearing">
+      <UniqueIdentifier>{af80b8ea-d626-4e27-b383-921db8ecd2af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bearing\Header Files">
+      <UniqueIdentifier>{40fd2f35-ee90-4192-8de0-bc8c2b67ee8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bearing\Resource Files">
+      <UniqueIdentifier>{a76e567d-e39e-4156-92ed-4eb0f46988b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bearing\Source Files">
+      <UniqueIdentifier>{1c6a1a15-b734-4454-abb1-aa7c34eb2ae6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

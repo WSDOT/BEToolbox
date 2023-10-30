@@ -43,6 +43,9 @@
 #include "PGStableOneEndSeatedSummaryChapterBuilder.h"
 #include "PGStableOneEndSeatedDetailsChapterBuilder.h"
 
+#include <psgLib/LiftingCriteria.h>
+#include <psgLib/HaulingCriteria.h>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -54,34 +57,33 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPGStableDoc, CBEToolboxDoc)
 
-CPGStableDoc::CPGStableDoc()
+CPGStableDoc::CPGStableDoc() : CBEToolboxDoc()
 {
-   std::shared_ptr<CTitlePageBuilder> pLiftingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pLiftingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::unique_ptr<CReportBuilder> pLiftingReportBuilder(std::make_unique<CReportBuilder>(_T("Lifting")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pLiftingReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Lifting")));
    pLiftingReportBuilder->AddTitlePageBuilder(pLiftingTitlePageBuilder);
-   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableLiftingSummaryChapterBuilder>(this)));
-   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableLiftingDetailsChapterBuilder>(this)));
+   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableLiftingSummaryChapterBuilder>(this)));
+   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableLiftingDetailsChapterBuilder>(this)));
+   GetReportManager()->AddReportBuilder(pLiftingReportBuilder);
 
-   m_RptMgr.AddReportBuilder(pLiftingReportBuilder.release());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pHaulingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::shared_ptr<CTitlePageBuilder> pHaulingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
-
-   std::unique_ptr<CReportBuilder> pHaulingReportBuilder(std::make_unique<CReportBuilder>(_T("Hauling")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pHaulingReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Hauling")));
    pHaulingReportBuilder->AddTitlePageBuilder(pHaulingTitlePageBuilder);
-   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableHaulingSummaryChapterBuilder>(this)));
-   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableHaulingDetailsChapterBuilder>(this)));
+   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableHaulingSummaryChapterBuilder>(this)));
+   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableHaulingDetailsChapterBuilder>(this)));
 
-   m_RptMgr.AddReportBuilder(pHaulingReportBuilder.release());
+   GetReportManager()->AddReportBuilder(pHaulingReportBuilder);
 
-   std::shared_ptr<CTitlePageBuilder> pOneEndSeatedTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pOneEndSeatedTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::unique_ptr<CReportBuilder> pOneEndSeatedReportBuilder(std::make_unique<CReportBuilder>(_T("OneEndSeated")));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pOneEndSeatedReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("OneEndSeated")));
    pOneEndSeatedReportBuilder->AddTitlePageBuilder(pOneEndSeatedTitlePageBuilder);
-   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableOneEndSeatedSummaryChapterBuilder>(this)));
-   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<CChapterBuilder>(std::make_shared<CPGStableOneEndSeatedDetailsChapterBuilder>(this)));
+   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedSummaryChapterBuilder>(this)));
+   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedDetailsChapterBuilder>(this)));
 
-   m_RptMgr.AddReportBuilder(pOneEndSeatedReportBuilder.release());
+   GetReportManager()->AddReportBuilder(pOneEndSeatedReportBuilder);
 
    m_strProjectCriteria = gs_strCriteria;
    m_strHaulTruck = gs_strHaulTruck;
@@ -170,7 +172,7 @@ void CPGStableDoc::LoadPGSLibrary()
 
    CComBSTR bpath(strMasterLibaryFile);
 
-   FileStream ifile;
+   WBFL::System::FileStream ifile;
    if ( ifile.open(bpath) )
    {
       // try to load file
@@ -179,7 +181,7 @@ void CPGStableDoc::LoadPGSLibrary()
          // clear out library
          m_LibMgr.ClearAllEntries();
 
-         sysStructuredLoadXmlPrs load;
+         WBFL::System::StructuredLoadXml load;
          load.BeginLoad( &ifile );
 
          // Problem : Library Editor application specific code is in the
@@ -202,10 +204,10 @@ void CPGStableDoc::LoadPGSLibrary()
          // success!
          WATCH(_T("Master Library loaded successfully"));
       }
-      catch( sysXStructuredLoad& e )
+      catch(WBFL::System::XStructuredLoad& e )
       {
          CString strMsg;
-         if ( e.GetExplicitReason() == sysXStructuredLoad::CantInitializeTheParser )
+         if ( e.GetReasonCode() == WBFL::System::XStructuredLoad::CantInitializeTheParser )
          {
             strMsg = _T("Failed to initialize the xml parser. This is an installation issue.");
          }
@@ -436,105 +438,112 @@ void CPGStableDoc::SetCriteria(LPCTSTR lpszCriteria)
    {
       // update input parameters to match library
       const SpecLibraryEntry* pSpec = GetSpecLibraryEntry();
+      const auto& lifting_criteria = pSpec->GetLiftingCriteria();
+      const auto& hauling_criteria = pSpec->GetHaulingCriteria();
 
       // lifting
       WBFL::Stability::LiftingStabilityProblem liftingProblem = GetLiftingStabilityProblem();
-      liftingProblem.SetImpact(pSpec->GetLiftingUpwardImpactFactor(),pSpec->GetLiftingDownwardImpactFactor());
+      liftingProblem.SetImpact(lifting_criteria.ImpactUp,lifting_criteria.ImpactDown);
 
-      liftingProblem.SetSupportPlacementTolerance(pSpec->GetLiftingLoopTolerance());
-      liftingProblem.SetLiftAngle(pSpec->GetMinCableInclination());
-      liftingProblem.SetSweepTolerance(pSpec->GetLiftingMaximumGirderSweepTolerance());
+      liftingProblem.SetSupportPlacementTolerance(lifting_criteria.LiftingLoopTolerance);
+      liftingProblem.SetLiftAngle(lifting_criteria.MinCableInclination);
+      liftingProblem.SetSweepTolerance(lifting_criteria.SweepTolerance);
       liftingProblem.SetSweepGrowth(0); // no sweep growth for initial lifting problem
-      liftingProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetLiftingWindType(),pSpec->GetLiftingWindLoad());
-      liftingProblem.SetYRollAxis(pSpec->GetPickPointHeight());
+      liftingProblem.SetWindLoading(lifting_criteria.WindLoadType,lifting_criteria.WindLoad);
+      liftingProblem.SetYRollAxis(lifting_criteria.PickPointHeight);
       SetLiftingStabilityProblem(liftingProblem);
 
       CPGStableLiftingCriteria liftingCriteria = GetLiftingCriteria();
-      liftingCriteria.MinFSf = pSpec->GetLiftingFailureFOS();
-      liftingCriteria.MinFScr = pSpec->GetCrackingFOSLifting();
-      liftingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetLiftingCompressionGlobalStressFactor();
-      liftingCriteria.CompressionCoefficient_PeakStress = pSpec->GetLiftingCompressionPeakStressFactor();
+      liftingCriteria.MinFSf = lifting_criteria.FsFailure;
+      liftingCriteria.MinFScr = lifting_criteria.FsCracking;
+      liftingCriteria.CompressionCoefficient_GlobalStress = lifting_criteria.CompressionStressCoefficient_GlobalStress;
+      liftingCriteria.CompressionCoefficient_PeakStress = lifting_criteria.CompressionStressCoefficient_PeakStress;
 
       auto* pLiftingTensionStressLimit = dynamic_cast<WBFL::Stability::CCLiftingTensionStressLimit*>(liftingCriteria.TensionStressLimit.get());
 
-      pLiftingTensionStressLimit->TensionCoefficient = pSpec->GetLiftingTensionStressFactor();
-      pSpec->GetLiftingMaximumTensionStress(&pLiftingTensionStressLimit->bMaxTension,&pLiftingTensionStressLimit->MaxTension);
-      pLiftingTensionStressLimit->TensionCoefficientWithRebar = pSpec->GetLiftingTensionStressFactorWithRebar();
+      pLiftingTensionStressLimit->TensionCoefficient = lifting_criteria.TensionStressLimitWithoutReinforcement.Coefficient;
+      pLiftingTensionStressLimit->bMaxTension = lifting_criteria.TensionStressLimitWithoutReinforcement.bHasMaxValue;
+      pLiftingTensionStressLimit->MaxTension = lifting_criteria.TensionStressLimitWithoutReinforcement.MaxValue;
+      pLiftingTensionStressLimit->TensionCoefficientWithRebar = lifting_criteria.TensionStressLimitWithReinforcement.Coefficient;
       SetLiftingCriteria(liftingCriteria);
 
 
       Float64 Fc,FrCoefficient;
       bool bComputeEc;
       GetLiftingMaterials(&Fc,&bComputeEc,&FrCoefficient);
-      SetLiftingMaterials(Fc,bComputeEc,pSpec->GetLiftingModulusOfRuptureFactor(pgsTypes::Normal));
+      SetLiftingMaterials(Fc, bComputeEc, lifting_criteria.ModulusOfRuptureCoefficient[pgsTypes::Normal]);
 
       // Hauling
       WBFL::Stability::HaulingStabilityProblem haulingProblem = GetHaulingStabilityProblem();
-      haulingProblem.SetImpactUsage((WBFL::Stability::HaulingImpact)pSpec->GetHaulingImpactUsage());
-      haulingProblem.SetImpact(pSpec->GetHaulingUpwardImpactFactor(),pSpec->GetHaulingDownwardImpactFactor());
-      haulingProblem.SetSupportSlope(pSpec->GetRoadwayCrownSlope());
-      haulingProblem.SetSuperelevation(pSpec->GetRoadwaySuperelevation());
+      haulingProblem.SetImpactUsage(hauling_criteria.WSDOT.ImpactUsage);
+      haulingProblem.SetImpact(hauling_criteria.WSDOT.ImpactUp,hauling_criteria.WSDOT.ImpactDown);
+      haulingProblem.SetSupportSlope(hauling_criteria.WSDOT.RoadwayCrownSlope);
+      haulingProblem.SetSuperelevation(hauling_criteria.WSDOT.RoadwaySuperelevation);
 
-      haulingProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
-      haulingProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
-      haulingProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
-      haulingProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetHaulingWindType(),pSpec->GetHaulingWindLoad());
-      haulingProblem.SetCentrifugalForceType((WBFL::Stability::CFType)pSpec->GetCentrifugalForceType());
-      haulingProblem.SetVelocity(pSpec->GetHaulingSpeed());
-      haulingProblem.SetTurningRadius(pSpec->GetTurningRadius());
+      haulingProblem.SetSupportPlacementTolerance(hauling_criteria.WSDOT.SupportPlacementTolerance);
+      haulingProblem.SetSweepTolerance(hauling_criteria.WSDOT.SweepTolerance);
+      haulingProblem.SetSweepGrowth(hauling_criteria.WSDOT.SweepGrowth);
+      haulingProblem.SetWindLoading(hauling_criteria.WSDOT.WindLoadType, hauling_criteria.WSDOT.WindLoad);
+      haulingProblem.SetCentrifugalForceType(hauling_criteria.WSDOT.CentrifugalForceType);
+      haulingProblem.SetVelocity(hauling_criteria.WSDOT.HaulingSpeed);
+      haulingProblem.SetTurningRadius(hauling_criteria.WSDOT.TurningRadius);
       SetHaulingStabilityProblem(haulingProblem);
 
       CPGStableHaulingCriteria haulingCriteria = GetHaulingCriteria();
-      haulingCriteria.MinFSf = pSpec->GetHaulingFailureFOS();
-      haulingCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
-      haulingCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
-      haulingCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
+      haulingCriteria.MinFSf = hauling_criteria.WSDOT.FsFailure;
+      haulingCriteria.MinFScr = hauling_criteria.WSDOT.FsCracking;
+      haulingCriteria.CompressionCoefficient_GlobalStress = hauling_criteria.WSDOT.CompressionStressCoefficient_GlobalStress;
+      haulingCriteria.CompressionCoefficient_PeakStress = hauling_criteria.WSDOT.CompressionStressCoefficient_PeakStress;
       
       auto* pHaulingTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(haulingCriteria.TensionStressLimit.get());
 
-      pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope] = pSpec->GetHaulingTensionStressFactor(pgsTypes::CrownSlope);
+      pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].Coefficient;
+      pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].bHasMaxValue;
+      pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].MaxValue;
+
+      pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope] = hauling_criteria.WSDOT.TensionStressLimitWithReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].Coefficient;
+
+      pHaulingTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::Superelevation] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::Superelevation].Coefficient;
+      pHaulingTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::Superelevation] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::Superelevation].bHasMaxValue;
+      pHaulingTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::Superelevation] = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::Superelevation].MaxValue;
 
 
-      pSpec->GetHaulingMaximumTensionStress(pgsTypes::CrownSlope, &pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope],&pHaulingTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope]);
-      pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope] = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::CrownSlope);
-      pHaulingTensionStressLimit->TensionCoefficient[WBFL::Stability::Superelevation] = pSpec->GetHaulingTensionStressFactor(pgsTypes::Superelevation);
-      
-      pSpec->GetHaulingMaximumTensionStress(pgsTypes::Superelevation, &pHaulingTensionStressLimit->bMaxTension[WBFL::Stability::Superelevation],&pHaulingTensionStressLimit->MaxTension[WBFL::Stability::Superelevation]);
-      pHaulingTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::Superelevation] = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::Superelevation);
+      pHaulingTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::Superelevation] = hauling_criteria.WSDOT.TensionStressLimitWithReinforcement[+WBFL::Stability::HaulingSlope::Superelevation].Coefficient;
+
       SetHaulingCriteria(haulingCriteria);
 
       GetHaulingMaterials(&Fc,&bComputeEc,&FrCoefficient);
-      SetHaulingMaterials(Fc,bComputeEc,pSpec->GetHaulingModulusOfRuptureFactor(pgsTypes::Normal));
+      SetHaulingMaterials(Fc, bComputeEc, hauling_criteria.WSDOT.ModulusOfRuptureCoefficient[pgsTypes::Normal]);
 
 
       // One end seated - PGSuper/PGSplice project spec criteria doesn't have values for one end seated analysis so we will use some of the hauling values
       WBFL::Stability::OneEndSeatedStabilityProblem OneEndSeatedProblem = GetOneEndSeatedStabilityProblem();
       OneEndSeatedProblem.SetImpact(0.0, 0.0);
-      OneEndSeatedProblem.SetSupportSlope(pSpec->GetRoadwayCrownSlope());
+      OneEndSeatedProblem.SetSupportSlope(hauling_criteria.WSDOT.RoadwayCrownSlope);
 
-      OneEndSeatedProblem.SetSupportPlacementTolerance(pSpec->GetHaulingSupportPlacementTolerance());
-      OneEndSeatedProblem.SetSweepTolerance(pSpec->GetHaulingMaximumGirderSweepTolerance());
-      OneEndSeatedProblem.SetSweepGrowth(pSpec->GetHaulingSweepGrowth());
-      OneEndSeatedProblem.SetWindLoading((WBFL::Stability::WindType)pSpec->GetHaulingWindType(), pSpec->GetHaulingWindLoad());
+      OneEndSeatedProblem.SetSupportPlacementTolerance(hauling_criteria.WSDOT.SupportPlacementTolerance);
+      OneEndSeatedProblem.SetSweepTolerance(hauling_criteria.WSDOT.SweepTolerance);
+      OneEndSeatedProblem.SetSweepGrowth(hauling_criteria.WSDOT.SweepGrowth);
+      OneEndSeatedProblem.SetWindLoading(hauling_criteria.WSDOT.WindLoadType, hauling_criteria.WSDOT.WindLoad);
       SetOneEndSeatedStabilityProblem(OneEndSeatedProblem);
 
       CPGStableOneEndSeatedCriteria OneEndSeatedCriteria = GetOneEndSeatedCriteria();
-      OneEndSeatedCriteria.MinFSf = pSpec->GetHaulingFailureFOS();
-      OneEndSeatedCriteria.MinFScr = pSpec->GetHaulingCrackingFOS();
-      OneEndSeatedCriteria.CompressionCoefficient_GlobalStress = pSpec->GetHaulingCompressionGlobalStressFactor();
-      OneEndSeatedCriteria.CompressionCoefficient_PeakStress = pSpec->GetHaulingCompressionPeakStressFactor();
+      OneEndSeatedCriteria.MinFSf = hauling_criteria.WSDOT.FsFailure;
+      OneEndSeatedCriteria.MinFScr = hauling_criteria.WSDOT.FsCracking;
+      OneEndSeatedCriteria.CompressionCoefficient_GlobalStress = hauling_criteria.WSDOT.CompressionStressCoefficient_GlobalStress;
+      OneEndSeatedCriteria.CompressionCoefficient_PeakStress = hauling_criteria.WSDOT.CompressionStressCoefficient_PeakStress;
 
       auto* pOneEndSeatedTensionStressLimit = dynamic_cast<WBFL::Stability::CCOneEndSeatedTensionStressLimit*>(OneEndSeatedCriteria.TensionStressLimit.get());
 
-      pOneEndSeatedTensionStressLimit->TensionCoefficient = pSpec->GetHaulingTensionStressFactor(pgsTypes::CrownSlope);
+      pOneEndSeatedTensionStressLimit->TensionCoefficient = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].Coefficient;
+      pOneEndSeatedTensionStressLimit->bMaxTension = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].bHasMaxValue;
+      pOneEndSeatedTensionStressLimit->bMaxTension = hauling_criteria.WSDOT.TensionStressLimitWithoutReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].MaxValue;
 
-
-      pSpec->GetHaulingMaximumTensionStress(pgsTypes::CrownSlope, &pOneEndSeatedTensionStressLimit->bMaxTension, &pOneEndSeatedTensionStressLimit->MaxTension);
-      pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = pSpec->GetHaulingTensionStressFactorWithRebar(pgsTypes::CrownSlope);
+      pOneEndSeatedTensionStressLimit->TensionCoefficientWithRebar = hauling_criteria.WSDOT.TensionStressLimitWithReinforcement[+WBFL::Stability::HaulingSlope::CrownSlope].Coefficient;
       SetOneEndSeatedCriteria(OneEndSeatedCriteria);
 
       GetOneEndSeatedMaterials(&Fc, &bComputeEc, &FrCoefficient);
-      SetOneEndSeatedMaterials(Fc, bComputeEc, pSpec->GetHaulingModulusOfRuptureFactor(pgsTypes::Normal));
+      SetOneEndSeatedMaterials(Fc, bComputeEc, hauling_criteria.WSDOT.ModulusOfRuptureCoefficient[pgsTypes::Normal]);
    }
 
    SetModifiedFlag();
@@ -780,12 +789,12 @@ void CPGStableDoc::SetDensityWithRebar(Float64 density)
    }
 }
 
-matConcrete::Type CPGStableDoc::GetConcreteType() const
+WBFL::Materials::ConcreteType CPGStableDoc::GetConcreteType() const
 {
    return m_Model.GetConcreteType();
 }
 
-void CPGStableDoc::SetConcreteType(matConcrete::Type type)
+void CPGStableDoc::SetConcreteType(WBFL::Materials::ConcreteType type)
 {
    if (m_Model.SetConcreteType(type))
    {
@@ -876,16 +885,16 @@ CString CPGStableDoc::UpdateEc(const CString& strFc)
    CString strEc;
    Float64 fc;
    Float64 ec = 0;
-   if (sysTokenizer::ParseDouble(strFc, &fc) && 0 < fc)
+   if (WBFL::System::Tokenizer::ParseDouble(strFc, &fc) && 0 < fc)
    {
          CEAFApp* pApp = EAFGetApp();
-         const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+         const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-         const unitPressure& stress_unit = pDispUnits->Stress.UnitOfMeasure;
+         const WBFL::Units::Pressure& stress_unit = pDispUnits->Stress.UnitOfMeasure;
 
-         fc       = ::ConvertToSysUnits(fc,      stress_unit);
+         fc       = WBFL::Units::ConvertToSysUnits(fc,      stress_unit);
 
-         ec = m_Model.GetK1()*m_Model.GetK2()*lrfdConcreteUtil::ModE(m_Model.GetConcreteType(),fc,m_Model.GetDensity(),false);
+         ec = m_Model.GetK1()*m_Model.GetK2()*WBFL::LRFD::ConcreteUtil::ModE(m_Model.GetConcreteType(),fc,m_Model.GetDensity(),false);
 
          strEc.Format(_T("%s"),FormatDimension(ec,pDispUnits->ModE,false));
    }
@@ -893,12 +902,12 @@ CString CPGStableDoc::UpdateEc(const CString& strFc)
    return strEc;
 }
 
-void CPGStableDoc::ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt)
+void CPGStableDoc::ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt) const
 {
    m_Model.ResolveStrandLocations(strands,girder,pXs,pYs,pXh,pXh1,pYh1,pXh2,pYh2,pXh3,pYh3,pXh4,pYh4,pXt,pYt);
 }
 
-void CPGStableDoc::GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp)
+void CPGStableDoc::GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const
 {
    m_Model.GetStrandProfiles(strands,girder,pvStraight,pvHarped,pvTemp);
 }

@@ -36,7 +36,7 @@ protected:
 	CCurvelRptView();           // protected constructor used by dynamic creation
 	virtual ~CCurvelRptView();
 
-   virtual std::shared_ptr<CReportBrowser> CreateReportBrowser();
+   virtual std::shared_ptr<WBFL::Reporting::ReportBrowser> CreateReportBrowser();
 
 #ifdef _DEBUG
 	virtual void AssertValid() const override;

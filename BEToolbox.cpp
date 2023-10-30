@@ -82,102 +82,108 @@ HRESULT Register(bool bRegister)
 
    // Register the BEToolbox component infor object with BridgeLink... this gives BridgeLink an object with
    // BEToolbox information for the About dialog
-   hr = sysComCatMgr::RegWithCategory(CLSID_BEToolboxComponentInfo,CATID_BridgeLinkComponentInfo,bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_BEToolboxComponentInfo,CATID_BridgeLinkComponentInfo,bRegister);
    if ( FAILED(hr) )
       return hr;
 
    // Register BEToolbox as a BridgeLink application (this makes BEToolbox show up in the New Project dialog)
-   hr = sysComCatMgr::RegWithCategory(CLSID_BEToolboxPlugin, CATID_BridgeLinkAppPlugin, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_BEToolboxPlugin, CATID_BridgeLinkAppPlugin, bRegister);
    if ( FAILED(hr) )
       return hr;
 
    // Register the PGSuper/PGSplice Data Importers/Exporters this DLL implements
-   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelImporter,  CATID_PGSuperDataImporter,    bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_CurvelImporter,  CATID_PGSuperDataImporter,    bRegister);
    if ( FAILED(hr) )
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelImporter,  CATID_PGSpliceDataImporter,    bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_CurvelImporter,  CATID_PGSpliceDataImporter,    bRegister);
    if ( FAILED(hr) )
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelExporter,  CATID_PGSuperDataExporter,    bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_CurvelExporter,  CATID_PGSuperDataExporter,    bRegister);
    if ( FAILED(hr) )
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelExporter,  CATID_PGSpliceDataExporter,    bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_CurvelExporter,  CATID_PGSpliceDataExporter,    bRegister);
    if ( FAILED(hr) )
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_GenCompExporter,  CATID_PGSuperDataExporter,    bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_GenCompExporter,  CATID_PGSuperDataExporter,    bRegister);
    if ( FAILED(hr) )
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_GenCompExporter,  CATID_PGSpliceDataExporter,    bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_GenCompExporter,  CATID_PGSpliceDataExporter,    bRegister);
    if ( FAILED(hr) )
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_PGStableExporter,  CATID_PGSuperDataExporter,    bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_PGStableExporter,  CATID_PGSuperDataExporter,    bRegister);
    if ( FAILED(hr) )
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_PGStableExporter,  CATID_PGSpliceDataExporter,    bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_PGStableExporter,  CATID_PGSpliceDataExporter,    bRegister);
    if ( FAILED(hr) )
    {
       return hr;
    }
 
    // Register the standard BEToolbox Tools so they can be discovered at application startup
-   hr = sysComCatMgr::RegWithCategory(CLSID_BoxGdrTool, CATID_BEToolboxTool, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_BoxGdrTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_GenCompTool, CATID_BEToolboxTool, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_GenCompTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_GirCompTool, CATID_BEToolboxTool, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_GirCompTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_UltColTool, CATID_BEToolboxTool, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_UltColTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_CurvelTool, CATID_BEToolboxTool, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_CurvelTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_PGStableTool, CATID_BEToolboxTool, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_PGStableTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;
    }
 
-   hr = sysComCatMgr::RegWithCategory(CLSID_SpectraTool, CATID_BEToolboxTool, bRegister);
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_SpectraTool, CATID_BEToolboxTool, bRegister);
+   if (FAILED(hr))
+   {
+      return hr;
+   }
+
+   hr = WBFL::System::ComCatMgr::RegWithCategory(CLSID_BearingTool, CATID_BEToolboxTool, bRegister);
    if (FAILED(hr))
    {
       return hr;

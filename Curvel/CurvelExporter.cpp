@@ -205,7 +205,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
          /////////////////////////////////////////////////
          // Write Curve Length in inch units... OpenBridgeML Units Test
          Float64 length = vCurve.L1 + vCurve.L2;
-         length = ::ConvertFromSysUnits(length,unitMeasure::Feet);
+         length = WBFL::Units::ConvertFromSysUnits(length,WBFL::Units::Measure::Feet);
          length *= 2.0; // number of half feet (using the silly half-foot unit)
          vCurveXML.Length(length);
          vCurveXML.Length().unit().set(_T("hft"));
@@ -215,16 +215,16 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
          // to units of feet.
          if ( IsEqual(profileData.Station,vCurve.PVIStation) )
          {
-            vCurveXML.PVIStation(::ConvertFromSysUnits(profileData.Station,unitMeasure::Feet));
-            vCurveXML.PVIElevation(::ConvertFromSysUnits(profileData.Elevation,unitMeasure::Feet));
+            vCurveXML.PVIStation(WBFL::Units::ConvertFromSysUnits(profileData.Station,WBFL::Units::Measure::Feet));
+            vCurveXML.PVIElevation(WBFL::Units::ConvertFromSysUnits(profileData.Elevation,WBFL::Units::Measure::Feet));
          }
          else
          {
             // Reference station and PVI of vertical curve are at different locations... compute
             // the PVI elevation
             Float64 pviElevation = profileData.Elevation + profileData.Grade*(vCurve.PVIStation - profileData.Station);
-            vCurveXML.PVIStation(::ConvertFromSysUnits(vCurve.PVIStation,unitMeasure::Feet));
-            vCurveXML.PVIElevation(::ConvertFromSysUnits(pviElevation,unitMeasure::Feet));
+            vCurveXML.PVIStation(WBFL::Units::ConvertFromSysUnits(vCurve.PVIStation,WBFL::Units::Measure::Feet));
+            vCurveXML.PVIElevation(WBFL::Units::ConvertFromSysUnits(pviElevation,WBFL::Units::Measure::Feet));
          }
       }
       else
@@ -261,7 +261,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
                }
             }
 
-            Float64 station = ::ConvertFromSysUnits(crown.Station,unitMeasure::Feet);
+            Float64 station = WBFL::Units::ConvertFromSysUnits(crown.Station,WBFL::Units::Measure::Feet);
             superelevationPointsXML.push_back(SuperelevationProfilePointType(station,crown.Left,crown.Right));
          }
 
@@ -271,11 +271,11 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
             for ( std::size_t i = 0; i < nTempSections; i++ )
             {
                SuperelevationProfilePointType pp = superelevationPointsXML.back();
-               pp.Station(::ConvertFromSysUnits(pp.Station() + ::ConvertToSysUnits(50,unitMeasure::Feet),unitMeasure::Feet));
+               pp.Station(WBFL::Units::ConvertFromSysUnits(pp.Station() + WBFL::Units::ConvertToSysUnits(50,WBFL::Units::Measure::Feet),WBFL::Units::Measure::Feet));
                superelevationPointsXML.push_back(pp);
             }
          }
-         SuperelevationDataType superelevationXML(::ConvertFromSysUnits(crownPointOffset,unitMeasure::Feet),crownXML);
+         SuperelevationDataType superelevationXML(WBFL::Units::ConvertFromSysUnits(crownPointOffset,WBFL::Units::Measure::Feet),crownXML);
          curvelXML->SuperelevationData(superelevationXML);
       }
       else
@@ -395,7 +395,7 @@ STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
             for ( std::size_t i = 0; i < nTempSections; i++ )
             {
                SuperelevationProfilePointType pp = superelevationPointsXML.back();
-               pp.Station(pp.Station() + ::ConvertToSysUnits(50,unitMeasure::Feet));
+               pp.Station(pp.Station() + WBFL::Units::ConvertToSysUnits(50,WBFL::Units::Measure::Feet));
                superelevationPointsXML.push_back(pp);
             }
          }

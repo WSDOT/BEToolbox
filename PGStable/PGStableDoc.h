@@ -46,7 +46,7 @@ public:
 	CPGStableDoc();
 	virtual ~CPGStableDoc();
 
-   virtual CString GetToolbarSectionName();
+   virtual CString GetToolbarSectionName() override;
 
    const CString& GetCriteria() const;
    void SetCriteria(LPCTSTR lpszCriteria);
@@ -99,8 +99,8 @@ public:
    Float64 GetDensityWithRebar() const;
    void SetDensityWithRebar(Float64 density);
 
-   matConcrete::Type GetConcreteType() const;
-   void SetConcreteType(matConcrete::Type type);
+   WBFL::Materials::ConcreteType GetConcreteType() const;
+   void SetConcreteType(WBFL::Materials::ConcreteType type);
 
    Float64 GetK1() const;
    void SetK1(Float64 k1);
@@ -122,8 +122,8 @@ public:
 
    CString UpdateEc(const CString& strFc);
 
-   void ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt);
-   void GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp);
+   void ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt) const;
+   void GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const;
 
    WBFL::Stability::LiftingResults GetLiftingResults() const;
    WBFL::Stability::HaulingResults GetHaulingResults() const;
@@ -144,8 +144,6 @@ public:
    const GirderLibraryEntry* GetGirderLibraryEntry() const;
 
    bool IsPermittedGirderEntry(const GirderLibraryEntry* pGirderEntry) const;
-
-   CReportBuilderManager m_RptMgr;
 
 #ifdef _DEBUG
 	virtual void AssertValid() const override;

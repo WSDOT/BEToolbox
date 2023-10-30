@@ -26,6 +26,8 @@
 #include "..\BEToolboxDoc.h"
 #include <ReportManager\ReportManager.h>
 #include <GenComp.h>
+#include <GeomModel/Polygon.h>
+#include <GeomModel/Section.h>
 
 class CGenCompDoc : public CBEToolboxDoc
 {
@@ -45,15 +47,15 @@ public:
    void ClearPrimaryPoints();
    void AddPrimaryPoint(Float64 x,Float64 y);
    void AddPrimaryPoints(const std::vector<std::pair<Float64,Float64>>& points);
-   const std::vector<std::pair<Float64,Float64>>& GetPrimaryPoints();
+   std::vector<std::pair<Float64,Float64>> GetPrimaryPoints() const;
 
    void ClearSecondaryPoints();
    void AddSecondaryPoint(Float64 x,Float64 y);
    void AddSecondaryPoints(const std::vector<std::pair<Float64,Float64>>& points);
-   const std::vector<std::pair<Float64,Float64>>& GetSecondaryPoints();
+   std::vector<std::pair<Float64,Float64>> GetSecondaryPoints() const;
 
-   CComPtr<IPolyShape> GetPrimaryShape();
-   CComPtr<ICompositeSection> GetCompositeSection();
+   WBFL::Geometry::Polygon GetPrimaryShape() const;
+   WBFL::Geometry::Section GetCompositeSection() const;
 
 
 #ifdef _DEBUG
@@ -80,13 +82,6 @@ protected:
    CComPtr<IUnitServer> m_DocUnitServer;
    CComPtr<IUnitConvert> m_DocConvert;
 
-   std::vector<std::pair<Float64,Float64>> m_PrimaryPoints;
-   std::vector<std::pair<Float64,Float64>> m_SecondaryPoints;
-
    afx_msg void OnHelpFinder();
    DECLARE_MESSAGE_MAP()
-
-public:
-
-   CReportBuilderManager m_RptMgr;
 };

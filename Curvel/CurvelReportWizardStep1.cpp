@@ -59,7 +59,7 @@ void CCurvelReportWizardStep1::DoDataExchange(CDataExchange* pDX)
 	CPropertyPage::DoDataExchange(pDX);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDisplayUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDisplayUnits = pApp->GetDisplayUnits();
 
    DDX_Percentage(pDX,IDC_G1,m_G1);
    DDX_Percentage(pDX,IDC_G2,m_G2);

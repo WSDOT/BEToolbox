@@ -24,16 +24,16 @@
 #include <ReportManager\TitlePageBuilder.h>
 
 class CCurvelTitlePageBuilder :
-   public CTitlePageBuilder
+   public WBFL::Reporting::TitlePageBuilder
 {
 public:
    CCurvelTitlePageBuilder(void);
    CCurvelTitlePageBuilder(const CCurvelTitlePageBuilder& other);
    ~CCurvelTitlePageBuilder(void);
 
-   virtual rptChapter* Build(std::shared_ptr<CReportSpecification>& pRptSpec) override;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const override;
 
-   virtual CTitlePageBuilder* Clone() const override;
+   virtual std::unique_ptr<WBFL::Reporting::TitlePageBuilder> Clone() const override;
 
 private:
 };

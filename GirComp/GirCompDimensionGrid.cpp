@@ -172,7 +172,7 @@ void CGirCompDimensionGrid::AddProblem()
 void CGirCompDimensionGrid::GetProblemData(ROWCOL row,GIRCOMPDIMENSIONS& dimensions)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ROWCOL col = 1;
    dimensions.Type = (GIRCOMPDIMENSIONS::BeamType)_tstoi(GetCellValue(row,col++));
@@ -183,70 +183,70 @@ void CGirCompDimensionGrid::GetProblemData(ROWCOL row,GIRCOMPDIMENSIONS& dimensi
    dimensions.RolledSectionName = rolledSections[idx].Name;
 
    Float64 value;
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.Area = ::ConvertToSysUnits(value,pDispUnits->Area.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.Area = WBFL::Units::ConvertToSysUnits(value,pDispUnits->Area.UnitOfMeasure);
 
    if ( dimensions.Type == GIRCOMPDIMENSIONS::General || dimensions.Type == GIRCOMPDIMENSIONS::Rolled )
    {
-      sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-      dimensions.D = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+      WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+      dimensions.D = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
    }
    else
    {
       col++;
    }
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.MomentOfInertia = ::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.MomentOfInertia = WBFL::Units::ConvertToSysUnits(value,pDispUnits->MomentOfInertia.UnitOfMeasure);
 
    if ( dimensions.Type == GIRCOMPDIMENSIONS::BuiltUp )
    {
-      sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-      dimensions.D = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+      WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+      dimensions.D = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
    }
    else
    {
       col++;
    }
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.tWeb = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.tWeb = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.wTopFlange = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.wTopFlange = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.tTopFlange = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.tTopFlange = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.wBotFlange = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.wBotFlange = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.tBotFlange = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.tBotFlange = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.wSlab = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.wSlab = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.tSlab = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.tSlab = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
-   dimensions.G = ::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   dimensions.G = WBFL::Units::ConvertToSysUnits(value,pDispUnits->ComponentDim.UnitOfMeasure);
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.N1 = value;
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.N2 = value;
 
-   sysTokenizer::ParseDouble(GetCellValue(row,col++), &value);
+   WBFL::System::Tokenizer::ParseDouble(GetCellValue(row,col++), &value);
    dimensions.N3 = value;
 }
 
 void CGirCompDimensionGrid::SetProblemData(ROWCOL row,const GIRCOMPDIMENSIONS& dimensions)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    ROWCOL col = 0;
    SetStyleRange(CGXRange(row,col++), CGXStyle()
@@ -274,17 +274,17 @@ void CGirCompDimensionGrid::SetProblemData(ROWCOL row,const GIRCOMPDIMENSIONS& d
    {
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.Area,pDispUnits->Area.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.Area,pDispUnits->Area.UnitOfMeasure))
             );
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.D,pDispUnits->ComponentDim.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.D,pDispUnits->ComponentDim.UnitOfMeasure))
             );
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.MomentOfInertia,pDispUnits->MomentOfInertia.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.MomentOfInertia,pDispUnits->MomentOfInertia.UnitOfMeasure))
             );
 
       col++; // D
@@ -292,7 +292,7 @@ void CGirCompDimensionGrid::SetProblemData(ROWCOL row,const GIRCOMPDIMENSIONS& d
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.wTopFlange,pDispUnits->ComponentDim.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.wTopFlange,pDispUnits->ComponentDim.UnitOfMeasure))
             );
 
       col++; // ttf
@@ -307,49 +307,49 @@ void CGirCompDimensionGrid::SetProblemData(ROWCOL row,const GIRCOMPDIMENSIONS& d
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.D,pDispUnits->ComponentDim.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.D,pDispUnits->ComponentDim.UnitOfMeasure))
             );
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.tWeb,pDispUnits->ComponentDim.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.tWeb,pDispUnits->ComponentDim.UnitOfMeasure))
             );
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.wTopFlange,pDispUnits->ComponentDim.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.wTopFlange,pDispUnits->ComponentDim.UnitOfMeasure))
             );
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.tTopFlange,pDispUnits->ComponentDim.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.tTopFlange,pDispUnits->ComponentDim.UnitOfMeasure))
             );
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.wBotFlange,pDispUnits->ComponentDim.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.wBotFlange,pDispUnits->ComponentDim.UnitOfMeasure))
             );
 
 	   SetStyleRange(CGXRange(row,col++), CGXStyle()
          .SetHorizontalAlignment(DT_RIGHT)
-         .SetValue(::ConvertFromSysUnits(dimensions.tBotFlange,pDispUnits->ComponentDim.UnitOfMeasure))
+         .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.tBotFlange,pDispUnits->ComponentDim.UnitOfMeasure))
             );
    }
 
    // Slab
    SetStyleRange(CGXRange(row,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(::ConvertFromSysUnits(dimensions.wSlab,pDispUnits->ComponentDim.UnitOfMeasure))
+      .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.wSlab,pDispUnits->ComponentDim.UnitOfMeasure))
          );
 
    SetStyleRange(CGXRange(row,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(::ConvertFromSysUnits(dimensions.tSlab,pDispUnits->ComponentDim.UnitOfMeasure))
+      .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.tSlab,pDispUnits->ComponentDim.UnitOfMeasure))
          );
 
    SetStyleRange(CGXRange(row,col++), CGXStyle()
       .SetHorizontalAlignment(DT_RIGHT)
-      .SetValue(::ConvertFromSysUnits(dimensions.G,pDispUnits->ComponentDim.UnitOfMeasure))
+      .SetValue(WBFL::Units::ConvertFromSysUnits(dimensions.G,pDispUnits->ComponentDim.UnitOfMeasure))
          );
 
    SetStyleRange(CGXRange(row,col++), CGXStyle()
@@ -558,7 +558,7 @@ void CGirCompDimensionGrid::OnUnitsModeChanged()
 void CGirCompDimensionGrid::UpdateColumnHeaders()
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    // set text along top row
    ROWCOL col = 0;

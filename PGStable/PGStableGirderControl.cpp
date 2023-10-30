@@ -102,7 +102,7 @@ void CPGStableGirderControl::OnPaint()
    // Set up coordinate mapping
    //
    std::vector<std::pair<Float64,Float64>> vProfile = pParent->GetGirderProfile();
-   GraphRect box(DBL_MAX,DBL_MAX,-DBL_MAX,-DBL_MAX);
+   WBFL::Graphing::Rect box(DBL_MAX,DBL_MAX,-DBL_MAX,-DBL_MAX);
    std::vector<std::pair<Float64,Float64>>::iterator iter(vProfile.begin());
    std::vector<std::pair<Float64,Float64>>::iterator end(vProfile.end());
    for ( ; iter != end; iter++ )
@@ -119,8 +119,8 @@ void CPGStableGirderControl::OnPaint()
    CRect rClient;
    GetClientRect(&rClient);
 
-   grlibPointMapper mapper;
-   mapper.SetMappingMode(grlibPointMapper::Anisotropic);
+   WBFL::Graphing::PointMapper mapper;
+   mapper.SetMappingMode(WBFL::Graphing::PointMapper::MapMode::Anisotropic);
    mapper.SetWorldExt(box.Size());
    mapper.SetWorldOrg(box.TopLeft());
    mapper.SetDeviceExt(rClient.Size().cx,rClient.Size().cy);
@@ -140,12 +140,12 @@ void CPGStableGirderControl::OnPaint()
    dc.SelectObject(pOldBrush);
 }
 
-void CPGStableGirderControl::DrawProfile(CDC* pDC,grlibPointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile)
+void CPGStableGirderControl::DrawProfile(CDC* pDC, WBFL::Graphing::PointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile)
 {
    Draw(pDC,mapper,vProfile,TRUE);
 }
 
-void CPGStableGirderControl::DrawStrands(CDC* pDC,grlibPointMapper& mapper)
+void CPGStableGirderControl::DrawStrands(CDC* pDC, WBFL::Graphing::PointMapper& mapper)
 {
    AFX_MANAGE_STATE(AfxGetAppModuleState());
    CWnd* parent = GetParent();
@@ -158,7 +158,7 @@ void CPGStableGirderControl::DrawStrands(CDC* pDC,grlibPointMapper& mapper)
    Draw(pDC,mapper,vTemp,FALSE);
 }
 
-void CPGStableGirderControl::Draw(CDC* pDC,grlibPointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile,BOOL bPolygon)
+void CPGStableGirderControl::Draw(CDC* pDC, WBFL::Graphing::PointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile,BOOL bPolygon)
 {
    IndexType nPoints = vProfile.size();
    if ( nPoints == 0 )

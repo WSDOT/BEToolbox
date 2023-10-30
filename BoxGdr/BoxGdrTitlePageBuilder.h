@@ -24,16 +24,16 @@
 #include <ReportManager\TitlePageBuilder.h>
 
 class CBoxGdrTitlePageBuilder :
-   public CTitlePageBuilder
+   public WBFL::Reporting::TitlePageBuilder
 {
 public:
    CBoxGdrTitlePageBuilder(void);
    CBoxGdrTitlePageBuilder(const CBoxGdrTitlePageBuilder& other);
    ~CBoxGdrTitlePageBuilder(void);
 
-   virtual rptChapter* Build(std::shared_ptr<CReportSpecification>& pRptSpec) override;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const override;
 
-   virtual CTitlePageBuilder* Clone() const override;
+   virtual std::unique_ptr<WBFL::Reporting::TitlePageBuilder> Clone() const override;
 
 private:
    std::_tstring m_strImagePath;

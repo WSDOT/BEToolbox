@@ -66,7 +66,7 @@
     <OutDir>$(ARPDIR)\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules />
     <CodeAnalysisRuleAssemblies />
@@ -102,6 +102,8 @@
       <ProgramDataBaseFileName>$(IntDir)vc.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -113,9 +115,12 @@
       </AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ARPDIR)\WBFL\RegFreeCOM\$(Platform)\$(Configuration);$(ARPDIR)\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
@@ -156,6 +161,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <ProgramDataBaseFileName>$(IntDir)vc.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -168,9 +176,11 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <AdditionalLibraryDirectories>$(ARPDIR)\WBFL\RegFreeCOM\$(Platform)\$(Configuration);$(ARPDIR)\BridgeLink\RegFreeCOM\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\BEToolbox.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <TargetMachine>MachineX64</TargetMachine>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
@@ -185,6 +195,13 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
+    <ClCompile Include="Bearing\BearingChapterBuilder.cpp" />
+    <ClCompile Include="Bearing\BearingChildFrame.cpp" />
+    <ClCompile Include="Bearing\BearingDlgBar.cpp" />
+    <ClCompile Include="Bearing\BearingDoc.cpp" />
+    <ClCompile Include="Bearing\BearingDocTemplate.cpp" />
+    <ClCompile Include="Bearing\BearingRptView.cpp" />
+    <ClCompile Include="Bearing\BearingTitlePageBuilder.cpp" />
     <ClCompile Include="BEToolbox.cpp" />
     <ClCompile Include="BEToolboxComponentInfo.cpp" />
     <ClCompile Include="BEToolboxDoc.cpp" />
@@ -301,6 +318,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClCompile Include=".\UltCol\UltColView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Bearing\BearingTool.rgs" />
     <None Include="BEToolbox.def" />
     <None Include="BEToolbox.rgs" />
     <None Include="BEToolbox.tip" />
@@ -330,6 +348,13 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
     <ClInclude Include="AutoLib.h" />
+    <ClInclude Include="Bearing\BearingChapterBuilder.h" />
+    <ClInclude Include="Bearing\BearingChildFrame.h" />
+    <ClInclude Include="Bearing\BearingDlgBar.h" />
+    <ClInclude Include="Bearing\BearingDoc.h" />
+    <ClInclude Include="Bearing\BearingDocTemplate.h" />
+    <ClInclude Include="Bearing\BearingRptView.h" />
+    <ClInclude Include="Bearing\BearingTitlePageBuilder.h" />
     <ClInclude Include="BEToolboxApp.h" />
     <ClInclude Include="BEToolboxColors.h" />
     <ClInclude Include="BEToolboxComponentInfo.h" />
@@ -440,6 +465,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include=".\UltCol\UltColView.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\Bearing.bmp" />
+    <Image Include="res\Bearing.ico" />
     <Image Include="res\BEToolbox.ico" />
     <Image Include="res\BoxGdr.ico" />
     <Image Include="res\Curvel.bmp" />

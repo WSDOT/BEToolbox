@@ -71,8 +71,8 @@ protected:
    virtual void OnDeactivateView() override;
    virtual void RefreshReport() override;
 
-   std::shared_ptr<CReportSpecification> m_pRptSpec;
-   std::shared_ptr<CReportBrowser> m_pBrowser; // this is the actual browser window that displays the report
+   std::shared_ptr<WBFL::Reporting::ReportSpecification> m_pRptSpec;
+   std::shared_ptr<WBFL::Reporting::ReportBrowser> m_pBrowser; // this is the actual browser window that displays the report
 
    void UpdateFpeControls();
    void UpdateCriteriaControls();

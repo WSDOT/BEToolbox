@@ -25,9 +25,10 @@
 // CBoxGdrDoc document
 #include "..\BEToolboxDoc.h"
 #include <WBFLTools.h>
-#include <WBFLGeometry.h>
 #include <WBFLUnitServer.h>
 #include <ReportManager\ReportManager.h>
+
+#include <GeomModel/ShapeProperties.h>
 
 struct BOXGDRDIMENSIONS
 {
@@ -61,10 +62,10 @@ public:
    void AddProblem(const BOXGDRDIMENSIONS& problem);
    void AddProblems(const std::vector<BOXGDRDIMENSIONS>& problems);
    void RemoveProblem(IndexType idx);
-   const BOXGDRDIMENSIONS& GetProblem(IndexType idx);
+   const BOXGDRDIMENSIONS& GetProblem(IndexType idx) const;
    void ClearProblems();
 
-   void ComputeShapeProperties(IndexType idx,IShapeProperties** ppShapeProperties);
+   WBFL::Geometry::ShapeProperties ComputeShapeProperties(IndexType idx) const;
 
 #ifdef _DEBUG
 	virtual void AssertValid() const override;
@@ -96,8 +97,6 @@ public:
 
    // over-ride default behavior by destroying column
    virtual void OnCloseDocument() override;
-
-   CReportBuilderManager m_RptMgr;
 
 private:
    CEAFToolBar* m_pMyToolBar;

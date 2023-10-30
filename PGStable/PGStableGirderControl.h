@@ -21,7 +21,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <GraphicsLib\Pointmapper.h>
+#include <Graphing/PointMapper.h>
 
 class CPGStableGirderControlParent
 {
@@ -47,9 +47,9 @@ public:
 
 protected:
 	DECLARE_MESSAGE_MAP()
-   void DrawProfile(CDC* pDC,grlibPointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile);
-   void DrawStrands(CDC* pDC,grlibPointMapper& mapper);
-   void Draw(CDC* pDC,grlibPointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile,BOOL bPolygon);
+   void DrawProfile(CDC* pDC, WBFL::Graphing::PointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile);
+   void DrawStrands(CDC* pDC, WBFL::Graphing::PointMapper& mapper);
+   void Draw(CDC* pDC, WBFL::Graphing::PointMapper& mapper,std::vector<std::pair<Float64,Float64>>& vProfile,BOOL bPolygon);
 };
 
 

@@ -24,16 +24,16 @@
 #include <ReportManager\TitlePageBuilder.h>
 
 class CGenCompTitlePageBuilder :
-   public CTitlePageBuilder
+   public WBFL::Reporting::TitlePageBuilder
 {
 public:
    CGenCompTitlePageBuilder(void);
    CGenCompTitlePageBuilder(const CGenCompTitlePageBuilder& other);
    ~CGenCompTitlePageBuilder(void);
 
-   virtual rptChapter* Build(std::shared_ptr<CReportSpecification>& pRptSpec) override;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const override;
 
-   virtual CTitlePageBuilder* Clone() const override;
+   virtual std::unique_ptr<WBFL::Reporting::TitlePageBuilder> Clone() const override;
 
 private:
    std::_tstring m_strImagePath;

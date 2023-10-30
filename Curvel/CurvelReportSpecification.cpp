@@ -30,8 +30,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-CCurvelReportSpecification::CCurvelReportSpecification(LPCTSTR strReportName) :
-CReportSpecification(strReportName)
+CCurvelReportSpecification::CCurvelReportSpecification(const std::_tstring& strReportName) :
+WBFL::Reporting::ReportSpecification(strReportName)
 {
 }
 
@@ -39,9 +39,9 @@ CCurvelReportSpecification::~CCurvelReportSpecification(void)
 {
 }
 
-HRESULT CCurvelReportSpecification::Validate() const
+bool CCurvelReportSpecification::IsValid() const
 {
-   return S_OK;
+   return true;
 }
 
 void CCurvelReportSpecification::SetVerticalCurveParameters(Float64 g1,Float64 g2,Float64 PVIStation,Float64 PVIElevation,Float64 length)
@@ -70,7 +70,7 @@ void CCurvelReportSpecification::GetVerticalCurveParameters(Float64* g1,Float64*
    *length       = vc.Length();
 }
 
-bool CCurvelReportSpecification::CorrectForSuperelevation()
+bool CCurvelReportSpecification::CorrectForSuperelevation() const
 {
    CCurvelDoc* pDoc = (CCurvelDoc*)EAFGetDocument();
    Curvel* pCurvel = pDoc->GetCurvelXML();
@@ -105,7 +105,7 @@ void CCurvelReportSpecification::SetProfileGradeOffset(Float64 offset)
    super->ProfileGradeOffset(offset);
 }
 
-Float64 CCurvelReportSpecification::GetProfileGradeOffset()
+Float64 CCurvelReportSpecification::GetProfileGradeOffset() const
 {
    CCurvelDoc* pDoc = (CCurvelDoc*)EAFGetDocument();
    Curvel* pCurvel = pDoc->GetCurvelXML();
@@ -117,7 +117,7 @@ Float64 CCurvelReportSpecification::GetProfileGradeOffset()
       return 0.0;
 }
 
-SuperelevationProfilePoint CCurvelReportSpecification::GetSuperelevationPoint(IndexType idx)
+SuperelevationProfilePoint CCurvelReportSpecification::GetSuperelevationPoint(IndexType idx) const
 {
    CCurvelDoc* pDoc = (CCurvelDoc*)EAFGetDocument();
    Curvel* pCurvel = pDoc->GetCurvelXML();
@@ -137,7 +137,7 @@ SuperelevationProfilePoint CCurvelReportSpecification::GetSuperelevationPoint(In
    }
    else
    {
-      p.Station    = idx*::ConvertToSysUnits(50.0,unitMeasure::Feet);
+      p.Station    = idx*WBFL::Units::ConvertToSysUnits(50.0,WBFL::Units::Measure::Feet);
       p.LeftSlope  = -0.02;
       p.RightSlope = -0.02;
    }

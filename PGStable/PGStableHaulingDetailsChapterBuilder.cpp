@@ -24,8 +24,6 @@
 #include "PGStableHaulingDetailsChapterBuilder.h"
 #include <Reporter\Reporter.h>
 
-#include <GraphicsLib\GraphicsLib.h>
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -53,7 +51,7 @@ Uint16 CPGStableHaulingDetailsChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CPGStableHaulingDetailsChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CPGStableHaulingDetailsChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    GirderType girderType = m_pDoc->GetGirderType();
    WBFL::Stability::Girder girder = m_pDoc->GetGirder(girderType);
@@ -62,12 +60,13 @@ rptChapter* CPGStableHaulingDetailsChapterBuilder::Build(CReportSpecification* p
 
    rptChapter* pChapter = new rptChapter;
    WBFL::Stability::HaulingStabilityReporter reporter;
-   reporter.BuildDetailsChapter(&girder,&problem,&results,pChapter);
+   auto* pApp = EAFGetApp();
+   reporter.BuildDetailsChapter(&girder,&problem,&results,pChapter,pApp->GetDisplayUnits());
 
    return pChapter;
 }
 
-CChapterBuilder* CPGStableHaulingDetailsChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CPGStableHaulingDetailsChapterBuilder::Clone() const
 {
-   return new CPGStableHaulingDetailsChapterBuilder(m_pDoc);
+   return std::make_unique<CPGStableHaulingDetailsChapterBuilder>(m_pDoc);
 }

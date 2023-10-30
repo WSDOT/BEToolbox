@@ -37,9 +37,8 @@ public:
 
    virtual CString GetToolbarSectionName() override;
 
-   CReportBuilderManager* GetReportBuilderManager();
-   std::shared_ptr<CReportSpecificationBuilder> GetReportSpecificationBuilder();
-   std::shared_ptr<CReportSpecification> GetDefaultReportSpecification();
+   const std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder>& GetReportSpecificationBuilder() const;
+   const std::shared_ptr<WBFL::Reporting::ReportSpecification>& GetDefaultReportSpecification() const;
 
    Curvel* GetCurvelXML();
 
@@ -71,9 +70,7 @@ protected:
    DECLARE_MESSAGE_MAP()
 
 private:
-   CReportBuilderManager m_RptMgr;
-
-   std::shared_ptr<CReportSpecificationBuilder> m_pRptSpecBuilder;
-   std::shared_ptr<CCurvelReportSpecification> m_pDefaultRptSpec; // this is the default spec that is
-   // used to get things started... after the report is displayed, the view holds the real repost spec
+   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> m_pRptSpecBuilder;
+   std::shared_ptr<WBFL::Reporting::ReportSpecification> m_pDefaultRptSpec; // this is the default spec that is
+   // used to get things started... after the report is displayed, the view holds the real report spec
 };

@@ -54,7 +54,7 @@ void DDX_GirderSectionGrid(CDataExchange* pDX,CPGStableGirderSectionGrid* pGrid,
 void DDX_Strands(CDataExchange* pDX,CPGStableStrands& strands)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    DDX_CBEnum(pDX,IDC_PS_METHOD,strands.strandMethod);
 
@@ -152,7 +152,7 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_Control(pDX,IDC_GIRDER,m_ctrlGirder);
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CView* pParent = (CView*)GetParent();
    CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
@@ -181,7 +181,7 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_DENSITY_WITH_REBAR,IDC_DENSITY_WITH_REBAR_UNIT,densityWithRebar,pDispUnits->Density);
    DDV_UnitValueGreaterThanZero(pDX,IDC_DENSITY_WITH_REBAR,densityWithRebar,pDispUnits->Density);
 
-   matConcrete::Type concrete_type = pDoc->GetConcreteType();
+   auto concrete_type = pDoc->GetConcreteType();
    DDX_RadioEnum(pDX, IDC_NWC, concrete_type);
 
    Float64 K1 = pDoc->GetK1();
@@ -207,7 +207,7 @@ void CPGStableNonprismaticGirder::DoDataExchange(CDataExchange* pDX)
          IndexType sectIdx = 0;
          for (const auto& sp : vStressPoints)
          {
-            girder.SetStressPoints(sectIdx, sp.pntTL[WBFL::Stability::Start], sp.pntTR[WBFL::Stability::Start], sp.pntBL[WBFL::Stability::Start], sp.pntBR[WBFL::Stability::Start], sp.pntTL[WBFL::Stability::End], sp.pntTR[WBFL::Stability::End], sp.pntBL[WBFL::Stability::End], sp.pntBR[WBFL::Stability::End]);
+            girder.SetStressPoints(sectIdx, sp.pntTL[+WBFL::Stability::Section::Start], sp.pntTR[+WBFL::Stability::Section::Start], sp.pntBL[+WBFL::Stability::Section::Start], sp.pntBR[+WBFL::Stability::Section::Start], sp.pntTL[+WBFL::Stability::Section::End], sp.pntTR[+WBFL::Stability::Section::End], sp.pntBL[+WBFL::Stability::Section::End], sp.pntBR[+WBFL::Stability::Section::End]);
             sectIdx++;
          }
       }
@@ -347,7 +347,7 @@ void CPGStableNonprismaticGirder::FillComboBoxes(INT xIDC,INT yIDC)
    if ( xIDC != 0 )
    {
       CEAFApp* pApp = EAFGetApp();
-      const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+      const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
       CComboBox* pX = (CComboBox*)GetDlgItem(xIDC);
       int idx = pX->AddString(pDispUnits->SpanLength.UnitOfMeasure.UnitTag().c_str());
@@ -423,7 +423,7 @@ BOOL CPGStableNonprismaticGirder::AreLoadsSelected()
 void CPGStableNonprismaticGirder::SetGirderLength(Float64 Lg)
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
    CString str;
    str.Format(_T("Girder Length: %s"),::FormatDimension(Lg,pDispUnits->SpanLength));
    GetDlgItem(IDC_L)->SetWindowText(str);
@@ -548,8 +548,8 @@ void CPGStableNonprismaticGirder::InitStressPointCache(const WBFL::Stability::Gi
    for (IndexType sectIdx = 0; sectIdx < nSections; sectIdx++)
    {
       StressPoints sp;
-      girder.GetStressPoints(sectIdx, WBFL::Stability::Start, &sp.pntTL[WBFL::Stability::Start], &sp.pntTR[WBFL::Stability::Start], &sp.pntBL[WBFL::Stability::Start], &sp.pntBR[WBFL::Stability::Start]);
-      girder.GetStressPoints(sectIdx, WBFL::Stability::End,   &sp.pntTL[WBFL::Stability::End],   &sp.pntTR[WBFL::Stability::End],   &sp.pntBL[WBFL::Stability::End],   &sp.pntBR[WBFL::Stability::End]);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Section::Start, &sp.pntTL[+WBFL::Stability::Section::Start], &sp.pntTR[+WBFL::Stability::Section::Start], &sp.pntBL[+WBFL::Stability::Section::Start], &sp.pntBR[+WBFL::Stability::Section::Start]);
+      girder.GetStressPoints(sectIdx, WBFL::Stability::Section::End,   &sp.pntTL[+WBFL::Stability::Section::End],   &sp.pntTR[+WBFL::Stability::Section::End],   &sp.pntBL[+WBFL::Stability::Section::End],   &sp.pntBR[+WBFL::Stability::Section::End]);
       m_StressPointCache.push_back(sp);
    }
 }

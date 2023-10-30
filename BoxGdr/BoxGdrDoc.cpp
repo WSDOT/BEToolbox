@@ -34,6 +34,9 @@
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 
+#include <GeomModel/CompositeShape.h>
+#include <GeomModel/Polygon.h>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -45,17 +48,16 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CBoxGdrDoc, CBEToolboxDoc)
 
-CBoxGdrDoc::CBoxGdrDoc()
+CBoxGdrDoc::CBoxGdrDoc() : CBEToolboxDoc()
 {
-   CReportBuilder* pRptBuilder = new CReportBuilder(_T("BoxGdr"));
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("BoxGdr")));
+   GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<CTitlePageBuilder> pTitlePageBuilder(std::make_shared<CBoxGdrTitlePageBuilder>());
+   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CBoxGdrTitlePageBuilder>());
    pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<CChapterBuilder> pChBuilder(std::make_shared<CBoxGdrChapterBuilder>(this) );
+   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CBoxGdrChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
-
-   m_RptMgr.AddReportBuilder(pRptBuilder);
 
    EnableUIHints(FALSE); // not using UIHints feature
 }
@@ -98,20 +100,20 @@ BOOL CBoxGdrDoc::Init()
 
    // initialize with some data
    BOXGDRDIMENSIONS problem;
-   problem.D = ::ConvertToSysUnits(8.0, unitMeasure::Feet);
-   problem.T = ::ConvertToSysUnits(12.0, unitMeasure::Inch);
+   problem.D = WBFL::Units::ConvertToSysUnits(8.0, WBFL::Units::Measure::Feet);
+   problem.T = WBFL::Units::ConvertToSysUnits(12.0, WBFL::Units::Measure::Inch);
    problem.N = 3;
-   problem.W = ::ConvertToSysUnits(24.0, unitMeasure::Feet);
-   problem.ST = ::ConvertToSysUnits(7.5, unitMeasure::Inch);
-   problem.SB = ::ConvertToSysUnits(7.0, unitMeasure::Inch);
-   problem.FT = ::ConvertToSysUnits(6.0, unitMeasure::Inch);
-   problem.FB = ::ConvertToSysUnits(6.0, unitMeasure::Inch);
-   problem.EL = ::ConvertToSysUnits(5.0, unitMeasure::Feet);
-   problem.CL = ::ConvertToSysUnits(8.5, unitMeasure::Inch);
-   problem.BL = ::ConvertToSysUnits(1.21, unitMeasure::Feet);
-   problem.ER = ::ConvertToSysUnits(5.0, unitMeasure::Feet);
-   problem.CR = ::ConvertToSysUnits(8.5, unitMeasure::Inch);
-   problem.BR = ::ConvertToSysUnits(1.21, unitMeasure::Feet);
+   problem.W = WBFL::Units::ConvertToSysUnits(24.0, WBFL::Units::Measure::Feet);
+   problem.ST = WBFL::Units::ConvertToSysUnits(7.5, WBFL::Units::Measure::Inch);
+   problem.SB = WBFL::Units::ConvertToSysUnits(7.0, WBFL::Units::Measure::Inch);
+   problem.FT = WBFL::Units::ConvertToSysUnits(6.0, WBFL::Units::Measure::Inch);
+   problem.FB = WBFL::Units::ConvertToSysUnits(6.0, WBFL::Units::Measure::Inch);
+   problem.EL = WBFL::Units::ConvertToSysUnits(5.0, WBFL::Units::Measure::Feet);
+   problem.CL = WBFL::Units::ConvertToSysUnits(8.5, WBFL::Units::Measure::Inch);
+   problem.BL = WBFL::Units::ConvertToSysUnits(1.21, WBFL::Units::Measure::Feet);
+   problem.ER = WBFL::Units::ConvertToSysUnits(5.0, WBFL::Units::Measure::Feet);
+   problem.CR = WBFL::Units::ConvertToSysUnits(8.5, WBFL::Units::Measure::Inch);
+   problem.BR = WBFL::Units::ConvertToSysUnits(1.21, WBFL::Units::Measure::Feet);
 
    m_Problems.push_back(problem);
 
@@ -420,7 +422,7 @@ void CBoxGdrDoc::RemoveProblem(IndexType idx)
    m_Problems.erase(m_Problems.begin() + idx);
 }
 
-const BOXGDRDIMENSIONS& CBoxGdrDoc::GetProblem(IndexType idx)
+const BOXGDRDIMENSIONS& CBoxGdrDoc::GetProblem(IndexType idx) const
 {
    return m_Problems[idx];
 }
@@ -430,28 +432,26 @@ void CBoxGdrDoc::ClearProblems()
    m_Problems.clear();
 }
 
-void CBoxGdrDoc::ComputeShapeProperties(IndexType idx,IShapeProperties** ppShapeProperties)
+WBFL::Geometry::ShapeProperties CBoxGdrDoc::ComputeShapeProperties(IndexType idx) const
 {
    const BOXGDRDIMENSIONS& dimensions = GetProblem(idx);
-   CComPtr<ICompositeShape> compositeShape;
-   compositeShape.CoCreateInstance(CLSID_CompositeShape);
 
-   CComPtr<IPolyShape> mainShape;
-   mainShape.CoCreateInstance(CLSID_PolyShape);
+   WBFL::Geometry::CompositeShape compositeShape;
 
-   mainShape->AddPoint(0,0);
-   mainShape->AddPoint(dimensions.W/2,0);
-   mainShape->AddPoint(dimensions.W/2,dimensions.D-dimensions.BR);
-   mainShape->AddPoint(dimensions.W/2+dimensions.ER,dimensions.D-dimensions.CR);
-   mainShape->AddPoint(dimensions.W/2+dimensions.ER,dimensions.D);
-   mainShape->AddPoint(-(dimensions.W/2+dimensions.EL),dimensions.D);
-   mainShape->AddPoint(-(dimensions.W/2+dimensions.EL),dimensions.D-dimensions.CL);
-   mainShape->AddPoint(-dimensions.W/2,dimensions.D-dimensions.BL);
-   mainShape->AddPoint(-dimensions.W/2,0);
-   mainShape->AddPoint(0,0);
+   WBFL::Geometry::Polygon mainShape;
 
-   CComQIPtr<IShape> s(mainShape);
-   compositeShape->AddShape(s,VARIANT_FALSE);
+   mainShape.AddPoint(0,0);
+   mainShape.AddPoint(dimensions.W/2,0);
+   mainShape.AddPoint(dimensions.W/2,dimensions.D-dimensions.BR);
+   mainShape.AddPoint(dimensions.W/2+dimensions.ER,dimensions.D-dimensions.CR);
+   mainShape.AddPoint(dimensions.W/2+dimensions.ER,dimensions.D);
+   mainShape.AddPoint(-(dimensions.W/2+dimensions.EL),dimensions.D);
+   mainShape.AddPoint(-(dimensions.W/2+dimensions.EL),dimensions.D-dimensions.CL);
+   mainShape.AddPoint(-dimensions.W/2,dimensions.D-dimensions.BL);
+   mainShape.AddPoint(-dimensions.W/2,0);
+   mainShape.AddPoint(0,0);
+
+   compositeShape.AddShape(mainShape, WBFL::Geometry::CompositeShape::ShapeType::Solid);
 
    Float64 H = dimensions.D - dimensions.ST - dimensions.SB; // void height
    IndexType nVoids = dimensions.N-1;
@@ -462,8 +462,8 @@ void CBoxGdrDoc::ComputeShapeProperties(IndexType idx,IShapeProperties** ppShape
 
    for (IndexType voidIdx = 0; voidIdx < nVoids; voidIdx++ )
    {
-      CComPtr<IPolyShape> voidShape;
-      voidShape.CoCreateInstance(CLSID_PolyShape);
+      WBFL::Geometry::Polygon voidShape;
+
       Float64 x1,x2,x3,x4,x5;
       Float64 y1,y2,y3,y4,y5;
       x1 = 0;                   y1 = 0;
@@ -472,26 +472,22 @@ void CBoxGdrDoc::ComputeShapeProperties(IndexType idx,IShapeProperties** ppShape
       x4 = V/2;                 y4 = H - dimensions.FT;
       x5 = V/2 - dimensions.FT; y5 = H;
 
-      voidShape->AddPoint(x1,y1);
-      voidShape->AddPoint(x2,y2);
-      voidShape->AddPoint(x3,y3);
-      voidShape->AddPoint(x4,y4);
-      voidShape->AddPoint(x5,y5);
-      voidShape->AddPoint(-x5,y5);
-      voidShape->AddPoint(-x4,y4);
-      voidShape->AddPoint(-x3,y3);
-      voidShape->AddPoint(-x2,y2);
-      voidShape->AddPoint(-x1,y1);
+      voidShape.AddPoint(x1,y1);
+      voidShape.AddPoint(x2,y2);
+      voidShape.AddPoint(x3,y3);
+      voidShape.AddPoint(x4,y4);
+      voidShape.AddPoint(x5,y5);
+      voidShape.AddPoint(-x5,y5);
+      voidShape.AddPoint(-x4,y4);
+      voidShape.AddPoint(-x3,y3);
+      voidShape.AddPoint(-x2,y2);
+      voidShape.AddPoint(-x1,y1);
 
-      CComQIPtr<IXYPosition> position(voidShape);
-      position->Offset(xOffset,yOffset);
-
-      CComQIPtr<IShape> s(voidShape);
-      compositeShape->AddShape(s,VARIANT_TRUE);
+      voidShape.Offset(xOffset, yOffset);
+      compositeShape.AddShape(voidShape, WBFL::Geometry::CompositeShape::ShapeType::Void);
 
       xOffset += S;
    }
 
-   CComQIPtr<IShape> shape(compositeShape);
-   shape->get_ShapeProperties(ppShapeProperties);
+   return compositeShape.GetProperties();
 }

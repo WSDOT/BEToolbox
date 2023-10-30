@@ -42,3 +42,5 @@
 
 #define IDH_SPECTRA                             700
 
+#define IDH_BEARING                             800
+

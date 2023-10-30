@@ -24,8 +24,6 @@
 #include "GirCompChapterBuilder.h"
 #include <Reporter\Reporter.h>
 
-#include <GraphicsLib\GraphicsLib.h>
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -35,15 +33,15 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////
 CGirCompChapterBuilder::CGirCompChapterBuilder(CGirCompDoc* pDoc) :
-m_Length(unitMeasure::Inch,0.001,6,2),
-m_Area(unitMeasure::Feet2,0.001,6,2),
-m_SectionModulus(unitMeasure::Feet3,0.001,10,2),
-m_MomentOfInertia(unitMeasure::Feet4,0.001,10,2)
+m_Length(WBFL::Units::Measure::Inch,0.001,6,2),
+m_Area(WBFL::Units::Measure::Feet2,0.001,6,2),
+m_SectionModulus(WBFL::Units::Measure::Feet3,0.001,10,2),
+m_MomentOfInertia(WBFL::Units::Measure::Feet4,0.001,10,2)
 {
-   m_Length.Format          = sysNumericFormatTool::Fixed;
-   m_Area.Format            = sysNumericFormatTool::Fixed;
-   m_SectionModulus.Format  = sysNumericFormatTool::Fixed;
-   m_MomentOfInertia.Format = sysNumericFormatTool::Fixed;
+   m_Length.Format          = WBFL::System::NumericFormatTool::Format::Fixed;
+   m_Area.Format            = WBFL::System::NumericFormatTool::Format::Fixed;
+   m_SectionModulus.Format  = WBFL::System::NumericFormatTool::Format::Fixed;
+   m_MomentOfInertia.Format = WBFL::System::NumericFormatTool::Format::Fixed;
 
    m_pDoc = pDoc;
 }
@@ -62,7 +60,7 @@ Uint16 CGirCompChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CGirCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CGirCompChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
@@ -78,12 +76,12 @@ rptChapter* CGirCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    }
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   m_Length.UnitOfMeasure          = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Inch  : unitMeasure::Millimeter);
-   m_Area.UnitOfMeasure            = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Inch2 : unitMeasure::Millimeter2);
-   m_SectionModulus.UnitOfMeasure  = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Inch3 : unitMeasure::Millimeter3);
-   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? unitMeasure::Inch4 : unitMeasure::Millimeter4);
+   m_Length.UnitOfMeasure          = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch  : WBFL::Units::Measure::Millimeter);
+   m_Area.UnitOfMeasure            = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch2 : WBFL::Units::Measure::Millimeter2);
+   m_SectionModulus.UnitOfMeasure  = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch3 : WBFL::Units::Measure::Millimeter3);
+   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch4 : WBFL::Units::Measure::Millimeter4);
 
 
    IndexType nProblems = m_pDoc->GetProblemCount();
@@ -121,9 +119,9 @@ rptChapter* CGirCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    return pChapter;
 }
 
-CChapterBuilder* CGirCompChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CGirCompChapterBuilder::Clone() const
 {
-   return new CGirCompChapterBuilder(m_pDoc);
+   return std::make_unique<CGirCompChapterBuilder>(m_pDoc);
 }
 
 void CGirCompChapterBuilder::ReportRolledSectionProperties(rptChapter* pChapter,IndexType idx,const GIRCOMPDIMENSIONS& dimensions) const
@@ -199,24 +197,19 @@ void CGirCompChapterBuilder::ReportBuiltUpSectionProperties(rptChapter* pChapter
    *pPara << length.SetValue(dimensions.tSlab);
    *pPara << _T(" G = ") << length.SetValue(dimensions.G) << rptNewLine;
 
-   CComPtr<IPlateGirder> girder;
-   m_pDoc->GetBuiltUpGirder(idx,&girder);
+   auto girder = m_pDoc->GetBuiltUpGirder(idx);
 
-   Float64 Qt, Qb;
-   girder->get_QTopFlange(&Qt);
-   girder->get_QBottomFlange(&Qb);
+   Float64 Qt = girder.GetQTopFlange();
+   Float64 Qb = girder.GetQBottomFlange();
 
-   CComQIPtr<IShape> shape(girder);
-   CComPtr<IShapeProperties> shapeProperties;
-   shape->get_ShapeProperties(&shapeProperties);
+   WBFL::Geometry::ShapeProperties shapeProperties = girder.GetProperties();
 
-   Float64 Ax, Ix, St, Sb, Yt, Yb;
-   shapeProperties->get_Area(&Ax);
-   shapeProperties->get_Ixx(&Ix);
-   shapeProperties->get_Ytop(&Yt);
-   shapeProperties->get_Ybottom(&Yb);
-   St = IsZero(Yt) ? 0 : Ix/Yt;
-   Sb = IsZero(Yb) ? 0 : Ix/Yb;
+   Float64 Ax = shapeProperties.GetArea();
+   Float64 Ix = shapeProperties.GetIxx();
+   Float64 Yt = shapeProperties.GetYtop();
+   Float64 Yb = shapeProperties.GetYbottom();
+   Float64 St = IsZero(Yt) ? 0 : Ix/Yt;
+   Float64 Sb = IsZero(Yb) ? 0 : Ix/Yb;
 
    pPara = new rptParagraph;
    *pChapter << pPara;
@@ -257,21 +250,14 @@ void CGirCompChapterBuilder::ReportCompositeSectionProperties(rptChapter* pChapt
 
    *pPara << _T("Composite Girder Properties N = ") << N << rptNewLine;
 
-   CComPtr<ICompositeBeam> compBeam;
-   m_pDoc->GetCompositeBeam(idx,n,&compBeam);
+   auto compBeam = m_pDoc->GetCompositeBeam(idx,n);
+   auto elasticProps = compBeam.GetElasticProperties();
+   auto shapeProperties = elasticProps.TransformProperties(1.0);
 
-   CComQIPtr<ISection> section(compBeam);
-   CComPtr<IElasticProperties> elasticProps;
-   section->get_ElasticProperties(&elasticProps);
-
-   CComPtr<IShapeProperties> shapeProperties;
-   elasticProps->TransformProperties(1.0,&shapeProperties);
-
-   Float64 Ax, Ix, St, Sb, Yt, Yb;
-   shapeProperties->get_Area(&Ax);
-   shapeProperties->get_Ixx(&Ix);
-   shapeProperties->get_Ytop(&Yt);
-   shapeProperties->get_Ybottom(&Yb);
+   Float64 Ax = shapeProperties.GetArea();
+   Float64 Ix = shapeProperties.GetIxx();
+   Float64 Yt = shapeProperties.GetYtop();
+   Float64 Yb = shapeProperties.GetYbottom();
 
    Float64 Hg;
    if ( dimensions.Type == GIRCOMPDIMENSIONS::BuiltUp )
@@ -288,17 +274,12 @@ void CGirCompChapterBuilder::ReportCompositeSectionProperties(rptChapter* pChapt
    // we want Yt of girder and St of girder
    Yt -= (dimensions.tSlab + dimensions.G);
 
-   St = IsZero(Yt) ? 0 : Ix/Yt;
-   Sb = IsZero(Yb) ? 0 : Ix/Yb;
+   Float64 St = IsZero(Yt) ? 0 : Ix/Yt;
+   Float64 Sb = IsZero(Yb) ? 0 : Ix/Yb;
 
-   Float64 Qslab;
-   compBeam->get_QSlab(&Qslab);
-
-   Float64 Qb;
-   compBeam->get_Q(dimensions.tBotFlange,&Qb);
-
-   Float64 Qt;
-   compBeam->get_Q(dimensions.tBotFlange + dimensions.D,&Qt);
+   Float64 Qslab = compBeam.GetQslab();
+   Float64 Qb = compBeam.GetQ(dimensions.tBotFlange);
+   Float64 Qt = compBeam.GetQ(dimensions.tBotFlange + dimensions.D);
 
    *pPara << Sub2(_T("I"),_T("c")) << _T(" = ") << momentOfInertia.SetValue(Ix) << _T(" ");
    *pPara << Sub2(_T("S"),_T("b")) << _T(" = ") << sectionModulus.SetValue(Sb) << _T(" ");

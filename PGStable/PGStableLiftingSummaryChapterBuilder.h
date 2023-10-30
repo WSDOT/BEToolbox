@@ -25,17 +25,17 @@
 #include "PGStableDoc.h"
 
 class CPGStableLiftingSummaryChapterBuilder :
-   public CChapterBuilder
+   public WBFL::Reporting::ChapterBuilder
 {
 public:
    CPGStableLiftingSummaryChapterBuilder(CPGStableDoc* pDoc);
    ~CPGStableLiftingSummaryChapterBuilder(void);
 
-   virtual LPCTSTR GetName() const;
+   virtual LPCTSTR GetName() const override;
    virtual Uint16 GetMaxLevel() const;
-   virtual rptChapter* Build(CReportSpecification* pRptSpec,Uint16 level) const;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const override;
    virtual bool Select() const { return true; }
-   virtual CChapterBuilder* Clone() const;
+   virtual std::unique_ptr<WBFL::Reporting::ChapterBuilder> Clone() const override;
 
 private:
    CPGStableDoc* m_pDoc;

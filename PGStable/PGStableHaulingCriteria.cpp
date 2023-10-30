@@ -40,21 +40,21 @@ CPGStableHaulingCriteria::CPGStableHaulingCriteria()
    CompressionCoefficient_GlobalStress = 0.65;
    CompressionCoefficient_PeakStress = 0.70;
 
-   MaxClearSpan = ::ConvertToSysUnits(130.0, unitMeasure::Feet);
-   MaxLeadingOverhang = ::ConvertToSysUnits(15, unitMeasure::Feet);
-   MaxGirderWeight = ::ConvertToSysUnits(200.0, unitMeasure::Kip);
+   MaxClearSpan = WBFL::Units::ConvertToSysUnits(130.0, WBFL::Units::Measure::Feet);
+   MaxLeadingOverhang = WBFL::Units::ConvertToSysUnits(15, WBFL::Units::Measure::Feet);
+   MaxGirderWeight = WBFL::Units::ConvertToSysUnits(200.0, WBFL::Units::Measure::Kip);
 
    WBFL::Stability::CCHaulingTensionStressLimit* pTensionStressLimit = new WBFL::Stability::CCHaulingTensionStressLimit;
 
-   pTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope] = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
-   pTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope] = false;
-   pTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope] = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
-   pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope] = ::ConvertToSysUnits(0.1900,unitMeasure::SqrtKSI);
+   pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingImpact::NormalCrown] = WBFL::Units::ConvertToSysUnits(0.0948,WBFL::Units::Measure::SqrtKSI);
+   pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingImpact::NormalCrown] = false;
+   pTensionStressLimit->MaxTension[+WBFL::Stability::HaulingImpact::NormalCrown] = WBFL::Units::ConvertToSysUnits(0.2,WBFL::Units::Measure::KSI);
+   pTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingImpact::NormalCrown] = WBFL::Units::ConvertToSysUnits(0.1900,WBFL::Units::Measure::SqrtKSI);
 
-   pTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper] = ::ConvertToSysUnits(0.0948,unitMeasure::SqrtKSI);
-   pTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper] = false;
-   pTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper] = ::ConvertToSysUnits(0.2,unitMeasure::KSI);
-   pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = ::ConvertToSysUnits(0.24,unitMeasure::SqrtKSI);
+   pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingImpact::MaxSuper] = WBFL::Units::ConvertToSysUnits(0.0948,WBFL::Units::Measure::SqrtKSI);
+   pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingImpact::MaxSuper] = false;
+   pTensionStressLimit->MaxTension[+WBFL::Stability::HaulingImpact::MaxSuper] = WBFL::Units::ConvertToSysUnits(0.2,WBFL::Units::Measure::KSI);
+   pTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingImpact::MaxSuper] = WBFL::Units::ConvertToSysUnits(0.24,WBFL::Units::Measure::SqrtKSI);
 
    TensionStressLimit.reset(pTensionStressLimit);
 }
@@ -84,16 +84,16 @@ bool CPGStableHaulingCriteria::operator==(const CPGStableHaulingCriteria& other)
    {
       WBFL::Stability::HaulingSlope slope = (WBFL::Stability::HaulingSlope)s;
 
-      if ( !IsEqual(pTensionStressLimit->TensionCoefficient[slope], pOtherTensionStressLimit->TensionCoefficient[slope]) )
+      if ( !IsEqual(pTensionStressLimit->TensionCoefficient[+slope], pOtherTensionStressLimit->TensionCoefficient[+slope]) )
          return false;
 
-      if (pTensionStressLimit->bMaxTension[slope] != pOtherTensionStressLimit->bMaxTension[slope] )
+      if (pTensionStressLimit->bMaxTension[+slope] != pOtherTensionStressLimit->bMaxTension[+slope] )
          return false;
       
-      if ( !IsEqual(pTensionStressLimit->MaxTension[slope], pOtherTensionStressLimit->MaxTension[slope]) )
+      if ( !IsEqual(pTensionStressLimit->MaxTension[+slope], pOtherTensionStressLimit->MaxTension[+slope]) )
          return false;
       
-      if ( !IsEqual(pTensionStressLimit->TensionCoefficientWithRebar[slope], pOtherTensionStressLimit->TensionCoefficientWithRebar[slope]) )
+      if ( !IsEqual(pTensionStressLimit->TensionCoefficientWithRebar[+slope], pOtherTensionStressLimit->TensionCoefficientWithRebar[+slope]) )
          return false;
    }
 
@@ -134,16 +134,16 @@ HRESULT CPGStableHaulingCriteria::Save(IStructuredSave* pStrSave)
    auto* pTensionStressLimit = dynamic_cast<WBFL::Stability::CCHaulingTensionStressLimit*>(TensionStressLimit.get());
 
    pStrSave->BeginUnit(_T("CrownSlope"),1.0);
-   pStrSave->put_Property(_T("TensionCoefficient"),CComVariant(pTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope]));
-   pStrSave->put_Property(_T("UseMaxTension"),CComVariant(pTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope]));
-   pStrSave->put_Property(_T("MaxTension"),CComVariant(pTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope]));
-   pStrSave->put_Property(_T("TensionCoefficientWithRebar"),CComVariant(pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope]));
+   pStrSave->put_Property(_T("TensionCoefficient"),CComVariant(pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope]));
+   pStrSave->put_Property(_T("UseMaxTension"),CComVariant(pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope]));
+   pStrSave->put_Property(_T("MaxTension"),CComVariant(pTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope]));
+   pStrSave->put_Property(_T("TensionCoefficientWithRebar"),CComVariant(pTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope]));
    pStrSave->EndUnit(); // CrownSlope
-   pStrSave->BeginUnit(_T("MaxSuper"),1.0);
-   pStrSave->put_Property(_T("TensionCoefficient"),CComVariant(pTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper]));
-   pStrSave->put_Property(_T("UseMaxTension"),CComVariant(pTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper]));
-   pStrSave->put_Property(_T("MaxTension"),CComVariant(pTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper]));
-   pStrSave->put_Property(_T("TensionCoefficientWithRebar"),CComVariant(pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper]));
+   pStrSave->BeginUnit(_T("MaxSuper"),1.0); // we mistakenly used MaxSuper when we meant Superelevation.... don't change the data block name since it would cause unnecessary changes in the file format
+   pStrSave->put_Property(_T("TensionCoefficient"),CComVariant(pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::Superelevation]));
+   pStrSave->put_Property(_T("UseMaxTension"),CComVariant(pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::Superelevation]));
+   pStrSave->put_Property(_T("MaxTension"),CComVariant(pTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::Superelevation]));
+   pStrSave->put_Property(_T("TensionCoefficientWithRebar"),CComVariant(pTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::Superelevation]));
    pStrSave->EndUnit(); // MaxSuper
    pStrSave->put_Property(_T("MaxClearSpan"),CComVariant(MaxClearSpan));
    pStrSave->put_Property(_T("MaxLeadingOverhang"),CComVariant(MaxLeadingOverhang));
@@ -194,35 +194,35 @@ HRESULT CPGStableHaulingCriteria::Load(IStructuredLoad* pStrLoad)
 
       hr = pStrLoad->BeginUnit(_T("CrownSlope"));
       hr = pStrLoad->get_Property(_T("TensionCoefficient"),&var);
-      pTensionStressLimit->TensionCoefficient[WBFL::Stability::CrownSlope] = var.dblVal;
+      pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope] = var.dblVal;
 
       var.vt = VT_BOOL;
       hr = pStrLoad->get_Property(_T("UseMaxTension"),&var);
-      pTensionStressLimit->bMaxTension[WBFL::Stability::CrownSlope] = (var.boolVal == VARIANT_TRUE ? true : false);
+      pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] = (var.boolVal == VARIANT_TRUE ? true : false);
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("MaxTension"),&var);
-      pTensionStressLimit->MaxTension[WBFL::Stability::CrownSlope] = var.dblVal;
+      pTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] = var.dblVal;
 
       hr = pStrLoad->get_Property(_T("TensionCoefficientWithRebar"),&var);
-      pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::CrownSlope] = var.dblVal;
+      pTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::CrownSlope] = var.dblVal;
       pStrLoad->EndUnit(); // CrownSlope
 
 
       hr = pStrLoad->BeginUnit(_T("MaxSuper"));
       hr = pStrLoad->get_Property(_T("TensionCoefficient"),&var);
-      pTensionStressLimit->TensionCoefficient[WBFL::Stability::MaxSuper] = var.dblVal;
+      pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::Superelevation] = var.dblVal;
 
       var.vt = VT_BOOL;
       hr = pStrLoad->get_Property(_T("UseMaxTension"),&var);
-      pTensionStressLimit->bMaxTension[WBFL::Stability::MaxSuper] = (var.boolVal == VARIANT_TRUE ? true : false);
+      pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::Superelevation] = (var.boolVal == VARIANT_TRUE ? true : false);
 
       var.vt = VT_R8;
       hr = pStrLoad->get_Property(_T("MaxTension"),&var);
-      pTensionStressLimit->MaxTension[WBFL::Stability::MaxSuper] = var.dblVal;
+      pTensionStressLimit->MaxTension[+WBFL::Stability::HaulingSlope::Superelevation] = var.dblVal;
 
       hr = pStrLoad->get_Property(_T("TensionCoefficientWithRebar"),&var);
-      pTensionStressLimit->TensionCoefficientWithRebar[WBFL::Stability::MaxSuper] = var.dblVal;
+      pTensionStressLimit->TensionCoefficientWithRebar[+WBFL::Stability::HaulingSlope::Superelevation] = var.dblVal;
       pStrLoad->EndUnit(); // MaxSuper
 
       hr = pStrLoad->get_Property(_T("MaxClearSpan"),&var);

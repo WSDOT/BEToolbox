@@ -23,9 +23,13 @@
 #include "stdafx.h"
 #include "GenCompChapterBuilder.h"
 #include "..\BEToolboxUtilities.h"
-#include <Reporter\Reporter.h>
 #include "..\BEToolboxColors.h"
-#include <GraphicsLib\GraphicsLib.h>
+
+#include <Reporter\Reporter.h>
+#include <Graphing/GraphXY.h>
+
+#include <GeomModel/ElasticProperties.h>
+#include <GeomModel/ShapeProperties.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -60,7 +64,7 @@ Uint16 CGenCompChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 level) const
+rptChapter* CGenCompChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;
@@ -73,7 +77,7 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    (*pPara) << pLayoutTable;
 
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  length, pDispUnits->ComponentDim, false);
 
@@ -120,19 +124,15 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    }
 
    // Properties
-   CComPtr<IPolyShape> primaryShape(m_pDoc->GetPrimaryShape());
-   CComQIPtr<IShape> shape(primaryShape);
-   CComPtr<IShapeProperties> shapeProps;
-   shape->get_ShapeProperties(&shapeProps);
+   auto primaryShape(m_pDoc->GetPrimaryShape());
+   auto shapeProps = primaryShape.GetProperties();
+
    (*pLayoutTable)(0,2) << Bold(_T("Basic Section Properties")) << rptNewLine;
    WriteSectionProperties((*pLayoutTable)(0,2),shapeProps);
 
-   CComPtr<ICompositeSection> compSection(m_pDoc->GetCompositeSection());
-   CComQIPtr<ISection> section(compSection);
-   CComQIPtr<IElasticProperties> elasticProperties;
-   section->get_ElasticProperties(&elasticProperties);
-   CComPtr<IShapeProperties> compositeProperties;
-   elasticProperties->TransformProperties(1.0,&compositeProperties);
+   auto compSection(m_pDoc->GetCompositeSection());
+   auto elasticProperties = compSection.GetElasticProperties();
+   auto compositeProperties = elasticProperties.TransformProperties(1.0);
 
    (*pLayoutTable)(0,3) << Bold(_T("Composite Section Properties")) << rptNewLine;
    (*pLayoutTable)(0,3) << _T("Modular Ratio, n = ") << m_pDoc->GetModularRatio() << rptNewLine;
@@ -148,24 +148,23 @@ rptChapter* CGenCompChapterBuilder::Build(CReportSpecification* pRptSpec,Uint16 
    return pChapter;
 }
 
-void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,IShapeProperties* pShapeProp) const
+void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,WBFL::Geometry::ShapeProperties& shapeProps) const
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  length, pDispUnits->ComponentDim, true);
    INIT_UV_PROTOTYPE( rptLength2UnitValue,  area, pDispUnits->Area, true);
    INIT_UV_PROTOTYPE( rptLength4UnitValue,  momentOfInertia, pDispUnits->MomentOfInertia, true);
 
-   Float64 Area,Ixx,Iyy,Ixy,yt,yb,xl,xr;
-   pShapeProp->get_Area(&Area);
-   pShapeProp->get_Ixx(&Ixx);
-   pShapeProp->get_Iyy(&Iyy);
-   pShapeProp->get_Ixy(&Ixy);
-   pShapeProp->get_Ybottom(&yb);
-   pShapeProp->get_Ytop(&yt);
-   pShapeProp->get_Xleft(&xl);
-   pShapeProp->get_Xright(&xr);
+   Float64 Area = shapeProps.GetArea();
+   Float64 Ixx = shapeProps.GetIxx();
+   Float64 Iyy = shapeProps.GetIyy();
+   Float64 Ixy = shapeProps.GetIxy();
+   Float64 yt = shapeProps.GetYtop();
+   Float64 yb = shapeProps.GetYbottom();
+   Float64 xl = shapeProps.GetXleft();
+   Float64 xr = shapeProps.GetXright();
 
    para << _T("Area = ") << area.SetValue(Area) << rptNewLine;
    para << _T("Xl = ") << length.SetValue(xl) << rptNewLine;
@@ -177,15 +176,15 @@ void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,IShapePro
    para << _T("Ixy = ") << momentOfInertia.SetValue(Ixy) << rptNewLine;
 }
 
-CChapterBuilder* CGenCompChapterBuilder::Clone() const
+std::unique_ptr<WBFL::Reporting::ChapterBuilder> CGenCompChapterBuilder::Clone() const
 {
-   return new CGenCompChapterBuilder(m_pDoc);
+   return std::make_unique<CGenCompChapterBuilder>(m_pDoc);
 }
 
 rptRcImage* CGenCompChapterBuilder::CreateImage() const
 {
    CEAFApp* pApp = EAFGetApp();
-   const unitmgtIndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+   const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    CImage image;
    image.Create(500,500,32);
@@ -199,15 +198,15 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    pDC->Rectangle(rect);
    pDC->SelectObject(pOldBrush);
 
-   LengthTool lengthTool(pDispUnits->ComponentDim);
-   grGraphXY graph(lengthTool,lengthTool);
+   WBFL::Units::LengthTool lengthTool(pDispUnits->ComponentDim);
+   WBFL::Graphing::GraphXY graph(&lengthTool,&lengthTool);
 
    graph.SetOutputRect(rect);
    graph.SetClientAreaColor(GRAPH_BACKGROUND);
    graph.SetGridPenStyle(GRAPH_GRID_PEN_STYLE, GRAPH_GRID_PEN_WEIGHT, GRAPH_GRID_COLOR);
 
-   graph.SetIsotropicAxes(true);
-   graph.SetDoDrawGrid(true);
+   graph.IsotropicAxes(true);
+   graph.DrawGrid(true);
    graph.DrawLegend(false);
 
    //graph.SetTitle(_T("Interaction Diagram"));
@@ -217,7 +216,7 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    strXAxis.Format(_T("X (%s)"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
    graph.SetXAxisTitle(strXAxis.LockBuffer());
    strXAxis.UnlockBuffer();
-   graph.SetXAxisNiceRange(true);
+   graph.XAxisNiceRange(true);
    graph.SetXAxisNumberOfMinorTics(0);
    graph.SetXAxisNumberOfMajorTics(11);
    graph.SetXAxisLabelAngle(350); // 35 degrees
@@ -227,7 +226,7 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    strYAxis.Format(_T("Y (%s)"),pDispUnits->ComponentDim.UnitOfMeasure.UnitTag().c_str());
    graph.SetYAxisTitle(strYAxis.LockBuffer());
    strYAxis.UnlockBuffer();
-   graph.SetYAxisNiceRange(true);
+   graph.YAxisNiceRange(true);
    graph.SetYAxisNumberOfMinorTics(0);
    graph.SetYAxisNumberOfMajorTics(11);
 
@@ -239,13 +238,13 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    std::vector<std::pair<Float64,Float64>>::const_iterator end(primaryPoints.end());
    for (; iter != end; iter++)
    {
-      GraphPoint point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(WBFL::Units::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),WBFL::Units::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(primarySeries,point);
    }
 
    if ( 0 < primaryPoints.size() )
    {
-      GraphPoint point(::ConvertFromSysUnits(primaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(primaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(WBFL::Units::ConvertFromSysUnits(primaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),WBFL::Units::ConvertFromSysUnits(primaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(primarySeries,point);
    }
 
@@ -254,13 +253,13 @@ rptRcImage* CGenCompChapterBuilder::CreateImage() const
    end = secondaryPoints.end();
    for (; iter != end; iter++)
    {
-      GraphPoint point(::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(WBFL::Units::ConvertFromSysUnits(iter->first,pDispUnits->ComponentDim.UnitOfMeasure),WBFL::Units::ConvertFromSysUnits(iter->second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(secondarySeries,point);
    }
 
    if ( 0 < secondaryPoints.size() )
    {
-      GraphPoint point(::ConvertFromSysUnits(secondaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),::ConvertFromSysUnits(secondaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
+      WBFL::Graphing::Point point(WBFL::Units::ConvertFromSysUnits(secondaryPoints.front().first,pDispUnits->ComponentDim.UnitOfMeasure),WBFL::Units::ConvertFromSysUnits(secondaryPoints.front().second,pDispUnits->ComponentDim.UnitOfMeasure));
       graph.AddPoint(secondarySeries,point);
    }
 
