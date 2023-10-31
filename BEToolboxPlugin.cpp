@@ -191,7 +191,7 @@ BOOL CBEToolboxPlugin::GetToolTipMessageString(UINT nID, CString& rMessage) cons
 void CBEToolboxPlugin::ManagePlugins()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   CWinApp* pApp = AfxGetApp();
+   CEAFApp* pApp = (CEAFApp*)AfxGetApp();
 
    std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage BEToolbox Tools"), _T("Select the BEToolbox Tools that you want to be available"), CATID_BEToolboxTool, EAFGetMainFrame(), pApp);
 
@@ -210,7 +210,7 @@ void CBEToolboxPlugin::ManagePlugins()
 void CBEToolboxPlugin::ManagePGStablePlugins()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   CWinApp* pApp = AfxGetApp();
+   CEAFApp* pApp = (CEAFApp*)AfxGetApp();
 
    std::vector<CEAFPluginState> pluginStates = EAFManageApplicationPlugins(_T("Manage PGStable plugins"), _T("Select the PGStable plugins that you want to be available"), CATID_PGStablePlugin, EAFGetMainFrame(), pApp);
 
