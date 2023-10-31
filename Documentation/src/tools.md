@@ -21,8 +21,8 @@ GirComp computes the geometric section properties of a built-up or rolled steel 
 @subpage pgstable <br>
 PGStable analyzes precast-prestressed girders for lateral stability.
 
-@subpage spectra <br>
-Spectra generates a design response spectra.
-
 @subpage ultcol <br>
 UltCol computes axial/bending interaction for a circular reinforced concrete column.
+
+@subpage spectra <br>
+Spectra generates a design response spectra. Note that this tool is obsolete and not installed with the BEToolbox.

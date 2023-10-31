@@ -7,3 +7,5 @@ The Bridge Engineer's Toolbox (BEToolbox) application is a collection of useful 
 @subpage general_information
 
 @ref tools
+
+@subpage installing_spectra
