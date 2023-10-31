@@ -53,6 +53,9 @@ IMPLEMENT_DYNCREATE(CBearingDoc, CBEToolboxDoc)
 CBearingDoc::CBearingDoc() : CBEToolboxDoc()
 {
    std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Bearing")));
+
+   pRptBuilder->EnableHeadingNumbers(true);
+
    GetReportManager()->AddReportBuilder(pRptBuilder);
 
    std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CBearingTitlePageBuilder>());
