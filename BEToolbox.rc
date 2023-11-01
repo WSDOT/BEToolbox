@@ -273,7 +273,7 @@ BEGIN
     LTEXT           "Cover Thickness:",IDC_WIDTH2,31,63,55,8
     EDITTEXT        IDC_COVER,111,60,40,14,ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_COVER_UNIT,157,63,14,8
-    LTEXT           "Intermediate Elastomer \n Layer Thickness:",IDC_LAYERx,31,78,78,18
+    LTEXT           "Intermediate Elastomer \nLayer Thickness:",IDC_LAYERx,31,78,78,18
     EDITTEXT        IDC_LAYER,111,78,40,14,ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_LAYER_UNIT,157,81,14,8
     LTEXT           "Steel Shim Thickness:",IDC_SHIMX,31,99,78,18
@@ -288,10 +288,10 @@ BEGIN
     LTEXT           "Fth:",IDC_LENGTH3,233,38,13,8
     EDITTEXT        IDC_FATIGUE,278,36,40,14,ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_FATIGUE_UNIT,322,38,22,10
-    LTEXT           "Min. Shear \n Modulus:",IDC_LENGTH4,233,57,40,24
+    LTEXT           "Min. Shear \nModulus:",IDC_LENGTH4,233,57,40,24
     EDITTEXT        IDC_SHEAR_MOD_MIN,278,55,40,14,ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_SHEAR_MOD_MIN_UNIT,322,56,25,12
-    LTEXT           "Max. Shear \n Modulus:",IDC_GMAX_TEXT2,233,73,40,18
+    LTEXT           "Max. Shear \nModulus:",IDC_GMAX_TEXT2,233,73,40,18
     EDITTEXT        IDC_GMAX_WINDOW,278,74,40,14,ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_SHEAR_MOD_MAX_UNIT,322,76,20,12
     GROUPBOX        "Applied Deflections",IDC_STATIC,423,5,137,72

@@ -108,7 +108,8 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	Float64 tlayer = brg.GetIntermediateLayerThickness();
 	Float64 tshim = brg.GetSteelShimThickness();
 
-	rptParagraph* pHeading = new rptParagraph(rptStyleManager::GetHeadingStyle());
+	rptHeading* pHeading = rptStyleManager::CreateHeading(1);
+
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Initial Parameters"));
 	*pHeading << _T("INITIAL PARAMETERS:");
@@ -316,18 +317,21 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewPage;
 
-	rptParagraph* pHeading = new rptParagraph(rptStyleManager::GetHeadingStyle());
+	rptHeading* pHeading = rptStyleManager::CreateHeading();
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Bearing Specification Check"));
 	*pHeading << _T("SPECIFICATION CHECK:");
 
-	rptParagraph* pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	rptHeading* pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Minimum Allowable Steel Shim Thickness Check:");
+
+	rptHeading* pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Absolute:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	*pPara << Underline(_T("Absolute")) << rptNewLine;
 	*pPara << Sub2(_T("h"), _T("s,min")) << _T(" = ") << length.SetValue(t_min_shim_absolute) << _T(" (Article 4.5, AASHTO M 251)") << rptNewLine;
 	if (t_min_shim_absolute_check == true)
 	{
@@ -340,7 +344,12 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << _T(" ") << RPT_FAIL;
 	}
 
-	*pPara << rptNewLine << Underline(_T("Service")) << rptNewLine;
+	*pPara << rptNewLine << rptNewLine;
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Service:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
 	*pPara << Sub2(_T("h"), _T("s,service")) << _T(" = ");
 
@@ -359,7 +368,12 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	*pPara << _T(" (14.7.5.3.5-1)");
 
-	*pPara << rptNewLine << Underline(_T("Fatigue")) << rptNewLine;
+	*pPara << rptNewLine << rptNewLine;
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Fatigue:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
 	*pPara << Sub2(_T("h"), _T("s,fatigue")) << _T(" = ") << _T("2 ") << symbol(TIMES) << Sub2(_T(" h"), _T("ri "));
 	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("LL")) << _T(" / ") Sub2(_T("f"), _T("th"));
@@ -379,7 +393,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 
 
-	pHeading = new rptParagraph(rptStyleManager::GetHeadingStyle());
+	pHeading = rptStyleManager::CreateHeading();;
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Method A Analysis:"));
 	*pHeading << _T("Method A Analysis:");
@@ -387,7 +401,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	(*pChapter) << pPara;
 
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Maximum Allowable Shape Factor, for applicability of Method A:");
 	pPara = new rptParagraph;
@@ -409,7 +423,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << rptNewLine;
 
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Minimum Allowable Shape Factor Checks:");
 	pPara = new rptParagraph;
@@ -485,7 +499,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	if (tlayer_max_check == true)
 	{
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tlayer) << _T(" < ") << length.SetValue(tlayer_max) << _T(" ");
-		*pPara << RPT_PASS << rptNewLine;
+		*pPara << RPT_PASS << rptNewLine << rptNewLine;
 	}
 	else
 	{
@@ -493,7 +507,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << RPT_FAIL << rptNewLine << rptNewLine;
 	}
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Maximum Allowable Stress Check:");
 	pPara = new rptParagraph;
@@ -514,13 +528,19 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Minimum Allowable Layers Checks:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	*pPara << Italic(_T("Shear Deformation:")) << rptNewLine;
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Shear Deformation:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
+
+
 	*pPara << Sub2(_T("n"), _T("min")) << _T("(") << Sub2(symbol(DELTA), _T("s")) << _T(") = 2 ") << symbol(TIMES);
 	*pPara << _T(" (") << Sub2(symbol(DELTA), _T("s")) << _T(" - ") << Sub2(_T("h"), _T("cover")) << _T(") / ") Sub2(_T("h"), _T("ri")) << _T(" = 2 ") << symbol(TIMES) << _T(" (");
 	*pPara << length.SetValue(sdef) << _T(" - ") << length.SetValue(tcover) << _T(") / ") << length.SetValue(tlayer) << _T(" = ") << n_min_shear_def << rptNewLine;
@@ -535,9 +555,19 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	*pPara << _T(" (14.7.6.3.4-1)") << rptNewLine;
 
-	*pPara << Underline(_T("Primary Direction")) << rptNewLine;
+	*pPara << rptNewLine;
 
-	*pPara << Italic(_T("Rotation:")) << rptNewLine;
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Primary Direction:");
+
+
+	rptHeading* pLevel4Heading = rptStyleManager::CreateHeading(4);
+	(*pChapter) << pLevel4Heading;
+	*pLevel4Heading << _T("Rotation:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
+
 
 
 	if (n_min_rot_x <= 0)
@@ -573,8 +603,13 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" < ") << n_min_rot_x << _T(" ") << RPT_FAIL;
 	}
 	*pPara << _T(" (SECTION 14.7.6.3.5)") << rptNewLine;
+	*pPara << rptNewLine;
 
-	*pPara << Italic(_T("Stability:")) << rptNewLine;
+	pLevel4Heading = rptStyleManager::CreateHeading(4);
+	(*pChapter) << pLevel4Heading;
+	*pLevel4Heading << _T("Stability:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
 	*pPara << Sub2(_T("n"), _T("max Stab X")) << _T(" = (L / 3 - 2 ");
 	*pPara << symbol(TIMES) << Sub2(_T(" h"), _T("cover")) << _T(" - ") << Sub2(_T("h"), _T("s")) << _T(") / (") << Sub2(_T("h"), _T("ri")) << _T(" + ") << Sub2(_T("h"), _T("s")) << _T(") = ");
@@ -591,12 +626,17 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	*pPara << _T(" (SECTION 14.7.6.3.6)") << rptNewLine;
 
+	*pPara << rptNewLine;
 
-	*pPara << Underline(_T("Secondary Direction")) << rptNewLine;
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Secondary Direction:");
 
-	*pPara << Italic(_T("Rotation:")) << rptNewLine;
-
-
+	pLevel4Heading = rptStyleManager::CreateHeading(4);
+	(*pChapter) << pLevel4Heading;
+	*pLevel4Heading << _T("Rotation:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
 	if (n_min_rot_y <= 0)
 	{
@@ -634,7 +674,13 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	*pPara << _T(" (SECTION 14.7.6.3.5)") << rptNewLine;
 
-	*pPara << Italic(_T("Stability:")) << rptNewLine;
+	*pPara << rptNewLine;
+
+	pLevel4Heading = rptStyleManager::CreateHeading(4);
+	(*pChapter) << pLevel4Heading;
+	*pLevel4Heading << _T("Stability:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
 	*pPara << Sub2(_T("n"), _T("max Stab Y")) << _T(" = (W / 3 - 2");
 	*pPara << symbol(TIMES) << Sub2(_T(" h"), _T("cover")) << _T(" - ") << Sub2(_T("h"), _T("s")) << _T(") / (") << Sub2(_T("h"), _T("ri")) << _T(" + ") << Sub2(_T("h"), _T("s")) << _T(") = ");
@@ -653,7 +699,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Maximum Compressive Strain:");
 	pPara = new rptParagraph;
@@ -677,7 +723,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Initial Dead Load Deflection:");
 	pPara = new rptParagraph;
@@ -691,7 +737,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Instantaneous Live Load Deflection:");
 	pPara = new rptParagraph;
@@ -865,20 +911,21 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewPage;
 
-	rptParagraph* pHeading = new rptParagraph(rptStyleManager::GetHeadingStyle());
+	rptHeading* pHeading = rptStyleManager::CreateHeading();
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Bearing Specification Check"));
 	*pHeading << _T("SPECIFICATION CHECK:");
 
-	*pPara << rptNewLine;
-
-	rptParagraph* pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	rptHeading* pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Minimum Allowable Steel Shim Thickness Check:");
+
+	rptHeading* pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Absolute: ");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	*pPara << Underline(_T("Absolute")) << rptNewLine;
 	*pPara << Sub2(_T("h"), _T("s,min")) << _T(" = ") << length.SetValue(t_min_shim_absolute) << _T(" (Article 4.5, AASHTO M 251)") << rptNewLine;
 	if (t_min_shim_absolute_check == true)
 	{
@@ -891,7 +938,14 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << _T(" ") << RPT_FAIL;
 	}
 
-	*pPara << rptNewLine << Underline(_T("Service")) << rptNewLine;
+	*pPara << rptNewLine << rptNewLine;
+
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Service: ");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
+
 
 	*pPara << Sub2(_T("h"), _T("s,service")) << _T(" = ");
 
@@ -910,7 +964,13 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	*pPara << _T(" (14.7.5.3.5-1)");
 
-	*pPara << rptNewLine << Underline(_T("Fatigue")) << rptNewLine;
+	*pPara << rptNewLine << rptNewLine;
+
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Fatigue: ");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
 	*pPara << Sub2(_T("h"), _T("s,fatigue")) << _T(" = 2 ") << symbol(TIMES) << _T(" ") << Sub2(_T(" h"), _T("ri"));
 	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("LL")) << _T(" / ") Sub2(_T("f"), _T("th"));
@@ -932,24 +992,18 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << rptNewLine;
 
 
-	pHeading = new rptParagraph(rptStyleManager::GetHeadingStyle());
+	pHeading = rptStyleManager::CreateHeading();
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Method B Analysis:"));
 	*pHeading << _T("Method B Analysis:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-
-
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Minimum Allowable Shear Deformation Check:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
-
-
-
-
 
 	*pPara << _T("2 ") << symbol(TIMES) << _T(" ") << Sub2(symbol(DELTA), _T("s-st")) << _T(" = 2 (") << length.SetValue(sdef);
 	*pPara << _T(") = ") << length.SetValue(2 * sdef) << rptNewLine;
@@ -968,7 +1022,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Shear Strain Combination Check:");
 	pPara = new rptParagraph;
@@ -976,13 +1030,8 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 
 	*pPara << _T("Compressibility Index, ");
-		
-		
 	*pPara << symbol(lambda) << _T(" = S " ) << symbol(TIMES) << _T(" ") << symbol(ROOT) << _T("(3 ") << symbol(TIMES);
 	*pPara << Sub2(_T(" G"), _T("min")) << _T(" / K) = ");
-		
-	
-		
 	*pPara << s << symbol(ROOT) << _T("(3 ") << symbol(TIMES) << _T(" ") << stress.SetValue(Gmin) << _T(" / ");
 	*pPara << stress.SetValue(K) << _T(") = ") << lambda;
 	*pPara << _T(" (14.7.5.3.3-6)") << rptNewLine;
@@ -995,9 +1044,13 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(" - 0.047") << symbol(lambda) << Super(_T("2")) << _T(" = -0.315 + 0.195(");
 	*pPara << lambda << _T(") - 0.047(") << lambda << _T(")") << Super(_T("2")) << _T(" = ") << da3 << _T(" (Comm. C14.7.5.3.3-5)") << rptNewLine;
 
+	*pPara << rptNewLine;
 
-
-	*pPara << Underline(_T("Primary Direction")) << rptNewLine;
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Primary Direction : ");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
 	*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("d"), _T("a2")) << _T(" + ");
 	*pPara << Sub2(_T("d"), _T("a3 ")) << symbol(TIMES) << _T(" L / W = ");
@@ -1084,8 +1137,13 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	*pPara << _T(" (14.7.5.3.3-1)") << rptNewLine;
 
+	*pPara << rptNewLine;
 
-	*pPara << Underline(_T("Secondary Direction")) << rptNewLine;
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Secondary Direction:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
 
 	*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("d"), _T("a2")) << _T(" + ");
@@ -1179,14 +1237,17 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Applicability of Total Stress Stability:");
+
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Primary Direction:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
 
-	*pPara << Underline(_T("Primary Direction")) << rptNewLine;
 	std::_tstring is_x_fixed;
 	if (fixed_x == WBFL::EngTools::BearingLoads::FixedTranslationX::Yes)
 	{
@@ -1234,9 +1295,17 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << _T(" Does not apply") << rptNewLine;
 	}
 
+	*pPara << rptNewLine;
 
 
-	*pPara << Underline(_T("Secondary Direction")) << rptNewLine;
+
+	pLevel3Heading = rptStyleManager::CreateHeading(3);
+	(*pChapter) << pLevel3Heading;
+	*pLevel3Heading << _T("Secondary Direction:");
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
+
+
 	std::_tstring is_y_fixed;
 	if (fixed_y == WBFL::EngTools::BearingLoads::FixedTranslationY::Yes)
 	{
@@ -1287,7 +1356,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Restraint System Requirement:");
 	pPara = new rptParagraph;
@@ -1327,7 +1396,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << rptNewLine << rptNewLine;
 
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Hydrostatic Stress:");
 	pPara = new rptParagraph;
@@ -1372,7 +1441,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Horizontal Force Check:");
 	pPara = new rptParagraph;
@@ -1399,7 +1468,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Initial Dead Load Deflection:");
 	pPara = new rptParagraph;
@@ -1413,7 +1482,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Instantaneous Live Load Deflection:");
 	pPara = new rptParagraph;
@@ -1427,13 +1496,11 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine;
 
-	pSubHeading = new rptParagraph(rptStyleManager::GetSubheadingStyle());
+	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Maximum Allowable Shape Factor, for applicability of Method A:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
-
-
 
 	*pPara << Sub2(_T("S"), _T("max")) << _T(" = ") << symbol(ROOT) << _T("22 ") << symbol(TIMES) << _T(" (n + ");
 	*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(")) = ") << symbol(ROOT) << _T(" 22 ") << symbol(TIMES) << _T(" (") << n << _T(" + ") << n_multiplier << _T(")) = ") << s_max << rptNewLine;
@@ -1446,10 +1513,6 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	{
 		*pPara << color(Red) << symbol(RIGHT_SINGLE_ARROW) << s << _T(" > ") << s_max << _T(" ") << RPT_FAIL << color(Red) << _T(" (METHOD A CANNOT BE USED per SECTION 14.7.6.1) ") << color(Red) << rptNewLine;
 	}
-
-
-	
-
 
 }
 
