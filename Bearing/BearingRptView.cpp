@@ -75,7 +75,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CBearingRptView::CreateReportBro
       return nullptr;
 
    CBearingDoc* pDoc = (CBearingDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), 0,m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CBearingRptView::RefreshReport()
