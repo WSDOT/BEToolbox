@@ -75,7 +75,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CBoxGdrRptView::CreateReportBrow
       return nullptr;
 
    CBoxGdrDoc* pDoc = (CBoxGdrDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec,std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),0,m_pReportSpec,std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CBoxGdrRptView::RefreshReport()

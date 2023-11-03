@@ -543,7 +543,7 @@ BEGIN
     LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB,28,524,159,8
     EDITTEXT        IDC_LIFTING_TENSION_WITH_REBAR,40,535,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "(lambda)sqrt(f'ci (MPa))",IDC_LIFTING_TENSION_WITH_REBAR_UNIT,85,537,103,8
-    GROUPBOX        "Browser Placeholder",IDC_BROWSER,268,7,509,560,NOT WS_VISIBLE
+    GROUPBOX        "Browser Placeholder",IDC_BROWSER,268,7,509,560
 END
 
 IDD_PGSTABLEHAULINGVIEW DIALOGEX 0, 0, 769, 891
@@ -692,7 +692,7 @@ BEGIN
     LTEXT           "Maximum girder weight",IDC_STATIC,25,815,74,8
     EDITTEXT        IDC_MAX_GIRDER_WEIGHT,173,815,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_MAX_GIRDER_WEIGHT_UNIT,217,815,19,8
-    GROUPBOX        "Browser Placeholder",IDC_BROWSER,263,7,487,877,NOT WS_VISIBLE
+    GROUPBOX        "Browser Placeholder",IDC_BROWSER,263,7,487,877
 END
 
 IDD_PGSTABLEONEENDSEATEDVIEW DIALOGEX 0, 0, 769, 891
@@ -815,7 +815,7 @@ BEGIN
     LTEXT           "In areas with sufficient bonded reinforcement",IDC_STATIC_ACSSB2,28,658,159,8
     EDITTEXT        IDC_HAULING_TENSION_WITH_REBAR_CROWN,24,669,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "(lambda)sqrt(f'ci (MPa))",IDC_HAULING_TENSION_WITH_REBAR_CROWN_UNIT,68,671,90,8
-    GROUPBOX        "Browser Placeholder",IDC_BROWSER,263,7,487,877,NOT WS_VISIBLE
+    GROUPBOX        "Browser Placeholder",IDC_BROWSER,263,7,487,877
 END
 
 IDD_PRISMATIC_GIRDER DIALOGEX 0, 0, 781, 410
@@ -1526,7 +1526,103 @@ END
 
 IDD_PGSTABLELIFTINGVIEW AFX_DIALOG_LAYOUT
 BEGIN
-    0
+    0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 100, 100
 END
 
 IDD_PRISMATIC_GIRDER AFX_DIALOG_LAYOUT

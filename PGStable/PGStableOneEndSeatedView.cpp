@@ -547,24 +547,19 @@ void CPGStableOneEndSeatedView::OnInitialUpdate()
       pcbHaulTruck->AddString(key.c_str());
    }
 
-   CWnd* pWnd = GetDlgItem(IDC_BROWSER);
-   pWnd->ShowWindow(SW_HIDE);
-
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("OneEndSeated"));
-   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
-
-   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
-   m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
-
-   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
-
-   m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
-
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::WindLoadType::Speed);
    pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::WindLoadType::Pressure);
 
    CPGStableFormView::OnInitialUpdate();
+
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("OneEndSeated"));
+   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
+   CWnd* pWnd = GetDlgItem(IDC_BROWSER);
+   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(pWnd->GetSafeHwnd(), WS_BORDER, m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   m_pBrowser->FitToParent();
 
    UpdateFpeControls();
 
@@ -643,11 +638,11 @@ void CPGStableOneEndSeatedView::OnSize(UINT nType, int cx, int cy)
 {
    CPGStableFormView::OnSize(nType, cx, cy);
 
-   if ( m_pBrowser )
+   if (m_pBrowser)
    {
       // Convert a 7du x 7du rect into pixels
-      CRect sizeRect(0,0,7,7);
-      MapDialogRect(GetSafeHwnd(),&sizeRect);
+      CRect sizeRect(0, 0, 7, 7);
+      MapDialogRect(GetSafeHwnd(), &sizeRect);
 
       CRect clientRect;
       GetClientRect(&clientRect);
@@ -659,14 +654,12 @@ void CPGStableOneEndSeatedView::OnSize(UINT nType, int cx, int cy)
 
       CRect browserRect;
       browserRect.left = placeholderRect.left;
-      browserRect.top  = placeholderRect.top;
+      browserRect.top = placeholderRect.top;
       browserRect.right = clientRect.right - sizeRect.Width();
       browserRect.bottom = clientRect.bottom - sizeRect.Height();
+      pWnd->SetWindowPos(nullptr, browserRect.left, browserRect.top, browserRect.Width(), browserRect.Height(), SWP_NOZORDER | SWP_NOMOVE);
 
-      m_pBrowser->Move(browserRect.TopLeft());
-      m_pBrowser->Size(browserRect.Size() );
-
-      Invalidate();
+      m_pBrowser->FitToParent();
    }
 }
 

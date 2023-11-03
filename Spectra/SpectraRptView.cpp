@@ -75,7 +75,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CSpectraRptView::CreateReportBro
       return nullptr;
 
    CSpectraDoc* pDoc = (CSpectraDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),0,m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CSpectraRptView::RefreshReport()
