@@ -21,5 +21,3 @@ mkdir %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
 xcopy /s /y /d %ARPDIR%\BEToolbox\Documentation\doc\html\* %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
 copy %ARPDIR%\BEToolbox\Documentation\BEToolbox.dm %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
 
-
-
