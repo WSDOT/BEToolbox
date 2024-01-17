@@ -98,7 +98,7 @@ BEGIN
             VALUE "FileDescription", "WSDOT BEToolbox"
             VALUE "FileVersion", "8.0.1.0"
             VALUE "InternalName", "BEToolbox.dll"
-            VALUE "LegalCopyright", "Copyright © 1999-2023, Washington State Department of Transportation, All Rights Reserved"
+            VALUE "LegalCopyright", "Copyright © 1999-2024, Washington State Department of Transportation, All Rights Reserved"
             VALUE "OriginalFilename", "BEToolbox.dll"
             VALUE "ProductName", "WSDOT BEToolbox"
             VALUE "ProductVersion", "8.0.1.0"
