@@ -14,8 +14,6 @@
 #include <WBFLGeometry_i.c>
 #include <WBFLUnitServer_i.c>
 
-#include <DManip\DManip.h>
-
 #include "ExampleTool\ExampleTool.h"
 
 using namespace ATL;
