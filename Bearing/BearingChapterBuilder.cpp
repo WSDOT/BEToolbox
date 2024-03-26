@@ -450,7 +450,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	{
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << s << _T(" < ") << s_min << _T(" ") << RPT_FAIL;
 	}
-	*pPara << _T(" (LRFD AASHTO 14.7.6.3.2-7)") << rptNewLine;
+	*pPara << _T(" (SECTION 14.7.6.3.2-7)") << rptNewLine;
 	*pPara << _T("Minimum Area, ") << Sub2(_T("A"), _T("min")) << _T(" = ") << Sub2(_T("P"), _T("s"));
 	*pPara << _T(" / (") << Sub2(symbol(sigma), _T("max ")) << symbol(TIMES);
 	*pPara << _T(" ") << Sub2(symbol(mu), _T("sd allow")) << _T(") = ") << force.SetValue(tl);
