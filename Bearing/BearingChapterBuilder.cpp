@@ -456,7 +456,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(" ") << Sub2(symbol(mu), _T("sd allow")) << _T(") = ") << force.SetValue(tl);
 	*pPara << _T(" / (") << stress.SetValue(smax) << _T(" ") << symbol(TIMES) << _T(" ");
 	*pPara << smax_multiplier << _T(") = ") << area.SetValue(a_min) << rptNewLine;
-	if (w_min_check == true)
+	if (a_min_check == true)
 	{
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << area.SetValue(a) << _T(" ") << _T(" > ");
 		*pPara << _T(" ") << area.SetValue(a_min) << _T(" ");
