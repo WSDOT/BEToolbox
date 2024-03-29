@@ -378,7 +378,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	rptHeading* pHeading = rptStyleManager::CreateHeading();
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Bearing Specification Check"));
-	*pHeading << _T("Specification Check:");
+	*pHeading << _T("Details:");
 
 	rptHeading* pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
@@ -960,7 +960,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	rptHeading* pHeading = rptStyleManager::CreateHeading();
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Bearing Specification Check"));
-	*pHeading << _T("Specification Check:");
+	*pHeading << _T("Details:");
 
 	rptHeading* pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
