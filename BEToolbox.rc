@@ -294,7 +294,7 @@ BEGIN
     LTEXT           "Max. Shear \nModulus:",IDC_GMAX_TEXT2,233,73,40,18
     EDITTEXT        IDC_GMAX_WINDOW,278,74,40,14,ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_SHEAR_MOD_MAX_UNIT,322,76,20,12
-    GROUPBOX        "Applied Deflections",IDC_STATIC,423,5,137,72
+    GROUPBOX        "Movements",IDC_STATIC,423,5,137,72
     LTEXT           "Static Rotation:",IDC_STATIC_ROT_TEXT,428,24,56,8
     LTEXT           "X Rotation:",IDC_X_ROT_TEXT,428,24,36,8
     EDITTEXT        IDC_ROT_STATIC,490,23,40,14,ES_AUTOHSCROLL
@@ -314,7 +314,7 @@ BEGIN
     GROUPBOX        "Fixed Y Translation",IDC_FIXED_Y,496,83,70,47
     CONTROL         "Yes",IDC_FIXED_Y_YES,"Button",BS_AUTORADIOBUTTON | WS_GROUP,503,94,27,10
     CONTROL         "No",IDC_FIXED_Y_NO,"Button",BS_AUTORADIOBUTTON,503,112,25,10
-    GROUPBOX        "Applied Loads",IDC_STATIC,599,5,122,52
+    GROUPBOX        "Loads",IDC_STATIC,599,5,122,52
     LTEXT           "Dead Load:",IDC_ROTxxx,602,19,37,8
     EDITTEXT        IDC_DL,655,18,40,14,ES_AUTOHSCROLL
     LTEXT           "Unit",IDC_DL_UNIT,698,19,17,10
