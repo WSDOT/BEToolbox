@@ -922,7 +922,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	rptHeading* pLevel3Heading = rptStyleManager::CreateHeading(3);
 	(*pChapter) << pLevel3Heading;
-	*pLevel3Heading << _T("Absolute: ");
+	*pLevel3Heading << _T("For Fabrication: ");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
@@ -942,7 +942,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	pLevel3Heading = rptStyleManager::CreateHeading(3);
 	(*pChapter) << pLevel3Heading;
-	*pLevel3Heading << _T("Service: ");
+	*pLevel3Heading << _T("For Service Limit State: ");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
@@ -968,7 +968,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	pLevel3Heading = rptStyleManager::CreateHeading(3);
 	(*pChapter) << pLevel3Heading;
-	*pLevel3Heading << _T("Fatigue: ");
+	*pLevel3Heading << _T("For Fatigue Limit State: ");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
@@ -1001,7 +1001,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
-	*pSubHeading << _T("Minimum Allowable Shear Deformation Check:");
+	*pSubHeading << _T("Minimum Allowable Elastomer Thickness Check:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
@@ -1400,7 +1400,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
-	*pSubHeading << _T("Hydrostatic Stress:");
+	*pSubHeading << _T("Hydrostatic Stress (Applicable For Externally Bonded Plates):");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
