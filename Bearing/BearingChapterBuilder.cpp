@@ -475,8 +475,6 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine;
 
-
-
 	pHeading = rptStyleManager::CreateHeading();;
 	(*pChapter) << pHeading;
 	pHeading->SetName(_T("Method A Analysis:"));
@@ -964,6 +962,16 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
+	*pPara << rptNewPage;
+
+	rptHeading* pHeading = rptStyleManager::CreateHeading();
+	(*pChapter) << pHeading;
+	pHeading->SetName(_T("Specification Check Summary"));
+	*pHeading << _T("Specification Check Summary");
+
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
+
 	if (!t_min_shim_absolute_check || !t_min_shim_service_check || !t_min_shim_fatigue_check || !s_max_check || !n_min_shear_def_check
 		|| !shear_def_check || !static_axial_X_ss_check || !static_axial_Y_ss_check || !ss_X_combo_sum_check || (check_app_TL_stab_X && !stab_X_dir_check) 
 		|| (check_app_TL_stab_Y && !stab_Y_dir_check) || !rest_system_req_check || !hydrostatic_check || !horiz_force_check)
@@ -1023,7 +1031,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		}
 		if (!hydrostatic_check)
 		{
-			*pPara << _T("Elastomer is not sufficient to resist tension due to hydrostatic stress.") << rptNewLine;
+			*pPara << _T("Elastomer is not sufficient to resist tension due to hydrostatic stress (Applicable if externally bonded plates are used).") << rptNewLine;
 		}
 		if (!horiz_force_check)
 		{
@@ -1038,12 +1046,11 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << color(Green) << _T("Bearing design per Method B was successful.") << color(Green) << rptNewLine << rptNewLine;
 	}
 
-	*pPara << rptNewPage;
 
-	rptHeading* pHeading = rptStyleManager::CreateHeading();
+	pHeading = rptStyleManager::CreateHeading();
 	(*pChapter) << pHeading;
-	pHeading->SetName(_T("Bearing Specification Check"));
-	*pHeading << _T("Details:");
+	pHeading->SetName(_T("Details"));
+	*pHeading << _T("Details");
 
 	rptHeading* pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
@@ -1372,7 +1379,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		is_x_fixed = _T("not fixed");
 	}
 	*pPara << _T("Translation is ") << is_x_fixed << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("K"), _T("eff")) << _T(" = ") << KeffX << rptNewLine;
-	*pPara << _T(" A = 1.92 ") << symbol(TIMES) << Sub2(_T(" t"), _T("total"));
+	*pPara << _T(" A = 1.92 ") << symbol(TIMES) << Sub2(_T(" h"), _T("rt"));
 	*pPara << _T(" / L /") << symbol(ROOT) << _T("1 + 2 ") << symbol(TIMES) << _T(" L / W) = 1.92 ") << symbol(TIMES) << _T(" ");
 	*pPara << length.SetValue(total_elastomer_thickness) << _T(" / ") << length.SetValue(l);
 	*pPara << _T("/") << symbol(ROOT) << _T("1 + 2") << symbol(TIMES) << length.SetValue(l) << _T("/");
@@ -1430,7 +1437,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		is_y_fixed = _T("not fixed");
 	}
 	*pPara << _T("Translation is ") << is_y_fixed << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("K"), _T("eff")) << _T(" = ") << KeffY << rptNewLine;
-	*pPara << _T("A = 1.92 ") << symbol(TIMES) << Sub2(_T(" t"), _T("total"));
+	*pPara << _T("A = 1.92 ") << symbol(TIMES) << Sub2(_T(" h"), _T("rt"));
 	*pPara << _T(" / W /") << symbol(ROOT) << _T("1 + 2 ") << symbol(TIMES) << _T(" W / L) = 1.92 ") << symbol(TIMES);
 	*pPara << _T(" ") << length.SetValue(total_elastomer_thickness) << _T(" / ") << length.SetValue(w);
 	*pPara << _T(" / ") << symbol(ROOT) << _T("1 + 2 ") << symbol(TIMES) << _T(" ") << length.SetValue(w) << _T(" / ");
