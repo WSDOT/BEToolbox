@@ -100,6 +100,7 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	Float64 total_elastomer_thickness = brg.GetTotalElastomerThickness();
 	Float64 tlayer = brg.GetIntermediateLayerThickness();
 	Float64 tshim = brg.GetSteelShimThickness();
+	Float64 weight = brg.GetBearingWeight();
 
 	rptHeading* pHeading = rptStyleManager::CreateHeading(1);
 
@@ -120,12 +121,23 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	INIT_UV_PROTOTYPE(rptStressUnitValue, E, pDispUnits->ModE, true);
 
 	*pPara << _T("Area, A = ") << length.SetValue(l) << _T(" ") << symbol(TIMES) << length.SetValue(w) << _T(" = ") << area.SetValue(a) << rptNewLine;
-	*pPara << _T("Total Elastomer Thickness, ") << Sub2(_T("h"), _T("rt")) << _T(" = 2 ") << symbol(TIMES) << _T(" ") << Sub2(_T("h"), _T("cover")) << _T(" + n ");
+	*pPara << _T("Total Elastomer Thickness, ") << Sub2(_T("h"), _T("rt")) << _T(" = 2 ") << symbol(TIMES) << _T(" ") << Sub2(_T("h"), _T("c")) << _T(" + n ");
 	*pPara << symbol(TIMES) << Sub2(_T(" h"), _T("ri")) << _T(" = 2 ") << symbol(TIMES) << length.SetValue(tcover) << _T(" + ");
 	*pPara << n << _T(" ") << symbol(TIMES) << length.SetValue(tlayer) << _T(" = ") << length.SetValue(total_elastomer_thickness) << rptNewLine;
 	*pPara << _T("Shape Factor, S = A / (2 ") << symbol(TIMES) << _T(" ") << Sub2(_T("h"), _T("ri")) << _T(" ") << symbol(TIMES) << _T(" (L + W)) = ");
 	*pPara << area.SetValue(a) << _T(" / (2 ") << symbol(TIMES) << _T(" ") << length.SetValue(tlayer) << _T(" ") << symbol(TIMES) << _T(" (");
 	*pPara << length.SetValue(l) << _T(" + ") << length.SetValue(w) << _T(")) = ") << s << rptNewLine;
+	*pPara << color(Blue) << _T("Approx. Bearing Weight = ");
+	if (pDispUnits->Name == _T("English"))
+	{
+		*pPara << weight*0.225 << _T(" lbs");
+	}
+	else
+	{
+		*pPara << weight << _T(" N");
+	}
+	*pPara << color(Blue) << rptNewLine << rptNewLine;
+
 
 	length.ShowUnitTag(false);
 	angle.ShowUnitTag(false);
@@ -624,7 +636,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 
 	*pPara << Sub2(_T("n"), _T("min")) << _T("(") << Sub2(symbol(DELTA), _T("s")) << _T(") = 2 ") << symbol(TIMES);
-	*pPara << _T(" (") << Sub2(symbol(DELTA), _T("s")) << _T(" - ") << Sub2(_T("h"), _T("cover")) << _T(") / ") Sub2(_T("h"), _T("ri")) << _T(" = 2 ") << symbol(TIMES) << _T(" (");
+	*pPara << _T(" (") << Sub2(symbol(DELTA), _T("s")) << _T(" - ") << Sub2(_T("h"), _T("c")) << _T(") / ") Sub2(_T("h"), _T("ri")) << _T(" = 2 ") << symbol(TIMES) << _T(" (");
 	*pPara << length.SetValue(sdef) << _T(" - ") << length.SetValue(tcover) << _T(") / ") << length.SetValue(tlayer) << _T(" = ") << n_min_shear_def << rptNewLine;
 	*pPara << symbol(RIGHT_SINGLE_ARROW) << _T(" ") << n << _T(" > ") << n_min_shear_def << _T(" ");
 	if (n_min_shear_def_check)
@@ -694,7 +706,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	(*pChapter) << pPara;
 
 	*pPara << Sub2(_T("n"), _T("max Stab X")) << _T(" = (L / 3 - 2 ");
-	*pPara << symbol(TIMES) << Sub2(_T(" h"), _T("cover")) << _T(" - ") << Sub2(_T("h"), _T("s")) << _T(") / (") << Sub2(_T("h"), _T("ri")) << _T(" + ") << Sub2(_T("h"), _T("s")) << _T(") = ");
+	*pPara << symbol(TIMES) << Sub2(_T(" h"), _T("c")) << _T(" - ") << Sub2(_T("h"), _T("s")) << _T(") / (") << Sub2(_T("h"), _T("ri")) << _T(" + ") << Sub2(_T("h"), _T("s")) << _T(") = ");
 	*pPara << _T("(") << length.SetValue(l) << _T(" / 3 - 2 ") << symbol(TIMES) << _T(" ") << length.SetValue(tcover) << _T(" - ");
 	*pPara << length.SetValue(tshim) << _T(") / (") << length.SetValue(tlayer) << _T(" + ");
 	*pPara << length.SetValue(tshim) << _T(") = ") << n_max_stab_x << rptNewLine;
@@ -765,7 +777,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	(*pChapter) << pPara;
 
 	*pPara << Sub2(_T("n"), _T("max Stab Y")) << _T(" = (W / 3 - 2");
-	*pPara << symbol(TIMES) << Sub2(_T(" h"), _T("cover")) << _T(" - ") << Sub2(_T("h"), _T("s")) << _T(") / (") << Sub2(_T("h"), _T("ri")) << _T(" + ") << Sub2(_T("h"), _T("s")) << _T(") = ");
+	*pPara << symbol(TIMES) << Sub2(_T(" h"), _T("c")) << _T(" - ") << Sub2(_T("h"), _T("s")) << _T(") / (") << Sub2(_T("h"), _T("ri")) << _T(" + ") << Sub2(_T("h"), _T("s")) << _T(") = ");
 	*pPara << _T("(") << length.SetValue(w) << _T(" / 3 - 2 ") << symbol(TIMES) << _T(" ") << length.SetValue(tcover) << _T(" - ");
 	*pPara << length.SetValue(tshim) << _T(") / (") << length.SetValue(tlayer) << _T(" + ");
 	*pPara << length.SetValue(tshim) << _T(") = ") << n_max_stab_y << rptNewLine;
