@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2024  Washington State Department of Transportation
+// Copyright Â© 1999-2024  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -234,8 +234,6 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("h"), _T("c")) << _T(" = ") << length.SetValue(tcover) << _T(" < ") << length.SetValue(0.5 * tlayer);
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(symbol(mu), _T("tc allow")) << _T(" = 0") << rptNewLine;
 	}
-
-
 }
 
 
@@ -451,7 +449,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << Sub2(_T("h"), _T("s,service")) << _T(" = ");
 
-	*pPara << _T("3 ") << symbol(TIMES) << Sub2(_T(" h"), _T("ri ")) << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("s")) << _T(" / ") Sub2(_T("f"), _T("y"));
+	*pPara << _T("3 ") << symbol(TIMES) << Sub2(_T(" h"), _T("ri ")) << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("s")) << _T(" / ") << Sub2(_T("f"), _T("y"));
 	*pPara << _T(" = 3 ") << symbol(TIMES) << _T(" ") << length.SetValue(tlayer) << _T(" ") << symbol(TIMES) << _T(" ") << stress.SetValue(tl_stress);
 	*pPara << _T(" / ") << stress.SetValue(fy) << _T(" = ") << length.SetValue(t_min_shim_service) << rptNewLine;
 	if (t_min_shim_service_check == true)
@@ -469,7 +467,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << rptNewLine << rptNewLine;
 
 	*pPara << Sub2(_T("h"), _T("s,fatigue")) << _T(" = 2 ") << symbol(TIMES) << _T(" ") << Sub2(_T(" h"), _T("ri"));
-	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("L")) << _T(" / ") Sub2(_T("f"), _T("th"));
+	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("L")) << _T(" / ") << Sub2(_T("f"), _T("th"));
 	*pPara << _T(" = 2 ") << symbol(TIMES) << _T(" ") << length.SetValue(tlayer) << symbol(TIMES) << stress.SetValue(ll_stress);
 	*pPara << _T(" / ") << stress.SetValue(fth) << _T(" = ") << length.SetValue(t_min_shim_fatigue) << rptNewLine;
 	if (t_min_shim_fatigue_check == true)
