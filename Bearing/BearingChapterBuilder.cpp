@@ -198,7 +198,7 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	(*pTable3)(0, 2) << COLHDR(Sub2(_T("P"), _T("s")), rptForceUnitTag, pDispUnits->GeneralForce);
 	(*pTable3)(1, 2) << force.SetValue(tl);
 	(*pTable3)(0, 3) << COLHDR(Sub2(symbol(sigma), _T("s")), rptStressUnitTag, pDispUnits->Stress);
-	(*pTable3)(1, 3) << force.SetValue(tl_stress);
+	(*pTable3)(1, 3) << stress.SetValue(tl_stress);
 
 	rptRcTable* pTable4 = rptStyleManager::CreateDefaultTable(3, _T("Movements"));
 	*pPara << pTable4 << rptNewLine;
