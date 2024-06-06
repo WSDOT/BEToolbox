@@ -1334,11 +1334,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("cy")) << _T(" / ") << Sub2(_T("G"), _T("min")) << _T(" / S = ") << Dax << _T(" ");
 	*pPara << symbol(TIMES) << _T(" ") << stress.SetValue(Scyclic) << _T(" / ");
 	*pPara << stress.SetValue(Gmin) << _T(" / ") << s << _T(" = ") << es_cyclic_axialy << rptNewLine;
-	*pPara << _T("Cyclic Rotational Shear Strain, ") << Sub2(symbol(gamma), _T("r,cy")) << _T(" = ") << Sub2(_T("D"), _T("r "));
-	*pPara << symbol(TIMES) << _T(" (W / ") << Sub2(_T("h"), _T("ri")) << _T(")") << Super(_T("2 ")) << symbol(TIMES) << _T(" ") << Sub2(symbol(theta), _T("cy"));
-	*pPara << _T(" / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") = ");
-	*pPara << Dry << _T(" ") << symbol(TIMES) << _T(" (") << length.SetValue(w) << _T(" / ") << length.SetValue(tlayer) << _T(") ") << Super(_T("2 "));
-	*pPara << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(" / (") << n << _T(" + ") << n_multiplier << _T(") = ") << es_cyclic_roty << rptNewLine;
+	*pPara << _T("Cyclic Rotational Shear Strain, ") << Sub2(symbol(gamma), _T("r,cy")) << _T(" = ")  << es_cyclic_roty << rptNewLine;
 	*pPara << _T("Cyclic Displacement Shear Strain, ") << Sub2(symbol(gamma), _T("s,cy")) << _T(" = ") << es_cyclic_dispy << rptNewLine;
 
 
