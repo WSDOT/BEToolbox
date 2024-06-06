@@ -1329,8 +1329,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(" / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") = ");
 	*pPara << Dry << _T(" ") << symbol(TIMES) << _T(" (") << length.SetValue(w) << _T(" / ") << length.SetValue(tlayer) << _T(")") << Super(_T("2 "));
 	*pPara << symbol(TIMES) << _T(" ") << static_rotation << _T(" / (") << n << _T(" + ") << n_multiplier << _T(") = ") << es_roty << rptNewLine;
-	*pPara << _T("Static Displacement Shear Strain, ") << Sub2(symbol(gamma), _T("s,st")) << _T(" = ") << Sub2(symbol(DELTA), _T("s")) << _T(" / ") << Sub2(_T("h"), _T("rt")) << _T(" = ");
-	*pPara << length.SetValue(sdef) << _T(" / ") << length.SetValue(total_elastomer_thickness) << _T(" = ") << Dsy << rptNewLine;
+	*pPara << _T("Static Displacement Shear Strain, ") << Sub2(symbol(gamma), _T("s,st")) << _T(" = ") << Dsy << rptNewLine;
 	*pPara << _T("Cyclic Axial Shear Strain, ") << Sub2(symbol(gamma), _T("a,cy")) << _T(" = ") << Sub2(_T("D"), _T("a")) << _T(" ");
 	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("cy")) << _T(" / ") << Sub2(_T("G"), _T("min")) << _T(" / S = ") << Dax << _T(" ");
 	*pPara << symbol(TIMES) << _T(" ") << stress.SetValue(Scyclic) << _T(" / ");
@@ -1370,7 +1369,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
-	*pSubHeading << _T("Applicability of Total Stress Stability:");
+	*pSubHeading << _T("Stability:");
 
 	pLevel3Heading = rptStyleManager::CreateHeading(3);
 	(*pChapter) << pLevel3Heading;
