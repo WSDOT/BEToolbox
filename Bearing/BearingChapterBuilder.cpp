@@ -1600,7 +1600,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	*pPara << Sub2(symbol(delta), _T("D-initial")) << Sub2(_T("P"), _T("D")) << symbol(TIMES) << Sub2(_T(" h"), _T("ri"));
+	*pPara << Sub2(symbol(delta), _T("D-initial")) << Sub2(_T(" = P"), _T("D")) << symbol(TIMES) << Sub2(_T(" h"), _T("ri"));
 	*pPara << _T(" / A / ") << Sub2(_T("E"), _T("c")) << _T(" = ");
 	*pPara << force.SetValue(dl) << _T(" ") << symbol(TIMES) << _T(" ") << length.SetValue(total_elastomer_thickness);
 	*pPara << _T(" / ") << area.SetValue(a) << _T(" / ") << E.SetValue(EcB) << _T(" = ");
@@ -1614,7 +1614,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	*pPara << Sub2(symbol(delta), _T("LL ")) << _T(" = LL ") << symbol(TIMES) << Sub2(_T(" h"), _T("ri"));
+	*pPara << Sub2(symbol(delta), _T("L ")) << _T(" = LL ") << symbol(TIMES) << Sub2(_T(" h"), _T("ri"));
 	*pPara << _T(" / A / ") << Sub2(_T("E"), _T("c")) << _T(" = ");
 	*pPara << force.SetValue(ll) << _T(" ") << symbol(TIMES) << _T(" ") << length.SetValue(total_elastomer_thickness);
 	*pPara << _T(" / ") << area.SetValue(a) << _T(" / ") << E.SetValue(EcB) << _T(" = ");
