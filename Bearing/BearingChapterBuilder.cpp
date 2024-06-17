@@ -796,7 +796,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pSubHeading << _T("Maximum Compressive Strain:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
-	*pPara << _T("Elastomer Elastic Modulus, ") << Sub2(_T("E"), _T("c")) << _T(" = 3 ");
+	*pPara << _T("Elastomer Elastic Modulus, ") << Sub2(_T("E"), _T("A")) << _T(" = 3 ");
 	*pPara << symbol(TIMES) << Sub2(_T(" (G"), _T("min")) << _T(" + ") << Sub2(_T("G"), _T("max")) << _T(") ");
 	*pPara << symbol(TIMES) << _T(" S") << Super(_T("2")) << _T(" = 3 ") << symbol(TIMES) << _T(" (");
 	*pPara << E.SetValue(Gmin) << _T(" + ") << E.SetValue(Gmax) << _T(") ") << symbol(TIMES) << _T(" ");
@@ -1488,7 +1488,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	*pPara << _T("Elastomer Elastic Modulus Method B, ") << Sub2(_T("E"), _T("cB"));
+	*pPara << _T("Elastomer Elastic Modulus Method B, ") << Sub2(_T("E"), _T("B"));
 	*pPara << _T(" = 6 ") << symbol(TIMES) << Sub2(_T(" G"), _T("min ")) << symbol(TIMES) << _T(" ") << Super2(_T("S"), _T("2"));
 	*pPara << _T(" = 6 ") << symbol(TIMES) << _T(" ");
 	*pPara << stress.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << s << Super(_T("2")) << _T(" = ") << stress.SetValue(EcB) << rptNewLine;
