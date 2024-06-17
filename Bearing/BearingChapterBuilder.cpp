@@ -1254,7 +1254,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(") + 1.75 ") << symbol(TIMES) << _T(" (") << Sub2(symbol(gamma), _T("a,cy")) << _T(" + ");
 	*pPara << Sub2(symbol(gamma), _T("r,cy")) << _T(" + ") << Sub2(symbol(gamma), _T("s,cy")) << _T(") = (");
 	*pPara << static_axial_X_ss << _T(" + ") << es_rotx << _T(" + ") << Dsx << _T(") + 1.75 (");
-	*pPara << _T(" + ") << es_cyclic_axialx << _T(" + ") << es_cyclic_rotx << _T(" + ") << es_cyclic_dispx << _T(") = " << ss_X_combo_sum) << rptNewLine;
+	*pPara << es_cyclic_axialx << _T(" + ") << es_cyclic_rotx << _T(" + ") << es_cyclic_dispx << _T(") = " << ss_X_combo_sum) << rptNewLine;
 	*pPara << symbol(RIGHT_SINGLE_ARROW) << ss_X_combo_sum;
 	if (ss_X_combo_sum_check == true)
 	{
@@ -1343,7 +1343,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(") + 1.75 ") << symbol(TIMES) << _T(" (") << Sub2(symbol(gamma), _T("a,cy")) << _T(" + ");
 	*pPara << Sub2(symbol(gamma), _T("r,cy")) << _T(" + ") << Sub2(symbol(gamma), _T("s,cy")) << _T(") = (");
 	*pPara << static_axial_Y_ss << _T(" + ") << es_roty << _T(" + ") << Dsy << _T(") + 1.75 (");
-	*pPara << _T(" + ") << es_cyclic_axialy << _T(" + ") << es_cyclic_roty << _T(" + ") << es_cyclic_dispy << _T(") = " << ss_Y_combo_sum) << rptNewLine;
+	*pPara << es_cyclic_axialy << _T(" + ") << es_cyclic_roty << _T(" + ") << es_cyclic_dispy << _T(") = " << ss_Y_combo_sum) << rptNewLine;
 	*pPara << symbol(RIGHT_SINGLE_ARROW) << ss_Y_combo_sum;
 	if (ss_Y_combo_sum_check)
 	{
