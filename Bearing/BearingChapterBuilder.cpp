@@ -1325,10 +1325,10 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	*pPara << _T(" (14.7.5.3.3-2)") << rptNewLine;
 	*pPara << _T("Static Rotational Shear Strain, ") << Sub2(symbol(gamma), _T("r,st")) << _T(" = ") << Sub2(_T("D"), _T("r "));
-	*pPara << symbol(TIMES) << _T(" (W / ") << Sub2(_T("h"), _T("ri")) << _T(")") << Super(_T("2 ")) << symbol(TIMES) << _T(" ") << Sub2(symbol(theta), _T("st"));
+	*pPara << symbol(TIMES) << _T(" (W / ") << Sub2(_T("h"), _T("ri")) << _T(")") << Super(_T("2 ")) << symbol(TIMES) << _T(" ") << _T("0.01");
 	*pPara << _T(" / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") = ");
 	*pPara << Dry << _T(" ") << symbol(TIMES) << _T(" (") << length.SetValue(w) << _T(" / ") << length.SetValue(tlayer) << _T(")") << Super(_T("2 "));
-	*pPara << symbol(TIMES) << _T(" ") << static_rotation << _T(" / (") << n << _T(" + ") << n_multiplier << _T(") = ") << es_roty << rptNewLine;
+	*pPara << symbol(TIMES) << _T(" 0.01") << _T(" / (") << n << _T(" + ") << n_multiplier << _T(") = ") << es_roty << rptNewLine;
 	*pPara << _T("Static Displacement Shear Strain, ") << Sub2(symbol(gamma), _T("s,st")) << _T(" = ") << Dsy << rptNewLine;
 	*pPara << _T("Cyclic Axial Shear Strain, ") << Sub2(symbol(gamma), _T("a,cy")) << _T(" = ") << Sub2(_T("D"), _T("a")) << _T(" ");
 	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("cy")) << _T(" / ") << Sub2(_T("G"), _T("min")) << _T(" / S = ") << Dax << _T(" ");
