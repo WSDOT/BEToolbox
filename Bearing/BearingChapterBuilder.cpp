@@ -127,17 +127,21 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	*pPara << _T("Shape Factor, S = A / (2 ") << symbol(TIMES) << _T(" ") << Sub2(_T("h"), _T("ri")) << _T(" ") << symbol(TIMES) << _T(" (L + W)) = ");
 	*pPara << area.SetValue(a) << _T(" / (2 ") << symbol(TIMES) << _T(" ") << length.SetValue(tlayer) << _T(" ") << symbol(TIMES) << _T(" (");
 	*pPara << length.SetValue(l) << _T(" + ") << length.SetValue(w) << _T(")) = ") << s << rptNewLine;
-	*pPara << color(Blue) << _T("Approx. Bearing Weight = ");
+	*pPara << color(Blue);
+	*pPara << _T("Summary:") << rptNewLine;
+	*pPara << _T("Dimensions: ") << length.SetValue(w) << symbol(TIMES) << length.SetValue(l);
+	*pPara << symbol(TIMES) << length.SetValue(total_elastomer_thickness);
+	*pPara << color(Blue) << rptNewLine;
+	*pPara << _T("Approx. Weight = ");
 	if (pDispUnits->Name == _T("English"))
 	{
-		*pPara << weight*0.225 << _T(" lbs");
+		*pPara << weight * 0.225 << _T(" lbs");
 	}
 	else
 	{
 		*pPara << weight << _T(" N");
 	}
 	*pPara << color(Blue) << rptNewLine << rptNewLine;
-
 
 	length.ShowUnitTag(false);
 	angle.ShowUnitTag(false);
