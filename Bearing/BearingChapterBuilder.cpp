@@ -129,8 +129,8 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	*pPara << length.SetValue(l) << _T(" + ") << length.SetValue(w) << _T(")) = ") << s << rptNewLine;
 	*pPara << color(Blue);
 	*pPara << _T("Summary:") << rptNewLine;
-	*pPara << _T("Dimensions: ") << length.SetValue(w) << symbol(TIMES) << length.SetValue(l);
-	*pPara << symbol(TIMES) << length.SetValue(total_elastomer_thickness);
+	*pPara << _T("Dimensions: ") << length.SetValue(w) << _T(" ") << symbol(TIMES) << length.SetValue(l);
+	*pPara << _T(" ") << symbol(TIMES) << length.SetValue(total_elastomer_thickness);
 	*pPara << color(Blue) << rptNewLine;
 	*pPara << _T("Approx. Weight = ");
 	if (pDispUnits->Name == _T("English"))
