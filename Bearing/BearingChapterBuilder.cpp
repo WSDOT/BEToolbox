@@ -1419,7 +1419,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	else
 	{
 		*pPara << Sub2(_T("G"), _T("min ")) << symbol(TIMES) << _T(" S / (") << Sub2(_T("K"), _T("effX ")) << symbol(TIMES) << Sub2(_T(" A"), _T("x"));
-		*pPara << _T(" - ") << Sub2(_T("B"), _T("x")) << _T(" = ") << stress.SetValue(Gmin) << symbol(TIMES) << s;
+		*pPara << _T(" - ") << Sub2(_T("B"), _T("x")) << _T(") = ") << stress.SetValue(Gmin) << symbol(TIMES) << s;
 		*pPara << _T(" / (") << KeffX << symbol(TIMES) << _T(" ") << Ax << _T(" - ") << Bx << _T(") = ") << stress.SetValue(sigmaTLstabX);
 		*pPara << _T(" < 0") << symbol(RIGHT_SINGLE_ARROW);
 		*pPara << _T(" Does not apply") << rptNewLine;
@@ -1477,7 +1477,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	else
 	{
 		*pPara << Sub2(_T("G"), _T("min ")) << symbol(TIMES) << _T(" S / (") << Sub2(_T("K"), _T("effY ")) << symbol(TIMES) << Sub2(_T(" A"), _T("y"));
-		*pPara << _T(" - ") << Sub2(_T("B"), _T("y")) << _T(" = ") << stress.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << s;
+		*pPara << _T(" - ") << Sub2(_T("B"), _T("y")) << _T(") = ") << stress.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << s;
 		*pPara << _T(" / (") << KeffY << _T(" ") << symbol(TIMES) << _T(" ") << Ay << _T(" - ") << By << _T(") = ") << stress.SetValue(sigmaTLstabY);
 		*pPara << _T(" < 0") << symbol(RIGHT_SINGLE_ARROW);
 		*pPara << _T(" Does not apply") << rptNewLine;
