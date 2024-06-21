@@ -1585,7 +1585,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("P"), _T("D")) << _T(" / 5 = ") << force.SetValue(dl) << _T(" / 5 = ");
 	*pPara << force.SetValue(dl / 5) << rptNewLine;
 	*pPara << symbol(RIGHT_SINGLE_ARROW);
-	if (horiz_force_check = true)
+	if (horiz_force_check)
 	{
 		*pPara << force.SetValue(horiz_force) << _T(" < ") << force.SetValue(dl / 5.0);
 		*pPara << _T(" ") << RPT_PASS;
