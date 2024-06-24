@@ -1573,7 +1573,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
-	*pSubHeading << _T("Horizontal Force Check:");
+	*pSubHeading << _T("Bearing Slip Check:");
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
@@ -1582,7 +1582,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << E.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << area.SetValue(a) << _T(" ") << symbol(TIMES) << _T(" ") << length.SetValue(sdef);
 	*pPara << _T(" / ") << length.SetValue(total_elastomer_thickness) << _T(" = ");
 	*pPara << force.SetValue(horiz_force) << rptNewLine;
-	*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("P"), _T("D")) << _T(" / 5 = ") << force.SetValue(dl) << _T(" / 5 = ");
+	*pPara << symbol(RIGHT_SINGLE_ARROW) << symbol(mu) << Sub2(_T("P"), _T("D")) << _T(" = 0.20") << force.SetValue(dl);
 	*pPara << force.SetValue(dl / 5) << rptNewLine;
 	*pPara << symbol(RIGHT_SINGLE_ARROW);
 	if (horiz_force_check)
