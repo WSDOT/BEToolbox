@@ -102,10 +102,10 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX, IDC_FATIGUE, IDC_FATIGUE_UNIT, m_Fth, pDispUnits->ModE);
    DDX_UnitValueAndTag(pDX, IDC_DL, IDC_DL_UNIT, m_DL, pDispUnits->GeneralForce);
    DDX_UnitValueAndTag(pDX, IDC_LL, IDC_LL_UNIT, m_LL, pDispUnits->GeneralForce);
-   DDX_Text(pDX,IDC_ROT_STATIC, m_rot_st);
-   DDX_Text(pDX, IDC_ROT_CYCLIC, m_rot_cy);
-   DDX_Text(pDX, IDC_ROT_X, m_rot_x);
-   DDX_Text(pDX, IDC_ROT_Y, m_rot_y);
+   DDV_NonNegativeDouble(pDX,IDC_ROT_STATIC, m_rot_st);
+   DDV_NonNegativeDouble(pDX, IDC_ROT_CYCLIC, m_rot_cy);
+   DDV_NonNegativeDouble(pDX, IDC_ROT_X, m_rot_x);
+   DDV_NonNegativeDouble(pDX, IDC_ROT_Y, m_rot_y);
    DDX_UnitValueAndTag(pDX, IDC_SHEAR_DEF, IDC_SHEAR_DEF_UNIT, m_shear_def, pDispUnits->ComponentDim);
    DDX_Radio(pDX, IDC_FIXED_X_YES, m_fixed_x);
    DDX_Radio(pDX, IDC_FIXED_Y_YES, m_fixed_y);
