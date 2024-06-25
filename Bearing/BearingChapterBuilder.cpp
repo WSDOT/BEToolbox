@@ -224,20 +224,6 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 		(*pTable4)(1, 2) << angle.SetValue(cyclic_rotation);
 	}
 
-	if (n_multiplier == 1)
-	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("0.5 ") << symbol(TIMES) << Sub2(_T(" h"), _T("ri"));
-		*pPara << _T(" = 0.5 ") << symbol(TIMES) << _T(" ") << length.SetValue(tlayer) << _T(" = ") << length.SetValue(0.5 * tlayer) << rptNewLine;
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("h"), _T("c")) << _T(" = ") << length.SetValue(tcover) << _T(" > ") << length.SetValue(0.5 * tlayer);
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(symbol(mu), _T("tc allow")) << _T(" = 1") << rptNewLine;
-	}
-	else
-	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("0.5 ") << symbol(TIMES) << Sub2(_T("h"), _T("ri"));
-		*pPara << _T(" = 0.5 ") << symbol(TIMES) << length.SetValue(tlayer) << _T(" = ") << length.SetValue(0.5 * tlayer) << rptNewLine;
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("h"), _T("c")) << _T(" = ") << length.SetValue(tcover) << _T(" < ") << length.SetValue(0.5 * tlayer);
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(symbol(mu), _T("tc allow")) << _T(" = 0") << rptNewLine;
-	}
 }
 
 
@@ -427,7 +413,23 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	pHeading->SetName(_T("Details"));
 	*pHeading << _T("Details");
 
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
 
+	if (n_multiplier == 1)
+	{
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("0.5 ") << symbol(TIMES) << Sub2(_T(" h"), _T("ri"));
+		*pPara << _T(" = 0.5 ") << symbol(TIMES) << _T(" ") << length.SetValue(tlayer) << _T(" = ") << length.SetValue(0.5 * tlayer) << rptNewLine;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("h"), _T("c")) << _T(" = ") << length.SetValue(tcover) << (tcover == 0.5 * tlayer ? _T(" = ") : _T(" > ")) << length.SetValue(0.5 * tlayer);
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << symbol(eta) << _T(" = 1") << rptNewLine;
+	}
+	else
+	{
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("0.5 ") << symbol(TIMES) << Sub2(_T("h"), _T("ri"));
+		*pPara << _T(" = 0.5 ") << symbol(TIMES) << length.SetValue(tlayer) << _T(" = ") << length.SetValue(0.5 * tlayer) << rptNewLine;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("h"), _T("c")) << _T(" = ") << length.SetValue(tcover) << _T(" < ") << length.SetValue(0.5 * tlayer);
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << symbol(eta) << _T(" = 0") << rptNewLine;
+	}
 
 	rptHeading* pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
@@ -506,7 +508,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 
 	*pPara << Sub2(_T("S"), _T("max")) << _T(" = ") << symbol(ROOT) << _T(" 22 ") << symbol(TIMES) << _T(" (n + ");
-	*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(")) = ") << symbol(ROOT) << _T("22 ") << symbol(TIMES) << _T(" (") << n << _T(" + ") << n_multiplier << _T(")) = ") << s_max << rptNewLine;
+	*pPara << symbol(eta) << _T(")) = ") << symbol(ROOT) << _T("22 ") << symbol(TIMES) << _T(" (") << n << _T(" + ") << n_multiplier << _T(")) = ") << s_max << rptNewLine;
 
 	if (s_max_check)
 	{
@@ -540,7 +542,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << symbol(TIMES) << _T(" ") << smax_multiplier << _T(") = ") << s_min << rptNewLine;
 	if (s_min_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << s << _T(" > ") << s_min << _T(" ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << s << (s == s_min?_T(" = ") : _T(" > ")) << s_min << _T(" ") << RPT_PASS;
 	}
 	else
 	{
@@ -554,7 +556,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << smax_multiplier << _T(") = ") << area.SetValue(a_min) << rptNewLine;
 	if (a_min_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << area.SetValue(a) << _T(" ") << _T(" > ");
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << area.SetValue(a) << _T(" ") << (a==a_min?_T(" = "): _T(" > "));
 		*pPara << _T(" ") << area.SetValue(a_min) << _T(" ");
 		*pPara << RPT_PASS << rptNewLine;
 	}
@@ -568,7 +570,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(" / ") << length.SetValue(w) << _T(" = ") << length.SetValue(l_min) << rptNewLine;
 	if (l_min_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(l) << _T(" > ") << _T(" ") << length.SetValue(l_min) << _T(" ");
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(l) << (l==l_min?_T(" = "):_T(" > ")) << _T(" ") << length.SetValue(l_min) << _T(" ");
 		*pPara << RPT_PASS << rptNewLine;
 	}
 	else
@@ -580,7 +582,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << area.SetValue(a_min) << _T(" / ") << length.SetValue(l) << _T(" = ") << length.SetValue(w_min) << rptNewLine;
 	if (w_min_check == true)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(w) << _T(" > ") << length.SetValue(w_min) << _T(" ");
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(w) << (w==w_min? _T(" = ") :_T(" > ")) << length.SetValue(w_min) << _T(" ");
 		*pPara << RPT_PASS << rptNewLine;
 	}
 	else
@@ -594,7 +596,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << length.SetValue(l) << _T(" + ") << length.SetValue(w) << _T(")) = ") << length.SetValue(tlayer_max) << rptNewLine;
 	if (tlayer_max_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tlayer) << _T(" < ") << length.SetValue(tlayer_max) << _T(" ");
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tlayer) << (tlayer==tlayer_max?_T(" = "):_T(" < ")) << length.SetValue(tlayer_max) << _T(" ");
 		*pPara << RPT_PASS << rptNewLine << rptNewLine;
 	}
 	else
@@ -612,7 +614,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << Sub2(symbol(sigma), _T("max")) << _T(" = ") << stress.SetValue(smax) << rptNewLine;
 	if (max_stress_check == true)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(total_stress) << _T(" < ") << stress.SetValue(smax);
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(total_stress) << (s==smax?_T(" = ") : _T(" < ")) << stress.SetValue(smax);
 		*pPara << _T(" ") << RPT_PASS;
 	}
 	else
@@ -640,13 +642,15 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << Sub2(_T("n"), _T("min")) << _T("(") << Sub2(symbol(DELTA), _T("s")) << _T(") = 2 ") << symbol(TIMES);
 	*pPara << _T(" (") << Sub2(symbol(DELTA), _T("s")) << _T(" - ") << Sub2(_T("h"), _T("c")) << _T(") / ") Sub2(_T("h"), _T("ri")) << _T(" = 2 ") << symbol(TIMES) << _T(" (");
 	*pPara << length.SetValue(sdef) << _T(" - ") << length.SetValue(tcover) << _T(") / ") << length.SetValue(tlayer) << _T(" = ") << n_min_shear_def << rptNewLine;
-	*pPara << symbol(RIGHT_SINGLE_ARROW) << _T(" ") << n << _T(" > ") << n_min_shear_def << _T(" ");
+	*pPara << symbol(RIGHT_SINGLE_ARROW);
 	if (n_min_shear_def_check)
 	{
+		*pPara << _T(" ") << n << (n==n_min_shear_def?_T(" = ") : _T(" > ")) << n_min_shear_def << _T(" ");
 		*pPara << RPT_PASS;
 	}
 	else
 	{
+		*pPara << _T(" ") << n << _T(" < ") << n_min_shear_def << _T(" ");
 		*pPara << RPT_FAIL;
 	}
 	*pPara << _T(" (14.7.6.3.4-1)") << rptNewLine;
@@ -671,7 +675,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << Sub2(_T("0.5G"), _T("max ")) << symbol(TIMES) << _T(" S ") << symbol(TIMES) << _T(" ");
 		*pPara << Sub2(symbol(theta), _T("x")) << _T(" / ") << Sub2(symbol(sigma), _T("s"));
 		*pPara << symbol(TIMES) << _T("(") << Sub2(_T("h"), _T("ri")) << _T(" / L)") << Super(_T("2")) << _T(" - ");
-		*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(" = ");
+		*pPara << symbol(eta) << _T(" = ");
 		*pPara << _T("0.5(") << E.SetValue(Gmax) << _T(") ") << symbol(TIMES) << _T(" (") << s << _T(") ") << symbol(TIMES) << _T(" (") << x_rotation << _T(" / ");
 		*pPara << stress.SetValue(tl_stress) << _T(") ") << symbol(TIMES) << _T(" (") << length.SetValue(l) << _T("/") << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
 		*pPara << _T(" - ") << n_multiplier << _T(" = ") << n_lay_r_x_calc << rptNewLine;
@@ -683,7 +687,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << Sub2(_T("0.5G"), _T("max ")) << symbol(TIMES) << _T(" S ") << symbol(TIMES) << _T(" ");
 		*pPara << Sub2(symbol(theta), _T("x")) << _T(" / ") << Sub2(symbol(sigma), _T("s"));
 		*pPara << symbol(TIMES)  << _T("(") << Sub2(_T("h"), _T("ri")) << _T(" / L)") << Super(_T("2")) << _T(" - ");
-		*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(" = ");
+		*pPara << symbol(eta) << _T(" = ");
 		*pPara << _T("0.5(") << E.SetValue(Gmax) << _T(") ") << symbol(TIMES) << _T(" (") << s << _T(") ") << symbol(TIMES) << _T(" (") << x_rotation << _T(" / ");
 		*pPara << stress.SetValue(tl_stress) << _T(") ") << symbol(TIMES) << _T(" (") << length.SetValue(l) << _T(" / ") << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
 		*pPara << _T(" - ") << n_multiplier << _T(" = ") << n_lay_r_x_calc << rptNewLine;
@@ -692,7 +696,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	if (n_min_rot_x_check == true)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" > ") << n_min_rot_x << _T(" ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << (n==n_min_rot_x?_T(" = ") : _T(" > ")) << n_min_rot_x << _T(" ") << RPT_PASS;
 	}
 	else
 	{
@@ -714,7 +718,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << length.SetValue(tshim) << _T(") = ") << n_max_stab_x << rptNewLine;
 	if (n_max_stab_x_check == true)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" < ") << n_max_stab_x << _T(" ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << (n==n_max_stab_x?_T(" = ") : _T(" < ")) << n_max_stab_x << _T(" ") << RPT_PASS;
 	}
 	else
 	{
@@ -739,7 +743,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << Sub2(_T("0.5G"), _T("max ")) << symbol(TIMES) << _T(" S ") << symbol(TIMES) << _T(" ");
 		*pPara << Sub2(symbol(theta), _T("y")) << _T(" / ") << Sub2(symbol(sigma), _T("s"));
 		*pPara << _T("(") << Sub2(_T("h"), _T("ri")) << _T(" / W)") << Super(_T("2")) << _T(" - ");
-		*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(" = ");
+		*pPara << symbol(eta) << _T(" = ");
 		*pPara << _T("0.5(") << E.SetValue(Gmax) << _T(") ") << symbol(TIMES) << _T(" (") << s << _T(") ") << symbol(TIMES) << _T(" (") << y_rotation << _T(") / (");
 		*pPara << stress.SetValue(tl_stress) << _T(") ") << symbol(TIMES) << _T(" (") << length.SetValue(w) << _T(" / ");
 		*pPara << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
@@ -752,7 +756,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << Sub2(_T("0.5G"), _T("max ")) << symbol(TIMES) << _T(" S ") << symbol(TIMES);
 		*pPara << _T(" ") << Sub2(symbol(theta), _T("y")) << _T(" / ") << Sub2(symbol(sigma), _T("s"));
 		*pPara << _T("(") << Sub2(_T("h"), _T("ri")) << _T(" / W)") << Super(_T("2")) << _T(" - ");
-		*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(" = ");
+		*pPara << symbol(eta) << _T(" = ");
 		*pPara << _T("0.5(") << E.SetValue(Gmax) << _T(") ") << symbol(TIMES) << _T(" (") << s << _T(")" ) << symbol(TIMES) << _T(" (") << y_rotation << _T(") / (");
 		*pPara << stress.SetValue(tl_stress) << _T(") ") << symbol(TIMES) << _T(" (") << length.SetValue(w) << _T("/");
 		*pPara << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
@@ -762,7 +766,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	}
 	if (n_min_rot_y_check == true)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" > ") << n_min_rot_y << _T(" ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << (n==n_min_rot_y?_T(" = ") :_T(" > ")) << n_min_rot_y << _T(" ") << RPT_PASS;
 	}
 	else
 	{
@@ -785,7 +789,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << length.SetValue(tshim) << _T(") = ") << n_max_stab_y << rptNewLine;
 	if (n_max_stab_y_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << _T(" < ") << n_max_stab_y << _T(" ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << n << (n==n_max_stab_y?_T(" = "): _T(" < ")) << n_max_stab_y << _T(" ") << RPT_PASS;
 	}
 	else
 	{
@@ -808,7 +812,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	if (max_comp_strain_check == true)
 	{
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(tl_stress) << _T(" / ");
-		*pPara << E.SetValue(EcA) << _T(" = ") << tl_stress / EcA << _T(" < 0.07 ") << RPT_PASS;
+		*pPara << E.SetValue(EcA) << _T(" = ") << tl_stress / EcA << (tl_stress/EcA==0.7? _T(" = 0.07 ") :_T(" < 0.07 ")) << RPT_PASS;
 	}
 	else
 	{
@@ -1067,6 +1071,24 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	pHeading->SetName(_T("Details"));
 	*pHeading << _T("Details");
 
+	pPara = new rptParagraph;
+	(*pChapter) << pPara;
+
+	if (n_multiplier == 1)
+	{
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("0.5 ") << symbol(TIMES) << Sub2(_T(" h"), _T("ri"));
+		*pPara << _T(" = 0.5 ") << symbol(TIMES) << _T(" ") << length.SetValue(tlayer) << _T(" = ") << length.SetValue(0.5 * tlayer) << rptNewLine;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("h"), _T("c")) << _T(" = ") << length.SetValue(tcover) << (tcover == 0.5 * tlayer ? _T(" = ") : _T(" > ")) << length.SetValue(0.5 * tlayer);
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << symbol(eta) << _T(" = 1") << rptNewLine;
+	}
+	else
+	{
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("0.5 ") << symbol(TIMES) << Sub2(_T("h"), _T("ri"));
+		*pPara << _T(" = 0.5 ") << symbol(TIMES) << length.SetValue(tlayer) << _T(" = ") << length.SetValue(0.5 * tlayer) << rptNewLine;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << Sub2(_T("h"), _T("c")) << _T(" = ") << length.SetValue(tcover) << _T(" < ") << length.SetValue(0.5 * tlayer);
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << symbol(eta) << _T(" = 0") << rptNewLine;
+	}
+
 	rptHeading* pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
 	*pSubHeading << _T("Minimum Allowable Steel Shim Thickness Check:");
@@ -1077,7 +1099,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << Sub2(_T("h"), _T("s,fab")) << _T(" = ") << length.SetValue(t_min_shim_absolute) << _T(" (Article 4.5, AASHTO M 251)") << rptNewLine;
 	if (t_min_shim_absolute_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tshim) << _T(" > ") << length.SetValue(t_min_shim_absolute);
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tshim) << (tshim==t_min_shim_absolute?_T(" = ") : _T(" > ")) << length.SetValue(t_min_shim_absolute);
 		*pPara << _T(" ") << RPT_PASS;
 	}
 	else
@@ -1096,7 +1118,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(" / ") << stress.SetValue(fy) << _T(" = ") << length.SetValue(t_min_shim_service) << rptNewLine;
 	if (t_min_shim_service_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tshim) << _T(" > ") << length.SetValue(t_min_shim_service);
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tshim) << (tshim==t_min_shim_service?_T(" = ") : _T(" > ")) << length.SetValue(t_min_shim_service);
 		*pPara << _T(" ") << RPT_PASS;
 	}
 	else
@@ -1114,7 +1136,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(" / ") << stress.SetValue(fth) << _T(" = ") << length.SetValue(t_min_shim_fatigue) << rptNewLine;
 	if (t_min_shim_fatigue_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tshim) << _T(" > ") << length.SetValue(t_min_shim_fatigue);
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tshim) << (tshim==t_min_shim_fatigue?_T(" = ") : _T(" > ")) << length.SetValue(t_min_shim_fatigue);
 		*pPara << _T(" ") << RPT_PASS;
 	}
 	else
@@ -1146,7 +1168,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	if (shear_def_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(total_elastomer_thickness) << _T(" > ") << length.SetValue(2 * sdef) << _T(" ");
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(total_elastomer_thickness) << (total_elastomer_thickness==sdef?_T(" = ") : _T(" > ")) << length.SetValue(2 * sdef) << _T(" ");
 		*pPara << RPT_PASS;
 	}
 	else
@@ -1227,16 +1249,16 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << stress.SetValue(Gmin) << _T(" / ") << s << _T(" = ") << static_axial_X_ss << rptNewLine;
 	if (static_axial_X_ss_check == true)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << static_axial_X_ss << _T(" < 3.0 ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << static_axial_X_ss << (static_axial_X_ss == 3.0? _T(" = 3.0 ") :_T(" < 3.0 ")) << RPT_PASS;
 	}
 	else
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << static_axial_X_ss << _T(" > ") << _T(" 3.0 ") << RPT_FAIL;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << static_axial_X_ss << _T(" > 3.0 ") << RPT_FAIL;
 	}
 	*pPara << _T(" (14.7.5.3.3-2)") << rptNewLine;
 	*pPara << _T("Static Rotational Shear Strain, ") << Sub2(symbol(gamma), _T("r,st")) << _T(" = ") << Sub2(_T("D"), _T("r "));
 	*pPara << symbol(TIMES) << _T(" (L / ") << Sub2(_T("h"), _T("ri")) << _T(")") << Super(_T("2 ")) << symbol(TIMES) << _T(" ") << Sub2(symbol(theta), _T("st"));
-	*pPara << _T(" / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") = ");
+	*pPara << _T(" / (n + ") << symbol(eta) << _T(") = ");
 	*pPara << Drx << _T(" ") << symbol(TIMES) << _T(" (") << length.SetValue(l) << _T(" / ") << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
 	*pPara << symbol(TIMES) << _T(" ") << static_rotation << _T(" / (") << n << _T(" + ") << n_multiplier << _T(") = ") << es_rotx << rptNewLine;
 	*pPara << _T("Static Displacement Shear Strain, ") << Sub2(symbol(gamma), _T("s,st")) << _T(" = ") << Sub2(symbol(DELTA), _T("s")) << _T(" / ") << Sub2(_T("h"), _T("rt")) << _T(" = ");
@@ -1249,7 +1271,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << stress.SetValue(Gmin) << _T(" / ") << s << _T(" = ") << es_cyclic_axialx << rptNewLine;
 	*pPara << _T("Cyclic Rotational Shear Strain, ") << Sub2(symbol(gamma), _T("r,cy")) << _T(" = ") << Sub2(_T("D"), _T("r "));
 	*pPara << symbol(TIMES) << _T(" (L / ") << Sub2(_T("h"), _T("ri")) << _T(")") << Super(_T("2 ")) << symbol(TIMES) << _T(" ") << Sub2(symbol(theta), _T("cy"));
-	*pPara << _T(" / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") = ");
+	*pPara << _T(" / (n + ") << symbol(eta) << _T(") = ");
 	*pPara << Drx << _T(" ") << symbol(TIMES) << _T(" (") << length.SetValue(l) << _T(" / ") << length.SetValue(tlayer) << _T(")") << Super(_T("2"));
 	*pPara << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(" / (") << n << _T(" + ") << n_multiplier << _T(") = ") << es_cyclic_rotx << rptNewLine;
 	*pPara << _T("Cyclic Displacement Shear Strain, ") << Sub2(symbol(gamma), _T("s,cy")) << _T(" = ") << es_cyclic_dispx << rptNewLine;
@@ -1263,7 +1285,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << symbol(RIGHT_SINGLE_ARROW) << ss_X_combo_sum;
 	if (ss_X_combo_sum_check == true)
 	{
-		*pPara << _T(" < 5.0 ");
+		*pPara << (ss_X_combo_sum==5.0?_T(" = 5.0") : _T(" < 5.0 "));
 		*pPara << RPT_PASS;
 	}
 	else
@@ -1322,7 +1344,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << stress.SetValue(Gmin) << _T(" / ") << s << _T(" = ") << static_axial_Y_ss << rptNewLine;
 	if (static_axial_Y_ss_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << static_axial_Y_ss << _T(" < 3.0 ") << RPT_PASS;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << static_axial_Y_ss << (static_axial_Y_ss==3.0? _T(" = 3.0 ") :_T(" < 3.0 ")) << RPT_PASS;
 	}
 	else
 	{
@@ -1331,7 +1353,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << _T(" (14.7.5.3.3-2)") << rptNewLine;
 	*pPara << _T("Static Rotational Shear Strain, ") << Sub2(symbol(gamma), _T("r,st")) << _T(" = ") << Sub2(_T("D"), _T("r "));
 	*pPara << symbol(TIMES) << _T(" (W / ") << Sub2(_T("h"), _T("ri")) << _T(")") << Super(_T("2 ")) << symbol(TIMES) << _T(" ") << _T("0.01");
-	*pPara << _T(" / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") = ");
+	*pPara << _T(" / (n + ") << symbol(eta) << _T(") = ");
 	*pPara << Dry << _T(" ") << symbol(TIMES) << _T(" (") << length.SetValue(w) << _T(" / ") << length.SetValue(tlayer) << _T(")") << Super(_T("2 "));
 	*pPara << symbol(TIMES) << _T(" 0.01") << _T(" / (") << n << _T(" + ") << n_multiplier << _T(") = ") << es_roty << rptNewLine;
 	*pPara << _T("Static Displacement Shear Strain, ") << Sub2(symbol(gamma), _T("s,st")) << _T(" = ") << Dsy << rptNewLine;
@@ -1352,7 +1374,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << symbol(RIGHT_SINGLE_ARROW) << ss_Y_combo_sum;
 	if (ss_Y_combo_sum_check)
 	{
-		*pPara << _T(" < 5.0 ");
+		*pPara << (ss_Y_combo_sum==5.0? _T(" = 5.0 ") :_T(" < 5.0 "));
 		*pPara << RPT_PASS;
 	}
 	else
@@ -1407,7 +1429,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 		if (stab_X_dir_check)
 		{
-			*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(tl_stress) << _T(" < ");
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(tl_stress) << (tl_stress== sigmaTLstabX?_T(" = ") : _T(" < "));
 			*pPara << stress.SetValue(sigmaTLstabX) << _T(" ") << RPT_PASS;
 		}
 		else
@@ -1465,7 +1487,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 		if (stab_Y_dir_check)
 		{
-			*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(tl_stress) << _T(" < ");
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(tl_stress) << (tl_stress== sigmaTLstabY?_T(" = ") : _T(" < "));
 			*pPara << stress.SetValue(sigmaTLstabY) << _T(" ") << RPT_PASS;
 		}
 		else
@@ -1501,18 +1523,18 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	if (rest_system_req_check)
 	{
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("(") << Sub2(symbol(theta), _T("s,st")) << _T(" + 1.75") << Sub2(symbol(theta), _T("s,cy"));
-		*pPara << _T(") ") << symbol(TIMES) << _T(" S / 3 / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") / (") << Sub2(symbol(sigma), _T("st"));
+		*pPara << _T(") ") << symbol(TIMES) << _T(" S / 3 / (n + ") << symbol(eta) << _T(") / (") << Sub2(symbol(sigma), _T("st"));
 		*pPara << _T(" + 1.75") << Sub2(symbol(sigma), _T("cy")) << _T(") ") << symbol(TIMES) << Sub2(_T(" E"), _T("B")) << _T(" = (");
 		*pPara << static_rotation << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") ") << symbol(TIMES) << _T(" ") << s << _T(" / 3 / (");
 		*pPara << n << _T(" + ") << n_multiplier << _T(") / (") << stress.SetValue(static_stress) << _T(" + 1.75 ") << symbol(TIMES) << stress.SetValue(cyclic_stress);
 		*pPara << _T(") ") << symbol(TIMES) << _T(" ") << E.SetValue(EcB) << _T(" = ") << restraint_system_calc;
-		*pPara << _T(" < 1 ") << rptNewLine;
+		*pPara << (restraint_system_calc == 1.0?_T(" = 1") : _T(" < 1 ")) << rptNewLine;
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << color(Green) << _T("NO RESTRAINT SYSTEM REQUIRED") << color(Green);
 	}
 	else
 	{
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("(") << Sub2(symbol(theta), _T("s,st")) << _T(" + 1.75") << Sub2(symbol(theta), _T("s,cy"));
-		*pPara << _T(") ") << symbol(TIMES) << _T(" S / 3 / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") / (") << Sub2(symbol(sigma), _T("st"));
+		*pPara << _T(") ") << symbol(TIMES) << _T(" S / 3 / (n + ") << symbol(eta) << _T(") / (") << Sub2(symbol(sigma), _T("st"));
 		*pPara << _T(" + 1.75") << Sub2(symbol(sigma), _T("cy")) << _T(") ") << symbol(TIMES) << Sub2(_T(" E"), _T("B")) << _T(" = (");
 		*pPara << static_rotation << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") ") << symbol(TIMES) << _T(" ") << s << _T(" / 3 / (");
 		*pPara << n << _T(" + ") << n_multiplier << _T(") / (") << stress.SetValue(static_stress) << _T(" + 1.75 ") << stress.SetValue(cyclic_stress);
@@ -1544,7 +1566,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << total_axial_strain << rptNewLine;
 
 		*pPara << symbol(alpha) << _T(" = ") << Sub2(symbol(epsilon), _T("a ")) << symbol(TIMES) << _T(" (n + ");
-		*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(") / S / (") << Sub2(symbol(theta), _T("st")) << _T(" + 1.75 ");
+		*pPara << symbol(eta) << _T(") / S / (") << Sub2(symbol(theta), _T("st")) << _T(" + 1.75 ");
 		*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(theta), _T("cy")) << _T(") = ") << total_axial_strain << _T(" ") << symbol(TIMES);
 		*pPara << _T(" (") << n << _T(" + ") << n_multiplier << _T(") / ") << s << _T(" / (") << static_rotation << _T(" + 1.75 ");
 		*pPara << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") = ") << alpha << rptNewLine;
@@ -1554,7 +1576,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 		*pPara << Sub2(symbol(sigma), _T("hyd")) << _T(" = 3 ") << symbol(TIMES) << Sub2(_T(" G"), _T("min "));
 		*pPara << symbol(TIMES) << _T(" S") << Super(_T("3")) << _T(" (") << Sub2(symbol(theta), _T("st")) << _T(" + 1.75 ") << symbol(TIMES);
-		*pPara << _T(" ") << Sub2(symbol(theta), _T("cy")) << _T(") / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") ") << symbol(TIMES);
+		*pPara << _T(" ") << Sub2(symbol(theta), _T("cy")) << _T(") / (n + ") << symbol(eta) << _T(") ") << symbol(TIMES);
 		*pPara << _T(" Ca = 3 ") << symbol(TIMES) << _T(" ") << stress.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << Super2(s, _T("3"));
 		*pPara << _T(" ") << symbol(TIMES) << _T(" (") << static_rotation;
 		*pPara << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") / (") << n << _T(" + ") << n_multiplier << _T(")");
@@ -1562,7 +1584,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 		if (hydrostatic_check)
 		{
-			*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(max_stress) << _T(" > ") << stress.SetValue(hydrostatic_stress) << _T(" ");
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(max_stress) << (max_stress==hydrostatic_stress? _T(" = ") :_T(" > ")) << stress.SetValue(hydrostatic_stress) << _T(" ");
 			*pPara << RPT_PASS;
 		}
 		else
@@ -1591,7 +1613,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	*pPara << symbol(RIGHT_SINGLE_ARROW);
 	if (horiz_force_check)
 	{
-		*pPara << force.SetValue(horiz_force) << _T(" < ") << force.SetValue(dl / 5.0);
+		*pPara << force.SetValue(horiz_force) << (horiz_force==dl/5.0?_T(" = "):_T(" < ")) << force.SetValue(dl / 5.0);
 		*pPara << _T(" ") << RPT_PASS;
 	}
 	else
@@ -1637,11 +1659,11 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	(*pChapter) << pPara;
 
 	*pPara << Sub2(_T("S"), _T("max")) << _T(" = ") << symbol(ROOT) << _T("22 ") << symbol(TIMES) << _T(" (n + ");
-	*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(")) = ") << symbol(ROOT) << _T(" 22 ") << symbol(TIMES) << _T(" (") << n << _T(" + ") << n_multiplier << _T(")) = ") << s_max << rptNewLine;
+	*pPara << symbol(eta) << _T(")) = ") << symbol(ROOT) << _T(" 22 ") << symbol(TIMES) << _T(" (") << n << _T(" + ") << n_multiplier << _T(")) = ") << s_max << rptNewLine;
 
 	if (s_max_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << s << _T(" < ") << s_max << _T(" ") << RPT_PASS << _T(" (Method A can be used per SECTION 14.7.6.1) ") << rptNewLine;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << s << (s==s_max?_T(" = ") :_T(" < ")) << s_max << _T(" ") << RPT_PASS << _T(" (Method A can be used per SECTION 14.7.6.1) ") << rptNewLine;
 	}
 	else
 	{
