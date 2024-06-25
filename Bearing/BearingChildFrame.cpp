@@ -214,6 +214,8 @@ void CBearingChildFrame::MethodBControls(int s)
     w_fixed_y_no->ShowWindow(s);
     CWnd* design_prop_group = m_DlgBar.GetDlgItem(IDC_DESIGN_PROP_B);
     design_prop_group->ShowWindow(s);
+    CWnd* use_plates = m_DlgBar.GetDlgItem(IDC_EXTERNAL_PLATES);
+    use_plates->ShowWindow(s);
 }
 
 
@@ -230,6 +232,7 @@ void CBearingChildFrame::OnMethodB()
     CBearingChildFrame::MethodBControls(SW_SHOW);
     CBearingChildFrame::OnUpdate();
 }
+
 
 
 
@@ -258,3 +261,5 @@ void CBearingChildFrame::UpdateData(BOOL bUpdate)
 {
    m_DlgBar.UpdateData(bUpdate);
 }
+
+

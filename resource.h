@@ -323,6 +323,7 @@
 #define IDC_CHECK1                      396
 #define IDC_RESTRICT_IMPACT             396
 #define IDC_LIFTING                     396
+#define IDC_EXTERNAL_PLATES             396
 #define IDC_MAX_BUNK                    398
 #define IDC_MAX_BUNK_UNIT               399
 #define IDC_LEADING_OVERHANG            400

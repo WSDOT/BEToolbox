@@ -947,6 +947,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	bool stab_X_dir_check = brg_calc.StabilityXDirectionCheck(brg, brg_loads);
 	Float64 allow_stab_Y_dir = brg_calc.GetAllowableTotalLoadStressStabilityY(brg, brg_loads);
 	bool stab_Y_dir_check = brg_calc.StabilityYDirectionCheck(brg, brg_loads);
+	bool use_ext_plates = brg.UseExternalPlates();
 
 	Float64 static_stress = brg_calc.GetStaticStress(brg, brg_loads);
 	Float64 cyclic_stress = brg_calc.GetCyclicStress(brg, brg_loads);
@@ -988,7 +989,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	if (!t_min_shim_absolute_check || !t_min_shim_service_check || !t_min_shim_fatigue_check || !s_max_check || !n_min_shear_def_check
 		|| !shear_def_check || !static_axial_X_ss_check || !static_axial_Y_ss_check || !ss_X_combo_sum_check || (check_app_TL_stab_X && !stab_X_dir_check) 
-		|| (check_app_TL_stab_Y && !stab_Y_dir_check) || !rest_system_req_check || !hydrostatic_check || !horiz_force_check)
+		|| (check_app_TL_stab_Y && !stab_Y_dir_check) || !rest_system_req_check || (use_ext_plates && !hydrostatic_check) || !horiz_force_check)
 	{
 		*pPara << color(Red);
 		if (!t_min_shim_absolute_check)
@@ -1043,7 +1044,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		{
 			*pPara << _T("Bearing restraint system is required.") << rptNewLine;
 		}
-		if (!hydrostatic_check)
+		if (use_ext_plates && !hydrostatic_check)
 		{
 			*pPara << _T("Elastomer is not sufficient to resist tension due to hydrostatic stress (Applicable if externally bonded plates are used).") << rptNewLine;
 		}
@@ -1525,51 +1526,54 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	*pPara << rptNewLine << rptNewLine;
 
-
-	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
-	(*pChapter) << pSubHeading;
-	*pSubHeading << _T("Hydrostatic Stress (Applicable For Externally Bonded Plates):");
-	pPara = new rptParagraph;
-	(*pChapter) << pPara;
-
-	*pPara << _T("Total axial strain, ") << Sub2(symbol(epsilon), _T("a"));
-	*pPara << _T(" = (") << Sub2(symbol(sigma), _T("st")) << _T(" + 1.75 ");
-	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("cy")) << _T(") / 3 / ");
-	*pPara << Sub2(_T("B"), _T("a")) << _T(" / ") << Sub2(_T("G"), _T("min")) << _T(" / ") << Super2(_T("S"), _T("2")) << _T(" = (");
-	*pPara << stress.SetValue(static_stress) << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << stress.SetValue(cyclic_stress) << _T(") / 3 / ");
-	*pPara << peak_hyd << _T(" / ") << stress.SetValue(Gmin) << _T(" / ") << Super2(s, _T("2")) << _T(" = ");
-	*pPara << total_axial_strain << rptNewLine;
-
-	*pPara << symbol(alpha) << _T(" = ") << Sub2(symbol(epsilon), _T("a ")) << symbol(TIMES) << _T(" (n + ");
-	*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(") / S / (") << Sub2(symbol(theta), _T("st")) << _T(" + 1.75 ");
-	*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(theta), _T("cy")) << _T(") = ") << total_axial_strain << _T(" ") << symbol(TIMES);
-	*pPara << _T(" (") << n << _T(" + ") << n_multiplier << _T(") / ") << s << _T(" / (") << static_rotation << _T(" + 1.75 ");
-	*pPara << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") = ") << alpha << rptNewLine;
-
-	*pPara << _T("Ca = 4 / 3 ") << symbol(TIMES) << _T(" ((") << alpha << Super(_T("2")) << _T(" + 1 / 3 )") << Super(_T("1.5")) << _T(" - ") << alpha;
-	*pPara << _T(" ") << symbol(TIMES) << _T(" (1 - ") << Super2(alpha, _T("2")) << _T(")) = ") << Ca << rptNewLine;
-
-	*pPara << Sub2(symbol(sigma), _T("hyd")) << _T(" = 3 ") << symbol(TIMES) << Sub2(_T(" G"), _T("min "));
-	*pPara << symbol(TIMES) << _T(" S") << Super(_T("3")) << _T(" (") << Sub2(symbol(theta), _T("st")) << _T(" + 1.75 ") << symbol(TIMES);
-	*pPara << _T(" ") << Sub2(symbol(theta), _T("cy")) << _T(") / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") ") << symbol(TIMES);
-	*pPara << _T(" Ca = 3 ") << symbol(TIMES) << _T(" ") << stress.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << Super2(s, _T("3"));
-	*pPara << _T(" ") << symbol(TIMES) << _T(" (") << static_rotation;
-	*pPara << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") / (") << n << _T(" + ") << n_multiplier << _T(")");
-	*pPara << _T(" ") << symbol(TIMES) << _T(" ") << Ca << _T(" = ") << stress.SetValue(hydrostatic_stress) << rptNewLine;
-
-	if (hydrostatic_check)
+	if (use_ext_plates)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(max_stress) << _T(" > ") << stress.SetValue(hydrostatic_stress) << _T(" ");
-		*pPara << RPT_PASS;
-	}
-	else
-	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(max_stress) << _T(" < ") << stress.SetValue(hydrostatic_stress) << _T(" ");
-		*pPara << RPT_FAIL;
-	}
-	*pPara << _T(" (14.7.5.3.3-11)");
 
-	*pPara << rptNewLine << rptNewLine;
+		pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
+		(*pChapter) << pSubHeading;
+		*pSubHeading << _T("Hydrostatic Stress (Applicable For Externally Bonded Plates):");
+		pPara = new rptParagraph;
+		(*pChapter) << pPara;
+
+		*pPara << _T("Total axial strain, ") << Sub2(symbol(epsilon), _T("a"));
+		*pPara << _T(" = (") << Sub2(symbol(sigma), _T("st")) << _T(" + 1.75 ");
+		*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(sigma), _T("cy")) << _T(") / 3 / ");
+		*pPara << Sub2(_T("B"), _T("a")) << _T(" / ") << Sub2(_T("G"), _T("min")) << _T(" / ") << Super2(_T("S"), _T("2")) << _T(" = (");
+		*pPara << stress.SetValue(static_stress) << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << stress.SetValue(cyclic_stress) << _T(") / 3 / ");
+		*pPara << peak_hyd << _T(" / ") << stress.SetValue(Gmin) << _T(" / ") << Super2(s, _T("2")) << _T(" = ");
+		*pPara << total_axial_strain << rptNewLine;
+
+		*pPara << symbol(alpha) << _T(" = ") << Sub2(symbol(epsilon), _T("a ")) << symbol(TIMES) << _T(" (n + ");
+		*pPara << Sub2(symbol(mu), _T("tc allow")) << _T(") / S / (") << Sub2(symbol(theta), _T("st")) << _T(" + 1.75 ");
+		*pPara << symbol(TIMES) << _T(" ") << Sub2(symbol(theta), _T("cy")) << _T(") = ") << total_axial_strain << _T(" ") << symbol(TIMES);
+		*pPara << _T(" (") << n << _T(" + ") << n_multiplier << _T(") / ") << s << _T(" / (") << static_rotation << _T(" + 1.75 ");
+		*pPara << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") = ") << alpha << rptNewLine;
+
+		*pPara << _T("Ca = 4 / 3 ") << symbol(TIMES) << _T(" ((") << alpha << Super(_T("2")) << _T(" + 1 / 3 )") << Super(_T("1.5")) << _T(" - ") << alpha;
+		*pPara << _T(" ") << symbol(TIMES) << _T(" (1 - ") << Super2(alpha, _T("2")) << _T(")) = ") << Ca << rptNewLine;
+
+		*pPara << Sub2(symbol(sigma), _T("hyd")) << _T(" = 3 ") << symbol(TIMES) << Sub2(_T(" G"), _T("min "));
+		*pPara << symbol(TIMES) << _T(" S") << Super(_T("3")) << _T(" (") << Sub2(symbol(theta), _T("st")) << _T(" + 1.75 ") << symbol(TIMES);
+		*pPara << _T(" ") << Sub2(symbol(theta), _T("cy")) << _T(") / (n + ") << Sub2(symbol(mu), _T("tc allow")) << _T(") ") << symbol(TIMES);
+		*pPara << _T(" Ca = 3 ") << symbol(TIMES) << _T(" ") << stress.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << Super2(s, _T("3"));
+		*pPara << _T(" ") << symbol(TIMES) << _T(" (") << static_rotation;
+		*pPara << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") / (") << n << _T(" + ") << n_multiplier << _T(")");
+		*pPara << _T(" ") << symbol(TIMES) << _T(" ") << Ca << _T(" = ") << stress.SetValue(hydrostatic_stress) << rptNewLine;
+
+		if (hydrostatic_check)
+		{
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(max_stress) << _T(" > ") << stress.SetValue(hydrostatic_stress) << _T(" ");
+			*pPara << RPT_PASS;
+		}
+		else
+		{
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << stress.SetValue(max_stress) << _T(" < ") << stress.SetValue(hydrostatic_stress) << _T(" ");
+			*pPara << RPT_FAIL;
+		}
+		*pPara << _T(" (14.7.5.3.3-11)");
+
+		*pPara << rptNewLine << rptNewLine;
+	}
 
 	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;

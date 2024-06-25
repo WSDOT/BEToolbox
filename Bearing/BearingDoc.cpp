@@ -151,6 +151,7 @@ BOOL CBearingDoc::Init()
    m_bearing.SetNumIntLayers(4);
    m_bearing.SetDensityElastomer(WBFL::Units::ConvertToSysUnits(74.93, WBFL::Units::Measure::LbfPerFeet3));
    m_bearing.SetDensitySteel(WBFL::Units::ConvertToSysUnits(490.0, WBFL::Units::Measure::LbfPerFeet3));
+   m_bearing.SetUseExternalPlates(false);
 
    m_bearing_loads.SetDeadLoad(WBFL::Units::ConvertToSysUnits(86.0, WBFL::Units::Measure::Kip));
    m_bearing_loads.SetLiveLoad(WBFL::Units::ConvertToSysUnits(47.0, WBFL::Units::Measure::Kip));
