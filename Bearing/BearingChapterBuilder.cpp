@@ -450,7 +450,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << _T(" ") << RPT_FAIL;
 	}
 
-	*pPara << rptNewLine;
+	*pPara << rptNewLine << rptNewLine;
 
 
 	*pPara << Sub2(_T("h"), _T("s,service")) << _T(" = ");
@@ -1108,7 +1108,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << _T(" ") << RPT_FAIL;
 	}
 
-	*pPara << rptNewLine;
+	*pPara << rptNewLine << rptNewLine;
 
 
 	*pPara << Sub2(_T("h"), _T("s,service")) << _T(" = ");
