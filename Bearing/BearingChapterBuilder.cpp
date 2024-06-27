@@ -512,7 +512,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 
 	if (s_max_check)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << s << _T(" < ") << s_max << _T(" ") << RPT_PASS << _T(" (Method A can be used per SECTION 14.7.6.1) ") << rptNewLine;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << s << (s==s_max?_T(" = ") :_T(" < ")) << s_max << _T(" ") << RPT_PASS << _T(" (Method A can be used per SECTION 14.7.6.1) ") << rptNewLine;
 	}
 	else
 	{
@@ -993,7 +993,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 
 	if (!t_min_shim_absolute_check || !t_min_shim_service_check || !t_min_shim_fatigue_check || !s_max_check || !n_min_shear_def_check
 		|| !shear_def_check || !static_axial_X_ss_check || !static_axial_Y_ss_check || !ss_X_combo_sum_check || (check_app_TL_stab_X && !stab_X_dir_check) 
-		|| (check_app_TL_stab_Y && !stab_Y_dir_check) || !rest_system_req_check || (use_ext_plates && !hydrostatic_check) || !horiz_force_check)
+		|| (check_app_TL_stab_Y && !stab_Y_dir_check) || !use_ext_plates && !rest_system_req_check || (use_ext_plates && !hydrostatic_check) || (!use_ext_plates && !horiz_force_check))
 	{
 		*pPara << color(Red);
 		if (!t_min_shim_absolute_check)
@@ -1044,7 +1044,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		{
 			*pPara << _T("Bearing is unstable in the secondary direction (transverse to the bridge) due to axial load.") << rptNewLine;
 		}
-		if (!rest_system_req_check)
+		if (!use_ext_plates && !rest_system_req_check)
 		{
 			*pPara << _T("Bearing restraint system is required.") << rptNewLine;
 		}
@@ -1052,7 +1052,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		{
 			*pPara << _T("Elastomer is not sufficient to resist tension due to hydrostatic stress (Applicable if externally bonded plates are used).") << rptNewLine;
 		}
-		if (!horiz_force_check)
+		if (!use_ext_plates && !horiz_force_check)
 		{
 			*pPara << _T("Elastomer is not sufficient to resist horizontal force effects due to shear deformation.") << rptNewLine;
 		}
@@ -1506,54 +1506,54 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << _T(" Does not apply") << rptNewLine;
 	}
 
-
 	*pPara << rptNewLine;
 
-	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
-	(*pChapter) << pSubHeading;
-	*pSubHeading << _T("Restraint System Requirement:");
-	pPara = new rptParagraph;
-	(*pChapter) << pPara;
-
-	*pPara << _T("Elastomer Elastic Modulus Method B, ") << Sub2(_T("E"), _T("B"));
-	*pPara << _T(" = 6 ") << symbol(TIMES) << Sub2(_T(" G"), _T("min ")) << symbol(TIMES) << _T(" ") << Super2(_T("S"), _T("2"));
-	*pPara << _T(" = 6 ") << symbol(TIMES) << _T(" ");
-	*pPara << stress.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << s << Super(_T("2")) << _T(" = ") << stress.SetValue(EcB) << rptNewLine;
-
-	if (rest_system_req_check)
+	if (!use_ext_plates)
 	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("(") << Sub2(symbol(theta), _T("s,st")) << _T(" + 1.75") << Sub2(symbol(theta), _T("s,cy"));
-		*pPara << _T(") ") << symbol(TIMES) << _T(" S / 3 / (n + ") << symbol(eta) << _T(") / (") << Sub2(symbol(sigma), _T("st"));
-		*pPara << _T(" + 1.75") << Sub2(symbol(sigma), _T("cy")) << _T(") ") << symbol(TIMES) << Sub2(_T(" E"), _T("B")) << _T(" = (");
-		*pPara << static_rotation << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") ") << symbol(TIMES) << _T(" ") << s << _T(" / 3 / (");
-		*pPara << n << _T(" + ") << n_multiplier << _T(") / (") << stress.SetValue(static_stress) << _T(" + 1.75 ") << symbol(TIMES) << stress.SetValue(cyclic_stress);
-		*pPara << _T(") ") << symbol(TIMES) << _T(" ") << E.SetValue(EcB) << _T(" = ") << restraint_system_calc;
-		*pPara << (restraint_system_calc == 1.0?_T(" = 1") : _T(" < 1 ")) << rptNewLine;
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << color(Green) << _T("NO RESTRAINT SYSTEM REQUIRED") << color(Green);
+		pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
+		(*pChapter) << pSubHeading;
+		*pSubHeading << _T("Restraint System Requirement:");
+		pPara = new rptParagraph;
+		(*pChapter) << pPara;
+
+		*pPara << _T("Elastomer Elastic Modulus Method B, ") << Sub2(_T("E"), _T("B"));
+		*pPara << _T(" = 6 ") << symbol(TIMES) << Sub2(_T(" G"), _T("min ")) << symbol(TIMES) << _T(" ") << Super2(_T("S"), _T("2"));
+		*pPara << _T(" = 6 ") << symbol(TIMES) << _T(" ");
+		*pPara << stress.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << s << Super(_T("2")) << _T(" = ") << stress.SetValue(EcB) << rptNewLine;
+
+		if (rest_system_req_check)
+		{
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("(") << Sub2(symbol(theta), _T("s,st")) << _T(" + 1.75") << Sub2(symbol(theta), _T("s,cy"));
+			*pPara << _T(") ") << symbol(TIMES) << _T(" S / 3 / (n + ") << symbol(eta) << _T(") / (") << Sub2(symbol(sigma), _T("st"));
+			*pPara << _T(" + 1.75") << Sub2(symbol(sigma), _T("cy")) << _T(") ") << symbol(TIMES) << Sub2(_T(" E"), _T("B")) << _T(" = (");
+			*pPara << static_rotation << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") ") << symbol(TIMES) << _T(" ") << s << _T(" / 3 / (");
+			*pPara << n << _T(" + ") << n_multiplier << _T(") / (") << stress.SetValue(static_stress) << _T(" + 1.75 ") << symbol(TIMES) << stress.SetValue(cyclic_stress);
+			*pPara << _T(") ") << symbol(TIMES) << _T(" ") << E.SetValue(EcB) << _T(" = ") << restraint_system_calc;
+			*pPara << (restraint_system_calc == 1.0 ? _T(" = 1") : _T(" < 1 ")) << rptNewLine;
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << color(Green) << _T("NO RESTRAINT SYSTEM REQUIRED") << color(Green);
+		}
+		else
+		{
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("(") << Sub2(symbol(theta), _T("s,st")) << _T(" + 1.75") << Sub2(symbol(theta), _T("s,cy"));
+			*pPara << _T(") ") << symbol(TIMES) << _T(" S / 3 / (n + ") << symbol(eta) << _T(") / (") << Sub2(symbol(sigma), _T("st"));
+			*pPara << _T(" + 1.75") << Sub2(symbol(sigma), _T("cy")) << _T(") ") << symbol(TIMES) << Sub2(_T(" E"), _T("B")) << _T(" = (");
+			*pPara << static_rotation << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") ") << symbol(TIMES) << _T(" ") << s << _T(" / 3 / (");
+			*pPara << n << _T(" + ") << n_multiplier << _T(") / (") << stress.SetValue(static_stress) << _T(" + 1.75 ") << stress.SetValue(cyclic_stress);
+			*pPara << _T(") ") << symbol(TIMES) << _T(" ") << E.SetValue(EcB) << _T(" = ") << restraint_system_calc;
+			*pPara << _T(" > 1 ") << rptNewLine;
+			*pPara << symbol(RIGHT_SINGLE_ARROW) << color(Red) << _T("RESTRAINT SYSTEM REQUIRED") << color(Red);
+		}
+		*pPara << _T(" (SECTION 14.7.5.4)");
+
+		*pPara << rptNewLine << rptNewLine;
 	}
-	else
-	{
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << _T("(") << Sub2(symbol(theta), _T("s,st")) << _T(" + 1.75") << Sub2(symbol(theta), _T("s,cy"));
-		*pPara << _T(") ") << symbol(TIMES) << _T(" S / 3 / (n + ") << symbol(eta) << _T(") / (") << Sub2(symbol(sigma), _T("st"));
-		*pPara << _T(" + 1.75") << Sub2(symbol(sigma), _T("cy")) << _T(") ") << symbol(TIMES) << Sub2(_T(" E"), _T("B")) << _T(" = (");
-		*pPara << static_rotation << _T(" + 1.75 ") << symbol(TIMES) << _T(" ") << cyclic_rotation << _T(") ") << symbol(TIMES) << _T(" ") << s << _T(" / 3 / (");
-		*pPara << n << _T(" + ") << n_multiplier << _T(") / (") << stress.SetValue(static_stress) << _T(" + 1.75 ") << stress.SetValue(cyclic_stress);
-		*pPara << _T(") ") << symbol(TIMES) << _T(" ") << E.SetValue(EcB) << _T(" = ") << restraint_system_calc;
-		*pPara << _T(" > 1 ") << rptNewLine;
-		*pPara << symbol(RIGHT_SINGLE_ARROW) << color(Red) << _T("RESTRAINT SYSTEM REQUIRED") << color(Red);
-	}
-	*pPara << _T(" (SECTION 14.7.5.4)");
-
-
-
-	*pPara << rptNewLine << rptNewLine;
 
 	if (use_ext_plates)
 	{
 
 		pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
 		(*pChapter) << pSubHeading;
-		*pSubHeading << _T("Hydrostatic Stress (Applicable For Externally Bonded Plates):");
+		*pSubHeading << _T("Hydrostatic Stress:");
 		pPara = new rptParagraph;
 		(*pChapter) << pPara;
 
@@ -1597,32 +1597,35 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << rptNewLine << rptNewLine;
 	}
 
-	pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
-	(*pChapter) << pSubHeading;
-	*pSubHeading << _T("Bearing Slip Check:");
-	pPara = new rptParagraph;
-	(*pChapter) << pPara;
-
-	*pPara << _T("Horizontal Force, ") << Sub2(_T("F"), _T("horiz")) << _T(" = ") << Sub2(_T("G"), _T("min ")) << symbol(TIMES);
-	*pPara << _T(" A ") << symbol(TIMES) << _T(" ") << Sub2(symbol(DELTA), _T("s")) << _T(" / ") << Sub2(_T("h"), _T("rt")) << _T(" = ");
-	*pPara << E.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << area.SetValue(a) << _T(" ") << symbol(TIMES) << _T(" ") << length.SetValue(sdef);
-	*pPara << _T(" / ") << length.SetValue(total_elastomer_thickness) << _T(" = ");
-	*pPara << force.SetValue(horiz_force) << rptNewLine;
-	*pPara << symbol(RIGHT_SINGLE_ARROW) << symbol(mu) << Sub2(_T("P"), _T("D")) << _T(" = 0.20") << force.SetValue(dl);
-	*pPara << force.SetValue(dl / 5) << rptNewLine;
-	*pPara << symbol(RIGHT_SINGLE_ARROW);
-	if (horiz_force_check)
+	if (!use_ext_plates)
 	{
-		*pPara << force.SetValue(horiz_force) << (horiz_force==dl/5.0?_T(" = "):_T(" < ")) << force.SetValue(dl / 5.0);
-		*pPara << _T(" ") << RPT_PASS;
-	}
-	else
-	{
-		*pPara << force.SetValue(horiz_force) << _T(" > ") << force.SetValue(dl / 5.0);
-		*pPara << _T(" ") << color(Red) << _T("RESTRAINT SYSTEM REQUIRED") << color(Red);
-	}
+		pSubHeading = pSubHeading = rptStyleManager::CreateSubHeading();
+		(*pChapter) << pSubHeading;
+		*pSubHeading << _T("Bearing Slip Check:");
+		pPara = new rptParagraph;
+		(*pChapter) << pPara;
 
-	*pPara << rptNewLine << rptNewLine;
+		*pPara << _T("Horizontal Force, ") << Sub2(_T("F"), _T("horiz")) << _T(" = ") << Sub2(_T("G"), _T("min ")) << symbol(TIMES);
+		*pPara << _T(" A ") << symbol(TIMES) << _T(" ") << Sub2(symbol(DELTA), _T("s")) << _T(" / ") << Sub2(_T("h"), _T("rt")) << _T(" = ");
+		*pPara << E.SetValue(Gmin) << _T(" ") << symbol(TIMES) << _T(" ") << area.SetValue(a) << _T(" ") << symbol(TIMES) << _T(" ") << length.SetValue(sdef);
+		*pPara << _T(" / ") << length.SetValue(total_elastomer_thickness) << _T(" = ");
+		*pPara << force.SetValue(horiz_force) << rptNewLine;
+		*pPara << symbol(RIGHT_SINGLE_ARROW) << symbol(mu) << Sub2(_T("P"), _T("D")) << _T(" = 0.20") << force.SetValue(dl);
+		*pPara << force.SetValue(dl / 5) << rptNewLine;
+		*pPara << symbol(RIGHT_SINGLE_ARROW);
+		if (horiz_force_check)
+		{
+			*pPara << force.SetValue(horiz_force) << (horiz_force == dl / 5.0 ? _T(" = ") : _T(" < ")) << force.SetValue(dl / 5.0);
+			*pPara << _T(" ") << RPT_PASS;
+		}
+		else
+		{
+			*pPara << force.SetValue(horiz_force) << _T(" > ") << force.SetValue(dl / 5.0);
+			*pPara << _T(" ") << color(Red) << _T("RESTRAINT SYSTEM REQUIRED") << color(Red);
+		}
+
+		*pPara << rptNewLine << rptNewLine;
+	}
 
 	pSubHeading = rptStyleManager::CreateSubHeading();
 	(*pChapter) << pSubHeading;
