@@ -151,6 +151,7 @@ BOOL CBearingDoc::Init()
    m_bearing.SetNumIntLayers(4);
    m_bearing.SetDensityElastomer(WBFL::Units::ConvertToSysUnits(74.93, WBFL::Units::Measure::LbfPerFeet3));
    m_bearing.SetDensitySteel(WBFL::Units::ConvertToSysUnits(490.0, WBFL::Units::Measure::LbfPerFeet3));
+   m_bearing.SetUseExternalPlates(false);
 
    m_bearing_loads.SetDeadLoad(WBFL::Units::ConvertToSysUnits(86.0, WBFL::Units::Measure::Kip));
    m_bearing_loads.SetLiveLoad(WBFL::Units::ConvertToSysUnits(47.0, WBFL::Units::Measure::Kip));
@@ -172,7 +173,7 @@ void CBearingDoc::OnCloseDocument()
 
 HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
 {
-   HRESULT hr = pStrSave->BeginUnit(_T("Bearing"),1.0);
+   HRESULT hr = pStrSave->BeginUnit(_T("Bearing"),1.1);
    if ( FAILED(hr) )
       return hr;
 
@@ -203,6 +204,9 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
    Float64 rot_cyclic = m_bearing_loads.GetCyclicRotation();
    Float64 shear_def = m_bearing_loads.GetShearDeformation();
 
+   // added in version 1.1
+   bool use_external_plates = m_bearing.UseExternalPlates();
+
   
 
    hr = pStrSave->put_Property(_T("Units"), CComVariant(pApp->GetUnitsMode()));
@@ -218,6 +222,10 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
        return hr;
 
    hr = pStrSave->put_Property(_T("Fixed_Y_Translation"), CComVariant((int)fixed_translation_y));
+   if (FAILED(hr))
+       return hr;
+
+   hr = pStrSave->put_Property(_T("Use_External_Plates"), CComVariant((bool)use_external_plates));
    if (FAILED(hr))
        return hr;
 
@@ -347,109 +355,118 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
        return hr;
    m_bearing_loads.SetFixedTranslationY((BearingLoads::FixedTranslationY)var.lVal);
 
-   var.vt = VT_R8;
-   hr = pStrLoad->get_Property(_T("Length"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetLength(var.dblVal);
+   pStrLoad->get_Version(&version);
+   if (1 < version)
+   {
+        hr = pStrLoad->get_Property(_T("Use_External_Plates"), &var);
+        if (FAILED(hr))
+            return hr;
+        m_bearing.SetUseExternalPlates(var.lVal);
+   }
 
-   hr = pStrLoad->get_Property(_T("Width"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetWidth(var.dblVal);
+    var.vt = VT_R8;
+    hr = pStrLoad->get_Property(_T("Length"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetLength(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("Gmin"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetShearModulusMinimum(var.dblVal);
+    hr = pStrLoad->get_Property(_T("Width"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetWidth(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("Gmax"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetShearModulusMaximum(var.dblVal);
+    hr = pStrLoad->get_Property(_T("Gmin"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetShearModulusMinimum(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("tlayer"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetIntermediateLayerThickness(var.dblVal);
+    hr = pStrLoad->get_Property(_T("Gmax"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetShearModulusMaximum(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("tcover"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetCoverThickness(var.dblVal);
+    hr = pStrLoad->get_Property(_T("tlayer"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetIntermediateLayerThickness(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("tshim"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetSteelShimThickness(var.dblVal);
+    hr = pStrLoad->get_Property(_T("tcover"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetCoverThickness(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("fy"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetYieldStrength(var.dblVal);
+    hr = pStrLoad->get_Property(_T("tshim"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetSteelShimThickness(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("fth"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetFatigueThreshold(var.dblVal);
-   
-   var.vt = VT_I4;
-   hr = pStrLoad->get_Property(_T("n"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetNumIntLayers(var.lVal);
+    hr = pStrLoad->get_Property(_T("fy"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetYieldStrength(var.dblVal);
 
-   var.vt = VT_R8;
-   hr = pStrLoad->get_Property(_T("ps"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetDensitySteel(var.dblVal);
+    hr = pStrLoad->get_Property(_T("fth"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetFatigueThreshold(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("pe"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing.SetDensityElastomer(var.dblVal);
+    var.vt = VT_I4;
+    hr = pStrLoad->get_Property(_T("n"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetNumIntLayers(var.lVal);
 
-   hr = pStrLoad->get_Property(_T("DL"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing_loads.SetDeadLoad(var.dblVal);
+    var.vt = VT_R8;
+    hr = pStrLoad->get_Property(_T("ps"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetDensitySteel(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("LL"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing_loads.SetLiveLoad(var.dblVal);
+    hr = pStrLoad->get_Property(_T("pe"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing.SetDensityElastomer(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("rotx"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing_loads.SetRotationX(var.dblVal);
+    hr = pStrLoad->get_Property(_T("DL"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing_loads.SetDeadLoad(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("roty"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing_loads.SetRotationY(var.dblVal);
+    hr = pStrLoad->get_Property(_T("LL"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing_loads.SetLiveLoad(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("rot_static"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing_loads.SetStaticRotation(var.dblVal);
+    hr = pStrLoad->get_Property(_T("rotx"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing_loads.SetRotationX(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("rot_cyclic"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing_loads.SetCyclicRotation(var.dblVal);
+    hr = pStrLoad->get_Property(_T("roty"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing_loads.SetRotationY(var.dblVal);
 
-   hr = pStrLoad->get_Property(_T("shear_def"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing_loads.SetShearDeformation(var.dblVal);
+    hr = pStrLoad->get_Property(_T("rot_static"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing_loads.SetStaticRotation(var.dblVal);
 
-   hr = pStrLoad->EndUnit(); // Bearing
-   if ( FAILED(hr) )
-      return hr;
+    hr = pStrLoad->get_Property(_T("rot_cyclic"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing_loads.SetCyclicRotation(var.dblVal);
 
-   return S_OK;
+    hr = pStrLoad->get_Property(_T("shear_def"), &var);
+    if (FAILED(hr))
+        return hr;
+    m_bearing_loads.SetShearDeformation(var.dblVal);
+
+    hr = pStrLoad->EndUnit(); // Bearing
+    if (FAILED(hr))
+        return hr;
+
+    return S_OK;
 }
 
 void CBearingDoc::LoadDocumentSettings()

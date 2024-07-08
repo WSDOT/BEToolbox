@@ -56,6 +56,7 @@ public:
 	Float64 m_shear_def;
 	int m_fixed_x;
 	int m_fixed_y;
+	bool m_ext_plates;
 
 
 	void SetBearingParameters(CBearingDialogBar&,
