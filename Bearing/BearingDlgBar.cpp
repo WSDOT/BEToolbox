@@ -109,6 +109,7 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX, IDC_SHEAR_DEF, IDC_SHEAR_DEF_UNIT, m_shear_def, pDispUnits->ComponentDim);
    DDX_Radio(pDX, IDC_FIXED_X_YES, m_fixed_x);
    DDX_Radio(pDX, IDC_FIXED_Y_YES, m_fixed_y);
+   DDX_Check_Bool(pDX, IDC_EXTERNAL_PLATES, m_ext_plates);
 }
 
 
@@ -146,6 +147,8 @@ void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
     dlgBar.m_rot_cy = brg_loads.GetCyclicRotation();
     dlgBar.m_shear_def = brg_loads.GetShearDeformation();
 
+    dlgBar.m_ext_plates = brg.UseExternalPlates();
+
     if (brg_loads.GetFixedTranslationX() == WBFL::EngTools::BearingLoads::FixedTranslationX::No)
     {
         dlgBar.m_fixed_x = 1;
@@ -181,6 +184,7 @@ void CBearingDialogBar::SetBearing(
     brg.SetYieldStrength(m_Fy);
     brg.SetFatigueThreshold(m_Fth);
     brg.SetNumIntLayers(m_n_layers);
+    brg.SetUseExternalPlates(m_ext_plates);
     brg_loads.SetDeadLoad(m_DL);
     brg_loads.SetLiveLoad(m_LL);
     brg_loads.SetShearDeformation(m_shear_def);
