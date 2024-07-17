@@ -128,6 +128,9 @@ BOOL CPGStableDoc::Init()
    if ( !CBEToolboxDoc::Init() )
       return FALSE;
 
+#pragma Reminder("Edge browser does not work with tabbed windows - Probably a bug in MSFTs code. Hard coding to IE")
+   GetReportManager()->SetReportBrowserType(WBFL::Reporting::ReportBrowser::Type::IE);
+
    LoadPGSLibrary();
 
    // get the common engineer and company name from the main application level
