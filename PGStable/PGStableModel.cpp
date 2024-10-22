@@ -245,6 +245,15 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
       m_LiftingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - Lr + offset)));
    }
 
+   if (!IsEqual(Ll, m_Strands[m_GirderType][ModelType::Lifting].XferLength))
+   {
+      m_LiftingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(m_Strands[m_GirderType][ModelType::Lifting].XferLength)));
+   }
+   if (!IsEqual(Lr, m_Strands[m_GirderType][ModelType::Lifting].XferLength))
+   {
+      m_LiftingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - m_Strands[m_GirderType][ModelType::Lifting].XferLength)));
+   }
+
    ResolveLiftingStrandLocations();
 
    // criteria
@@ -316,6 +325,15 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    m_HaulingStabilityProblem.GetSupportLocations(&Ll,&Lr);
    m_HaulingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(Ll)));
    m_HaulingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L-Lr)));
+
+   if (!IsEqual(Ll, m_Strands[m_GirderType][ModelType::Lifting].XferLength))
+   {
+      m_HaulingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(m_Strands[m_GirderType][ModelType::Hauling].XferLength)));
+   }
+   if (!IsEqual(Lr, m_Strands[m_GirderType][ModelType::Lifting].XferLength))
+   {
+      m_HaulingStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - m_Strands[m_GirderType][ModelType::Hauling].XferLength)));
+   }
 
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtop,Wbot;
    pGirder->GetSectionProperties(0,WBFL::Stability::Section::Start,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtop,&Wbot);
@@ -389,6 +407,15 @@ WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckA
    m_OneEndSeatedStabilityProblem.GetSupportLocations(&Ll, &Lr);
    m_OneEndSeatedStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(Ll)));
    m_OneEndSeatedStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - Lr)));
+
+   if (!IsEqual(Ll, m_Strands[m_GirderType][ModelType::Lifting].XferLength))
+   {
+      m_OneEndSeatedStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(m_Strands[m_GirderType][ModelType::OneEndSeated].XferLength)));
+   }
+   if (!IsEqual(Lr, m_Strands[m_GirderType][ModelType::Lifting].XferLength))
+   {
+      m_OneEndSeatedStabilityProblem.AddAnalysisPoint(std::move(std::make_unique<WBFL::Stability::AnalysisPoint>(L - m_Strands[m_GirderType][ModelType::OneEndSeated].XferLength)));
+   }
 
    Float64 Ag, Ixx, Iyy, Ixy, Xleft, Ytop, Hg, Wtop, Wbot;
    pGirder->GetSectionProperties(0, WBFL::Stability::Section::Start, &Ag, &Ixx, &Iyy, &Ixy, &Xleft, &Ytop, &Hg, &Wtop, &Wbot);

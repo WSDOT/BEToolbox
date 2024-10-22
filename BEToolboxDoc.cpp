@@ -96,6 +96,11 @@ BOOL CBEToolboxDoc::Init()
       return FALSE;
    }
 
+   CEAFApp* pApp = EAFGetApp();
+   auto strBrowserType = pApp->GetProfileString(_T("Settings"), _T("ReportBrowser"), _T("Edge"));
+   WBFL::Reporting::ReportBrowser::Type browserType = (strBrowserType.CompareNoCase(_T("IE")) == 0 ? WBFL::Reporting::ReportBrowser::Type::IE : WBFL::Reporting::ReportBrowser::Type::Edge);
+   m_pRptMgr->SetReportBrowserType(browserType);
+
    return TRUE;
 }
 

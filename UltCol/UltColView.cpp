@@ -73,7 +73,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CUltColView::CreateReportBrowser
       return nullptr;
 
    CUltColDoc* pDoc = (CUltColDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), 0, m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CUltColView::RefreshReport()
