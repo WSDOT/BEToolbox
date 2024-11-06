@@ -125,13 +125,19 @@
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
       <Command>mkdir $(ARPDIR)\BridgeLink\Images
-xcopy /y/d $(ProjectDir)Images\*.png $(ARPDIR)\BridgeLink\Images\
+xcopy /y/d/s/e/i $(ProjectDir)Images\ $(ARPDIR)\BridgeLink\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
     </Manifest>
+    <PreBuildEvent>
+      <Command>$(ARPDIR)\WBFL\InstallWBFL_ReportImages.bat $(ARPDIR)\BEToolbox\Images</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Installing WBFL Report Images</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CustomBuildStep>
@@ -185,13 +191,19 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
       <Command>mkdir $(ARPDIR)\BridgeLink\Images
-xcopy /y/d $(ProjectDir)Images\*.png $(ARPDIR)\BridgeLink\Images\
+xcopy /y/d/s/e/i $(ProjectDir)Images\ $(ARPDIR)\BridgeLink\Images\
 xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
 </Command>
     </PostBuildEvent>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
     </Manifest>
+    <PreBuildEvent>
+      <Command>$(ARPDIR)\WBFL\InstallWBFL_ReportImages.bat $(ARPDIR)\BEToolbox\Images</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Installing WBFL Report Images</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
