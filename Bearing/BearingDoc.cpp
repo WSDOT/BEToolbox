@@ -160,8 +160,8 @@ BOOL CBearingDoc::Init()
    m_bearing_loads.SetRotationY(0.005);
    m_bearing_loads.SetStaticRotation(0.008);
    m_bearing_loads.SetCyclicRotation(0.006);
-   m_bearing_loads.SetFixedTranslationX(BearingLoads::FixedTranslationX::No);
-   m_bearing_loads.SetFixedTranslationY(BearingLoads::FixedTranslationY::Yes);
+   m_bearing_loads.SetFixedTranslationX(BearingLoads::FixedTranslationX::Yes);
+   m_bearing_loads.SetFixedTranslationY(BearingLoads::FixedTranslationY::No);
 
    return TRUE;
 }
