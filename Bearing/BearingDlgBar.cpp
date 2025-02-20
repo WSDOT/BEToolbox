@@ -27,8 +27,9 @@
 #include "..\resource.h"
 #include <EAF\EAFApp.h>
 #include "BearingDlgBar.h"
-#include "BearingDoc.h"
 #include <MFCTools\CustomDDX.h>
+#include <LibraryFw/Library.h>
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -58,7 +59,9 @@ CBearingDialogBar::CBearingDialogBar()
     m_rot_y{ 0 },
     m_rot_st{ 0 },
     m_rot_cy{ 0 },
-    m_shear_def{ 0 }
+    m_shear_def{ 0 },
+    m_ext_plates{ false },
+    m_specification{WBFL::LRFD::BDSManager::Edition::LastEdition}
 {
 }
 
@@ -82,14 +85,28 @@ END_MESSAGE_MAP()
 void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
 {
    CDialogBar::DoDataExchange(pDX);
-   CBearingDoc* pDoc = (CBearingDoc*)((CFrameWnd*)GetParent())->GetActiveDocument();
 
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
    int i = (pApp->GetUnitsMode() == eafTypes::umUS ? 0 : 1);
    DDX_Radio(pDX, IDC_US, i);
-   DDX_Radio(pDX, IDC_METHOD_A, m_method_a);
+   DDX_Radio(pDX, IDC_METHOD_A, m_method);
+   CComboBox* pcbSpecification = (CComboBox*)GetDlgItem(IDC_SPECIFICATION2);
+   if (pDX->m_bSaveAndValidate)
+   {
+       int menuIdx;
+       DDX_CBIndex(pDX, IDC_SPECIFICATION2, menuIdx);
+       int specIdx = pcbSpecification->GetItemData(menuIdx);
+       m_specification = static_cast<WBFL::LRFD::BDSManager::Edition>(specIdx);
+   }
+   else
+   {
+       CBearingDoc* pDoc = (CBearingDoc*)((CFrameWnd*)GetParent())->GetActiveDocument();
+       m_specification = static_cast<WBFL::LRFD::BDSManager::Edition>(pDoc->GetSpecification());
+       int defaultIdx = static_cast<int>(m_specification) - static_cast<int>(WBFL::LRFD::BDSManager::Edition::FourthEditionWith2009Interims);
+       pcbSpecification->SetCurSel(defaultIdx);
+   }
    DDX_UnitValueAndTag(pDX, IDC_BLENGTH, IDC_BLENGTH_UNIT, m_length, pDispUnits->ComponentDim);
    DDX_UnitValueAndTag(pDX, IDC_BWIDTH, IDC_BWIDTH_UNIT, m_width, pDispUnits->ComponentDim);
    DDX_UnitValueAndTag(pDX, IDC_COVER, IDC_COVER_UNIT, m_cover, pDispUnits->ComponentDim);
@@ -107,8 +124,8 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX, IDC_ROT_X, m_rot_x);
    DDX_Text(pDX, IDC_ROT_Y, m_rot_y);
    DDX_UnitValueAndTag(pDX, IDC_SHEAR_DEF, IDC_SHEAR_DEF_UNIT, m_shear_def, pDispUnits->ComponentDim);
-   DDX_Radio(pDX, IDC_FIXED_X_YES, m_fixed_x);
-   DDX_Radio(pDX, IDC_FIXED_Y_YES, m_fixed_y);
+   DDX_Check_Bool(pDX, IDC_FIXED_Y, m_fixed_y);
+   DDX_Check_Bool(pDX, IDC_FIXED_X, m_fixed_x);
    DDX_Check_Bool(pDX, IDC_EXTERNAL_PLATES, m_ext_plates);
 }
 
@@ -119,16 +136,13 @@ void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
     const WBFL::EngTools::BearingCalculator& brg_calc)
 {
 
-    if (brg_calc.GetAnalysisMethodA() == WBFL::EngTools::BearingCalculator::AnalysisMethodA::Yes)
-    {
-        dlgBar.m_method_a = 0;
-    }
-    else
-    {
-        dlgBar.m_method_a = 1;
-    }
+
+    dlgBar.m_method = (brg_calc.GetAnalysisMethod()==WBFL::EngTools::BearingCalculator::AnalysisMethod::MethodA? 0:1);
 
 
+    CBearingDoc* pDoc = (CBearingDoc*)((CFrameWnd*)GetParent())->GetActiveDocument();
+
+    dlgBar.m_specification = pDoc->GetSpecification();
     dlgBar.m_length = brg.GetLength();
     dlgBar.m_width = brg.GetWidth();
     dlgBar.m_cover = brg.GetCoverThickness();
@@ -146,26 +160,9 @@ void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
     dlgBar.m_rot_st = brg_loads.GetStaticRotation();
     dlgBar.m_rot_cy = brg_loads.GetCyclicRotation();
     dlgBar.m_shear_def = brg_loads.GetShearDeformation();
-
     dlgBar.m_ext_plates = brg.UseExternalPlates();
-
-    if (brg_loads.GetFixedTranslationX() == WBFL::EngTools::BearingLoads::FixedTranslationX::No)
-    {
-        dlgBar.m_fixed_x = 1;
-    }
-    else
-    {
-        dlgBar.m_fixed_x = 0;
-    }
-    if (brg_loads.GetFixedTranslationY() == WBFL::EngTools::BearingLoads::FixedTranslationY::No)
-    {
-        dlgBar.m_fixed_y = 1;
-    }
-    else
-    {
-        dlgBar.m_fixed_y = 0;
-    }
-
+    dlgBar.m_fixed_x = brg_loads.GetFixedTranslationX();
+    dlgBar.m_fixed_y = brg_loads.GetFixedTranslationY();
 }
 
 void CBearingDialogBar::SetBearing(
@@ -173,7 +170,10 @@ void CBearingDialogBar::SetBearing(
     WBFL::EngTools::BearingLoads& brg_loads,
     WBFL::EngTools::BearingCalculator& brg_calc)
 {
-    brg_calc.SetMethodA((WBFL::EngTools::BearingCalculator::AnalysisMethodA)m_method_a);
+    CBearingDoc* pDoc = (CBearingDoc*)((CFrameWnd*)GetParent())->GetActiveDocument();
+    pDoc->SetSpecification(m_specification);
+    brg_calc.SetSpecification(m_specification);
+    brg_calc.SetAnalysisMethod(static_cast<WBFL::EngTools::BearingCalculator::AnalysisMethod>(m_method));
     brg.SetLength(m_length);
     brg.SetWidth(m_width);
     brg.SetShearModulusMinimum(m_Gmin);
@@ -192,8 +192,8 @@ void CBearingDialogBar::SetBearing(
     brg_loads.SetRotationY(m_rot_y);
     brg_loads.SetStaticRotation(m_rot_st);
     brg_loads.SetCyclicRotation(m_rot_cy);
-    brg_loads.SetFixedTranslationX((WBFL::EngTools::BearingLoads::FixedTranslationX)m_fixed_x);
-    brg_loads.SetFixedTranslationY((WBFL::EngTools::BearingLoads::FixedTranslationY)m_fixed_y);
+    brg_loads.SetFixedTranslationX(m_fixed_x);
+    brg_loads.SetFixedTranslationY(m_fixed_y);
 }
 
 #if defined _DEBUG
@@ -206,10 +206,24 @@ void CBearingDialogBar::AssertValid() const
 
 BOOL CBearingDialogBar::Create(CWnd* pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID)
 {
-   // TODO: Add your specialized code here and/or call the base class
 
    if ( !CDialogBar::Create(pParentWnd, nIDTemplate, nStyle, nID) )
       return FALSE;
+
+   CComboBox* pcbSpecification = (CComboBox*)GetDlgItem(IDC_SPECIFICATION2);
+
+   int menuIdx = 0;
+
+   for (int specIdx = static_cast<int>(WBFL::LRFD::BDSManager::Edition::FourthEditionWith2009Interims); specIdx <=
+       static_cast<int>(WBFL::LRFD::BDSManager::Edition::LastEdition)-1; ++specIdx)
+   {
+       WBFL::LRFD::BDSManager::Edition edition = static_cast<WBFL::LRFD::BDSManager::Edition>(specIdx);
+       LPCTSTR editionStr = WBFL::LRFD::BDSManager::GetEditionAsString(edition);
+       menuIdx = pcbSpecification->AddString(editionStr);
+       pcbSpecification->SetItemData(menuIdx, specIdx);
+   }
+
+   pcbSpecification->SetCurSel(menuIdx);
 
    return TRUE;
 }

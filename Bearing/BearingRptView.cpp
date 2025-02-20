@@ -141,6 +141,16 @@ void CBearingRptView::OnInitialUpdate()
    const auto brg_loads{ pDoc->GetBearingLoads()};
    const auto brg_calc{ pDoc->GetBearingCalculator() };
    CBearingChildFrame* pFrame = (CBearingChildFrame*)GetParentFrame();
+   if (brg_calc.GetAnalysisMethod() == WBFL::EngTools::BearingCalculator::AnalysisMethod::MethodA)
+   {
+	   pFrame->MethodAControls(SW_SHOW);
+	   pFrame->MethodBControls(SW_HIDE);
+   }
+   else
+   {
+	   pFrame->MethodAControls(SW_HIDE);
+	   pFrame->MethodBControls(SW_SHOW);
+   }
    pFrame->SetBearingParameters(brg,brg_loads,brg_calc);
    
 

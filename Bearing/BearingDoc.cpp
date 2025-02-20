@@ -29,7 +29,9 @@
 #include "BearingTitlePageBuilder.h"
 #include "BearingChapterBuilder.h"
 #include "BearingChildFrame.h"
-#include "..\BEToolboxStatusBar.h"
+#include "..\BEToolboxStatusBar.h";
+
+
 
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
@@ -79,6 +81,23 @@ CString CBearingDoc::GetToolbarSectionName()
 BEGIN_MESSAGE_MAP(CBearingDoc, CBEToolboxDoc)
    ON_COMMAND(ID_HELP_FINDER, OnHelpFinder)
 END_MESSAGE_MAP()
+
+
+void CBearingDoc::SetSpecification(WBFL::LRFD::BDSManager::Edition specification)
+{
+    if (m_specification != specification)
+    {
+        m_specification = specification;
+        UpdateAllViews(nullptr);
+        SetModifiedFlag();
+    }
+}
+
+
+WBFL::LRFD::BDSManager::Edition CBearingDoc::GetSpecification() const
+{
+    return m_specification;
+}
 
 
 void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads, const BearingCalculator& brg_calc)
@@ -137,7 +156,9 @@ BOOL CBearingDoc::Init()
 
    // initialize with some defaults
 
-   m_bearing_calculator.SetMethodA(BearingCalculator::AnalysisMethodA::Yes);
+   SetSpecification(WBFL::LRFD::BDSManager::Edition::LastEdition);
+
+   m_bearing_calculator.SetAnalysisMethod(BearingCalculator::AnalysisMethod::MethodA);
 
    m_bearing.SetLength(WBFL::Units::ConvertToSysUnits(11.0, WBFL::Units::Measure::Inch));
    m_bearing.SetWidth(WBFL::Units::ConvertToSysUnits(27.0, WBFL::Units::Measure::Inch));
@@ -160,8 +181,8 @@ BOOL CBearingDoc::Init()
    m_bearing_loads.SetRotationY(0.005);
    m_bearing_loads.SetStaticRotation(0.008);
    m_bearing_loads.SetCyclicRotation(0.006);
-   m_bearing_loads.SetFixedTranslationX(BearingLoads::FixedTranslationX::Yes);
-   m_bearing_loads.SetFixedTranslationY(BearingLoads::FixedTranslationY::No);
+   m_bearing_loads.SetFixedTranslationX(true);
+   m_bearing_loads.SetFixedTranslationY(false);
 
    return TRUE;
 }
@@ -173,16 +194,16 @@ void CBearingDoc::OnCloseDocument()
 
 HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
 {
-   HRESULT hr = pStrSave->BeginUnit(_T("Bearing"),1.1);
+   HRESULT hr = pStrSave->BeginUnit(_T("Bearing"),1.2);
    if ( FAILED(hr) )
       return hr;
 
 
    CEAFApp* pApp = EAFGetApp();
 
-   BearingCalculator::AnalysisMethodA m_method_a = m_bearing_calculator.GetAnalysisMethodA();
-   BearingLoads::FixedTranslationX fixed_translation_x = m_bearing_loads.GetFixedTranslationX();
-   BearingLoads::FixedTranslationY fixed_translation_y = m_bearing_loads.GetFixedTranslationY();
+   BearingCalculator::AnalysisMethod m_method = m_bearing_calculator.GetAnalysisMethod();
+   bool fixed_translation_x = m_bearing_loads.GetFixedTranslationX();
+   bool fixed_translation_y = m_bearing_loads.GetFixedTranslationY();
    Float64 length = m_bearing.GetLength();
    Float64 width = m_bearing.GetWidth();
    Float64 Gmin = m_bearing.GetShearModulusMinimum();
@@ -207,21 +228,27 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
    // added in version 1.1
    bool use_external_plates = m_bearing.UseExternalPlates();
 
-  
+   // added in version 1.2
+   WBFL::LRFD::BDSManager::Edition specification = GetSpecification();
+
+
+   hr = pStrSave->put_Property(_T("Specification"), CComVariant((int)specification));
+   if (FAILED(hr))
+       return hr;
 
    hr = pStrSave->put_Property(_T("Units"), CComVariant(pApp->GetUnitsMode()));
    if (FAILED(hr))
        return hr;
 
-   hr = pStrSave->put_Property(_T("Analysis_Method_A"), CComVariant((int)m_method_a));
+   hr = pStrSave->put_Property(_T("Analysis_Method"), CComVariant((int)m_method));
    if (FAILED(hr))
        return hr;
 
-   hr = pStrSave->put_Property(_T("Fixed_X_Translation"), CComVariant((int)fixed_translation_x));
+   hr = pStrSave->put_Property(_T("Fixed_X_Translation"), CComVariant((bool)fixed_translation_x));
    if (FAILED(hr))
        return hr;
 
-   hr = pStrSave->put_Property(_T("Fixed_Y_Translation"), CComVariant((int)fixed_translation_y));
+   hr = pStrSave->put_Property(_T("Fixed_Y_Translation"), CComVariant((bool)fixed_translation_y));
    if (FAILED(hr))
        return hr;
 
@@ -334,26 +361,48 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
 
    CEAFApp* pApp = EAFGetApp();
 
+   if (1.1 < version)
+   {
+       // added in version 1.2
+       var.vt = VT_I4;
+       hr = pStrLoad->get_Property(_T("Specification"), &var);
+       if (FAILED(hr))
+           return hr;
+       m_specification = (WBFL::LRFD::BDSManager::Edition)(var.lVal);
+   }
+
    var.vt = VT_I4;
    hr = pStrLoad->get_Property(_T("Units"), &var);
    if (FAILED(hr))
        return hr;
    pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
 
-   hr = pStrLoad->get_Property(_T("Analysis_Method_A"), &var);
-   if (FAILED(hr))
-       return hr;
-   m_bearing_calculator.SetMethodA((BearingCalculator::AnalysisMethodA)var.lVal);
+   if (1.1 < version)
+   {
+       hr = pStrLoad->get_Property(_T("Analysis_Method"), &var);
+       if (FAILED(hr))
+           return hr;
+       m_bearing_calculator.SetAnalysisMethod((BearingCalculator::AnalysisMethod)var.lVal);
+
+   }
+   else
+   {
+       hr = pStrLoad->get_Property(_T("Analysis_Method_A"), &var);
+       if (FAILED(hr))
+           return hr;
+       m_bearing_calculator.SetAnalysisMethod((BearingCalculator::AnalysisMethod)var.lVal);
+   }
 
    hr = pStrLoad->get_Property(_T("Fixed_X_Translation"), &var);
    if (FAILED(hr))
        return hr;
-   m_bearing_loads.SetFixedTranslationX((BearingLoads::FixedTranslationX)var.lVal);
+   m_bearing_loads.SetFixedTranslationX((bool)var.lVal);
 
    hr = pStrLoad->get_Property(_T("Fixed_Y_Translation"), &var);
    if (FAILED(hr))
        return hr;
-   m_bearing_loads.SetFixedTranslationY((BearingLoads::FixedTranslationY)var.lVal);
+   m_bearing_loads.SetFixedTranslationY((bool)var.lVal);
+
 
    pStrLoad->get_Version(&version);
    if (1 < version)

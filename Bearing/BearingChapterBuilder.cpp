@@ -58,16 +58,19 @@ rptChapter* CBearingChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
 	CEAFApp* pApp = EAFGetApp();
 	const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
+	const auto& spec{ m_pDoc->GetSpecification() };
 	const auto& brg{ m_pDoc->GetBearing()};
 	const auto& brg_loads{ m_pDoc->GetBearingLoads()};
-	const auto& brg_calc{m_pDoc->GetBearingCalculator()};
+	const auto& brg_calc{ m_pDoc->GetBearingCalculator() };
+
 
 	rptChapter* pChapter = new rptChapter;
 	rptParagraph* pPara = new rptParagraph;
 	(*pChapter) << pPara;
 	
+
 	std::unique_ptr<WBFL::EngTools::BearingReporter> BrgReporter;
-	BrgReporter->BuildSpecCheckChapter(pDispUnits, pChapter, pPara, brg, brg_loads, brg_calc);
+	BrgReporter->BuildSpecCheckChapter(pDispUnits, pChapter, pPara, brg, brg_loads, brg_calc, spec);
 
 	return pChapter;
 }
