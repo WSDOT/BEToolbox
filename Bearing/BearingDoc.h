@@ -26,6 +26,7 @@
 #include "..\BEToolboxDoc.h"
 #include <WBFLTools.h>
 #include <WBFLUnitServer.h>
+#include <LRFD/BDSManager.h>
 #include <ReportManager\ReportManager.h>
 #include <Math\PiecewiseFunction.h>
 #include <EngTools\Bearing.h>
@@ -73,6 +74,9 @@ protected:
 public:
    virtual void OnCloseDocument() override;
 
+   WBFL::LRFD::BDSManager::Edition GetSpecification() const;
+   void SetSpecification(WBFL::LRFD::BDSManager::Edition specification);
+
    void SetBearing(const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads, const WBFL::EngTools::BearingCalculator& brg_calc);
    const WBFL::EngTools::Bearing& GetBearing() const;
    const WBFL::EngTools::BearingLoads& GetBearingLoads() const;
@@ -80,7 +84,7 @@ public:
 
 private:
 
-
+	WBFL::LRFD::BDSManager::Edition m_specification{ WBFL::LRFD::BDSManager::Edition::LastEdition };
 	WBFL::EngTools::Bearing m_bearing;
 	WBFL::EngTools::BearingLoads m_bearing_loads;
 	WBFL::EngTools::BearingCalculator m_bearing_calculator;

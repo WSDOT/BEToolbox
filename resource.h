@@ -372,6 +372,7 @@
 #define IDC_COMBO1                      445
 #define IDC_GIRDER_LIST                 445
 #define IDC_SITE_CLASS                  445
+#define IDC_SPECIFICATION2              445
 #define IDC_LATITUDE                    446
 #define IDC_LONGITUDE                   447
 #define IDC_LAT_RANGE                   448
@@ -417,7 +418,6 @@
 #define IDC_LL                          474
 #define IDC_LWC                         475
 #define IDC_ROT_X                       475
-#define IDC_X_ROT_WINDOW                475
 #define IDC_ATTACHMENT_WEIGHT_UNIT      476
 #define IDC_ROT_Y                       476
 #define IDC_ECCENTRICITY                477
@@ -431,15 +431,12 @@
 #define IDC_FRACTION_OF_ROLL_STIFFNESS  484
 #define IDC_FRACTION_OF_ROLL_STIFFNESS_UNIT 485
 #define IDC_COPY                        486
-#define IDC_FIXED_X_YES                 488
-#define IDC_FIXED_X_NO                  489
-#define IDC_FIXED_Y_YES                 490
-#define IDC_FIXED_X_NO2                 491
-#define IDC_FIXED_Y_NO                  491
 #define IDC_FIXED_X                     492
 #define IDC_FIXED_Y                     493
 #define IDC_DESIGN_PROP_B               494
 #define IDC_DESIGN_PROP_A2              495
+#define IDC_SUPPORT                     497
+#define IDC_SUPPORT_COND                497
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -498,7 +495,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        227
 #define _APS_NEXT_COMMAND_VALUE         36873
-#define _APS_NEXT_CONTROL_VALUE         496
+#define _APS_NEXT_CONTROL_VALUE         498
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

@@ -24,7 +24,11 @@
 #include <EngTools\Bearing.h>
 #include <EngTools\BearingLoads.h>
 #include <EngTools\BearingCalculator.h>
+#include "BearingDoc.h"
 #include <MfcTools\MetaFileStatic.h>
+
+
+
 
 
 // CBearingDialogBar
@@ -36,7 +40,19 @@ public:
 	CBearingDialogBar();
 	virtual ~CBearingDialogBar();
 
-	int m_method_a;
+	void SetBearingParameters(CBearingDialogBar&,
+		const WBFL::EngTools::Bearing&,
+		const WBFL::EngTools::BearingLoads&,
+		const WBFL::EngTools::BearingCalculator&);
+
+	void SetBearing(
+		WBFL::EngTools::Bearing& brg,
+		WBFL::EngTools::BearingLoads& brg_loads,
+		WBFL::EngTools::BearingCalculator& brg_calc);
+
+private:
+
+	int m_method;
 	Float64 m_length;
 	Float64 m_width;
 	Float64 m_cover;
@@ -54,20 +70,12 @@ public:
 	Float64 m_rot_x;
 	Float64 m_rot_y;
 	Float64 m_shear_def;
-	int m_fixed_x;
-	int m_fixed_y;
+	bool m_fixed_x;
+	bool m_fixed_y;
 	bool m_ext_plates;
+	WBFL::LRFD::BDSManager::Edition m_specification{WBFL::LRFD::BDSManager::Edition::LastEdition};
 
 
-	void SetBearingParameters(CBearingDialogBar&,
-		const WBFL::EngTools::Bearing&,
-		const WBFL::EngTools::BearingLoads&,
-		const WBFL::EngTools::BearingCalculator&);
-
-	void SetBearing(
-		WBFL::EngTools::Bearing& brg,
-		WBFL::EngTools::BearingLoads& brg_loads,
-		WBFL::EngTools::BearingCalculator& brg_calc);
 
 protected:
 	DECLARE_MESSAGE_MAP()
