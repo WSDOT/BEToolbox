@@ -94,11 +94,15 @@ void CBearingDoc::SetSpecification(WBFL::LRFD::BDSManager::Edition specification
 }
 
 
-WBFL::LRFD::BDSManager::Edition CBearingDoc::GetSpecification() const
+const WBFL::LRFD::BDSManager::Edition& CBearingDoc::GetSpecification() const
 {
     return m_specification;
 }
 
+const WBFL::EngTools::BearingDesignCriteria& CBearingDoc::GetBearingDesignCriteria() const
+{
+    return m_criteria;
+}
 
 void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads, const BearingCalculator& brg_calc)
 {
