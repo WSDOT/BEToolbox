@@ -107,16 +107,46 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
        int defaultIdx = static_cast<int>(m_specification) - static_cast<int>(WBFL::LRFD::BDSManager::Edition::FourthEditionWith2009Interims);
        pcbSpecification->SetCurSel(defaultIdx);
    }
+
    DDX_UnitValueAndTag(pDX, IDC_BLENGTH, IDC_BLENGTH_UNIT, m_length, pDispUnits->ComponentDim);
+   DDV_GreaterThanZero(pDX, IDC_BLENGTH, m_length);
    DDX_UnitValueAndTag(pDX, IDC_BWIDTH, IDC_BWIDTH_UNIT, m_width, pDispUnits->ComponentDim);
+   DDV_GreaterThanZero(pDX, IDC_BWIDTH, m_width);
    DDX_UnitValueAndTag(pDX, IDC_COVER, IDC_COVER_UNIT, m_cover, pDispUnits->ComponentDim);
+   DDV_GreaterThanZero(pDX, IDC_COVER, m_cover);
    DDX_UnitValueAndTag(pDX, IDC_LAYER, IDC_LAYER_UNIT, m_layer, pDispUnits->ComponentDim);
+   DDV_GreaterThanZero(pDX, IDC_LAYER, m_layer);
    DDX_UnitValueAndTag(pDX, IDC_SHIM, IDC_SHIM_UNIT, m_shim, pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX, IDC_SHIM, m_shim, pDispUnits->ComponentDim);
+
    DDX_Text(pDX, IDC_N_LAYERS, m_n_layers);
+
+   if (pDX->m_bSaveAndValidate)
+   {
+       CEdit* editWindow = (CEdit*)GetDlgItem(IDC_N_LAYERS);
+       CString strValue;
+       editWindow->GetWindowText(strValue);
+       if (strValue.Find('.') != -1 || _ttoi(strValue) <= 0)
+       {
+           pDX->PrepareEditCtrl(IDC_N_LAYERS);
+           AfxMessageBox(_T("Enter an integer greater than zero"), MB_OK);
+           pDX->Fail();
+       }
+   }
+
+
    DDX_UnitValueAndTag(pDX, IDC_SHEAR_MOD_MIN, IDC_SHEAR_MOD_MIN_UNIT, m_Gmin, pDispUnits->ModE);
+   DDV_GreaterThanZero(pDX, IDC_SHEAR_MOD_MIN, m_Gmin);
    DDX_UnitValueAndTag(pDX, IDC_SHEAR_MOD_MAX, IDC_SHEAR_MOD_MAX_UNIT, m_Gmax, pDispUnits->ModE);
+   DDV_GreaterThanZero(pDX, IDC_SHEAR_MOD_MAX, m_Gmax);
+   if (m_method == 0)
+   {
+       DDV_UnitValueLimitOrMore(pDX, IDC_SHEAR_MOD_MAX, m_Gmax, m_Gmin, pDispUnits->ModE);
+   }
    DDX_UnitValueAndTag(pDX, IDC_YIELD, IDC_YIELD_UNIT, m_Fy, pDispUnits->ModE);
+   DDV_UnitValueZeroOrMore(pDX, IDC_YIELD, m_Fy, pDispUnits->ModE);
    DDX_UnitValueAndTag(pDX, IDC_FATIGUE, IDC_FATIGUE_UNIT, m_Fth, pDispUnits->ModE);
+   DDV_UnitValueZeroOrMore(pDX, IDC_FATIGUE, m_Fth, pDispUnits->ModE);
    DDX_UnitValueAndTag(pDX, IDC_DL, IDC_DL_UNIT, m_DL, pDispUnits->GeneralForce);
    DDX_UnitValueAndTag(pDX, IDC_LL, IDC_LL_UNIT, m_LL, pDispUnits->GeneralForce);
    DDX_Text(pDX,IDC_ROT_STATIC, m_rot_st);
