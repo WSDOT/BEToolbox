@@ -94,11 +94,15 @@ void CBearingDoc::SetSpecification(WBFL::LRFD::BDSManager::Edition specification
 }
 
 
-WBFL::LRFD::BDSManager::Edition CBearingDoc::GetSpecification() const
+const WBFL::LRFD::BDSManager::Edition& CBearingDoc::GetSpecification() const
 {
     return m_specification;
 }
 
+const WBFL::EngTools::BearingDesignCriteria& CBearingDoc::GetBearingDesignCriteria() const
+{
+    return m_criteria;
+}
 
 void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads, const BearingCalculator& brg_calc)
 {
@@ -162,8 +166,8 @@ BOOL CBearingDoc::Init()
 
    m_bearing.SetLength(WBFL::Units::ConvertToSysUnits(11.0, WBFL::Units::Measure::Inch));
    m_bearing.SetWidth(WBFL::Units::ConvertToSysUnits(27.0, WBFL::Units::Measure::Inch));
-   m_bearing.SetShearModulusMinimum(WBFL::Units::ConvertToSysUnits(140, WBFL::Units::Measure::PSI));
-   m_bearing.SetShearModulusMaximum(WBFL::Units::ConvertToSysUnits(190, WBFL::Units::Measure::PSI));
+   m_bearing.SetShearModulusMinimum(WBFL::Units::ConvertToSysUnits(165, WBFL::Units::Measure::PSI));
+   m_bearing.SetShearModulusMaximum(WBFL::Units::ConvertToSysUnits(165, WBFL::Units::Measure::PSI));
    m_bearing.SetIntermediateLayerThickness(WBFL::Units::ConvertToSysUnits(0.5, WBFL::Units::Measure::Inch));
    m_bearing.SetCoverThickness(WBFL::Units::ConvertToSysUnits(0.25, WBFL::Units::Measure::Inch));
    m_bearing.SetSteelShimThickness(WBFL::Units::ConvertToSysUnits(0.0747, WBFL::Units::Measure::Inch));

@@ -24,6 +24,7 @@
 #include "BearingChapterBuilder.h"
 #include <Reporter\Reporter.h>
 #include <EngTools\BearingReporter.h>
+#include <EngTools\BearingDesignCriteria.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -62,6 +63,9 @@ rptChapter* CBearingChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
 	const auto& brg{ m_pDoc->GetBearing()};
 	const auto& brg_loads{ m_pDoc->GetBearingLoads()};
 	const auto& brg_calc{ m_pDoc->GetBearingCalculator() };
+	const auto& brg_criteria{m_pDoc->GetBearingDesignCriteria() };
+
+
 
 
 	rptChapter* pChapter = new rptChapter;
@@ -70,7 +74,7 @@ rptChapter* CBearingChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
 	
 
 	std::unique_ptr<WBFL::EngTools::BearingReporter> BrgReporter;
-	BrgReporter->BuildSpecCheckChapter(pDispUnits, pChapter, pPara, brg, brg_loads, brg_calc, spec);
+	BrgReporter->BuildSpecCheckChapter(pDispUnits, pChapter, pPara, brg, brg_loads, brg_calc, spec, brg_criteria);
 
 	return pChapter;
 }

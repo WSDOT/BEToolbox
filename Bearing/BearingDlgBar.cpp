@@ -203,6 +203,10 @@ void CBearingDialogBar::SetBearing(
     CBearingDoc* pDoc = (CBearingDoc*)((CFrameWnd*)GetParent())->GetActiveDocument();
     pDoc->SetSpecification(m_specification);
     brg_calc.SetSpecification(m_specification);
+
+    const WBFL::EngTools::BearingDesignCriteria criteria;
+    brg_calc.SetDesignCriteria(criteria);
+
     brg_calc.SetAnalysisMethod(static_cast<WBFL::EngTools::BearingCalculator::AnalysisMethod>(m_method));
     brg.SetLength(m_length);
     brg.SetWidth(m_width);

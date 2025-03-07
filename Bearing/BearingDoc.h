@@ -32,6 +32,7 @@
 #include <EngTools\Bearing.h>
 #include <EngTools\BearingLoads.h>
 #include <EngTools\BearingCalculator.h>
+#include <EngTools\BearingDesignCriteria.h>
 
 
 class CBearingDoc : public CBEToolboxDoc
@@ -74,8 +75,10 @@ protected:
 public:
    virtual void OnCloseDocument() override;
 
-   WBFL::LRFD::BDSManager::Edition GetSpecification() const;
+   const WBFL::LRFD::BDSManager::Edition& GetSpecification() const;
    void SetSpecification(WBFL::LRFD::BDSManager::Edition specification);
+
+   const WBFL::EngTools::BearingDesignCriteria& GetBearingDesignCriteria() const;
 
    void SetBearing(const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads, const WBFL::EngTools::BearingCalculator& brg_calc);
    const WBFL::EngTools::Bearing& GetBearing() const;
@@ -85,6 +88,7 @@ public:
 private:
 
 	WBFL::LRFD::BDSManager::Edition m_specification{ WBFL::LRFD::BDSManager::Edition::LastEdition };
+	WBFL::EngTools::BearingDesignCriteria m_criteria;
 	WBFL::EngTools::Bearing m_bearing;
 	WBFL::EngTools::BearingLoads m_bearing_loads;
 	WBFL::EngTools::BearingCalculator m_bearing_calculator;
