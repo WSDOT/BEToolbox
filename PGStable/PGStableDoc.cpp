@@ -45,6 +45,7 @@
 
 #include <psgLib/LiftingCriteria.h>
 #include <psgLib/HaulingCriteria.h>
+#include <psgLib/SpecificationCriteria.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -873,6 +874,16 @@ void CPGStableDoc::SetOneEndSeatedMaterials(Float64 fc, bool bComputeEc, Float64
 Float64 CPGStableDoc::GetHeightOfGirderBottomAboveRoadway() const
 {
    return m_Model.GetHeightOfGirderBottomAboveRoadway();
+}
+
+void CPGStableDoc::SetPGStableLongitudinalRebarData(const CPGStableLongitudinalRebarData& rData)
+{
+   m_Model.SetPGStableLongitudinalRebarData(rData);
+}
+
+CPGStableLongitudinalRebarData CPGStableDoc::GetPGStableLongitudinalRebarData() const
+{
+   return m_Model.GetPGStableLongitudinalRebarData();
 }
 
 void CPGStableDoc::SetHeightOfGirderBottomAboveRoadway(Float64 Hgb)

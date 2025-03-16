@@ -50,10 +50,11 @@ public:
    virtual void OnDeactivateView() override;
    virtual void RefreshReport() override;
 
+   virtual BOOL IsDataValid() override;
+
    virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName,	DWORD dwRequestedStyle, const RECT& rect, CWnd* pParentWnd, UINT nID,CCreateContext* pContext) override;
 
 protected:
-   BOOL m_bViewInitialized; // set to FALSE until OnInitialUpdate completes. The child dialog windows are not created until OnInitialUpdate is called
    CPGStablePrismaticGirder m_Prismatic;
    CPGStableNonprismaticGirder m_Nonprismatic;
 
@@ -66,6 +67,7 @@ protected:
    virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/) override;
 public:
    afx_msg void OnChange();
+   afx_msg void OnSpecChanged();
 };
 
 

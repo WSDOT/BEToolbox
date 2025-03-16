@@ -52,6 +52,12 @@ Enter the girder drag coefficient. This coefficient is used for computing wind p
 * Cd = 2.2 for I-shaped girders with no deck forms in place
 * Cd = 1.5 for U-shaped girders with no deck forms in place
 
+## Top Reinforcement Along Entire Segment
+Define rows of longitudinal reinforcement along the top of the girder. This reinforcement is to solely used for computation of the total resistant tensile force required to use the higher allowable tensile stress limit at temporary conditions. Refer to LRFD 5.9.2.3b (LRFD 10th edition or later) for details.
+
+### Maximum Reinforcement Cover to Always Resist Tension force
+Reinforcement located within this cover value will always be used to resist the tension force as described in C5.9.2.3.1b regardless of the girder's stress condition.
+
 ## Prestress Arrangement
 The prestressing may be defined with a Simplified or Detailed arrangement. A simplified arrangement consists of parameters that describe the location of the prestressing force as well as a prestress transfer length. The prestressing force is defined on the Lifting and Hauling views. In a detailed arrangement, the location and magnitude of the prestressing force is defined at discrete locations along the girder. This is accomplished in the Lifting and Hauling views.
 

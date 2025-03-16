@@ -71,6 +71,8 @@ protected:
    virtual void OnDeactivateView() override;
    virtual void RefreshReport() override;
 
+   virtual BOOL IsDataValid() override;
+
    std::shared_ptr<WBFL::Reporting::ReportSpecification> m_pRptSpec;
    std::shared_ptr<WBFL::Reporting::ReportBrowser> m_pBrowser; // this is the actual browser window that displays the report
 

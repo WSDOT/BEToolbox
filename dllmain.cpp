@@ -39,6 +39,7 @@
 #include <EAF\EAFComponentInfo.h>
 #include <WBFLCogo.h>
 #include <WBFLCogo_i.c>
+#include <WBFLGenericBridge_i.c>
 
 #include <WBFLUnitServer_i.c>
 

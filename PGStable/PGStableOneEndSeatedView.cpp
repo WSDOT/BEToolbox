@@ -535,6 +535,9 @@ void CPGStableOneEndSeatedView::OnEditFpe()
 
 void CPGStableOneEndSeatedView::OnInitialUpdate()
 {
+   // use exception safe older to prevent bad things to happen during initialization
+   OnInitBoolHolder holder(m_bViewInitialized);
+
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    const HaulTruckLibrary* pLib = pDoc->GetHaulTruckLibrary();
@@ -597,6 +600,11 @@ void CPGStableOneEndSeatedView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHar
 
 void CPGStableOneEndSeatedView::RefreshReport()
 {
+   if (!m_bViewInitialized)
+   {
+      return;
+   }
+
    if ( m_pRptSpec == nullptr )
       return;
 
@@ -608,6 +616,20 @@ void CPGStableOneEndSeatedView::RefreshReport()
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 
+}
+
+BOOL CPGStableOneEndSeatedView::IsDataValid()
+{
+   try
+   {
+      CDataExchange DX(this, TRUE);
+      DoDataExchange(&DX);
+      return TRUE;
+   }
+   catch (...)
+   {
+      return FALSE;
+   }
 }
 
 void CPGStableOneEndSeatedView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)

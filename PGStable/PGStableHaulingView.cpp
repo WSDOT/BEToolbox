@@ -565,6 +565,9 @@ void CPGStableHaulingView::OnEditFpe()
 
 void CPGStableHaulingView::OnInitialUpdate()
 {
+   // use exception safe older to prevent bad things to happen during initialization
+   OnInitBoolHolder holder(m_bViewInitialized);
+
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    const HaulTruckLibrary* pLib = pDoc->GetHaulTruckLibrary();
@@ -637,6 +640,13 @@ void CPGStableHaulingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,F
 
 void CPGStableHaulingView::RefreshReport()
 {
+   // use exception safe older to prevent bad things to happen during initialization
+   if (!m_bViewInitialized)
+   {
+      // don't generate report during init
+      return;
+   }
+
    if ( m_pRptSpec == nullptr )
       return;
 
@@ -648,6 +658,20 @@ void CPGStableHaulingView::RefreshReport()
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 
+}
+
+BOOL CPGStableHaulingView::IsDataValid()
+{
+   try
+   {
+      CDataExchange DX(this, TRUE);
+      DoDataExchange(&DX);
+      return TRUE;
+   }
+   catch (...)
+   {
+      return FALSE;
+   }
 }
 
 void CPGStableHaulingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)

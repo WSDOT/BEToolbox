@@ -120,6 +120,9 @@ public:
    void SetHeightOfGirderBottomAboveRoadway(Float64 Hgb);
    Float64 GetHeightOfGirderBottomAboveRoadway() const;
 
+   void SetPGStableLongitudinalRebarData(const CPGStableLongitudinalRebarData& rData);
+   CPGStableLongitudinalRebarData GetPGStableLongitudinalRebarData() const;
+
    CString UpdateEc(const CString& strFc);
 
    void ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt) const;

@@ -313,6 +313,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClCompile Include=".\Spectra\SpectraDocTemplate.cpp" />
     <ClCompile Include=".\Spectra\SpectraRptView.cpp" />
     <ClCompile Include=".\Spectra\SpectraTitlePageBuilder.cpp" />
+    <ClCompile Include="PGStable\PgStableLongitudinalRebarData.cpp" />
+    <ClCompile Include="PGStable\PGStableLongRebarGrid.cpp" />
     <ClCompile Include="PGStable\PGStableOneEndSeatedCriteria.cpp" />
     <ClCompile Include="PGStable\PGStableOneEndSeatedDetailsChapterBuilder.cpp" />
     <ClCompile Include="PGStable\PGStableOneEndSeatedSummaryChapterBuilder.cpp" />
@@ -451,6 +453,8 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include=".\PGStable\PGStableStressPointGrid.h" />
     <ClInclude Include=".\PGStable\PGStableTabView.h" />
     <ClInclude Include=".\PGStable\PGStableTitlePageBuilder.h" />
+    <ClInclude Include="PGStable\PGStableLongitudinalRebarData.h" />
+    <ClInclude Include="PGStable\PGStableLongRebarGrid.h" />
     <ClInclude Include="PGStable\PGStableOneEndSeatedCriteria.h" />
     <ClInclude Include="PGStable\PGStableOneEndSeatedDetailsChapterBuilder.h" />
     <ClInclude Include="PGStable\PGStableOneEndSeatedSummaryChapterBuilder.h" />

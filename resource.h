@@ -435,8 +435,10 @@
 #define IDC_FIXED_Y                     493
 #define IDC_DESIGN_PROP_B               494
 #define IDC_DESIGN_PROP_A2              495
-#define IDC_SUPPORT                     497
+#define IDC_SUPPORT                     496
 #define IDC_SUPPORT_COND                497
+#define IDC_REINF_CB                    498
+#define IDC_STATIC_REINFMAT             499
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -448,6 +450,11 @@
 #define IDC_VERSION                     1002
 #define IDC_COPYRIGHT                   1003
 #define IDC_APPICON                     1005
+#define IDC_MILD_STEEL_SELECTOR         1013
+#define IDC_INSERT_REBAR_ROW            1029
+#define IDC_REMOVE_REBAR_ROW            1031
+#define IDC_LONG_GRID                   1038
+#define IDC_COVER_LIMIT                 1111
 #define IDC_LIFTING_COMPRESSION         1126
 #define IDC_LIFTING_TENSION             1127
 #define IDC_CHECK_LIFTING_TENSION_MAX   1129
@@ -466,6 +473,7 @@
 #define IDC_HAULING_TENSION_WITH_REBAR  1142
 #define IDC_HAULING_TENSION_WITH_REBAR_UNIT 1143
 #define IDC_HAULING_TENSION_SUPER_UNIT  1144
+#define IDC_COVER_LIMIT_UNIT            1144
 #define IDC_CHECK_HAULING_TENSION_MAX_SUPER 1145
 #define IDC_HAULING_TENSION_MAX_SUPER   1146
 #define IDC_HAULING_TENSION_MAX_SUPER_UNIT 1147
@@ -484,6 +492,7 @@
 #define IDC_STATIC_ACSTS3               1296
 #define IDC_WSDOT                       1666
 #define IDC_TXDOT                       1668
+#define IDC_COVER_LIMIT_TAG             1748
 #define IDC_GIRDER                      1781
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
@@ -493,7 +502,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        227
+#define _APS_NEXT_RESOURCE_VALUE        228
 #define _APS_NEXT_COMMAND_VALUE         36873
 #define _APS_NEXT_CONTROL_VALUE         498
 #define _APS_NEXT_SYMED_VALUE           114

@@ -324,6 +324,34 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
    model.SetK1(pMaterial->GetSegmentEccK1(segmentKey));
    model.SetK2(pMaterial->GetSegmentEccK2(segmentKey));
 
+   if (bIsPrismatic)
+   {
+      GET_IFACE2(pBroker, ILongitudinalRebar, pLongRebar);
+      const CLongitudinalRebarData* pLRD = pLongRebar->GetSegmentLongitudinalRebarData(segmentKey);
+
+      CPGStableLongitudinalRebarData barData;
+      barData.BarGrade = pLRD->BarGrade;
+      barData.BarType = pLRD->BarType;
+
+      // Only export full length top bars
+      for (const auto& row : pLRD->RebarRows)
+      {
+         if (row.BarLayout == pgsTypes::blFullLength && row.Face == pgsTypes::TopFace)
+         {
+            CPGStableLongitudinalRebarData::RebarRow barRow;
+            barRow.Face = pgsTypes::TopFace;
+            barRow.BarSize = row.BarSize;
+            barRow.BarSpacing = row.BarSpacing;
+            barRow.Cover = row.Cover;
+            barRow.NumberOfBars = row.NumberOfBars;
+
+            barData.RebarRows.push_back(barRow);
+         }
+      }
+
+      model.SetPGStableLongitudinalRebarData(barData);
+   }
+
    GET_IFACE2(pBroker,ISegmentLiftingSpecCriteria,pSegmentLiftingSpecCriteria);
    GET_IFACE2(pBroker,ISegmentHaulingSpecCriteria,pSegmentHaulingSpecCriteria);
 

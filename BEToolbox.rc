@@ -855,33 +855,33 @@ BEGIN
     LTEXT           "L",IDC_STATIC,19,195,8,8
     EDITTEXT        IDC_L,47,192,51,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_L_UNIT,102,195,19,8
-    GROUPBOX        "Stress Points",IDC_STATIC,136,7,265,203
+    GROUPBOX        "Stress Points",IDC_STATIC,136,7,136,116
     CONTROL         "Compute from Properties",IDC_COMPUTE_STRESS_POINTS,
-                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,147,21,96,10
-    CONTROL         "Explicitly Define",IDC_DEFINE_STRESS_POINTS,"Button",BS_AUTORADIOBUTTON,147,35,66,10
-    CONTROL         "Custom1",IDC_STRESS_POINT_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_GROUP | WS_TABSTOP,147,53,228,118
-    GROUPBOX        "Materials && Dead Loads",IDC_STATIC,407,7,223,203
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,146,21,96,10
+    CONTROL         "Explicitly Define",IDC_DEFINE_STRESS_POINTS,"Button",BS_AUTORADIOBUTTON,146,34,66,10
+    CONTROL         "Custom1",IDC_STRESS_POINT_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_GROUP | WS_TABSTOP,146,50,115,61
+    GROUPBOX        "Materials && Dead Loads",IDC_STATIC,280,7,223,203
     CONTROL         "Unit Weight\n(used to compute modulus of elasticity)",IDC_STATIC,
-                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,413,23,128,18
-    EDITTEXT        IDC_DENSITY,544,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_DENSITY_UNIT,589,26,36,8
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,286,23,128,18
+    EDITTEXT        IDC_DENSITY,417,23,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_UNIT,462,26,36,8
     CONTROL         "Unit Weight with Reinforcement\n(used to compute dead load)",IDC_STATIC,
-                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,413,47,108,19
-    EDITTEXT        IDC_DENSITY_WITH_REBAR,544,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,589,50,36,8
-    CONTROL         "Normalweight Concrete",IDC_NWC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,414,69,91,10
-    CONTROL         "Lightweight Concrete",IDC_LWC,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,507,68,84,10
-    LTEXT           "Averaging Factor, K1",IDC_STATIC,417,84,69,8
-    EDITTEXT        IDC_K1,489,81,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Bounding Factor, K2",IDC_STATIC,417,100,66,8
-    EDITTEXT        IDC_K2,489,98,40,14,ES_RIGHT | ES_AUTOHSCROLL
-    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,414,125,170,8
-    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,413,137,170,54
-    PUSHBUTTON      "+",IDC_ADD,586,137,18,14
-    PUSHBUTTON      "-",IDC_REMOVE,586,154,18,14
-    GROUPBOX        "Wind Characteristics",IDC_STATIC,640,7,134,203
-    LTEXT           "Drag Coefficient, Cd",IDC_STATIC,651,28,66,8
-    EDITTEXT        IDC_DRAG_COEFFICIENT,724,26,40,14,ES_AUTOHSCROLL
+                    "Static",SS_LEFTNOWORDWRAP | WS_GROUP,286,47,108,19
+    EDITTEXT        IDC_DENSITY_WITH_REBAR,417,47,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_DENSITY_WITH_REBAR_UNIT,462,50,36,8
+    CONTROL         "Normalweight Concrete",IDC_NWC,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,287,69,91,10
+    CONTROL         "Lightweight Concrete",IDC_LWC,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,380,68,84,10
+    LTEXT           "Averaging Factor, K1",IDC_STATIC,290,84,69,8
+    EDITTEXT        IDC_K1,362,81,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Bounding Factor, K2",IDC_STATIC,290,100,66,8
+    EDITTEXT        IDC_K2,362,98,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Additional Dead Load (postive values are downward)",IDC_STATIC,287,125,170,8
+    CONTROL         "Custom1",IDC_POINT_LOAD_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,286,137,170,54
+    PUSHBUTTON      "+",IDC_ADD,459,137,18,14
+    PUSHBUTTON      "-",IDC_REMOVE,459,154,18,14
+    GROUPBOX        "Wind Characteristics",IDC_STATIC,135,127,134,83
+    LTEXT           "Drag Coefficient, Cd",IDC_STATIC,147,148,66,8
+    EDITTEXT        IDC_DRAG_COEFFICIENT,219,146,40,14,ES_AUTOHSCROLL
     GROUPBOX        "Prestress Arrangement",IDC_STATIC,7,214,767,180
     LTEXT           "Prestress Definition",IDC_STATIC,15,228,63,8
     COMBOBOX        IDC_PS_METHOD,88,226,91,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
@@ -912,6 +912,15 @@ BEGIN
     LTEXT           "ex",IDC_EX_LABEL,16,244,9,8
     EDITTEXT        IDC_EX,28,242,40,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "Static",IDC_EX_UNIT,71,244,19,8
+    GROUPBOX        "Top Reinforcement Along Entire Segment (used to evaulate tension stress limit)",IDC_REINF_CB,514,7,260,202
+    LTEXT           "Reinforcement Material",IDC_STATIC_REINFMAT,522,25,84,8
+    COMBOBOX        IDC_MILD_STEEL_SELECTOR,610,22,147,43,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Custom1",IDC_LONG_GRID,"GXWND",WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,524,41,228,124
+    PUSHBUTTON      "Insert Row",IDC_INSERT_REBAR_ROW,574,168,63,14
+    PUSHBUTTON      "Delete Row",IDC_REMOVE_REBAR_ROW,642,168,63,14
+    LTEXT           "Max reinforcement cover to always resist tension force (5.9.2.3.1b)",IDC_COVER_LIMIT_TAG,523,190,179,15
+    EDITTEXT        IDC_COVER_LIMIT,703,189,40,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "in",IDC_COVER_LIMIT_UNIT,748,191,12,8
 END
 
 IDD_NONPRISMATIC_GIRDER DIALOGEX 0, 0, 794, 387
@@ -1655,6 +1664,20 @@ END
 
 IDD_BEARING AFX_DIALOG_LAYOUT
 BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_PRISMATIC_GIRDER DLGINIT
+BEGIN
+    IDC_MILD_STEEL_SELECTOR, 0x403, 29, 0
+0x4141, 0x4853, 0x4f54, 0x4d20, 0x3133, 0x2820, 0x3641, 0x3531, 0x2029, 
+0x202d, 0x7247, 0x6461, 0x2065, 0x3036, "\000" 
     0
 END
 

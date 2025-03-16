@@ -86,6 +86,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    Float64 L;
    problem.GetSupportLocations(&L,&L);
    DDX_UnitValueAndTag(pDX,IDC_LIFT,IDC_LIFT_UNIT,L,pDispUnits->SpanLength);
+   DDV_UnitValueZeroOrMore(pDX, IDC_LIFT_UNIT, L, pDispUnits->SpanLength);
 
    Float64 Fs,Fh,Ft;
    GetMaxFpe(&Fs,&Fh,&Ft);
@@ -426,6 +427,9 @@ void CPGStableLiftingView::OnEditFpe()
 
 void CPGStableLiftingView::OnInitialUpdate()
 {
+   // use exception safe older to prevent bad things to happen during initialization
+   OnInitBoolHolder holder(m_bViewInitialized);
+
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
@@ -449,6 +453,11 @@ void CPGStableLiftingView::OnInitialUpdate()
 
 void CPGStableLiftingView::RefreshReport()
 {
+   if (!m_bViewInitialized)
+   {
+      return;
+   }
+
    if ( m_pRptSpec == nullptr )
       return;
 
@@ -460,6 +469,20 @@ void CPGStableLiftingView::RefreshReport()
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 
+}
+
+BOOL CPGStableLiftingView::IsDataValid()
+{
+   try
+   {
+      CDataExchange DX(this,TRUE);
+      DoDataExchange(&DX);
+      return TRUE;
+   }
+   catch (...)
+   {
+      return FALSE;
+   }
 }
 
 void CPGStableLiftingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)

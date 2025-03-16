@@ -31,10 +31,33 @@ class CPGStableFormView : public CFormView
    virtual void OnActivateView() = 0;
    virtual void OnDeactivateView() = 0;
 	virtual void RefreshReport() = 0;
+	virtual BOOL IsDataValid() = 0;
 
 protected:
 	CPGStableFormView(UINT nTemplate);
 	virtual ~CPGStableFormView();
+
+	// There was a bug that cause reports to be generated during OnInitialUpdate (document loading time).
+	// This is undesirable for many reasons The class and data member below should be used in child class' 
+	// OnInitialUpdate and RefreshReport() to prevent this
+	class OnInitBoolHolder
+	{
+	public:
+		OnInitBoolHolder(BOOL& rBool) :
+			m_rBool(rBool)
+		{
+			m_rBool = FALSE;
+		}
+
+		~OnInitBoolHolder()
+		{
+			m_rBool = TRUE;
+		}
+
+		BOOL& m_rBool;
+
+	};
+
+	BOOL m_bViewInitialized; // set to FALSE until OnInitialUpdate completes. The child dialog windows are not created until OnInitialUpdate is called
+
 };
-
-

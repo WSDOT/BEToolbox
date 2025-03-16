@@ -32,11 +32,170 @@
 
 #include <IFace\BeamFactory.h>
 
+#include <PsgLib\UnitServer.h>
+
+#include <Stability/Stability.h>
+#include <psgLib/SpecificationCriteria.h>
+#include <psgLib/PrestressedElementCriteria.h>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+
+// inline functions to convert rebar data
+inline BarSize GetBarSize(WBFL::Materials::Rebar::Size size)
+{
+   switch (size)
+   {
+   case WBFL::Materials::Rebar::Size::bs3:  return bs3;
+   case WBFL::Materials::Rebar::Size::bs4:  return bs4;
+   case WBFL::Materials::Rebar::Size::bs5:  return bs5;
+   case WBFL::Materials::Rebar::Size::bs6:  return bs6;
+   case WBFL::Materials::Rebar::Size::bs7:  return bs7;
+   case WBFL::Materials::Rebar::Size::bs8:  return bs8;
+   case WBFL::Materials::Rebar::Size::bs9:  return bs9;
+   case WBFL::Materials::Rebar::Size::bs10: return bs10;
+   case WBFL::Materials::Rebar::Size::bs11: return bs11;
+   case WBFL::Materials::Rebar::Size::bs14: return bs14;
+   case WBFL::Materials::Rebar::Size::bs18: return bs18;
+   default:
+      ATLASSERT(false); // should not get here
+   }
+
+   ATLASSERT(false); // should not get here
+   return bs3;
+}
+
+inline RebarGrade GetRebarGrade(WBFL::Materials::Rebar::Grade grade)
+{
+   RebarGrade matGrade;
+   switch (grade)
+   {
+   case WBFL::Materials::Rebar::Grade40: matGrade = Grade40; break;
+   case WBFL::Materials::Rebar::Grade::Grade60: matGrade = Grade60; break;
+   case WBFL::Materials::Rebar::Grade75: matGrade = Grade75; break;
+   case WBFL::Materials::Rebar::Grade80: matGrade = Grade80; break;
+   case WBFL::Materials::Rebar::Grade100: matGrade = Grade100; break;
+   default:
+      ATLASSERT(false);
+   }
+
+   return matGrade;
+}
+
+inline MaterialSpec GetRebarSpecification(WBFL::Materials::Rebar::Type type)
+{
+   return (type == WBFL::Materials::Rebar::Type::A615 ? msA615 : (type == WBFL::Materials::Rebar::Type::A706 ? msA706 : msA1035));
+}
+
+
+// Utility class to implement abstract data needs for alternate tensile stress requirement for pgstable models
+class PGStableAlternateTensStressDataProvider : public WBFL::Stability::IAlternateTensStressDataProvider
+{
+public:
+   PGStableAlternateTensStressDataProvider(IShape* pShape, Float64 L, Float64 Hg, const CPGStableLongitudinalRebarData& rebarData) :
+      m_pShape(pShape),
+      m_RebarData(rebarData),
+      m_L(L),
+      m_Hg(Hg),
+      m_IsInit(false)
+   {
+   }
+
+   // IAlternateTensStressDataProvider
+   virtual HRESULT GetGirderShape(Float64 Xs, IShape** ppShape) override
+   {
+      if (m_pShape)
+      {
+         return m_pShape.CopyTo(ppShape);
+      }
+      else
+      {
+         ATLASSERT(0);
+         *ppShape = nullptr;
+         return E_FAIL;
+      }
+   }
+
+   virtual HRESULT CreateRebarSection(Float64 Xs, IRebarSection** ppSection) override
+   {
+      Init();
+
+      CComPtr<IRebarSection> pRebarSection;
+      pRebarSection.CoCreateInstance(CLSID_RebarSection);
+
+      MaterialSpec  matSpec = GetRebarSpecification(m_RebarData.BarType);
+      RebarGrade    matGrade = GetRebarGrade(m_RebarData.BarGrade);
+
+      for (const auto& barrow : m_RebarData.RebarRows)
+      {
+         BarSize       matSize = GetBarSize(barrow.BarSize);
+         CComPtr<IRebar> rebar;
+         m_RebarFactory->CreateRebar(matSpec, matGrade, matSize, m_UnitConvert, 0, &rebar);
+
+         Float64 db;
+         rebar->get_NominalDiameter(&db);
+
+         Float64 topCover = barrow.Cover;
+
+         // X location of left most bar
+         Float64 barLoc = -1.0 * ((barrow.NumberOfBars - 1) * barrow.BarSpacing) / 2.0;
+         for (int ibar = 0; ibar < barrow.NumberOfBars; ibar++)
+         {
+            CComPtr<IPoint2d> point;
+            point.CoCreateInstance(CLSID_Point2d);
+            point->Move(barLoc, m_Hg - topCover - db);
+
+            Float64 lftDist = Xs;
+            Float64 rgtDist = m_L - Xs;
+
+            CComPtr<IRebarSectionItem> sectionItem;
+            sectionItem.CoCreateInstance(CLSID_RebarSectionItem);
+            sectionItem->Init(point, 1000.0, 1000.0, htNone, htNone, rebar);
+
+            pRebarSection->Add(sectionItem);
+
+            barLoc += barrow.BarSpacing;
+         }
+      }
+
+      return pRebarSection.CopyTo(ppSection);
+   }
+
+private:
+   void Init()
+   {
+      if (!m_IsInit)
+      {
+         // Create com objects we need for all rebar calls
+         // Tebar factory. This does the work of creating rebar objects
+         m_RebarFactory.CoCreateInstance(CLSID_RebarFactory);
+
+         // Need a unit server object for units conversion in factory
+         CComPtr<IUnitServer> unitServer;
+         unitServer.CoCreateInstance(CLSID_UnitServer);
+         HRESULT hr = ConfigureUnitServer(unitServer);
+         ATLASSERT(SUCCEEDED(hr));
+
+         unitServer->get_UnitConvert(&m_UnitConvert);
+
+         m_IsInit = true;
+      }
+   }
+
+private:
+   PGStableAlternateTensStressDataProvider();
+   CComPtr<IShape> m_pShape;
+   CPGStableLongitudinalRebarData m_RebarData;
+   Float64 m_L;
+   Float64 m_Hg;
+   bool m_IsInit;
+   CComPtr<IRebarFactory> m_RebarFactory;
+   CComPtr<IUnitConvert> m_UnitConvert;
+};
+
 
 
 void DDX_Girder(CDataExchange* pDX,WBFL::Stability::Girder& girder)
@@ -188,6 +347,32 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
    DDX_Text(pDX,IDC_DRAG_COEFFICIENT,Cd);
    DDV_GreaterThanZero(pDX,IDC_DRAG_COEFFICIENT,Cd);
 
+   DDX_Control(pDX, IDC_MILD_STEEL_SELECTOR, m_cbRebar);
+
+   CPGStableLongitudinalRebarData rebarData(pDoc->GetPGStableLongitudinalRebarData());
+   DDX_UnitValueAndTag(pDX, IDC_COVER_LIMIT, IDC_COVER_LIMIT_UNIT, rebarData.MaxCoverToUseHigherTensionStressLimit, pDispUnits->ComponentDim);
+   DDV_UnitValueZeroOrMore(pDX, IDC_COVER_LIMIT, rebarData.MaxCoverToUseHigherTensionStressLimit, pDispUnits->ComponentDim);
+   DDX_RebarMaterial(pDX, IDC_MILD_STEEL_SELECTOR, rebarData.BarType, rebarData.BarGrade);
+
+   if (pDX->m_bSaveAndValidate)
+   {
+      CPGStableLongitudinalRebarData rebarDataGrid;
+      if (!m_pPGStableLongRebarGrid->GetRebarData(pDX, &rebarDataGrid))
+      {
+         pDX->PrepareCtrl(IDC_LONG_GRID);
+         pDX->Fail();
+      }
+
+      rebarDataGrid.BarType = rebarData.BarType;
+      rebarDataGrid.MaxCoverToUseHigherTensionStressLimit = rebarData.MaxCoverToUseHigherTensionStressLimit;
+      pDoc->SetPGStableLongitudinalRebarData(rebarDataGrid);
+   }
+   else
+   {
+      m_pPGStableLongRebarGrid->FillGrid(rebarData);
+      OnEnableDeleteRebarRow(false);
+   }
+
    DDX_Girder(pDX,girder);
    DDX_PrismaticGirderStrands(pDX, lifting_strands);
    DDX_PrismaticGirderStrands(pDX, hauling_strands);
@@ -243,6 +428,39 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
          girder.SetStressPoints(0, m_pntTL, m_pntTR, m_pntBL, m_pntBR);
       }
 
+      pDoc->SetGirder(strGirder);
+
+      // We can only compute alternative allowable tensile stress if we have a girder entry with a shape to integrate over. 
+      const GirderLibraryEntry* pGdrEntry = pDoc->GetGirderLibraryEntry();
+      if (pGdrEntry != nullptr)
+      {
+         CComPtr<IBeamFactory> pFactory;
+         pGdrEntry->GetBeamFactory(&pFactory);
+         GirderLibraryEntry::Dimensions dimensions = pGdrEntry->GetDimensions();
+
+         CComPtr<IGirderSection> gdrSection;
+         pFactory->CreateGirderSection(nullptr, INVALID_ID, dimensions, -1.0, -1.0, &gdrSection);
+
+         CComPtr<IShape> pShape;
+         gdrSection.QueryInterface(&pShape);
+
+         // bounding box and height
+         CComPtr<IRect2d> bbox;
+         pShape->get_BoundingBox(&bbox);
+         Float64 Hg;
+         bbox->get_Height(&Hg);
+
+         Float64 length = girder.GetGirderLength();
+         CPGStableLongitudinalRebarData rebarData = pDoc->GetPGStableLongitudinalRebarData();
+
+         std::shared_ptr<WBFL::Stability::IAlternateTensStressDataProvider> pATSP(std::make_shared<PGStableAlternateTensStressDataProvider>(pShape, length, Hg, rebarData));
+         girder.SetAlternateTensStressDataProvider(pATSP);
+      }
+      else
+      {
+         girder.SetAlternateTensStressDataProvider(nullptr);
+      }
+
       pDoc->SetGirder(GirderType::Prismatic,girder);
       pDoc->SetStrands(GirderType::Prismatic, ModelType::Lifting, lifting_strands);
       pDoc->SetStrands(GirderType::Prismatic, ModelType::Hauling, hauling_strands);
@@ -255,14 +473,13 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
 
       pDoc->SetK1(K1);
       pDoc->SetK2(K2);
-
-      pDoc->SetGirder(strGirder);
    }
 
    if ( !pDX->m_bSaveAndValidate )
    {
       m_ctrlGirder.Invalidate();
       m_ctrlGirder.UpdateWindow();
+      UpdateRebarControls();
    }
 }
 
@@ -274,14 +491,17 @@ BEGIN_MESSAGE_MAP(CPGStablePrismaticGirder, CDialog)
 	ON_MESSAGE(WM_HELP, OnCommandHelp)
    ON_CBN_SELCHANGE(IDC_PS_METHOD, &CPGStablePrismaticGirder::OnPSMethodChanged)
    ON_CBN_SELCHANGE(IDC_GIRDER_LIST, &CPGStablePrismaticGirder::OnGirderChanged)
+   ON_CBN_SELCHANGE(IDC_MILD_STEEL_SELECTOR, &CPGStablePrismaticGirder::OnRebarMaterialChanged)
 //   ON_WM_KILLFOCUS()
    ON_BN_CLICKED(IDC_COMPUTE_STRESS_POINTS, &CPGStablePrismaticGirder::OnBnClickedComputeStressPoints)
    ON_BN_CLICKED(IDC_DEFINE_STRESS_POINTS, &CPGStablePrismaticGirder::OnBnClickedDefineStressPoints)
+   ON_BN_CLICKED(IDC_INSERT_REBAR_ROW, &CPGStablePrismaticGirder::OnBnClickedInsertRebarRow)
    ON_EN_CHANGE(IDC_HG, &CPGStablePrismaticGirder::OnChangedStressPointDimension)
    ON_EN_CHANGE(IDC_WTF, &CPGStablePrismaticGirder::OnChangedStressPointDimension)
    ON_EN_CHANGE(IDC_WBF, &CPGStablePrismaticGirder::OnChangedStressPointDimension)
    ON_EN_CHANGE(IDC_YTOP, &CPGStablePrismaticGirder::OnChangedStressPointDimension)
    ON_WM_SHOWWINDOW()
+   ON_BN_CLICKED(IDC_REMOVE_REBAR_ROW, OnRemoveRebarRows)
 END_MESSAGE_MAP()
 
 
@@ -302,6 +522,10 @@ BOOL CPGStablePrismaticGirder::OnInitDialog()
    m_pPointLoadGrid = std::make_unique<CPGStablePointLoadGrid>();
 	m_pPointLoadGrid->SubclassDlgItem(IDC_POINT_LOAD_GRID, this);
    m_pPointLoadGrid->CustomInit();
+
+   m_pPGStableLongRebarGrid = std::make_unique<CPGStableLongRebarGrid>();
+   m_pPGStableLongRebarGrid->SubclassDlgItem(IDC_LONG_GRID, this);
+   m_pPGStableLongRebarGrid->CustomInit();
 
    m_ctrlGirder.SubclassDlgItem(IDC_GIRDER,this);
    m_ctrlGirder.CustomInit();
@@ -485,6 +709,7 @@ void CPGStablePrismaticGirder::GetStrandProfiles(std::vector<std::pair<Float64,F
    pDoc->GetStrandProfiles(strands,girder,pvStraight,pvHarped,pvTemp);
 }
 
+
 void CPGStablePrismaticGirder::OnGirderChanged()
 {
    CString strGirder;
@@ -560,6 +785,7 @@ void CPGStablePrismaticGirder::OnGirderChanged()
    }
 
    UpdateStressPoints();
+   UpdateRebarControls();
 }
 
 void CPGStablePrismaticGirder::InitStressPoints(Float64 Wtf, Float64 Wbf, Float64 Ytop, Float64 Hg)
@@ -598,6 +824,53 @@ void CPGStablePrismaticGirder::UpdateStressPoints()
       m_pStressPointGrid->SetBottomRight(m_pntBR.X(), m_pntBR.Y());
       m_pStressPointGrid->Enable(FALSE); // restore the enabled state
    }
+}
+
+void CPGStablePrismaticGirder::UpdateRebarControls()
+{
+   // Must use a girder library with a shape in order to model rebar
+   CString strGirder;
+   CComboBox* pCB = (CComboBox*)GetDlgItem(IDC_GIRDER_LIST);
+   int curSel = pCB->GetCurSel();
+   pCB->GetLBText(curSel, strGirder);
+   bool bShow = strGirder != gs_strGirder;
+
+   CView* pParent = (CView*)GetParent();
+   CPGStableDoc* pDoc = (CPGStableDoc*)pParent->GetDocument();
+
+   bShow &= pDoc->GetGirderType() == Prismatic;
+
+   int Show = bShow ? SW_SHOW : SW_HIDE;
+
+   GetDlgItem(IDC_REINF_CB)->ShowWindow(Show);
+   GetDlgItem(IDC_STATIC_REINFMAT)->ShowWindow(Show);
+   GetDlgItem(IDC_MILD_STEEL_SELECTOR)->ShowWindow(Show);
+   GetDlgItem(IDC_LONG_GRID)->ShowWindow(Show);
+   GetDlgItem(IDC_INSERT_REBAR_ROW)->ShowWindow(Show);
+   GetDlgItem(IDC_REMOVE_REBAR_ROW)->ShowWindow(Show);
+
+   GetDlgItem(IDC_COVER_LIMIT)->ShowWindow(Show);
+   GetDlgItem(IDC_COVER_LIMIT_UNIT)->ShowWindow(Show);
+   GetDlgItem(IDC_COVER_LIMIT_TAG)->ShowWindow(Show);
+
+   if (bShow)
+   {
+      // Move cover from spec entry into UI
+      const SpecLibraryEntry* pSpec = pDoc->GetSpecLibraryEntry();
+      BOOL bEnable = pSpec == nullptr ? TRUE : FALSE;
+      if (!bEnable)
+      {
+         Float64 cover = pSpec->GetPrestressedElementCriteria().MaxCoverToUseHigherTensionStressLimit;
+
+         CEAFApp* pApp = EAFGetApp();
+         const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
+         CDataExchange DX(this, FALSE);
+         DDX_UnitValueAndTag(&DX, IDC_COVER_LIMIT, IDC_COVER_LIMIT_UNIT, cover, pDispUnits->ComponentDim);
+      }
+
+      GetDlgItem(IDC_COVER_LIMIT)->EnableWindow(bEnable);
+   }
+
 }
 
 void CPGStablePrismaticGirder::OnBnClickedComputeStressPoints()
@@ -645,6 +918,19 @@ void CPGStablePrismaticGirder::OnShowWindow(BOOL bShow, UINT nStatus)
    }
 }
 
+void CPGStablePrismaticGirder::OnBnClickedInsertRebarRow()
+{
+   WBFL::Materials::Rebar::Type type;
+   WBFL::Materials::Rebar::Grade grade;
+   CDataExchange dx(this, TRUE);
+   DDX_RebarMaterial(&dx, IDC_MILD_STEEL_SELECTOR, type, grade);
+
+   m_pPGStableLongRebarGrid->Insertrow(type, grade);
+}
+
+void CPGStablePrismaticGirder::OnRebarMaterialChanged()
+{
+}
 
 void CPGStablePrismaticGirder::OnCancel()
 {
@@ -663,4 +949,31 @@ void CPGStablePrismaticGirder::OnUnitsChanged()
 {
    UpdateData(FALSE);
    m_pStressPointGrid->OnUnitsChanged();
+}
+
+BOOL CPGStablePrismaticGirder::IsDataValid()
+{
+   if (m_pPGStableLongRebarGrid)
+   {
+      return m_pPGStableLongRebarGrid->ValidateAllCells(FALSE);
+   }
+
+   return TRUE;
+}
+
+void CPGStablePrismaticGirder::OnRemoveRebarRows()
+{
+   m_pPGStableLongRebarGrid->Removerows();
+
+   // selection is gone after row is deleted
+   CWnd* pdel = GetDlgItem(IDC_REMOVE_REBAR_ROW);
+   ASSERT(pdel);
+   pdel->EnableWindow(FALSE);
+}
+
+void CPGStablePrismaticGirder::OnEnableDeleteRebarRow(bool canDelete)
+{
+   CWnd* pdel = GetDlgItem(IDC_REMOVE_REBAR_ROW);
+   ASSERT(pdel);
+   pdel->EnableWindow(canDelete);
 }

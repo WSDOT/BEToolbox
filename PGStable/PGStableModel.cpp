@@ -98,6 +98,11 @@ CPGStableModel::CPGStableModel()
    m_HaulingStabilityProblem.SetConcrete(haulingConcrete);
    m_OneEndSeatedStabilityProblem.SetConcrete(oneEndSeatedConcrete);
 
+   Float64 rebarFy = WBFL::Units::ConvertToSysUnits(60.0, WBFL::Units::Measure::KSI);
+   m_LiftingStabilityProblem.SetRebarYieldStrength(rebarFy);
+   m_HaulingStabilityProblem.SetRebarYieldStrength(rebarFy);
+   m_OneEndSeatedStabilityProblem.SetRebarYieldStrength(rebarFy);
+
    m_LiftingStabilityProblem.SetCamber(WBFL::Units::ConvertToSysUnits(0,WBFL::Units::Measure::Inch));
    m_LiftingStabilityProblem.SetLateralCamber(0.0);
    m_LiftingStabilityProblem.IncludeLateralRollAxisOffset(false);
@@ -256,7 +261,17 @@ WBFL::Stability::LiftingCheckArtifact CPGStableModel::GetLiftingCheckArtifact() 
 
    ResolveLiftingStrandLocations();
 
-   // criteria
+   // Criteria
+
+   // Don't use longitudinal rebar for higher tensile stress unless the input says so
+   bool bUseRebar = DoUseTensileLongRebar();
+   pTensionStressLimit->bWithRebarLimit = bUseRebar;
+
+   if (bUseRebar)
+   {
+      m_LiftingStabilityProblem.SetMaxCoverToUseHigherTensionStressLimit(m_LongitudinalRebarData.MaxCoverToUseHigherTensionStressLimit);
+   }
+
    m_LiftingCriteria.AllowableCompression_GlobalStress = -m_LiftingCriteria.CompressionCoefficient_GlobalStress*fci;
    m_LiftingCriteria.AllowableCompression_PeakStress   = -m_LiftingCriteria.CompressionCoefficient_PeakStress*fci;
    pTensionStressLimit->AllowableTension = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficient*sqrt(fci);
@@ -346,6 +361,16 @@ WBFL::Stability::HaulingCheckArtifact CPGStableModel::GetHaulingCheckArtifact() 
    m_HaulingCriteria.AllowableCompression_GlobalStress = -m_HaulingCriteria.CompressionCoefficient_GlobalStress*fc;
    m_HaulingCriteria.AllowableCompression_PeakStress = -m_HaulingCriteria.CompressionCoefficient_PeakStress*fc;
 
+   // Don't use longitudinal rebar for higher tensile stress unless the input says so
+   bool bUseRebar = DoUseTensileLongRebar();
+   pTensionStressLimit->bWithRebarLimit[+WBFL::Stability::HaulingSlope::CrownSlope] = bUseRebar;
+   pTensionStressLimit->bWithRebarLimit[+WBFL::Stability::HaulingSlope::Superelevation] = bUseRebar;
+
+   if (bUseRebar)
+   {
+      m_HaulingStabilityProblem.SetMaxCoverToUseHigherTensionStressLimit(m_LongitudinalRebarData.MaxCoverToUseHigherTensionStressLimit);
+   }
+
    pTensionStressLimit->AllowableTension[+WBFL::Stability::HaulingSlope::CrownSlope] = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficient[+WBFL::Stability::HaulingSlope::CrownSlope]*sqrt(fc);
    if (pTensionStressLimit->bMaxTension[+WBFL::Stability::HaulingSlope::CrownSlope] )
    {
@@ -427,6 +452,14 @@ WBFL::Stability::OneEndSeatedCheckArtifact CPGStableModel::GetOneEndSeatedCheckA
 
    m_OneEndSeatedCriteria.AllowableCompression_GlobalStress = -m_OneEndSeatedCriteria.CompressionCoefficient_GlobalStress * fc;
    m_OneEndSeatedCriteria.AllowableCompression_PeakStress = -m_OneEndSeatedCriteria.CompressionCoefficient_PeakStress * fc;
+
+   bool bUseRebar = DoUseTensileLongRebar();
+   pTensionStressLimit->bWithRebarLimit = bUseRebar;
+
+   if (bUseRebar)
+   {
+      m_OneEndSeatedStabilityProblem.SetMaxCoverToUseHigherTensionStressLimit(m_LongitudinalRebarData.MaxCoverToUseHigherTensionStressLimit);
+   }
 
    pTensionStressLimit->AllowableTension = pTensionStressLimit->Lambda * pTensionStressLimit->TensionCoefficient * sqrt(fc);
    if (pTensionStressLimit->bMaxTension)
@@ -1097,6 +1130,16 @@ bool CPGStableModel::SetHeightOfGirderBottomAboveRoadway(Float64 Hgb)
    return false;
 }
 
+void CPGStableModel::SetPGStableLongitudinalRebarData(const CPGStableLongitudinalRebarData& rData)
+{
+   m_LongitudinalRebarData = rData;
+}
+
+CPGStableLongitudinalRebarData CPGStableModel::GetPGStableLongitudinalRebarData() const
+{
+   return m_LongitudinalRebarData;
+}
+
 void CPGStableModel::ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt)
 {
    GetSimplifiedStrandLocations(&strands,&girder,pXs,pYs,pXh,pXh1,pYh1,pXh2,pYh2,pXh3,pYh3,pXh4,pYh4,pXt,pYt);
@@ -1201,9 +1244,30 @@ void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const WBFL::Stab
    *pXt = fpe.XpsTemp;
 }
 
+bool CPGStableModel::DoUseTensileLongRebar() const
+{
+   // Use of long rebar for tension began in 10th edition (although we can use in previous), and girders need to be prismatic and defined by a library entry
+   if (m_GirderType == Prismatic) // WBFL::LRFD::BDSManager::Edition::TenthEdition2024 <= WBFL::LRFD::BDSManager::GetEdition() 
+   {
+      std::shared_ptr<WBFL::Stability::IAlternateTensStressDataProvider> patsdp = m_Girder[Prismatic].GetAlternateTensStressDataProvider();
+      {
+         if (patsdp)
+         {
+            CComPtr<IShape> pShape;
+            patsdp->GetGirderShape(0.0, &pShape);
+            if (pShape)
+            {
+               return true;
+            }
+         }
+      }
+   }
+   return false;
+}
+
 HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
 {
-   HRESULT hr = pStrSave->BeginUnit(_T("PGStable"),3.0);
+   HRESULT hr = pStrSave->BeginUnit(_T("PGStable"),4.0);
    if ( FAILED(hr) )
       return hr;
 
@@ -1215,7 +1279,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
    pStrSave->put_Property(_T("DragCoefficient"),CComVariant(m_Girder[m_GirderType].GetDragCoefficient()));
    pStrSave->put_Property(_T("Precamber"), CComVariant(m_Girder[m_GirderType].GetPrecamber())); // added in version 2
 
-   pStrSave->BeginUnit(_T("Girder"),2.0);
+   pStrSave->BeginUnit(_T("Girder"),3.0);
    pStrSave->BeginUnit(_T("Sections"),1.0);
    IndexType nSections = m_Girder[m_GirderType].GetSectionCount();
    for ( IndexType sectIdx = 0; sectIdx < nSections; sectIdx++ )
@@ -1339,8 +1403,10 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       }
       pStrSave->EndUnit(); // AdditionalLoads
    }
-   pStrSave->EndUnit(); // Girder
 
+   m_LongitudinalRebarData.Save(pStrSave); // Added in version 3 of girder, 4 of model
+
+   pStrSave->EndUnit(); // Girder
 
    {
    pStrSave->BeginUnit(_T("LiftingProblem"),6.0);
@@ -1899,6 +1965,11 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
             hr = pStrLoad->EndUnit(); // AdditionalLoad
          }
          hr = pStrLoad->EndUnit(); // AdditionalLoads
+      }
+
+      if (girder_datablock_version >= 3)
+      {
+         m_LongitudinalRebarData.Load(pStrLoad); // Added in version 3 of girder, 4 of model
       }
 
       hr = pStrLoad->EndUnit(); // Girder

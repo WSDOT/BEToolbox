@@ -314,6 +314,12 @@
     <ClCompile Include="Bearing\BearingTitlePageBuilder.cpp">
       <Filter>Bearing\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PGStable\PgStableLongitudinalRebarData.cpp">
+      <Filter>PGStable\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PGStable\PGStableLongRebarGrid.cpp">
+      <Filter>PGStable\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BEToolbox_i.h" />
@@ -664,6 +670,12 @@
     </ClInclude>
     <ClInclude Include="Bearing\BearingTitlePageBuilder.h">
       <Filter>Bearing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PGStable\PGStableLongitudinalRebarData.h">
+      <Filter>PGStable\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PGStable\PGStableLongRebarGrid.h">
+      <Filter>PGStable\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

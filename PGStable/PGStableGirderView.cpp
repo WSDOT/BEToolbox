@@ -86,6 +86,7 @@ BEGIN_MESSAGE_MAP(CPGStableGirderView, CPGStableFormView)
    ON_EN_CHANGE(IDC_JOB, &CPGStableGirderView::OnChange)
    ON_EN_CHANGE(IDC_COMMENTS, &CPGStableGirderView::OnChange)
 	ON_MESSAGE(WM_HELP, OnCommandHelp)
+   ON_CBN_SELCHANGE(IDC_SPEC, &CPGStableGirderView::OnSpecChanged)
 END_MESSAGE_MAP()
 
 
@@ -147,6 +148,16 @@ void CPGStableGirderView::OnDeactivateView()
    }
 }
 
+BOOL CPGStableGirderView::IsDataValid()
+{
+   if (GetCheckedRadioButton(IDC_PRISMATIC, IDC_NONPRISMATIC) == IDC_PRISMATIC)
+   {
+      return m_Prismatic.IsDataValid();
+   }
+
+   return TRUE;
+}
+
 void CPGStableGirderView::RefreshReport()
 {
    // do nothing - this view doesn't have a report
@@ -183,6 +194,9 @@ LRESULT CPGStableGirderView::OnCommandHelp(WPARAM, LPARAM lParam)
 
 void CPGStableGirderView::OnInitialUpdate()
 {
+   // use exception safe older to prevent bad things to happen during initialization
+   OnInitBoolHolder holder(m_bViewInitialized);
+
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    const SpecLibrary* pSpecLib = pDoc->GetSpecLibrary();
@@ -217,8 +231,6 @@ void CPGStableGirderView::OnInitialUpdate()
    VERIFY(m_Nonprismatic.Create(CPGStableNonprismaticGirder::IDD, this));
    VERIFY(m_Nonprismatic.SetWindowPos( GetDlgItem(IDC_STATIC_BOUNDS), boxRect.left, boxRect.top, 0, 0, SWP_SHOWWINDOW|SWP_NOSIZE));
    m_Nonprismatic.ShowWindow(prismatic == GirderType::Nonprismatic ? SW_SHOW : SW_HIDE);
-
-   m_bViewInitialized = TRUE;
 }
 
 void CPGStableGirderView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)
@@ -260,3 +272,20 @@ void CPGStableGirderView::OnChange()
    // TODO:  Add your control notification handler code here
    UpdateData(TRUE);
 }
+
+void CPGStableGirderView::OnSpecChanged()
+{
+   CComboBox* pCB = (CComboBox*)GetDlgItem(IDC_SPEC);
+   int curSel = pCB->GetCurSel();
+   CString strSpec;
+   pCB->GetLBText(curSel, strSpec);
+
+   CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
+   pDoc->SetCriteria(strSpec);
+
+   if (GetCheckedRadioButton(IDC_PRISMATIC, IDC_NONPRISMATIC) == IDC_PRISMATIC)
+   {
+      m_Prismatic.UpdateRebarControls();
+   }
+}
+
