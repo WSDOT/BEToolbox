@@ -63,9 +63,9 @@ const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
 
 void CBearingChildFrame::SetBearingParameters(const WBFL::EngTools::Bearing& brg,
     const WBFL::EngTools::BearingLoads& brg_loads,
-    const WBFL::EngTools::BearingCalculator& brg_calc)
+    const WBFL::EngTools::BearingDesignCriteria& criteria)
 {
-    m_DlgBar.SetBearingParameters(m_DlgBar, brg, brg_loads, brg_calc);
+    m_DlgBar.SetBearingParameters(m_DlgBar, brg, brg_loads, criteria);
     m_DlgBar.UpdateData(FALSE);
 }
 
@@ -120,9 +120,10 @@ void CBearingChildFrame::OnUpdate()
        
        WBFL::EngTools::Bearing brg;
        WBFL::EngTools::BearingLoads brg_loads;
-       WBFL::EngTools::BearingCalculator brg_calc;
-       m_DlgBar.SetBearing(brg, brg_loads, brg_calc);
-       pDoc->SetBearing(brg, brg_loads, brg_calc);
+       WBFL::EngTools::BearingDesignCriteria brg_criteria;
+
+       m_DlgBar.SetBearing(brg, brg_loads, brg_criteria);
+       pDoc->SetBearing(brg, brg_loads, brg_criteria);
        pDoc->SetModifiedFlag();
        pDoc->UpdateAllViews(nullptr);
    }

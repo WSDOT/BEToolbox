@@ -43,12 +43,12 @@ public:
 	void SetBearingParameters(CBearingDialogBar&,
 		const WBFL::EngTools::Bearing&,
 		const WBFL::EngTools::BearingLoads&,
-		const WBFL::EngTools::BearingCalculator&);
+		const WBFL::EngTools::BearingDesignCriteria&);
 
 	void SetBearing(
 		WBFL::EngTools::Bearing& brg,
 		WBFL::EngTools::BearingLoads& brg_loads,
-		WBFL::EngTools::BearingCalculator& brg_calc);
+		WBFL::EngTools::BearingDesignCriteria& brg_criteria);
 
 private:
 
