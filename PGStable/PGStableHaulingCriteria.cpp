@@ -26,13 +26,6 @@
 #include "stdafx.h"
 #include "PGStableHaulingCriteria.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CPGStableHaulingCriteria::CPGStableHaulingCriteria()
 {
    MinFScr = 1.0;

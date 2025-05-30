@@ -46,12 +46,6 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE 
-BEGIN
-    "1 TYPELIB ""BEToolbox.tlb""\r\n"
-    "\0"
-END
-
 #endif    // APSTUDIO_INVOKED
 
 
@@ -109,43 +103,6 @@ BEGIN
         VALUE "Translation", 0x409, 1252
     END
 END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// REGISTRY
-//
-
-IDR_BETOOLBOX           REGISTRY                "BEToolbox.rgs"
-
-IDR_BETOOLBOXPLUGIN     REGISTRY                "BEToolboxPlugin.rgs"
-
-IDR_BETOOLBOXCOMPONENTINFO REGISTRY                "BEToolboxComponentInfo.rgs"
-
-IDR_PGSTABLEEXPORTER    REGISTRY                ".\\PGStable\\PGStableExporter.rgs"
-
-IDR_CURVELEXPORTER      REGISTRY                ".\\Curvel\\CurvelExporter.rgs"
-
-IDR_CURVELIMPORTER      REGISTRY                ".\\Curvel\\CurvelImporter.rgs"
-
-IDR_GENCOMPEXPORTER     REGISTRY                ".\\GenComp\\GenCompExporter.rgs"
-
-IDR_ULTCOLTOOL          REGISTRY                ".\\UltCol\\UltColTool.rgs"
-
-IDR_BOXGDRTOOL          REGISTRY                ".\\BoxGdr\\BoxGdrTool.rgs"
-
-IDR_GENCOMPTOOL         REGISTRY                ".\\GenComp\\GenCompTool.rgs"
-
-IDR_GIRCOMPTOOL         REGISTRY                ".\\GirComp\\GirCompTool.rgs"
-
-IDR_CURVELTOOL          REGISTRY                ".\\Curvel\\CurvelTool.rgs"
-
-IDR_PGSTABLETOOL        REGISTRY                ".\\PGStable\\PGStableTool.rgs"
-
-IDR_SPECTRATOOL         REGISTRY                ".\\Spectra\\SpectraTool.rgs"
-
-IDR_BEARINGTOOL         REGISTRY                ".\\Bearing\\BearingTool.rgs"
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1724,16 +1681,3 @@ END
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
-
-
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-1 TYPELIB "BEToolbox.tlb"
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
-

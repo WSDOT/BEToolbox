@@ -66,7 +66,7 @@ public:
    virtual Float64 GetRootNodeVersion() override;
 
 protected:
-   CEAFToolBar* m_pMyToolBar;
+   std::shared_ptr<WBFL::EAF::ToolBar> m_MyToolBar;
 
 
    virtual void OnOldFormat(LPCTSTR lpszPathName);

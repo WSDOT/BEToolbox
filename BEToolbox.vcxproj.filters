@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="BEToolbox_i.c" />
     <ClCompile Include="AboutDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -14,7 +13,7 @@
     <ClCompile Include="BEToolboxDoc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BEToolboxPlugin.cpp">
+    <ClCompile Include="BEToolboxPluginApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BEToolboxStatusBar.cpp">
@@ -322,7 +321,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BEToolbox_i.h" />
     <ClInclude Include="AboutDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -338,7 +336,7 @@
     <ClInclude Include="BEToolboxDoc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BEToolboxPlugin.h">
+    <ClInclude Include="BEToolboxPluginApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BEToolboxStatusBar.h">
@@ -677,6 +675,9 @@
     <ClInclude Include="PGStable\PGStableLongRebarGrid.h">
       <Filter>PGStable\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BEToolboxCLSID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\BoxGdr.ico">
@@ -738,22 +739,10 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="BEToolbox.idl" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="BEToolbox.def" />
     <None Include="BEToolbox.tip" />
     <None Include="res\BoxGdr.emf">
       <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include="BEToolbox.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="BEToolboxComponentInfo.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="BEToolboxPlugin.rgs">
-      <Filter>Resource Files</Filter>
     </None>
     <None Include="res\GirComp.emf">
       <Filter>GirComp\Resource Files</Filter>
@@ -769,42 +758,6 @@
     </None>
     <None Include="res\VertCurve.emf">
       <Filter>Curvel\Resource Files</Filter>
-    </None>
-    <None Include=".\BoxGdr\BoxGdrTool.rgs">
-      <Filter>BoxGdr\Resource Files</Filter>
-    </None>
-    <None Include=".\UltCol\UltColTool.rgs">
-      <Filter>UltCol\Resource Files</Filter>
-    </None>
-    <None Include=".\Spectra\SpectraTool.rgs">
-      <Filter>Spectra\Resource Files</Filter>
-    </None>
-    <None Include=".\PGStable\PGStableTool.rgs">
-      <Filter>PGStable\Resource Files</Filter>
-    </None>
-    <None Include=".\PGStable\PGStableExporter.rgs">
-      <Filter>PGStable\Resource Files</Filter>
-    </None>
-    <None Include=".\GirComp\GirCompTool.rgs">
-      <Filter>GirComp\Resource Files</Filter>
-    </None>
-    <None Include=".\GenComp\GenCompTool.rgs">
-      <Filter>GenComp\Resource Files</Filter>
-    </None>
-    <None Include=".\GenComp\GenCompExporter.rgs">
-      <Filter>GenComp\Resource Files</Filter>
-    </None>
-    <None Include=".\Curvel\CurvelExporter.rgs">
-      <Filter>Curvel\Resource Files</Filter>
-    </None>
-    <None Include=".\Curvel\CurvelImporter.rgs">
-      <Filter>Curvel\Resource Files</Filter>
-    </None>
-    <None Include=".\Curvel\CurvelTool.rgs">
-      <Filter>Curvel\Resource Files</Filter>
-    </None>
-    <None Include="Bearing\BearingTool.rgs">
-      <Filter>Bearing\Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

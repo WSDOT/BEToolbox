@@ -38,12 +38,6 @@
 #include <psgLib/SpecificationCriteria.h>
 #include <psgLib/PrestressedElementCriteria.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 // inline functions to convert rebar data
 inline BarSize GetBarSize(WBFL::Materials::Rebar::Size size)
 {
@@ -267,15 +261,15 @@ void DDX_PrismaticGirderStrands(CDataExchange* pDX,CPGStableStrands& strands)
    DDX_UnitValueAndTag(pDX,IDC_XFER_LENGTH,IDC_XFER_LENGTH_UNIT,strands.XferLength,pDispUnits->ComponentDim);
    DDV_UnitValueZeroOrMore(pDX,IDC_XFER_LENGTH,strands.XferLength,pDispUnits->ComponentDim);
 
-   strands.YsMeasure = BOTTOM;
-   strands.YtMeasure = TOP;
+   strands.YsMeasure = BOTTOM_STRANDS;
+   strands.YtMeasure = TOP_STRANDS;
 
    strands.Xh1 = 0;
    strands.Xh1Measure = FRACTION;
-   strands.Yh1Measure = TOP;
+   strands.Yh1Measure = TOP_STRANDS;
 
    strands.Xh2Measure = FRACTION;
-   strands.Yh2Measure = BOTTOM;
+   strands.Yh2Measure = BOTTOM_STRANDS;
 
    DDX_UnitValueAndTag(pDX,IDC_YS,IDC_YS_UNIT,strands.Ys,pDispUnits->ComponentDim);
    DDV_UnitValueZeroOrMore(pDX,IDC_YS,strands.Ys,pDispUnits->ComponentDim);
@@ -434,8 +428,7 @@ void CPGStablePrismaticGirder::DoDataExchange(CDataExchange* pDX)
       const GirderLibraryEntry* pGdrEntry = pDoc->GetGirderLibraryEntry();
       if (pGdrEntry != nullptr)
       {
-         CComPtr<IBeamFactory> pFactory;
-         pGdrEntry->GetBeamFactory(&pFactory);
+         auto pFactory = pGdrEntry->GetBeamFactory();
          GirderLibraryEntry::Dimensions dimensions = pGdrEntry->GetDimensions();
 
          CComPtr<IGirderSection> gdrSection;
@@ -737,10 +730,9 @@ void CPGStablePrismaticGirder::OnGirderChanged()
 
       Float64 Cd = pEntry->GetDragCoefficient();
 
-      CComPtr<IBeamFactory> factory;
-      pEntry->GetBeamFactory(&factory);
+      auto factory = pEntry->GetBeamFactory();
 
-      IBeamFactory::Dimensions dimensions = pEntry->GetDimensions();
+      auto dimensions = pEntry->GetDimensions();
       CComPtr<IGirderSection> section;
       factory->CreateGirderSection(nullptr,INVALID_ID,dimensions,-1,-1,&section);
 

@@ -93,7 +93,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.\BEToolboxXML;$(ARPDIR)\BridgeLink\Include;$(ARPDIR)\BridgeLink\Include\$(Platform);$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema;.\Documentation;$(ARPDIR)\PGSuper\Include;%(AdditionalIncludeDirectories);$(ARPDIR)\BridgeLink\Include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;_DEBUG;_USRDLL;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -121,6 +121,7 @@
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
@@ -160,7 +161,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>.\BEToolboxXML;$(ARPDIR)\BridgeLink\Include;$(ARPDIR)\BridgeLink\Include\$(Platform);$(ARPDIR)\WBFL\Include;$(ARPDIR)\WBFL\Include\$(Platform);$(ARPDIR)\WBFL\UnitServer\Schema;.\Documentation;$(ARPDIR)\PGSuper\Include;%(AdditionalIncludeDirectories);$(ARPDIR)\BridgeLink\Include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_NO_UUIDOF;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDBETOOLBOXLIB;WIN32;_WINDOWS;NDEBUG;_USRDLL;_GXDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -187,6 +188,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
       <TargetMachine>MachineX64</TargetMachine>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
     </Link>
     <PostBuildEvent>
       <Message>Copying Images to BridgeLink\Image folder</Message>
@@ -217,17 +219,9 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClCompile Include="BEToolbox.cpp" />
     <ClCompile Include="BEToolboxComponentInfo.cpp" />
     <ClCompile Include="BEToolboxDoc.cpp" />
-    <ClCompile Include="BEToolboxPlugin.cpp" />
+    <ClCompile Include="BEToolboxPluginApp.cpp" />
     <ClCompile Include="BEToolboxStatusBar.cpp" />
     <ClCompile Include="BEToolboxUtilities.cpp" />
-    <ClCompile Include="BEToolbox_i.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
     <ClCompile Include=".\BoxGdr\BoxGdrChapterBuilder.cpp" />
     <ClCompile Include=".\BoxGdr\BoxGdrChildFrame.cpp" />
     <ClCompile Include=".\BoxGdr\BoxGdrDimensionGrid.cpp" />
@@ -332,32 +326,14 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClCompile Include=".\UltCol\UltColView.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Bearing\BearingTool.rgs" />
     <None Include="BEToolbox.def" />
-    <None Include="BEToolbox.rgs" />
     <None Include="BEToolbox.tip" />
-    <None Include="BEToolboxComponentInfo.rgs" />
-    <None Include="BEToolboxPlugin.rgs" />
-    <None Include=".\BoxGdr\BoxGdrTool.rgs" />
-    <None Include=".\Curvel\CurvelExporter.rgs" />
-    <None Include=".\Curvel\CurvelImporter.rgs" />
-    <None Include=".\Curvel\CurvelTool.rgs" />
-    <None Include=".\GenComp\GenCompExporter.rgs" />
-    <None Include=".\GenComp\GenCompTool.rgs" />
-    <None Include=".\GirComp\GirCompTool.rgs" />
-    <None Include=".\PGStable\PGStableExporter.rgs" />
-    <None Include=".\PGStable\PGStableTool.rgs" />
     <None Include="res\BoxGdr.emf" />
     <None Include="res\GirComp.emf" />
     <None Include="res\PrismaticStrandLayout.emf" />
     <None Include="res\StrandLayout.emf" />
     <None Include="res\Superelevation.emf" />
     <None Include="res\VertCurve.emf" />
-    <None Include=".\Spectra\SpectraTool.rgs" />
-    <None Include=".\UltCol\UltColTool.rgs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Midl Include="BEToolbox.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
@@ -374,13 +350,12 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include="BEToolboxComponentInfo.h" />
     <ClInclude Include="BEToolboxDoc.h" />
     <ClInclude Include="BEToolboxLib.h" />
-    <ClInclude Include="BEToolboxPlugin.h" />
+    <ClInclude Include="BEToolboxPluginApp.h" />
     <ClInclude Include="BEToolboxStatusBar.h" />
     <ClInclude Include="BEToolboxTool.h" />
     <ClInclude Include="BEToolboxTypes.h" />
     <ClInclude Include="BEToolboxUtilities.h" />
     <ClInclude Include="BEToolboxVersion.h" />
-    <ClInclude Include="BEToolbox_i.h" />
     <ClInclude Include="BETResources.h" />
     <ClInclude Include=".\BoxGdr\BoxGdrChapterBuilder.h" />
     <ClInclude Include=".\BoxGdr\BoxGdrChildFrame.h" />
@@ -407,6 +382,7 @@ xcopy /y/d $(ProjectDir)\USGS\2014\us_hazard_7pc75.2014.bin $(OutDir)
     <ClInclude Include=".\Curvel\CurvelSkewLineGrid.h" />
     <ClInclude Include=".\Curvel\CurvelStationRangeGrid.h" />
     <ClInclude Include=".\Curvel\CurvelTitlePageBuilder.h" />
+    <ClInclude Include="BEToolboxCLSID.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="Documentation\BEToolbox.hh" />
     <ClInclude Include=".\GenComp\GenCompChapterBuilder.h" />

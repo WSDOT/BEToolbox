@@ -21,23 +21,8 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <initguid.h>
 
-#include <EAF\EAFDocTemplate.h>
-
-class CCurvelDocTemplate : public CEAFDocTemplate
-{
-public:
-   CCurvelDocTemplate(UINT nIDResource,
-                      std::shared_ptr<WBFL::EAF::ICommandCallback> pCallback,
-                      CRuntimeClass* pDocClass,
-                      CRuntimeClass* pFrameClass,
-                      CRuntimeClass* pViewClass,
-                      HMENU hSharedMenu = nullptr,
-                      int maxViewCount = -1);
-
-   virtual CString GetTemplateGroupItemDescription(const CEAFTemplateItem* pItem) const override;
-
-   virtual CDocument* OpenDocumentFile(LPCTSTR lpszPathName, BOOL bAddToMRU, BOOL bMakeVisible) override;
-
-   DECLARE_DYNAMIC(CCurvelDocTemplate)
-};
+// {23CFD70B-F121-4122-821B-806F9685BE1A}
+DEFINE_GUID(CLSID_ExampleTool,
+   0x23cfd70b, 0xf121, 0x4122, 0x82, 0x1b, 0x80, 0x6f, 0x96, 0x85, 0xbe, 0x1a);

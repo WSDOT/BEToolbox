@@ -25,13 +25,6 @@
 #include "GirCompChildFrame.h"
 #include "GirCompDoc.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 IMPLEMENT_DYNCREATE(CGirCompChildFrame, CEAFChildFrame)
 
 CGirCompChildFrame::CGirCompChildFrame(void)
@@ -117,13 +110,13 @@ void CGirCompChildFrame::OnUpdate()
 void CGirCompChildFrame::OnUSUnits()
 {
    ASSERT(m_TopDlgBar.IsDlgButtonChecked(IDC_US) == 1 );
-   SetUnitsMode(eafTypes::umUS);
+   SetUnitsMode(WBFL::EAF::UnitMode::US);
 }
 
 void CGirCompChildFrame::OnSIUnits()
 {
    ASSERT(m_TopDlgBar.IsDlgButtonChecked(IDC_SI) == 1 );
-   SetUnitsMode(eafTypes::umSI);
+   SetUnitsMode(WBFL::EAF::UnitMode::SI);
 }
 
 void CGirCompChildFrame::OnAdd()
@@ -141,7 +134,7 @@ void CGirCompChildFrame::OnUpdateRemove(CCmdUI* pCmdUI)
    pCmdUI->Enable(m_TopDlgBar.AreProblemsSelected() ? TRUE : FALSE);
 }
 
-void CGirCompChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+void CGirCompChildFrame::SetUnitsMode(WBFL::EAF::UnitMode um)
 {
    CEAFApp* pApp = EAFGetApp();
    if ( pApp->GetUnitsMode() != um )

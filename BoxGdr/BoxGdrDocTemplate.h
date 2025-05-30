@@ -28,7 +28,7 @@ class CBoxGdrDocTemplate : public CEAFDocTemplate
 {
 public:
    CBoxGdrDocTemplate(UINT nIDResource,
-                      IEAFCommandCallback* pCallback,
+                      std::shared_ptr<WBFL::EAF::ICommandCallback> pCallback,
                       CRuntimeClass* pDocClass,
                       CRuntimeClass* pFrameClass,
                       CRuntimeClass* pViewClass,

@@ -30,14 +30,6 @@
 #include "PGStableEffectivePrestressDlg.h"
 #include <MFCTools\MFCTools.h>
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CPGStableLiftingView
 
 IMPLEMENT_DYNCREATE(CPGStableLiftingView, CPGStableFormView)
@@ -98,7 +90,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    Float64 sweepGrowth = problem.GetSweepGrowth();
    Float64 supportPlacementTolerance = problem.GetSupportPlacementTolerance();
 
-   if ( pApp->GetUnitsMode() == eafTypes::umSI )
+   if ( pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI )
    {
       sweepTolerance *= 1000;
       DDX_Text(pDX,IDC_SWEEP_TOLERANCE,sweepTolerance);
@@ -164,11 +156,11 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    CString tag;
    if ( WBFL::LRFD::BDSManager::GetEdition() < WBFL::LRFD::BDSManager::Edition::SeventhEditionWith2016Interims )
    {
-      tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("sqrt(f'ci (MPa))") : _T("sqrt(f'ci (KSI))");
+      tag = pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("sqrt(f'ci (MPa))") : _T("sqrt(f'ci (KSI))");
    }
    else
    {
-      tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("(lambda)sqrt(f'ci (MPa))") : _T("(lambda)sqrt(f'ci (KSI))");
+      tag = pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("(lambda)sqrt(f'ci (MPa))") : _T("(lambda)sqrt(f'ci (KSI))");
    }
    DDX_Text(pDX,IDC_FR_COEFFICIENT_UNIT,tag);
 

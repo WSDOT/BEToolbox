@@ -33,13 +33,6 @@
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CUltColDoc
 
 IMPLEMENT_DYNCREATE(CUltColDoc, CBEToolboxDoc)
@@ -145,7 +138,7 @@ HRESULT CUltColDoc::WriteTheDocument(IStructuredSave* pStrSave)
 
    CEAFApp* pApp = EAFGetApp();
 
-   hr = pStrSave->put_Property(_T("Units"),CComVariant(pApp->GetUnitsMode()));
+   hr = pStrSave->put_Property(_T("Units"),CComVariant(+pApp->GetUnitsMode()));
    if ( FAILED(hr) )
       return hr;
 
@@ -204,7 +197,7 @@ HRESULT CUltColDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    hr = pStrLoad->get_Property(_T("Units"),&var);
    if ( FAILED(hr) )
       return hr;
-   pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
+   pApp->SetUnitsMode(WBFL::EAF::UnitMode(var.lVal));
 
    var.vt = VT_R8;
    hr = pStrLoad->get_Property(_T("Diameter"),&var);

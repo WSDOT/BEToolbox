@@ -39,7 +39,7 @@ public:
 	afx_msg void MethodAControls(int);
 	afx_msg void MethodBControls(int);
 
-   void SetUnitsMode(eafTypes::UnitMode um);
+   void SetUnitsMode(WBFL::EAF::UnitMode um);
 
    void UpdateData(BOOL bUpdate);
 

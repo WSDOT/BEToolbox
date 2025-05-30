@@ -28,7 +28,7 @@ class CGirCompDocTemplate : public CEAFDocTemplate
 {
 public:
    CGirCompDocTemplate(UINT nIDResource,
-                      IEAFCommandCallback* pCallback,
+                      std::shared_ptr<WBFL::EAF::ICommandCallback> pCallback,
                       CRuntimeClass* pDocClass,
                       CRuntimeClass* pFrameClass,
                       CRuntimeClass* pViewClass,

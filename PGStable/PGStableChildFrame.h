@@ -44,7 +44,7 @@ protected:
    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
    afx_msg void OnHelpFinder();
 
-   void SetUnitsMode(eafTypes::UnitMode um);
+   void SetUnitsMode(WBFL::EAF::UnitMode um);
 
 public:
 #if defined _DEBUG

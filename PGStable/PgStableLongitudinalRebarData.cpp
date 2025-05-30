@@ -31,37 +31,10 @@
 #include <psgLib\GirderLibraryEntry.h>
 #include <LRFD\RebarPool.h>
 
-/****************************************************************************
-CLASS
-   CPGStableLongitudinalRebarData
-****************************************************************************/
-////////////////////////// PUBLIC     ///////////////////////////////////////
-
-//======================== LIFECYCLE  =======================================
 CPGStableLongitudinalRebarData::CPGStableLongitudinalRebarData() :
 BarType(WBFL::Materials::Rebar::Type::A615),
 BarGrade(WBFL::Materials::Rebar::Grade::Grade60)
 {
-}
-
-CPGStableLongitudinalRebarData::CPGStableLongitudinalRebarData(const CPGStableLongitudinalRebarData& rOther)
-{
-   MakeCopy(rOther);
-}
-
-CPGStableLongitudinalRebarData::~CPGStableLongitudinalRebarData()
-{
-}
-
-//======================== OPERATORS  =======================================
-CPGStableLongitudinalRebarData& CPGStableLongitudinalRebarData::operator= (const CPGStableLongitudinalRebarData& rOther)
-{
-   if( this != &rOther )
-   {
-      MakeAssignment(rOther);
-   }
-
-   return *this;
 }
 
 bool CPGStableLongitudinalRebarData::operator == (const CPGStableLongitudinalRebarData& rOther) const
@@ -89,7 +62,6 @@ bool CPGStableLongitudinalRebarData::operator != (const CPGStableLongitudinalReb
    return !operator==( rOther );
 }
 
-//======================== OPERATIONS =======================================
 HRESULT CPGStableLongitudinalRebarData::Load(IStructuredLoad* pStrLoad)
 {
    USES_CONVERSION;
@@ -204,39 +176,3 @@ bool CPGStableLongitudinalRebarData::RebarRow::operator==(const RebarRow& other)
 
    return true;
 };
-
-//======================== ACCESS     =======================================
-//======================== INQUIRY    =======================================
-
-////////////////////////// PROTECTED  ///////////////////////////////////////
-
-//======================== LIFECYCLE  =======================================
-//======================== OPERATORS  =======================================
-//======================== OPERATIONS =======================================
-void CPGStableLongitudinalRebarData::MakeCopy(const CPGStableLongitudinalRebarData& rOther)
-{
-   BarType   = rOther.BarType;
-   BarGrade  = rOther.BarGrade;
-   MaxCoverToUseHigherTensionStressLimit = rOther.MaxCoverToUseHigherTensionStressLimit;
-   RebarRows = rOther.RebarRows;
-}
-
-void CPGStableLongitudinalRebarData::MakeAssignment(const CPGStableLongitudinalRebarData& rOther)
-{
-   MakeCopy( rOther );
-}
-
-//======================== ACCESS     =======================================
-//======================== INQUIRY    =======================================
-
-////////////////////////// PRIVATE    ///////////////////////////////////////
-
-//======================== LIFECYCLE  =======================================
-//======================== OPERATORS  =======================================
-//======================== OPERATIONS =======================================
-
-#if defined _DEBUG
-void CPGStableLongitudinalRebarData::AssertValid()
-{
-}
-#endif

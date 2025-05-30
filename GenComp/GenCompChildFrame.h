@@ -31,7 +31,7 @@ class CGenCompChildFrame :
 public:
 	DECLARE_DYNCREATE(CGenCompChildFrame)
 
-   void SetUnitsMode(eafTypes::UnitMode um);
+   void SetUnitsMode(WBFL::EAF::UnitMode um);
    void UpdateUnitsDisplayMode();
 
    void UpdateData(BOOL bUpdate);

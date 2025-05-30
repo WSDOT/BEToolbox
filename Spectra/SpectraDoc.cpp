@@ -34,13 +34,6 @@
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CSpectraDoc
 
 IMPLEMENT_DYNCREATE(CSpectraDoc, CBEToolboxDoc)
@@ -549,7 +542,7 @@ void CSpectraDoc::InitGuideSpec()
 
 void CSpectraDoc::OnCloseDocument()
 {
-   EAFGetApp()->SetUnitsMode(eafTypes::umUS);
+   EAFGetApp()->SetUnitsMode(WBFL::EAF::UnitMode::US);
    
    delete[] m_pValues;
    m_pValues = nullptr;

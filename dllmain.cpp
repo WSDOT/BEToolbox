@@ -25,8 +25,12 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "BEToolboxApp.h"
-#include "BEToolbox_i.h"
 #include "dllmain.h"
+
+#pragma Reminder("Move to std::filesystem once we get BEToolbox to C++17 or more")
+// once we update to C++17, also need to remove the "FORCE" option in the linker
+// that setting is on because of the boost::filesystem library
+#include <boost/filesystem.hpp>
 
 #include <Reporter\Reporter.h>
 
@@ -36,31 +40,55 @@
 #include <WBFLUnitServer.h>
 #include <WBFLGeometry.h>
 #include <WBFLGeometry_i.c>
-#include <EAF\EAFComponentInfo.h>
+#include <EAF\ApplicationComponentInfo.h>
 #include <WBFLCogo.h>
 #include <WBFLCogo_i.c>
 #include <WBFLGenericBridge_i.c>
 
 #include <WBFLUnitServer_i.c>
 
+#include "BEToolboxCLSID.h"
 #include ".\PGStable\PGStablePluginCATID.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-CBEToolboxModule _AtlModule;
 
 BEGIN_MESSAGE_MAP(CBEToolboxApp, CWinApp)
 END_MESSAGE_MAP()
+
+#include "Curvel/CurvelExporter.h"
+#include "Curvel/CurvelImporter.h"
+#include "GenComp/GenCompExporter.h"
+#include "PGStable/PGStableExporter.h"
+#include "BEToolboxComponentInfo.h"
+#include "Tools.h"
+#include "BEToolboxPluginApp.h"
+#include <EAF\ComponentModule.h>
+WBFL::EAF::ComponentModule Module_;
+
+EAF_BEGIN_OBJECT_MAP(ObjectMap)
+EAF_OBJECT_ENTRY(CLSID_BEToolboxPluginApp, CBEToolboxPlugin)
+EAF_OBJECT_ENTRY(CLSID_BoxGdrTool, CBoxGdrTool)
+EAF_OBJECT_ENTRY(CLSID_CurvelExporter, CCurvelExporter)
+EAF_OBJECT_ENTRY(CLSID_CurvelImporter, CCurvelImporter)
+EAF_OBJECT_ENTRY(CLSID_GenCompExporter, CGenCompExporter)
+EAF_OBJECT_ENTRY(CLSID_PGStableExporter, CPGStableExporter)
+EAF_OBJECT_ENTRY(CLSID_BEToolboxComponentInfo, CBEToolboxComponentInfo)
+EAF_OBJECT_ENTRY(CLSID_BoxGdrTool, CBoxGdrTool)
+EAF_OBJECT_ENTRY(CLSID_GenCompTool, CGenCompTool)
+EAF_OBJECT_ENTRY(CLSID_GirCompTool, CGirCompTool)
+EAF_OBJECT_ENTRY(CLSID_UltColTool, CUltColTool)
+EAF_OBJECT_ENTRY(CLSID_CurvelTool, CCurvelTool)
+EAF_OBJECT_ENTRY(CLSID_PGStableTool, CPGStableTool)
+EAF_OBJECT_ENTRY(CLSID_SpectraTool, CSpectraTool)
+EAF_OBJECT_ENTRY(CLSID_BearingTool, CBearingTool)
+EAF_END_OBJECT_MAP()
 
 CBEToolboxApp theApp;
 
 BOOL CBEToolboxApp::InitInstance()
 {
+   Module_.Init(ObjectMap);
+
+   EAFGetApp()->LoadManifest(_T("Manifest.BEToolbox"));
+
    GXInit();
 
    // Store registry entries in HKCU\Software\Washington State Department of Transportation\BEToolbox
@@ -104,13 +132,12 @@ BOOL CBEToolboxApp::InitInstance()
    printOnly.SetMediaType(rptRiStyle::Print);
    pStyleLib->AddNamedStyle(_T("BEToolboxPrintOnly"), printOnly);
 
-   WBFL::System::ComCatMgr::CreateCategory(CComBSTR("PGStable Plugins"), CATID_PGStablePlugin);
-
    return CWinApp::InitInstance();
 }
 
 int CBEToolboxApp::ExitInstance()
 {
    GXForceTerminate();
+   Module_.Term();
 	return CWinApp::ExitInstance();
 }

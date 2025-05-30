@@ -31,7 +31,7 @@ class CGirCompChildFrame :
 public:
 	DECLARE_DYNCREATE(CGirCompChildFrame)
 
-   void SetUnitsMode(eafTypes::UnitMode um);
+   void SetUnitsMode(WBFL::EAF::UnitMode um);
    void UpdateUnitsDisplayMode();
 
    void UpdateData(BOOL bUpdate);

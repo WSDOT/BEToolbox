@@ -25,13 +25,7 @@
 #include "BearingChildFrame.h"
 #include "BearingDoc.h"
 #include <BEToolbox.hh>
-#include <EAF/EAFHelp.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#include <EAF/Help.h>
 
 IMPLEMENT_DYNCREATE(CBearingChildFrame, CEAFChildFrame)
 
@@ -140,7 +134,7 @@ void CBearingChildFrame::OnUSUnits()
 {
     ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == TRUE);
     m_DlgBar.UpdateData(TRUE);
-    SetUnitsMode(eafTypes::umUS);
+    SetUnitsMode(WBFL::EAF::UnitMode::US);
     m_DlgBar.UpdateData(FALSE);
     OnUpdate();
 }
@@ -149,12 +143,12 @@ void CBearingChildFrame::OnSIUnits()
 {
     ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == TRUE);
     m_DlgBar.UpdateData(TRUE);
-    SetUnitsMode(eafTypes::umSI);
+    SetUnitsMode(WBFL::EAF::UnitMode::SI);
     m_DlgBar.UpdateData(FALSE);
     OnUpdate();
 }
 
-void CBearingChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+void CBearingChildFrame::SetUnitsMode(WBFL::EAF::UnitMode um)
 {
     CEAFApp* pApp = EAFGetApp();
     pApp->SetUnitsMode(um);

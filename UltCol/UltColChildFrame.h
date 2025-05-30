@@ -33,7 +33,7 @@ public:
 	DECLARE_DYNCREATE(CUltColChildFrame)
 
    void SetColumnParameters(const WBFL::RCSection::CircularColumn& column,Float64 ecl,Float64 etl);
-   void SetUnitsMode(eafTypes::UnitMode um);
+   void SetUnitsMode(WBFL::EAF::UnitMode um);
 
 protected:
    CUltColChildFrame(void);

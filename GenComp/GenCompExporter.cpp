@@ -22,7 +22,7 @@
 
 // GenCompExporter.cpp : Implementation of CGenCompExporter
 #include "stdafx.h"
-#include "..\BEToolbox_i.h"
+#include "..\resource.h"
 #include "GenCompExporter.h"
 #include <GenComp.h>
 
@@ -33,52 +33,41 @@
 #include <IFace\Selection.h>
 #include <EAF\EAFDocument.h>
 #include <IFace\DocumentType.h>
+#include <IFace/PointOfInterest.h>
 
-#include <PgsExt\GirderLabel.h>
+#include <PsgLib\GirderLabel.h>
+#include <PsgLib\BridgeDescription2.h>
 #include <PgsExt\Prompts.h>
-#include <PgsExt\BridgeDescription2.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 
-HRESULT CGenCompExporter::FinalConstruct()
+
+CGenCompExporter::CGenCompExporter()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    VERIFY(m_Bitmap.LoadBitmap(IDB_GENCOMP));
-   return S_OK;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CGenCompExporter
-
-STDMETHODIMP CGenCompExporter::Init(UINT nCmdID)
+HRESULT CGenCompExporter::Init(UINT nCmdID)
 {
    return S_OK;
 }
 
-STDMETHODIMP CGenCompExporter::GetMenuText(BSTR*  bstrText) const
+CString CGenCompExporter::GetMenuText() const
 {
-   *bstrText = CComBSTR("BEToolbox:GenComp composite girder section model");
-   return S_OK;
+   return CString("BEToolbox:GenComp composite girder section model");
 }
 
-STDMETHODIMP CGenCompExporter::GetBitmapHandle(HBITMAP* phBmp) const
+HBITMAP CGenCompExporter::GetBitmapHandle() const
 {
-   *phBmp = m_Bitmap;
-   return S_OK;
+   return m_Bitmap;
 }
 
-STDMETHODIMP CGenCompExporter::GetCommandHintText(BSTR*  bstrText) const
+CString CGenCompExporter::GetCommandHintText() const
 {
-   *bstrText = CComBSTR("BEToolbox:GenComp model\nTool tip text");
-   return S_OK;   
+   return CString("BEToolbox:GenComp model\nTool tip text");
 }
 
-STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
+HRESULT CGenCompExporter::Export(std::shared_ptr<WBFL::EAF::Broker> pBroker)
 {
    pgsPointOfInterest poi;
    GET_IFACE2(pBroker,ISelection,pSelection);
@@ -247,7 +236,7 @@ STDMETHODIMP CGenCompExporter::Export(IBroker* pBroker)
       ShapeType::Point_sequence& secondaryShapePointsXML(secondaryShapeXML.Point());
 
       GET_IFACE2(pBroker,IEAFDisplayUnits,pDisplayUnits);
-      genCompXML->Units(pDisplayUnits->GetUnitMode() == eafTypes::umSI ? UnitMode::SI : UnitMode::US);
+      genCompXML->Units(pDisplayUnits->GetUnitMode() == WBFL::EAF::UnitMode::SI ? UnitMode::SI : UnitMode::US);
 
       Float64 n = EcDeck/EcGdr;
       n = ::RoundOff(n,0.001);

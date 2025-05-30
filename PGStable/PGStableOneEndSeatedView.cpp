@@ -30,12 +30,6 @@
 #include "PGStableEffectivePrestressDlg.h"
 #include <MFCTools\MFCTools.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 // CPGStableOneEndSeatedView
 
 IMPLEMENT_DYNCREATE(CPGStableOneEndSeatedView, CPGStableFormView)
@@ -123,11 +117,11 @@ void CPGStableOneEndSeatedView::DoDataExchange(CDataExchange* pDX)
    CString tag;
    if ( WBFL::LRFD::BDSManager::GetEdition() < WBFL::LRFD::BDSManager::Edition::SeventhEditionWith2016Interims )
    {
-      tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("sqrt(f'c (MPa))") : _T("sqrt(f'c (KSI))");
+      tag = pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("sqrt(f'c (MPa))") : _T("sqrt(f'c (KSI))");
    }
    else
    {
-      tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("(lambda)sqrt(f'c (MPa))") : _T("(lambda)sqrt(f'c (KSI))");
+      tag = pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("(lambda)sqrt(f'c (MPa))") : _T("(lambda)sqrt(f'c (KSI))");
    }
    DDX_Text(pDX,IDC_FR_COEFFICIENT_UNIT,tag);
 
@@ -142,7 +136,7 @@ void CPGStableOneEndSeatedView::DoDataExchange(CDataExchange* pDX)
    Float64 elift = problem.GetLiftPlacementTolerance();
    DDX_UnitValueAndTag(pDX, IDC_LIFT_POINT_TOLERANCE, IDC_LIFT_POINT_TOLERANCE_UNIT, elift, pDispUnits->ComponentDim);
 
-   if ( pApp->GetUnitsMode() == eafTypes::umSI )
+   if ( pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI )
    {
       sweepTolerance *= 1000;
       DDX_Text(pDX,IDC_SWEEP_TOLERANCE,sweepTolerance);
@@ -182,7 +176,7 @@ void CPGStableOneEndSeatedView::DoDataExchange(CDataExchange* pDX)
    Float64 Hrc = problem.GetHeightOfRollAxis();
    DDX_UnitValueAndTag(pDX,IDC_HRC,IDC_HRC_UNIT,Hrc,pDispUnits->ComponentDim);
 
-   CString slope_unit(pApp->GetUnitsMode() == eafTypes::umSI ? _T("m/m") : _T("ft/ft"));
+   CString slope_unit(pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("m/m") : _T("ft/ft"));
 
    Float64 crown_slope = problem.GetSupportSlope();
    DDX_Text(pDX,IDC_CROWN_SLOPE,crown_slope);

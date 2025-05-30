@@ -29,23 +29,14 @@
 #include "BearingTitlePageBuilder.h"
 #include "BearingChapterBuilder.h"
 #include "BearingChildFrame.h"
-#include "..\BEToolboxStatusBar.h";
-
-
+#include "..\BEToolboxStatusBar.h"
 
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 #include <BEToolbox.hh>
-#include <EAF/EAFHelp.h>
+#include <EAF/Help.h>
 
 using namespace WBFL::EngTools;
-
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 
 // CBearingDoc
@@ -240,7 +231,7 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
    if (FAILED(hr))
        return hr;
 
-   hr = pStrSave->put_Property(_T("Units"), CComVariant(pApp->GetUnitsMode()));
+   hr = pStrSave->put_Property(_T("Units"), CComVariant(+pApp->GetUnitsMode()));
    if (FAILED(hr))
        return hr;
 
@@ -379,7 +370,7 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    hr = pStrLoad->get_Property(_T("Units"), &var);
    if (FAILED(hr))
        return hr;
-   pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
+   pApp->SetUnitsMode(WBFL::EAF::UnitMode(var.lVal));
 
    if (1.1 < version)
    {

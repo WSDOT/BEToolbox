@@ -26,14 +26,6 @@
 #include <Reporter\Reporter.h>
 #include <Graphing/GraphXY.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-//////////////////////////////////
 CUltColChapterBuilder::CUltColChapterBuilder(CUltColDoc* pDoc)
 {
    m_pDoc = pDoc;
@@ -154,11 +146,6 @@ rptChapter* CUltColChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
 
 
    return pChapter;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CUltColChapterBuilder::Clone() const
-{
-   return std::make_unique<CUltColChapterBuilder>(m_pDoc);
 }
 
 rptRcImage* CUltColChapterBuilder::CreateImage(const std::vector<std::pair<Float64, Float64>>& unfactored,const std::vector<std::pair<Float64, Float64>>& factored) const

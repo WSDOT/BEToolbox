@@ -23,18 +23,12 @@
 // BEToolboxPlugin.cpp : Implementation of CBEToolboxPlugin
 
 #include "stdafx.h"
-#include "BEToolboxPlugin.h"
+#include "BEToolboxPluginApp.h"
+#include "BEToolboxCLSID.h"
 #include ".\PGStable\PGStablePluginCATID.h"
 #include <EAF\EAFApp.h>
 
 #include <MFCTools\VersionInfo.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 
 #define ID_MANAGE_PLUGINS 37000
 #define ID_MANAGE_PGSTABLE_PLUGINS 37001
@@ -58,42 +52,47 @@ void CMyCmdTarget::OnManagePGStablePlugins()
 BOOL CBEToolboxPlugin::Init(CEAFApp* pParent)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   m_DocumentationImpl.Init(this);
+   auto plugin = std::dynamic_pointer_cast<WBFL::EAF::IPluginApp>(shared_from_this());
+   m_DocumentationImpl.Init(plugin);
    m_Tools.SetParent(pParent);
    m_Tools.SetCATID(CATID_BEToolboxTool);
 
    if (m_Tools.LoadPlugins())
    {
+      WBFL::System::Logger::Info(_T("Initializing BEToolbox Tools"));
       m_Tools.InitPlugins();
    }
+
    return TRUE;
 }
 
 void CBEToolboxPlugin::Terminate()
 {
    m_Tools.UnloadPlugins();
+   //m_Tools2.UnloadPlugins();
 }
 
 void CBEToolboxPlugin::IntegrateWithUI(BOOL bIntegrate)
 {
    CEAFMainFrame* pFrame = EAFGetMainFrame();
-   CEAFMenu* pMainMenu = pFrame->GetMainMenu();
+   auto pMainMenu = pFrame->GetMainMenu();
 
    UINT filePos = pMainMenu->FindMenuItem(_T("&File"));
-   CEAFMenu* pFileMenu = pMainMenu->GetSubMenu(filePos);
+   auto pFileMenu = pMainMenu->GetSubMenu(filePos);
 
    UINT managePos = pFileMenu->FindMenuItem(_T("Manage"));
-   CEAFMenu* pManageMenu = pFileMenu->GetSubMenu(managePos);
+   auto pManageMenu = pFileMenu->GetSubMenu(managePos);
 
+   auto callback = std::dynamic_pointer_cast<WBFL::EAF::ICommandCallback>(shared_from_this());
    if (bIntegrate)
    {
-      pManageMenu->AppendMenu(ID_MANAGE_PLUGINS, _T("BEToolbox Tools..."), this);
-      pManageMenu->AppendMenu(ID_MANAGE_PGSTABLE_PLUGINS, _T("PGStable plugins..."), this);
+      pManageMenu->AppendMenu(ID_MANAGE_PLUGINS, _T("BEToolbox Tools..."), callback);
+      pManageMenu->AppendMenu(ID_MANAGE_PGSTABLE_PLUGINS, _T("PGStable plugins..."), callback);
    }
    else
    {
-      pManageMenu->RemoveMenu(ID_MANAGE_PGSTABLE_PLUGINS, MF_BYCOMMAND, this);
-      pManageMenu->RemoveMenu(ID_MANAGE_PLUGINS, MF_BYCOMMAND, this);
+      pManageMenu->RemoveMenu(ID_MANAGE_PGSTABLE_PLUGINS, MF_BYCOMMAND, callback);
+      pManageMenu->RemoveMenu(ID_MANAGE_PLUGINS, MF_BYCOMMAND, callback);
    }
 }
 
@@ -135,14 +134,14 @@ void CBEToolboxPlugin::LoadDocumentationMap()
    return m_DocumentationImpl.LoadDocumentationMap();
 }
 
-eafTypes::HelpResult CBEToolboxPlugin::GetDocumentLocation(LPCTSTR lpszDocSetName,UINT nID,CString& strURL)
+std::pair<WBFL::EAF::HelpResult,CString> CBEToolboxPlugin::GetDocumentLocation(LPCTSTR lpszDocSetName,UINT nID)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
-   return m_DocumentationImpl.GetDocumentLocation(lpszDocSetName,nID,strURL);
+   return m_DocumentationImpl.GetDocumentLocation(lpszDocSetName,nID);
 }
 
 //////////////////////////
-// IEAFCommandCallback
+// ICommandCallback
 BOOL CBEToolboxPlugin::OnCommandMessage(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
 {
    return m_MyCmdTarget.OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);

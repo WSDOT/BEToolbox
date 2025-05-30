@@ -47,13 +47,6 @@
 #include <psgLib/HaulingCriteria.h>
 #include <psgLib/SpecificationCriteria.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CPGStableDoc
 
 IMPLEMENT_DYNCREATE(CPGStableDoc, CBEToolboxDoc)
@@ -1026,10 +1019,9 @@ const GirderLibraryEntry* CPGStableDoc::GetGirderLibraryEntry() const
 bool CPGStableDoc::IsPermittedGirderEntry(const GirderLibraryEntry* pGirderEntry) const
 {
    const GirderLibraryEntry::Dimensions& dimensions = pGirderEntry->GetDimensions();
-   CComPtr<IBeamFactory> factory;
-   pGirderEntry->GetBeamFactory(&factory);
+   auto factory = pGirderEntry->GetBeamFactory();
 
-   // Stabilty analysis is only applicable to I-Beam type girders
+   // Stability analysis is only applicable to I-Beam type girders
    auto clsidFamily = factory->GetFamilyCLSID();
    return ::IsEqualGUID(clsidFamily, CLSID_WFBeamFamily) || ::IsEqualGUID(clsidFamily, CLSID_DeckBulbTeeBeamFamily);
 }

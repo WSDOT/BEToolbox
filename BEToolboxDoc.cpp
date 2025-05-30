@@ -28,15 +28,8 @@
 #include "BETResources.h"
 #include "BEToolboxDoc.h"
 #include "BEToolboxStatusBar.h"
-#include "BEToolboxPlugin.h"
+#include "BEToolboxPluginApp.h"
 #include "AboutDlg.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 
 // CBEToolboxDoc
 
@@ -49,8 +42,6 @@ static const Float64 FILE_VERSION = 1.0;
 
 CBEToolboxDoc::CBEToolboxDoc()
 {
-   m_pMyToolBar = nullptr;
-
    // Reserve command IDs for document plug ins
    UINT nCommands = GetPluginCommandManager()->ReserveCommandIDRange(PLUGIN_COMMAND_COUNT);
    ATLASSERT(nCommands == PLUGIN_COMMAND_COUNT);
@@ -117,7 +108,7 @@ Float64 CBEToolboxDoc::GetRootNodeVersion()
 BOOL CBEToolboxDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
    // Open the file and see if it starts with XML... if it does
-   // pass it on for normal processing, otherwise, assume it is an old fortran fixed format file
+   // pass it on for normal processing, otherwise, assume it is an old Fortran fixed format file
    DWORD dwResults = GetFileAttributes(lpszPathName);
    if ( dwResults == INVALID_FILE_ATTRIBUTES ) // if we couldn't get the file attributes, it probably doesn't exist
    {
@@ -194,7 +185,7 @@ void CBEToolboxDoc::LoadToolbarResource()
 {
    // override this method and call AFX_MANAGE_STATE(AfxGetStaticModuleState()) to set the
    // correct resource state if your BEToolbox tool is implemented in a DLL
-   m_pMyToolBar->LoadToolBar(GetToolbarID(), nullptr);
+   m_MyToolBar->LoadToolBar(GetToolbarID(), nullptr);
 }
 
 void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
@@ -209,10 +200,10 @@ void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
       {
       AFX_MANAGE_STATE(AfxGetStaticModuleState());
       UINT tbID = pFrame->CreateToolBar(GetToolbarSectionName(),GetPluginCommandManager());
-      m_pMyToolBar = pFrame->GetToolBar(tbID);
+      m_MyToolBar = pFrame->GetToolBar(tbID);
       LoadToolbarResource();
-      m_pMyToolBar->CreateDropDownButton(ID_FILE_OPEN,nullptr,BTNS_DROPDOWN);
-      m_pMyToolBar->HideButton(BET_ID_PLACEHOLDER,nullptr,TRUE); // hides the placeholder button that reserves a little extra space
+      m_MyToolBar->CreateDropDownButton(ID_FILE_OPEN,nullptr,BTNS_DROPDOWN);
+      m_MyToolBar->HideButton(BET_ID_PLACEHOLDER,nullptr,TRUE); // hides the placeholder button that reserves a little extra space
       }
 
       // use our status bar
@@ -223,8 +214,8 @@ void CBEToolboxDoc::DoIntegrateWithUI(BOOL bIntegrate)
    else
    {
       // remove toolbar here
-      pFrame->DestroyToolBar(m_pMyToolBar);
-      m_pMyToolBar = nullptr;
+      pFrame->DestroyToolBar(m_MyToolBar->GetToolBarID());
+      m_MyToolBar = nullptr;
 
       // reset the status bar
       pFrame->SetStatusBar(nullptr);

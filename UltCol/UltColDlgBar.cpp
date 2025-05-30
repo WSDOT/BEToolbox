@@ -29,13 +29,6 @@
 #include "UltColDlgBar.h"
 #include <MFCTools\CustomDDX.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CUltColDlgBar
 
 IMPLEMENT_DYNAMIC(CUltColDlgBar, CDialogBar)
@@ -65,7 +58,7 @@ void CUltColDlgBar::DoDataExchange(CDataExchange* pDX)
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   int i = (pApp->GetUnitsMode() == eafTypes::umUS ? 0 : 1);
+   int i = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? 0 : 1);
    DDX_Radio(pDX,IDC_US,i);
 
    DDX_UnitValueAndTag(pDX,IDC_DIAMETER,IDC_DIAMETER_UNIT,m_Diameter,pDispUnits->ComponentDim);

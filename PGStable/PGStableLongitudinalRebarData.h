@@ -21,31 +21,13 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-// SYSTEM INCLUDES
-//
+
 #include "..\BEToolboxLib.h"
-
-//#include <WBFLCore.h>
-
-#if !defined INCLUDED_MATHEX_H_
 #include <MathEx.h>
-#endif
-
-// PROJECT INCLUDES
-//
-
 #include <StrData.h>
 #include <Materials/Rebar.h>
 
-// LOCAL INCLUDES
-//
-
-// FORWARD DECLARATIONS
-//
 class GirderLibraryEntry;
-
-// MISCELLANEOUS
-//
 
 /*****************************************************************************
 CLASS 
@@ -89,65 +71,14 @@ public:
 
    Float64 MaxCoverToUseHigherTensionStressLimit = 0;
 
-   // GROUP: LIFECYCLE
-
-   //------------------------------------------------------------------------
-   // Constructor
    CPGStableLongitudinalRebarData();
+   CPGStableLongitudinalRebarData(const CPGStableLongitudinalRebarData& rOther) = default;
+   ~CPGStableLongitudinalRebarData() = default;
 
-   //------------------------------------------------------------------------
-   // Copy constructor
-   CPGStableLongitudinalRebarData(const CPGStableLongitudinalRebarData& rOther);
-
-   //------------------------------------------------------------------------
-   // Destructor
-   ~CPGStableLongitudinalRebarData();
-
-   // GROUP: OPERATORS
-   //------------------------------------------------------------------------
-   // Assignment operator
-   CPGStableLongitudinalRebarData& operator = (const CPGStableLongitudinalRebarData& rOther);
+   CPGStableLongitudinalRebarData& operator=(const CPGStableLongitudinalRebarData& rOther) = default;
    bool operator == (const CPGStableLongitudinalRebarData& rOther) const;
    bool operator != (const CPGStableLongitudinalRebarData& rOther) const;
 
-   // GROUP: OPERATIONS
-
 	HRESULT Load(IStructuredLoad* pStrLoad);
 	HRESULT Save(IStructuredSave* pStrSave);
-
-   // GROUP: ACCESS
-   // GROUP: INQUIRY
-
-#if defined _DEBUG
-   void AssertValid();
-#endif
-
-protected:
-   // GROUP: DATA MEMBERS
-   // GROUP: LIFECYCLE
-   // GROUP: OPERATORS
-   // GROUP: OPERATIONS
-   //------------------------------------------------------------------------
-   void MakeCopy(const CPGStableLongitudinalRebarData& rOther);
-
-   //------------------------------------------------------------------------
-   void MakeAssignment(const CPGStableLongitudinalRebarData& rOther);
-
-   // GROUP: ACCESS
-   // GROUP: INQUIRY
-
-private:
-   // GROUP: DATA MEMBERS
-   // GROUP: LIFECYCLE
-   // GROUP: OPERATORS
-   // GROUP: OPERATIONS
-   // GROUP: ACCESS
-   // GROUP: INQUIRY
 };
-
-// INLINE METHODS
-//
-
-// EXTERNAL REFERENCES
-//
-

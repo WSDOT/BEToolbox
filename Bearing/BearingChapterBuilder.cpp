@@ -26,14 +26,6 @@
 #include <EngTools\BearingReporter.h>
 #include <EngTools\BearingDesignCriteria.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-//////////////////////////////////
 CBearingChapterBuilder::CBearingChapterBuilder(CBearingDoc* pDoc)
 {
    m_pDoc = pDoc;
@@ -77,9 +69,4 @@ rptChapter* CBearingChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
 	BrgReporter->BuildSpecCheckChapter(pDispUnits, pChapter, pPara, brg, brg_loads, brg_calc, spec, brg_criteria);
 
 	return pChapter;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CBearingChapterBuilder::Clone() const
-{
-   return std::make_unique<CBearingChapterBuilder>(m_pDoc);
 }

@@ -31,13 +31,6 @@
 #include <LibraryFw/Library.h>
 
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CBearingDialogBar
 
 IMPLEMENT_DYNAMIC(CBearingDialogBar, CDialogBar)
@@ -89,7 +82,7 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   int i = (pApp->GetUnitsMode() == eafTypes::umUS ? 0 : 1);
+   int i = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? 0 : 1);
    DDX_Radio(pDX, IDC_US, i);
    DDX_Radio(pDX, IDC_METHOD_A, m_method);
    CComboBox* pcbSpecification = (CComboBox*)GetDlgItem(IDC_SPECIFICATION2);

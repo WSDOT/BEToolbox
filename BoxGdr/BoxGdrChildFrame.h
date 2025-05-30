@@ -31,7 +31,7 @@ class CBoxGdrChildFrame :
 public:
 	DECLARE_DYNCREATE(CBoxGdrChildFrame)
 
-   void SetUnitsMode(eafTypes::UnitMode um);
+   void SetUnitsMode(WBFL::EAF::UnitMode um);
    void UpdateUnitsDisplayMode();
 
    void UpdateData(BOOL bUpdate);

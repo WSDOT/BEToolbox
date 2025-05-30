@@ -22,12 +22,13 @@
 
 // PGStableExporter.cpp : Implementation of CPGStableExporter
 #include "stdafx.h"
-#include "..\BEToolbox_i.h"
+#include "..\resource.h"
 
 #include "PGStableExporter.h"
 #include "PGStableDoc.h"
+#include "PGStableModel.h"
 
-#include <EAF\EAFAutoProgress.h>
+#include <EAF/AutoProgress.h>
 #include <EAF\EAFDocument.h>
 
 #include <IFace\Intervals.h>
@@ -39,55 +40,41 @@
 #include <IFace\DocumentType.h>
 #include <IFace\Selection.h>
 #include <IFace\BeamFactory.h>
-
-#include <WBFLCore.h>
+#include <IFace/PointOfInterest.h>
 
 #include <PgsExt\Prompts.h>
-#include <PgsExt\SplicedGirderData.h>
-#include <PgsExt\PrecastSegmentData.h>
-#include <PgsExt\GirderLabel.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#include <PsgLib\SplicedGirderData.h>
+#include <PsgLib\PrecastSegmentData.h>
+#include <PsgLib\GirderLabel.h>
 
 
-HRESULT CPGStableExporter::FinalConstruct()
+CPGStableExporter::CPGStableExporter()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    VERIFY(m_Bitmap.LoadBitmap(IDB_PGSTABLE));
-   return S_OK;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CCurvelExporter
-
-STDMETHODIMP CPGStableExporter::Init(UINT nCmdID)
+HRESULT CPGStableExporter::Init(UINT nCmdID)
 {
    return S_OK;
 }
 
-STDMETHODIMP CPGStableExporter::GetMenuText(BSTR*  bstrText) const
+CString CPGStableExporter::GetMenuText() const
 {
-   *bstrText = CComBSTR("BEToolbox:PGStable model");
-   return S_OK;
+   return CString("BEToolbox:PGStable model");
 }
 
-STDMETHODIMP CPGStableExporter::GetBitmapHandle(HBITMAP* phBmp) const
+HBITMAP CPGStableExporter::GetBitmapHandle() const
 {
-   *phBmp = m_Bitmap;
-   return S_OK;
+   return m_Bitmap;
 }
 
-STDMETHODIMP CPGStableExporter::GetCommandHintText(BSTR*  bstrText) const
+CString CPGStableExporter::GetCommandHintText() const
 {
-   *bstrText = CComBSTR("Export BEToolbox:PGStable model\nTool tip text");
-   return S_OK;   
+   return CString("Export BEToolbox:PGStable model\nTool tip text");
 }
 
-STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
+HRESULT CPGStableExporter::Export(std::shared_ptr<WBFL::EAF::Broker> pBroker)
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -190,11 +177,10 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
 
       const GirderLibraryEntry* pGirderEntry = pBridgeDesc->GetGirder(segmentKey)->GetGirderLibraryEntry();
 
-      CComPtr<IBeamFactory> factory;
-      pGirderEntry->GetBeamFactory(&factory);
+      auto factory = pGirderEntry->GetBeamFactory();
 
-      CComQIPtr<ISplicedBeamFactory> splicedFactory(factory); // using only PGSuper prismatic beams... want splicedFactory to be nullptr
-      if ( splicedFactory == nullptr && factory->IsPrismatic(segmentKey) )
+      auto splicedBeamFactory = std::dynamic_pointer_cast<PGS::Beams::SplicedBeamFactory>(factory); // using only PGSuper prismatic beams... want splicedFactory to be nullptr
+      if ( splicedBeamFactory == nullptr && factory->IsPrismatic(segmentKey) )
       {
          strGirder = pBridgeDesc->GetGirder(segmentKey)->GetGirderName();
       }
@@ -216,7 +202,7 @@ STDMETHODIMP CPGStableExporter::Export(IBroker* pBroker)
    return S_OK;
 }
 
-bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segmentKey,CPGStableModel& model)
+bool CPGStableExporter::ConfigureModel(std::shared_ptr<WBFL::EAF::Broker> pBroker,const CSegmentKey& segmentKey,CPGStableModel& model)
 {
    GET_IFACE2(pBroker, ISegmentTendonGeometry, pSegmentTendonGeometry);
    DuctIndexType nSegmentDucts = pSegmentTendonGeometry->GetDuctCount(segmentKey);
@@ -228,8 +214,8 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       }
    }
 
-   GET_IFACE2(pBroker,IProgress,pProgress);
-   CEAFAutoProgress ap(pProgress);
+   GET_IFACE2(pBroker,IEAFProgress,pProgress);
+   WBFL::EAF::AutoProgress ap(pProgress);
    pProgress->UpdateMessage(_T("Exporting PGStable model"));
 
    GET_IFACE2(pBroker,IIntervals,pIntervals);
@@ -302,14 +288,14 @@ bool CPGStableExporter::ConfigureModel(IBroker* pBroker,const CSegmentKey& segme
       Float64 Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   liftingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
       Float64 Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,liftingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
 
-      liftingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
+      liftingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP_STRANDS,Ph,Xh,Yh,TOP_STRANDS,Pt,Xt,Yt,TOP_STRANDS));
 
       Ps = pPSForce->GetPrestressForce(poi,pgsTypes::Straight, haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
       Ph = pPSForce->GetPrestressForce(poi,pgsTypes::Harped,   haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
       Pt = pPSForce->GetPrestressForce(poi,pgsTypes::Temporary,haulingIntervalIdx,pgsTypes::Start, pgsTypes::TransferLengthType::Minimum);
 
-      haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP,Ph,Xh,Yh,TOP,Pt,Xt,Yt,TOP));
-      oneEndSeatedStrands.m_vFpe.insert(CPGStableFpe(X, Ps, Xs, Ys, TOP, Ph, Xh, Yh, TOP, Pt, Xt, Yt, TOP));
+      haulingStrands.m_vFpe.insert(CPGStableFpe(X,Ps,Xs,Ys,TOP_STRANDS,Ph,Xh,Yh,TOP_STRANDS,Pt,Xt,Yt,TOP_STRANDS));
+      oneEndSeatedStrands.m_vFpe.insert(CPGStableFpe(X, Ps, Xs, Ys, TOP_STRANDS, Ph, Xh, Yh, TOP_STRANDS, Pt, Xt, Yt, TOP_STRANDS));
    }
 
    model.SetStrands(model.GetGirderType(),ModelType::Lifting,liftingStrands);

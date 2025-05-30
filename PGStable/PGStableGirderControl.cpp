@@ -31,13 +31,6 @@
 #define SEGMENT_FILL_COLOR   GREY70
 
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CPGStableGirderControl
 
 IMPLEMENT_DYNAMIC(CPGStableGirderControl, CWnd)

@@ -30,12 +30,6 @@
 #include <EAF\EAFApp.h>
 #include <CoordGeom/Station.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //GRID_IMPLEMENT_REGISTER(CCurvelStationRangeGrid, CS_DBLCLKS, 0, 0, 0);
 
 /////////////////////////////////////////////////////////////////////////////
@@ -240,11 +234,11 @@ BOOL CCurvelStationRangeGrid::OnValidateCell(ROWCOL nRow, ROWCOL nCol)
       try
       {
          std::_tstring strStation(s);
-         WBFL::COGO::Station station(strStation, pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::StationFormats::US : WBFL::Units::StationFormats::SI);
+         WBFL::COGO::Station station(strStation, pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? WBFL::Units::StationFormats::US : WBFL::Units::StationFormats::SI);
       }
       catch(...)
       {
-         if ( pApp->GetUnitsMode() == eafTypes::umUS )
+         if ( pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US )
             SetWarningText(_T("Invalid station value. Enter the station in the following format: xx+yy.zz"));
          else
             SetWarningText(_T("Invalid station value. Enter the station in the following format: xx+yyy.zz"));

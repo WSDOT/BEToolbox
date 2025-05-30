@@ -22,32 +22,20 @@
 
 #pragma once
 
+#include <EAF\ComponentObject.h>
 #include "BEToolboxTool.h"
 
-template<class C,const CLSID* pclsid,int RID,class Doc,class Frame, class View,class Template, int ID>
-class ATL_NO_VTABLE CToolImpl : 
-   public CComObjectRootEx<CComSingleThreadModel>,
-   public CComCoClass<C, pclsid>,
+template<class Doc,class Frame, class View,class Template, int ID>
+class CToolImpl : public WBFL::EAF::ComponentObject,
    public IBEToolboxTool
 {
-public:
-   HRESULT FinalConstruct() { return S_OK; }
-   void FinalRelease() {}
-
-public:
-   DECLARE_REGISTRY_RESOURCEID(RID)
-   DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-   BEGIN_COM_MAP(C)
-      COM_INTERFACE_ENTRY(IBEToolboxTool)
-   END_COM_MAP()
-
    // IBEToolboxTool
 public:
    virtual BOOL Init(CEAFApp* pParent) override
    {  return TRUE; }
+
    virtual void Terminate() override {}
-   //virtual CString GetName() const override { return pstrName; }
+
    virtual CEAFDocTemplate* CreateDocumentTemplate() const override 
    { 
       AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -63,4 +51,3 @@ public:
       return pTemplate.release();
    }
 };
-

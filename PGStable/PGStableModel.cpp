@@ -27,13 +27,6 @@
 #include "PGStableModel.h"
 #include <EAF\EAFApp.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CPGStableModel::CPGStableModel()
 {
    m_GirderType = GirderType::Prismatic;
@@ -700,8 +693,8 @@ void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStran
    Float64 XpsHarped = Xleft + pStrands->ex;
    Float64 XpsTemp = Xleft + pStrands->ex;
 
-   Float64 YpsStraight = (pStrands->YsMeasure == TOP ? -pStrands->Ys : pStrands->Ys - Hg);
-   Float64 YpsTemp = (pStrands->YtMeasure == TOP ? -pStrands->Yt : pStrands->Yt - Hg);
+   Float64 YpsStraight = (pStrands->YsMeasure == TOP_STRANDS ? -pStrands->Ys : pStrands->Ys - Hg);
+   Float64 YpsTemp = (pStrands->YtMeasure == TOP_STRANDS ? -pStrands->Yt : pStrands->Yt - Hg);
    Float64 Xh1,Yh1,Xh2,Yh2,Xh3,Yh3,Xh4,Yh4;
    if ( pStrands->Xh1Measure == FRACTION )
    {
@@ -713,7 +706,7 @@ void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStran
    }
 
    pGirder->GetSectionProperties(Xh1,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
-   if ( pStrands->Yh1Measure == TOP )
+   if ( pStrands->Yh1Measure == TOP_STRANDS)
    {
       Yh1 = -pStrands->Yh1;
    }
@@ -732,7 +725,7 @@ void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStran
    }
 
    pGirder->GetSectionProperties(Xh2,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
-   if ( pStrands->Yh2Measure == TOP )
+   if ( pStrands->Yh2Measure == TOP_STRANDS)
    {
       Yh2 = -pStrands->Yh2;
    }
@@ -751,7 +744,7 @@ void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStran
    }
 
    pGirder->GetSectionProperties(Xh3,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
-   if ( pStrands->Yh3Measure == TOP )
+   if ( pStrands->Yh3Measure == TOP_STRANDS)
    {
       Yh3 = -pStrands->Yh3;
    }
@@ -770,7 +763,7 @@ void CPGStableModel::GetSimplifiedStrandLocations(const CPGStableStrands* pStran
    }
 
    pGirder->GetSectionProperties(Xh4,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
-   if ( pStrands->Yh4Measure == TOP )
+   if ( pStrands->Yh4Measure == TOP_STRANDS)
    {
       Yh4 = -pStrands->Yh4;
    }
@@ -1213,7 +1206,7 @@ void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const WBFL::Stab
    Float64 Ag,Ixx,Iyy,Ixy,Xleft,Ytop,Hg,Wtf,Wbf;
    pGirder->GetSectionProperties(fpe.X,&Ag,&Ixx,&Iyy,&Ixy,&Xleft,&Ytop,&Hg,&Wtf,&Wbf);
 
-   if ( fpe.YpsStraightMeasure == TOP )
+   if ( fpe.YpsStraightMeasure == TOP_STRANDS)
    {
       *pYs = -fpe.YpsStraight;
    }
@@ -1223,7 +1216,7 @@ void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const WBFL::Stab
    }
    *pXs = fpe.XpsStraight;
 
-   if ( fpe.YpsHarpedMeasure == TOP )
+   if ( fpe.YpsHarpedMeasure == TOP_STRANDS)
    {
       *pYh = -fpe.YpsHarped;
    }
@@ -1233,7 +1226,7 @@ void CPGStableModel::GetStrandLocations(const CPGStableFpe& fpe,const WBFL::Stab
    }
    *pXh = fpe.XpsHarped;
 
-   if ( fpe.YpsTempMeasure == TOP )
+   if ( fpe.YpsTempMeasure == TOP_STRANDS)
    {
       *pYt = -fpe.YpsTemp;
    }
@@ -1272,7 +1265,7 @@ HRESULT CPGStableModel::Save(IStructuredSave* pStrSave)
       return hr;
 
    CEAFApp* pApp = EAFGetApp();
-   hr = pStrSave->put_Property(_T("Units"),CComVariant(pApp->GetUnitsMode()));
+   hr = pStrSave->put_Property(_T("Units"),CComVariant(+pApp->GetUnitsMode()));
 
    pStrSave->put_Property(_T("GirderType"),CComVariant(m_GirderType));
    pStrSave->put_Property(_T("StressPointType"), CComVariant(m_StressPointType)); // added in version 2
@@ -1658,7 +1651,7 @@ HRESULT CPGStableModel::Load(IStructuredLoad* pStrLoad)
       var.vt = VT_I4;
       hr = pStrLoad->get_Property(_T("Units"),&var);
       CEAFApp* pApp = EAFGetApp();
-      pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
+      pApp->SetUnitsMode(WBFL::EAF::UnitMode(var.lVal));
 
       var.vt = VT_I4;
       hr = pStrLoad->get_Property(_T("GirderType"),&var);

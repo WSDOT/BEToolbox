@@ -24,14 +24,7 @@
 #include "GirCompChapterBuilder.h"
 #include <Reporter\Reporter.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
-
-//////////////////////////////////
 CGirCompChapterBuilder::CGirCompChapterBuilder(CGirCompDoc* pDoc) :
 m_Length(WBFL::Units::Measure::Inch,0.001,6,2),
 m_Area(WBFL::Units::Measure::Feet2,0.001,6,2),
@@ -78,10 +71,10 @@ rptChapter* CGirCompChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   m_Length.UnitOfMeasure          = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch  : WBFL::Units::Measure::Millimeter);
-   m_Area.UnitOfMeasure            = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch2 : WBFL::Units::Measure::Millimeter2);
-   m_SectionModulus.UnitOfMeasure  = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch3 : WBFL::Units::Measure::Millimeter3);
-   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Inch4 : WBFL::Units::Measure::Millimeter4);
+   m_Length.UnitOfMeasure          = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? WBFL::Units::Measure::Inch  : WBFL::Units::Measure::Millimeter);
+   m_Area.UnitOfMeasure            = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? WBFL::Units::Measure::Inch2 : WBFL::Units::Measure::Millimeter2);
+   m_SectionModulus.UnitOfMeasure  = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? WBFL::Units::Measure::Inch3 : WBFL::Units::Measure::Millimeter3);
+   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? WBFL::Units::Measure::Inch4 : WBFL::Units::Measure::Millimeter4);
 
 
    IndexType nProblems = m_pDoc->GetProblemCount();
@@ -117,11 +110,6 @@ rptChapter* CGirCompChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
    }
 
    return pChapter;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CGirCompChapterBuilder::Clone() const
-{
-   return std::make_unique<CGirCompChapterBuilder>(m_pDoc);
 }
 
 void CGirCompChapterBuilder::ReportRolledSectionProperties(rptChapter* pChapter,IndexType idx,const GIRCOMPDIMENSIONS& dimensions) const

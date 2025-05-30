@@ -55,7 +55,7 @@
 #include <MFCTools\MFCTools.h>
 #include <Units\Units.h>
 #include <EAF\EAFUtilities.h>
-#include <EAF\EAFHelp.h>
+#include <EAF\Help.h>
 #include <EAF\EAFResources.h>
 #include <EAF\EAFHints.h>
 #include <EAF\EAFCustSiteVars.h>
@@ -79,7 +79,7 @@
 #include <IFace\Tools.h>
 
 #include <PGSuperTypes.h>
-#include <PgsExt\LongitudinalRebarData.h>
+#include <PsgLib\LongitudinalRebarData.h>
 
 #include <Units\Units.h>
 #include <Stability\Stability.h>
