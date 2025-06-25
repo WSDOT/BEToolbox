@@ -88,7 +88,7 @@ rptChapter* CBearingTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Re
 
    //*pPara << rptRcImage(std::_tstring(rptStyleManager::GetImagePath()) + _T("Bearing.PNG"));
 
-   //(*pPara) << rptNewPage;
+   (*pPara) << rptNewPage;
  
    return pTitlePage;
 }
