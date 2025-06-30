@@ -220,6 +220,7 @@ void CBearingDialogBar::SetBearing(
     brg_loads.SetCyclicRotation(m_rot_cy);
     brg_loads.SetFixedTranslationX(m_fixed_x);
     brg_loads.SetFixedTranslationY(m_fixed_y);
+    brg_criteria.SetBearing(brg, brg_loads);
 }
 
 #if defined _DEBUG
