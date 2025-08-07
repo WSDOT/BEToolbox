@@ -74,11 +74,11 @@ HRESULT CGenCompExporter::Export(std::shared_ptr<WBFL::EAF::Broker> pBroker)
    CSelection selection = pSelection->GetSelection();
    if (selection.Type == CSelection::Girder )
    {
-      poi = pgsPointOfInterest(CSegmentKey(selection.GroupIdx,selection.GirderIdx,0),0.0);
+      poi = pgsPointOfInterest(CSegmentKey(selection.GroupIdx == INVALID_INDEX ? 0 : selection.GroupIdx,selection.GirderIdx,0),0.0);
    }
    else if ( selection.Type == CSelection::Segment )
    {
-      poi = pgsPointOfInterest(CSegmentKey(selection.GroupIdx,selection.GirderIdx,selection.SegmentIdx),0.0);
+      poi = pgsPointOfInterest(CSegmentKey(selection.GroupIdx == INVALID_INDEX ? 0 : selection.GroupIdx,selection.GirderIdx,selection.SegmentIdx),0.0);
    }
    else
    {
