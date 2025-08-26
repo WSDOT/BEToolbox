@@ -74,32 +74,17 @@ BEGIN_MESSAGE_MAP(CBearingDoc, CBEToolboxDoc)
 END_MESSAGE_MAP()
 
 
-void CBearingDoc::SetSpecification(WBFL::LRFD::BDSManager::Edition specification)
-{
-    if (m_specification != specification)
-    {
-        m_specification = specification;
-        UpdateAllViews(nullptr);
-        SetModifiedFlag();
-    }
-}
-
-
-const WBFL::LRFD::BDSManager::Edition& CBearingDoc::GetSpecification() const
-{
-    return m_specification;
-}
-
 const WBFL::EngTools::BearingDesignCriteria& CBearingDoc::GetBearingDesignCriteria() const
 {
     return m_criteria;
 }
 
-void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads, const BearingCalculator& brg_calc)
+void CBearingDoc::SetBearing(const Bearing& brg, const BearingLoads& brg_loads, 
+    const BearingDesignCriteria& brg_criteria)
 {
 	m_bearing = brg;
 	m_bearing_loads = brg_loads;
-    m_bearing_calculator = brg_calc;
+    m_criteria = brg_criteria;
 	UpdateAllViews(NULL);
 }
 
@@ -113,12 +98,6 @@ const Bearing& CBearingDoc::GetBearing() const
 const BearingLoads& CBearingDoc::GetBearingLoads() const
 {
     return m_bearing_loads;
-}
-
-
-const BearingCalculator& CBearingDoc::GetBearingCalculator() const
-{
-    return m_bearing_calculator;
 }
 
 
@@ -151,9 +130,9 @@ BOOL CBearingDoc::Init()
 
    // initialize with some defaults
 
-   SetSpecification(WBFL::LRFD::BDSManager::Edition::LastEdition);
+   m_criteria.SetSpecification(WBFL::LRFD::BDSManager::GetLatestEdition());
 
-   m_bearing_calculator.SetAnalysisMethod(BearingCalculator::AnalysisMethod::MethodA);
+   m_criteria.AnalysisMethod = BearingAnalysisMethod::MethodA;
 
    m_bearing.SetLength(WBFL::Units::ConvertToSysUnits(11.0, WBFL::Units::Measure::Inch));
    m_bearing.SetWidth(WBFL::Units::ConvertToSysUnits(27.0, WBFL::Units::Measure::Inch));
@@ -196,7 +175,7 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
 
    CEAFApp* pApp = EAFGetApp();
 
-   BearingCalculator::AnalysisMethod m_method = m_bearing_calculator.GetAnalysisMethod();
+   BearingAnalysisMethod m_method = m_criteria.AnalysisMethod;
    bool fixed_translation_x = m_bearing_loads.GetFixedTranslationX();
    bool fixed_translation_y = m_bearing_loads.GetFixedTranslationY();
    Float64 length = m_bearing.GetLength();
@@ -224,7 +203,7 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
    bool use_external_plates = m_bearing.UseExternalPlates();
 
    // added in version 1.2
-   WBFL::LRFD::BDSManager::Edition specification = GetSpecification();
+   WBFL::LRFD::BDSManager::Edition specification = m_criteria.GetSpecification();
 
 
    hr = pStrSave->put_Property(_T("Specification"), CComVariant((int)specification));
@@ -363,7 +342,7 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
        hr = pStrLoad->get_Property(_T("Specification"), &var);
        if (FAILED(hr))
            return hr;
-       m_specification = (WBFL::LRFD::BDSManager::Edition)(var.lVal);
+       m_criteria.SetSpecification((WBFL::LRFD::BDSManager::Edition)var.lVal);
    }
 
    var.vt = VT_I4;
@@ -377,7 +356,7 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
        hr = pStrLoad->get_Property(_T("Analysis_Method"), &var);
        if (FAILED(hr))
            return hr;
-       m_bearing_calculator.SetAnalysisMethod((BearingCalculator::AnalysisMethod)var.lVal);
+       m_criteria.AnalysisMethod = (BearingAnalysisMethod)var.lVal;
 
    }
    else
@@ -385,7 +364,7 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
        hr = pStrLoad->get_Property(_T("Analysis_Method_A"), &var);
        if (FAILED(hr))
            return hr;
-       m_bearing_calculator.SetAnalysisMethod((BearingCalculator::AnalysisMethod)var.lVal);
+       m_criteria.AnalysisMethod = (BearingAnalysisMethod)var.lVal;
    }
 
    hr = pStrLoad->get_Property(_T("Fixed_X_Translation"), &var);

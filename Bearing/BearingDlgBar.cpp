@@ -96,7 +96,8 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
    else
    {
        CBearingDoc* pDoc = (CBearingDoc*)((CFrameWnd*)GetParent())->GetActiveDocument();
-       m_specification = static_cast<WBFL::LRFD::BDSManager::Edition>(pDoc->GetSpecification());
+       const auto& criteria = pDoc->GetBearingDesignCriteria();
+       m_specification = static_cast<WBFL::LRFD::BDSManager::Edition>(criteria.GetSpecification());
        int defaultIdx = static_cast<int>(m_specification) - static_cast<int>(WBFL::LRFD::BDSManager::Edition::FourthEditionWith2009Interims);
        pcbSpecification->SetCurSel(defaultIdx);
    }
@@ -156,16 +157,18 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
 void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
     const WBFL::EngTools::Bearing& brg, 
     const WBFL::EngTools::BearingLoads& brg_loads,
-    const WBFL::EngTools::BearingCalculator& brg_calc)
+    const WBFL::EngTools::BearingDesignCriteria& brg_criteria)
 {
 
 
-    dlgBar.m_method = (brg_calc.GetAnalysisMethod()==WBFL::EngTools::BearingCalculator::AnalysisMethod::MethodA? 0:1);
+    dlgBar.m_method = (brg_criteria.AnalysisMethod==WBFL::EngTools::BearingAnalysisMethod::MethodA? 0:1);
 
 
     CBearingDoc* pDoc = (CBearingDoc*)((CFrameWnd*)GetParent())->GetActiveDocument();
 
-    dlgBar.m_specification = pDoc->GetSpecification();
+    const auto& criteria = pDoc->GetBearingDesignCriteria();
+
+    dlgBar.m_specification = criteria.GetSpecification();
     dlgBar.m_length = brg.GetLength();
     dlgBar.m_width = brg.GetWidth();
     dlgBar.m_cover = brg.GetCoverThickness();
@@ -191,16 +194,12 @@ void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
 void CBearingDialogBar::SetBearing(
     WBFL::EngTools::Bearing& brg,
     WBFL::EngTools::BearingLoads& brg_loads,
-    WBFL::EngTools::BearingCalculator& brg_calc)
+    WBFL::EngTools::BearingDesignCriteria& brg_criteria)
 {
     CBearingDoc* pDoc = (CBearingDoc*)((CFrameWnd*)GetParent())->GetActiveDocument();
-    pDoc->SetSpecification(m_specification);
-    brg_calc.SetSpecification(m_specification);
 
-    const WBFL::EngTools::BearingDesignCriteria criteria;
-    brg_calc.SetDesignCriteria(criteria);
-
-    brg_calc.SetAnalysisMethod(static_cast<WBFL::EngTools::BearingCalculator::AnalysisMethod>(m_method));
+    brg_criteria.SetSpecification(m_specification);
+    brg_criteria.AnalysisMethod = static_cast<WBFL::EngTools::BearingAnalysisMethod>(m_method);
     brg.SetLength(m_length);
     brg.SetWidth(m_width);
     brg.SetShearModulusMinimum(m_Gmin);
@@ -221,6 +220,7 @@ void CBearingDialogBar::SetBearing(
     brg_loads.SetCyclicRotation(m_rot_cy);
     brg_loads.SetFixedTranslationX(m_fixed_x);
     brg_loads.SetFixedTranslationY(m_fixed_y);
+    brg_criteria.SetBearing(brg, brg_loads);
 }
 
 #if defined _DEBUG

@@ -34,7 +34,7 @@ public:
 
 	void SetBearingParameters(const WBFL::EngTools::Bearing&,
 		const WBFL::EngTools::BearingLoads&,
-		const WBFL::EngTools::BearingCalculator&);
+		const WBFL::EngTools::BearingDesignCriteria&);
 
 	afx_msg void MethodAControls(int);
 	afx_msg void MethodBControls(int);
