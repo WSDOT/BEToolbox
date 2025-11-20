@@ -130,7 +130,7 @@ void ReportBearingProperties(rptChapter* pChapter,rptParagraph* pPara,
 	*pPara << color(Blue);
 	*pPara << _T("Summary:") << rptNewLine;
 	*pPara << _T("Dimensions: ") << length.SetValue(w) << _T(" ") << symbol(TIMES) << length.SetValue(l);
-	*pPara << _T(" ") << symbol(TIMES) << length.SetValue(total_elastomer_thickness);
+	*pPara << _T(" ") << symbol(TIMES) << length.SetValue(total_elastomer_thickness + tshim * (n + 1));
 	*pPara << color(Blue) << rptNewLine;
 	*pPara << _T("Approx. Weight = ");
 	if (pDispUnits->Name == _T("English"))
@@ -336,7 +336,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 		*pPara << color(Red);
 		if (!t_min_shim_absolute_check)
 		{
-			*pPara << _T("Steel shim thickness is less than required for fabrication.") << rptNewLine;
+			*pPara << _T("Steel shim thickness is less than the minimum limit per Article 4.5, AASHTO M 251.") << rptNewLine;
 		}
 		if (!t_min_shim_service_check)
 		{
@@ -438,7 +438,7 @@ void ReportBearingSpecificationCheckA(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	*pPara << Sub2(_T("h"), _T("s,fab")) << _T(" = ") << length.SetValue(t_min_shim_absolute) << _T(" (Article 4.5, AASHTO M 251)") << rptNewLine;
+	*pPara << Sub2(_T("h"), _T("s,minimum")) << _T(" = ") << length.SetValue(t_min_shim_absolute) << _T(" (Article 4.5, AASHTO M 251)") << rptNewLine;
 	if (t_min_shim_absolute_check)
 	{
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tshim) << _T(" > ") << length.SetValue(t_min_shim_absolute);
@@ -991,14 +991,14 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	if (!t_min_shim_absolute_check || !t_min_shim_service_check || !t_min_shim_fatigue_check || !s_max_check || !n_min_shear_def_check
-		|| !shear_def_check || !static_axial_X_ss_check || !static_axial_Y_ss_check || !ss_X_combo_sum_check || (check_app_TL_stab_X && !stab_X_dir_check) 
+	if (!t_min_shim_absolute_check || !t_min_shim_service_check || !t_min_shim_fatigue_check || !s_max_check
+		|| !shear_def_check || !static_axial_X_ss_check || !static_axial_Y_ss_check || !ss_X_combo_sum_check || !ss_Y_combo_sum_check  || (check_app_TL_stab_X && !stab_X_dir_check)
 		|| (check_app_TL_stab_Y && !stab_Y_dir_check) || !use_ext_plates && !rest_system_req_check || (use_ext_plates && !hydrostatic_check) || (!use_ext_plates && !horiz_force_check))
 	{
 		*pPara << color(Red);
 		if (!t_min_shim_absolute_check)
 		{
-			*pPara << _T("Steel shim thickness is less than required for fabrication.") << rptNewLine;
+			*pPara << _T("Steel shim thickness is less than the minimum limit per Article 4.5, AASHTO M 251.") << rptNewLine;
 		}
 		if (!t_min_shim_service_check)
 		{
@@ -1011,10 +1011,6 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		if (!s_max_check)
 		{
 			*pPara << _T("Bearing exceeds the maximum shape factor.") << rptNewLine;
-		}
-		if (!n_min_shear_def_check)
-		{
-			*pPara << _T("Number of elastomer layers is not sufficient to accommodate shear deformation.") << rptNewLine;
 		}
 		if (!shear_def_check)
 		{
@@ -1030,11 +1026,11 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 		}
 		if (!ss_X_combo_sum_check)
 		{
-			*pPara << _T("Elastomer is not sufficient to accommodate shear strain in the primary direction (longitudinal to the bridge) due to axial service loads.") << rptNewLine;
+			*pPara << _T("Elastomer is not sufficient to accommodate shear strain in the primary direction (longitudinal to the bridge) due to combined service loads.") << rptNewLine;
 		}
 		if (!ss_Y_combo_sum_check)
 		{
-			*pPara << _T("Elastomer is not sufficient to accommodate shear strain in the secondary direction (transverse to the bridge) due to axial service loads.") << rptNewLine;
+			*pPara << _T("Elastomer is not sufficient to accommodate shear strain in the secondary direction (transverse to the bridge) due to combined service loads.") << rptNewLine;
 		}
 		if (check_app_TL_stab_X && !stab_X_dir_check)
 		{
@@ -1096,7 +1092,7 @@ void ReportBearingSpecificationCheckB(rptChapter* pChapter, rptParagraph* pPara,
 	pPara = new rptParagraph;
 	(*pChapter) << pPara;
 
-	*pPara << Sub2(_T("h"), _T("s,fab")) << _T(" = ") << length.SetValue(t_min_shim_absolute) << _T(" (Article 4.5, AASHTO M 251)") << rptNewLine;
+	*pPara << Sub2(_T("h"), _T("s,minimum")) << _T(" = ") << length.SetValue(t_min_shim_absolute) << _T(" (Article 4.5, AASHTO M 251)") << rptNewLine;
 	if (t_min_shim_absolute_check)
 	{
 		*pPara << symbol(RIGHT_SINGLE_ARROW) << length.SetValue(tshim) << (tshim==t_min_shim_absolute?_T(" = ") : _T(" > ")) << length.SetValue(t_min_shim_absolute);
