@@ -141,11 +141,25 @@ HRESULT CGenCompExporter::Export(std::shared_ptr<WBFL::EAF::Broker> pBroker)
 
          if (1 < nShapes)
          {
-            CComPtr<IShape> secondaryShape;
-            item.Release();
-            compShape->get_Item(1, &item);
-            item->get_Shape(&secondaryShape);
-            secondaryShape->get_PolyPoints(&secondaryShapePoints);
+             for (IndexType i = 1; i < nShapes; i++)
+             {
+                 CComPtr<IShape> secondaryShape;
+                 item.Release();
+                 compShape->get_Item(i, &item);
+                 item->get_Shape(&secondaryShape);
+                 CComPtr<IPoint2dCollection> sShapePoints;
+                 secondaryShape->get_PolyPoints(&sShapePoints);
+                 IndexType nPtCount = 0;
+                 sShapePoints->get_Count(&nPtCount);
+                 if (nPtCount == 4) // must be a deck shape
+                 {
+                     secondaryShapePoints = sShapePoints;
+                 }
+                 else
+                 {
+                     //TO DO: deal with shapes for steel components
+                 }
+             }
          }
       }
       else
