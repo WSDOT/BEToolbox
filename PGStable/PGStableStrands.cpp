@@ -26,13 +26,6 @@
 #include "stdafx.h"
 #include "PGStableStrands.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CPGStableFpe::CPGStableFpe()
 {
    memset((void*)this,0,sizeof(CPGStableFpe));
@@ -80,34 +73,34 @@ CPGStableStrands::CPGStableStrands()
    XferLength = WBFL::Units::ConvertToSysUnits(36.0,WBFL::Units::Measure::Inch);
 
    Ys = WBFL::Units::ConvertToSysUnits(3.0,WBFL::Units::Measure::Inch);
-   YsMeasure = BOTTOM;
+   YsMeasure = BOTTOM_STRANDS;
 
    Yt = WBFL::Units::ConvertToSysUnits(2.0,WBFL::Units::Measure::Inch);
-   YtMeasure = TOP;
+   YtMeasure = TOP_STRANDS;
 
    Xh1 = 0.0;
    Xh1Measure = FRACTION;
 
    Yh1 = WBFL::Units::ConvertToSysUnits(4.0,WBFL::Units::Measure::Inch);
-   Yh1Measure = TOP;
+   Yh1Measure = TOP_STRANDS;
 
    Xh2 = 0.4;
    Xh2Measure = FRACTION;
    
    Yh2 = WBFL::Units::ConvertToSysUnits(5.0,WBFL::Units::Measure::Inch);
-   Yh2Measure = BOTTOM;
+   Yh2Measure = BOTTOM_STRANDS;
 
    Xh3 = 0.6;
    Xh3Measure = FRACTION;
    
    Yh3 = WBFL::Units::ConvertToSysUnits(5.0,WBFL::Units::Measure::Inch);
-   Yh3Measure = BOTTOM;
+   Yh3Measure = BOTTOM_STRANDS;
 
    Xh4 = 1.0;
    Xh4Measure = FRACTION;
 
    Yh4 = WBFL::Units::ConvertToSysUnits(4.0,WBFL::Units::Measure::Inch);
-   Yh4Measure = TOP;
+   Yh4Measure = TOP_STRANDS;
 
    FpeStraight = 0;
    FpeHarped   = 0;

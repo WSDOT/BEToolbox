@@ -37,13 +37,6 @@
 #include <GeomModel/CompositeShape.h>
 #include <GeomModel/Polygon.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CBoxGdrDoc
 
 IMPLEMENT_DYNCREATE(CBoxGdrDoc, CBEToolboxDoc)
@@ -122,7 +115,7 @@ BOOL CBoxGdrDoc::Init()
 
 void CBoxGdrDoc::OnCloseDocument()
 {
-   EAFGetApp()->SetUnitsMode(eafTypes::umUS);
+   EAFGetApp()->SetUnitsMode(WBFL::EAF::UnitMode::US);
 
    CBEToolboxDoc::OnCloseDocument();
 }
@@ -135,7 +128,7 @@ HRESULT CBoxGdrDoc::WriteTheDocument(IStructuredSave* pStrSave)
 
    CEAFApp* pApp = EAFGetApp();
 
-   hr = pStrSave->put_Property(_T("Units"),CComVariant(pApp->GetUnitsMode()));
+   hr = pStrSave->put_Property(_T("Units"),CComVariant(+pApp->GetUnitsMode()));
    if ( FAILED(hr) )
       return hr;
 
@@ -246,7 +239,7 @@ HRESULT CBoxGdrDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    if ( FAILED(hr) )
       return hr;
 
-   pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
+   pApp->SetUnitsMode(WBFL::EAF::UnitMode(var.lVal));
 
    var.vt = VT_INDEX;
    hr = pStrLoad->get_Property(_T("ProblemCount"),&var);

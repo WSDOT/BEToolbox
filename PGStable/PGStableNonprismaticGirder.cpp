@@ -31,14 +31,6 @@
 #include "PGStableGirderControl.h"
 #include <MFCTools\MFCTools.h>
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 void DDX_GirderSectionGrid(CDataExchange* pDX,CPGStableGirderSectionGrid* pGrid,WBFL::Stability::Girder& girder)
 {
    if ( pDX->m_bSaveAndValidate )
@@ -358,9 +350,9 @@ void CPGStableNonprismaticGirder::FillComboBoxes(INT xIDC,INT yIDC)
 
    CComboBox* pY = (CComboBox*)GetDlgItem(yIDC);
    int idx = pY->AddString(_T("Top"));
-   pY->SetItemData(idx,TOP);
+   pY->SetItemData(idx,TOP_STRANDS);
    idx = pY->AddString(_T("Bottom"));
-   pY->SetItemData(idx,BOTTOM);
+   pY->SetItemData(idx,BOTTOM_STRANDS);
 }
 
 // CPGStableNonprismaticGirder message handlers

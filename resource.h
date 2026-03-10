@@ -5,26 +5,20 @@
 #define IDS_PROJNAME                    100
 #define IDR_BETOOLBOX                   101
 #define IDR_GENCOMP                     102
-#define IDR_BETOOLBOXPLUGIN             103
 #define IDR_BOXGDR                      104
 #define IDD_BOXGDR                      104
-#define IDR_BETOOLBOXCOMPONENTINFO      105
 #define IDD_GENCOMP                     105
 #define IDD_GIRCOMP                     106
 #define IDD_GIRCOMP_TOP                 106
-#define IDR_CURVELEXPORTER              106
 #define IDR_GIRCOMP                     107
 #define IDD_GIRCOMP_LEFT                107
-#define IDR_CURVELIMPORTER              107
 #define IDR_ULTCOL                      108
 #define IDD_ULTCOL                      108
-#define IDR_GENCOMPEXPORTER             108
 #define IDD_PGSTABLEGIRDERVIEW          109
 #define IDD_PGSTABLELIFTINGVIEW         110
 #define IDD_PGSTABLEHAULINGVIEW         111
 #define IDD_PGSTABLEONEENDSEATEDVIEW    112
 #define IDD_PGSTABLEEFFECTIVEPRESTRESSDLG 113
-#define IDR_PGSTABLEEXPORTER            114
 #define IDD_SPECTRA                     115
 #define IDR_SPECTRA                     116
 #define IDB_SPECTRA                     117
@@ -113,25 +107,18 @@
 #define IDC_STATION_LABEL_3             249
 #define IDC_LENGTH10                    249
 #define IDC_STATION_3                   250
-#define IDR_ULTCOLTOOL                  250
 #define IDC_BLENGTH_UNIT                250
 #define IDC_LEFT_SLOPE_3                251
-#define IDR_BOXGDRTOOL                  251
 #define IDC_BWIDTH_UNIT                 251
 #define IDC_LEFT_SLOPE_UNIT_3           252
-#define IDR_GENCOMPTOOL                 252
 #define IDC_SHEAR_MOD_MAX_UNIT          252
 #define IDC_RIGHT_SLOPE_LABEL_3         253
-#define IDR_GIRCOMPTOOL                 253
 #define IDC_SHEAR_MOD_MIN_UNIT          253
 #define IDC_RIGHT_SLOPE_3               254
-#define IDR_CURVELTOOL                  254
 #define IDC_YIELD_UNIT                  254
 #define IDC_RIGHT_SLOPE_UNIT_3          255
-#define IDR_PGSTABLETOOL                255
 #define IDC_FATIGUE_UNIT                255
 #define IDC_LEFT_SLOPE_LABEL_1          256
-#define IDR_SPECTRATOOL                 256
 #define IDC_DL_UNIT                     256
 #define IDC_LEFT_SLOPE_LABEL_2          257
 #define IDC_LL_UNIT                     257
@@ -141,7 +128,6 @@
 #define IDC_INDIVIDUAL_STATIONS         259
 #define IDC_LENGTH12                    259
 #define IDC_INDIVIDUAL_STATION_ADD      260
-#define IDR_BEARINGTOOL                 260
 #define IDC_LENGTH13                    260
 #define IDC_INDIVIDUAL_STATION_REMOVE   261
 #define IDC_LENGTH14                    261
@@ -372,6 +358,7 @@
 #define IDC_COMBO1                      445
 #define IDC_GIRDER_LIST                 445
 #define IDC_SITE_CLASS                  445
+#define IDC_SPECIFICATION2              445
 #define IDC_LATITUDE                    446
 #define IDC_LONGITUDE                   447
 #define IDC_LAT_RANGE                   448
@@ -417,7 +404,6 @@
 #define IDC_LL                          474
 #define IDC_LWC                         475
 #define IDC_ROT_X                       475
-#define IDC_X_ROT_WINDOW                475
 #define IDC_ATTACHMENT_WEIGHT_UNIT      476
 #define IDC_ROT_Y                       476
 #define IDC_ECCENTRICITY                477
@@ -431,15 +417,14 @@
 #define IDC_FRACTION_OF_ROLL_STIFFNESS  484
 #define IDC_FRACTION_OF_ROLL_STIFFNESS_UNIT 485
 #define IDC_COPY                        486
-#define IDC_FIXED_X_YES                 488
-#define IDC_FIXED_X_NO                  489
-#define IDC_FIXED_Y_YES                 490
-#define IDC_FIXED_X_NO2                 491
-#define IDC_FIXED_Y_NO                  491
 #define IDC_FIXED_X                     492
 #define IDC_FIXED_Y                     493
 #define IDC_DESIGN_PROP_B               494
 #define IDC_DESIGN_PROP_A2              495
+#define IDC_SUPPORT                     496
+#define IDC_SUPPORT_COND                497
+#define IDC_REINF_CB                    498
+#define IDC_STATIC_REINFMAT             499
 #define IDC_CONSTANT_FPE                500
 #define IDR_PGSTABLE                    500
 #define IDC_VARIABLE_FPE                501
@@ -451,6 +436,11 @@
 #define IDC_VERSION                     1002
 #define IDC_COPYRIGHT                   1003
 #define IDC_APPICON                     1005
+#define IDC_MILD_STEEL_SELECTOR         1013
+#define IDC_INSERT_REBAR_ROW            1029
+#define IDC_REMOVE_REBAR_ROW            1031
+#define IDC_LONG_GRID                   1038
+#define IDC_COVER_LIMIT                 1111
 #define IDC_LIFTING_COMPRESSION         1126
 #define IDC_LIFTING_TENSION             1127
 #define IDC_CHECK_LIFTING_TENSION_MAX   1129
@@ -469,6 +459,7 @@
 #define IDC_HAULING_TENSION_WITH_REBAR  1142
 #define IDC_HAULING_TENSION_WITH_REBAR_UNIT 1143
 #define IDC_HAULING_TENSION_SUPER_UNIT  1144
+#define IDC_COVER_LIMIT_UNIT            1144
 #define IDC_CHECK_HAULING_TENSION_MAX_SUPER 1145
 #define IDC_HAULING_TENSION_MAX_SUPER   1146
 #define IDC_HAULING_TENSION_MAX_SUPER_UNIT 1147
@@ -487,6 +478,7 @@
 #define IDC_STATIC_ACSTS3               1296
 #define IDC_WSDOT                       1666
 #define IDC_TXDOT                       1668
+#define IDC_COVER_LIMIT_TAG             1748
 #define IDC_GIRDER                      1781
 #define ID_REFRESH_REPORT               36864
 #define ID_HELP_ABOUTBETOOLBOX          36865
@@ -496,9 +488,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        227
+#define _APS_NEXT_RESOURCE_VALUE        228
 #define _APS_NEXT_COMMAND_VALUE         36873
-#define _APS_NEXT_CONTROL_VALUE         496
+#define _APS_NEXT_CONTROL_VALUE         498
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

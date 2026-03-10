@@ -25,12 +25,6 @@
 #include "BoxGdrChildFrame.h"
 #include "BoxGdrDoc.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 
 IMPLEMENT_DYNCREATE(CBoxGdrChildFrame, CEAFChildFrame)
 
@@ -110,13 +104,13 @@ void CBoxGdrChildFrame::OnUpdate()
 void CBoxGdrChildFrame::OnUSUnits()
 {
    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == 1 );
-   SetUnitsMode(eafTypes::umUS);
+   SetUnitsMode(WBFL::EAF::UnitMode::US);
 }
 
 void CBoxGdrChildFrame::OnSIUnits()
 {
    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == 1 );
-   SetUnitsMode(eafTypes::umSI);
+   SetUnitsMode(WBFL::EAF::UnitMode::SI);
 }
 
 void CBoxGdrChildFrame::OnAdd()
@@ -134,7 +128,7 @@ void CBoxGdrChildFrame::OnUpdateRemove(CCmdUI* pCmdUI)
    pCmdUI->Enable(m_DlgBar.AreProblemsSelected() ? TRUE : FALSE);
 }
 
-void CBoxGdrChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+void CBoxGdrChildFrame::SetUnitsMode(WBFL::EAF::UnitMode um)
 {
    CEAFApp* pApp = EAFGetApp();
    if ( pApp->GetUnitsMode() != um )

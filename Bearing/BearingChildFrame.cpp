@@ -25,13 +25,7 @@
 #include "BearingChildFrame.h"
 #include "BearingDoc.h"
 #include <BEToolbox.hh>
-#include <EAF/EAFHelp.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#include <EAF/Help.h>
 
 IMPLEMENT_DYNCREATE(CBearingChildFrame, CEAFChildFrame)
 
@@ -47,6 +41,7 @@ BEGIN_MESSAGE_MAP(CBearingChildFrame, CEAFChildFrame)
     ON_WM_CREATE()
     ON_BN_CLICKED(IDC_UPDATE, OnUpdate)
     ON_MESSAGE(WM_HELP, OnCommandHelp)
+    ON_CBN_SELCHANGE(IDC_SPECIFICATION2, OnSpecificationChanged)
     ON_BN_CLICKED(IDC_METHOD_A, OnMethodA)
     ON_BN_CLICKED(IDC_METHOD_B, OnMethodB)
     ON_BN_CLICKED(IDC_US, OnUSUnits)
@@ -68,19 +63,10 @@ const CBearingDialogBar& CBearingChildFrame::GetDialogBar() const
 
 void CBearingChildFrame::SetBearingParameters(const WBFL::EngTools::Bearing& brg,
     const WBFL::EngTools::BearingLoads& brg_loads,
-    const WBFL::EngTools::BearingCalculator& brg_calc)
+    const WBFL::EngTools::BearingDesignCriteria& criteria)
 {
-    m_DlgBar.SetBearingParameters(m_DlgBar, brg, brg_loads, brg_calc);
+    m_DlgBar.SetBearingParameters(m_DlgBar, brg, brg_loads, criteria);
     m_DlgBar.UpdateData(FALSE);
-
-    if (brg_calc.GetAnalysisMethodA() == WBFL::EngTools::BearingCalculator::AnalysisMethodA::Yes)
-    {
-        OnMethodA();
-    }
-    else
-    {
-        OnMethodB();
-    }
 }
 
 
@@ -131,11 +117,13 @@ void CBearingChildFrame::OnUpdate()
    CBearingDoc* pDoc = (CBearingDoc*)GetActiveDocument();
    if ( pDoc )
    {
+       
        WBFL::EngTools::Bearing brg;
        WBFL::EngTools::BearingLoads brg_loads;
-       WBFL::EngTools::BearingCalculator brg_calc;
-       m_DlgBar.SetBearing(brg,brg_loads,brg_calc);
-       pDoc->SetBearing(brg, brg_loads, brg_calc);
+       WBFL::EngTools::BearingDesignCriteria brg_criteria;
+
+       m_DlgBar.SetBearing(brg, brg_loads, brg_criteria);
+       pDoc->SetBearing(brg, brg_loads, brg_criteria);
        pDoc->SetModifiedFlag();
        pDoc->UpdateAllViews(nullptr);
    }
@@ -147,7 +135,7 @@ void CBearingChildFrame::OnUSUnits()
 {
     ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == TRUE);
     m_DlgBar.UpdateData(TRUE);
-    SetUnitsMode(eafTypes::umUS);
+    SetUnitsMode(WBFL::EAF::UnitMode::US);
     m_DlgBar.UpdateData(FALSE);
     OnUpdate();
 }
@@ -156,12 +144,12 @@ void CBearingChildFrame::OnSIUnits()
 {
     ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == TRUE);
     m_DlgBar.UpdateData(TRUE);
-    SetUnitsMode(eafTypes::umSI);
+    SetUnitsMode(WBFL::EAF::UnitMode::SI);
     m_DlgBar.UpdateData(FALSE);
     OnUpdate();
 }
 
-void CBearingChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+void CBearingChildFrame::SetUnitsMode(WBFL::EAF::UnitMode um)
 {
     CEAFApp* pApp = EAFGetApp();
     pApp->SetUnitsMode(um);
@@ -178,12 +166,16 @@ void CBearingChildFrame::MethodAControls(int s)
     w_gmax_unit->ShowWindow(s);
     CWnd* w_xrot_text = m_DlgBar.GetDlgItem(IDC_X_ROT_TEXT);
     w_xrot_text->ShowWindow(s);
-    CWnd* w_xrot_window = m_DlgBar.GetDlgItem(IDC_X_ROT_WINDOW);
+    CWnd* w_xrot_window = m_DlgBar.GetDlgItem(IDC_ROT_X);
     w_xrot_window->ShowWindow(s);
     CWnd* w_yrot_text = m_DlgBar.GetDlgItem(IDC_Y_ROT_TEXT);
     w_yrot_text->ShowWindow(s);
     CWnd* w_yrot_window = m_DlgBar.GetDlgItem(IDC_ROT_Y);
     w_yrot_window->ShowWindow(s);
+    CWnd* w_fixed_x = m_DlgBar.GetDlgItem(IDC_FIXED_X);
+    w_fixed_x->ShowWindow(s);
+    CWnd* w_fixed_y = m_DlgBar.GetDlgItem(IDC_FIXED_Y);
+    w_fixed_y->ShowWindow(s);
     CWnd* design_prop_group = m_DlgBar.GetDlgItem(IDC_DESIGN_PROP_A2);
     design_prop_group->ShowWindow(s);
 }
@@ -200,22 +192,21 @@ void CBearingChildFrame::MethodBControls(int s)
     w_rot_cy_text->ShowWindow(s);
     CWnd* w_rot_cy_window = m_DlgBar.GetDlgItem(IDC_ROT_CYCLIC);
     w_rot_cy_window->ShowWindow(s);
+    CWnd* w_supp_cond = m_DlgBar.GetDlgItem(IDC_SUPPORT_COND);
+    w_supp_cond->ShowWindow(s);
     CWnd* w_fixed_x = m_DlgBar.GetDlgItem(IDC_FIXED_X);
     w_fixed_x->ShowWindow(s);
-    CWnd* w_fixed_x_yes = m_DlgBar.GetDlgItem(IDC_FIXED_X_YES);
-    w_fixed_x_yes->ShowWindow(s);
-    CWnd* w_fixed_x_no = m_DlgBar.GetDlgItem(IDC_FIXED_X_NO);
-    w_fixed_x_no->ShowWindow(s);
     CWnd* w_fixed_y = m_DlgBar.GetDlgItem(IDC_FIXED_Y);
     w_fixed_y->ShowWindow(s);
-    CWnd* w_fixed_y_yes = m_DlgBar.GetDlgItem(IDC_FIXED_Y_YES);
-    w_fixed_y_yes->ShowWindow(s);
-    CWnd* w_fixed_y_no = m_DlgBar.GetDlgItem(IDC_FIXED_Y_NO);
-    w_fixed_y_no->ShowWindow(s);
     CWnd* design_prop_group = m_DlgBar.GetDlgItem(IDC_DESIGN_PROP_B);
     design_prop_group->ShowWindow(s);
     CWnd* use_plates = m_DlgBar.GetDlgItem(IDC_EXTERNAL_PLATES);
     use_plates->ShowWindow(s);
+}
+
+void CBearingChildFrame::OnSpecificationChanged()
+{
+    CBearingChildFrame::OnUpdate();
 }
 
 

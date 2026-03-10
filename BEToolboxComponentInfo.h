@@ -21,33 +21,15 @@
 ///////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <EAF\EAFComponentInfo.h>
-#include "resource.h"
 
-class ATL_NO_VTABLE CBEToolboxComponentInfo : 
-   public CComObjectRootEx<CComSingleThreadModel>,
-   public CComCoClass<CBEToolboxComponentInfo, &CLSID_BEToolboxComponentInfo>,
-   public IEAFComponentInfo
+#include <EAF\ApplicationComponentInfo.h>
+
+class CBEToolboxComponentInfo : public WBFL::EAF::ApplicationComponentInfo
 {
 public:
-   CBEToolboxComponentInfo()
-   {
-   }
+   CBEToolboxComponentInfo() = default;
 
-DECLARE_REGISTRY_RESOURCEID(IDR_BETOOLBOXCOMPONENTINFO)
-DECLARE_CLASSFACTORY_SINGLETON(CBEToolboxComponentInfo)
-
-BEGIN_COM_MAP(CBEToolboxComponentInfo)
-   COM_INTERFACE_ENTRY(IEAFComponentInfo)
-END_COM_MAP()
-
-BEGIN_CONNECTION_POINT_MAP(CBEToolboxComponentInfo)
-END_CONNECTION_POINT_MAP()
-
-   HRESULT FinalConstruct();
-   void FinalRelease();
-
-// IEAFComponentInfo
+// IComponentInfo
 public:
    virtual BOOL Init(CEAFApp* pApp) override;
    virtual void Terminate() override;
@@ -57,5 +39,3 @@ public:
    virtual bool HasMoreInfo() override;
    virtual void OnMoreInfo() override;
 };
-
-OBJECT_ENTRY_AUTO(__uuidof(BEToolboxComponentInfo), CBEToolboxComponentInfo)

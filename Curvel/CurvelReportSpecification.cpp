@@ -24,12 +24,6 @@
 #include "CurvelReportSpecification.h"
 #include "CurvelDoc.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 CCurvelReportSpecification::CCurvelReportSpecification(const std::_tstring& strReportName) :
 WBFL::Reporting::ReportSpecification(strReportName)
 {

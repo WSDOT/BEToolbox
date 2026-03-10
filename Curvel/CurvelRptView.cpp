@@ -29,13 +29,6 @@
 #include "CurvelChildFrame.h"
 #include "CurvelReportSpecification.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CCurvelRptView
 
 IMPLEMENT_DYNCREATE(CCurvelRptView, CEAFReportView)
@@ -59,7 +52,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CCurvelRptView::CreateReportBrow
       return nullptr;
 
    CCurvelDoc* pDoc = (CCurvelDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),0,m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 // CCurvelRptView diagnostics

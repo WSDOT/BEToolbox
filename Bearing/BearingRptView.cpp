@@ -30,12 +30,6 @@
 
 #include <EAF\EAFHints.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 
 // CBearingRptView
 
@@ -75,7 +69,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CBearingRptView::CreateReportBro
       return nullptr;
 
    CBearingDoc* pDoc = (CBearingDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), 0,m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CBearingRptView::RefreshReport()
@@ -139,9 +133,20 @@ void CBearingRptView::OnInitialUpdate()
 
    const auto brg{ pDoc->GetBearing() };
    const auto brg_loads{ pDoc->GetBearingLoads()};
-   const auto brg_calc{ pDoc->GetBearingCalculator() };
+   const auto brg_criteria{ pDoc->GetBearingDesignCriteria() };
+
    CBearingChildFrame* pFrame = (CBearingChildFrame*)GetParentFrame();
-   pFrame->SetBearingParameters(brg,brg_loads,brg_calc);
+   if (brg_criteria.AnalysisMethod == WBFL::EngTools::BearingAnalysisMethod::MethodA)
+   {
+	   pFrame->MethodAControls(SW_SHOW);
+	   pFrame->MethodBControls(SW_HIDE);
+   }
+   else
+   {
+	   pFrame->MethodAControls(SW_HIDE);
+	   pFrame->MethodBControls(SW_SHOW);
+   }
+   pFrame->SetBearingParameters(brg,brg_loads, brg_criteria);
    
 
 }

@@ -30,13 +30,6 @@
 
 #include <EAF\EAFHints.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CSpectraRptView
 
 IMPLEMENT_DYNCREATE(CSpectraRptView, CEAFReportView)
@@ -75,7 +68,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CSpectraRptView::CreateReportBro
       return nullptr;
 
    CSpectraDoc* pDoc = (CSpectraDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),0,m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CSpectraRptView::RefreshReport()

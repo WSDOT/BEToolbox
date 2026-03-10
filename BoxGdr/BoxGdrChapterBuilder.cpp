@@ -24,14 +24,7 @@
 #include "BoxGdrChapterBuilder.h"
 #include <Reporter\Reporter.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
-
-//////////////////////////////////
 CBoxGdrChapterBuilder::CBoxGdrChapterBuilder(CBoxGdrDoc* pDoc) :
 m_Area(WBFL::Units::Measure::Feet2,0.001,6,2),
 m_SectionModulus(WBFL::Units::Measure::Feet3,0.001,10,2),
@@ -82,9 +75,9 @@ rptChapter* CBoxGdrChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   m_Area.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet2 : WBFL::Units::Measure::Meter2);
-   m_SectionModulus.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet3 : WBFL::Units::Measure::Meter3);
-   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == eafTypes::umUS ? WBFL::Units::Measure::Feet4 : WBFL::Units::Measure::Meter4);
+   m_Area.UnitOfMeasure = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? WBFL::Units::Measure::Feet2 : WBFL::Units::Measure::Meter2);
+   m_SectionModulus.UnitOfMeasure = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? WBFL::Units::Measure::Feet3 : WBFL::Units::Measure::Meter3);
+   m_MomentOfInertia.UnitOfMeasure = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? WBFL::Units::Measure::Feet4 : WBFL::Units::Measure::Meter4);
 
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  longLength,  pDispUnits->SpanLength, false);
    INIT_UV_PROTOTYPE( rptLengthUnitValue,  shortLength, pDispUnits->ComponentDim, false);
@@ -190,9 +183,4 @@ rptChapter* CBoxGdrChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
    }
 
    return pChapter;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CBoxGdrChapterBuilder::Clone() const
-{
-   return std::make_unique<CBoxGdrChapterBuilder>(m_pDoc);
 }

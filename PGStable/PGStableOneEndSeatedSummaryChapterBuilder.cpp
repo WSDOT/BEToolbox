@@ -24,14 +24,6 @@
 #include "PGStableOneEndSeatedSummaryChapterBuilder.h"
 #include <Reporter\Reporter.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-//////////////////////////////////
 CPGStableOneEndSeatedSummaryChapterBuilder::CPGStableOneEndSeatedSummaryChapterBuilder(CPGStableDoc* pDoc)
 {
    m_pDoc = pDoc;
@@ -64,9 +56,4 @@ rptChapter* CPGStableOneEndSeatedSummaryChapterBuilder::Build(const std::shared_
    reporter.BuildSpecCheckChapter(&girder,&problem,&artifact,pChapter,pApp->GetDisplayUnits());
 
    return pChapter;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CPGStableOneEndSeatedSummaryChapterBuilder::Clone() const
-{
-   return std::make_unique<CPGStableOneEndSeatedSummaryChapterBuilder>(m_pDoc);
 }

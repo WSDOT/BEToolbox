@@ -30,13 +30,6 @@
 
 #include <EAF\EAFHints.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CGirCompRptView
 
 IMPLEMENT_DYNCREATE(CGirCompRptView, CEAFReportView)
@@ -75,7 +68,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CGirCompRptView::CreateReportBro
       return nullptr;
 
    CGirCompDoc* pDoc = (CGirCompDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),0,m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CGirCompRptView::RefreshReport()

@@ -36,12 +36,6 @@
 
 #include <GeomModel/GenericShape.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 
 GIRCOMPDIMENSIONS::GIRCOMPDIMENSIONS()
 {
@@ -144,7 +138,7 @@ BOOL CGirCompDoc::Init()
 
 void CGirCompDoc::OnCloseDocument()
 {
-   EAFGetApp()->SetUnitsMode(eafTypes::umUS);
+   EAFGetApp()->SetUnitsMode(WBFL::EAF::UnitMode::US);
 
    CEAFDocument::OnCloseDocument();
 }
@@ -175,7 +169,7 @@ HRESULT CGirCompDoc::WriteTheDocument(IStructuredSave* pStrSave)
 
    CEAFApp* pApp = EAFGetApp();
 
-   hr = pStrSave->put_Property(_T("Units"),CComVariant(pApp->GetUnitsMode()));
+   hr = pStrSave->put_Property(_T("Units"),CComVariant(+pApp->GetUnitsMode()));
    if ( FAILED(hr) )
       return hr;
 
@@ -309,7 +303,7 @@ HRESULT CGirCompDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    if ( FAILED(hr) )
       return hr;
 
-   pApp->SetUnitsMode(eafTypes::UnitMode(var.lVal));
+   pApp->SetUnitsMode(WBFL::EAF::UnitMode(var.lVal));
 
    var.vt = VT_INDEX;
    hr = pStrLoad->get_Property(_T("ProblemCount"),&var);

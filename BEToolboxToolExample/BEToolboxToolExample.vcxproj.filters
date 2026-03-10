@@ -40,9 +40,6 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BEToolboxToolExample_i.c">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="ExampleTool\ExampleToolChildFrame.cpp">
       <Filter>ExampleTool\Source Files</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
     <ClInclude Include="dllmain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BEToolboxToolExample_i.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="ExampleTool\ExampleTool.h">
       <Filter>ExampleTool\Header Files</Filter>
     </ClInclude>
@@ -87,6 +81,9 @@
     <ClInclude Include="ExampleTool\ExampleToolView.h">
       <Filter>ExampleTool\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CLSID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BEToolboxToolExample.rc">
@@ -97,20 +94,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BEToolboxToolExample.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="BEToolboxToolExample.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="ExampleTool\ExampleTool.rgs">
-      <Filter>ExampleTool\Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Midl Include="BEToolboxToolExample.idl">
-      <Filter>Source Files</Filter>
-    </Midl>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ExampleTool.ico">

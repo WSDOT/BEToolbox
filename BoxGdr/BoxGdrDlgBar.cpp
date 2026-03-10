@@ -29,12 +29,6 @@
 #include "BoxGdrDlgBar.h"
 #include <MFCTools\CustomDDX.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 
 // CBoxGdrDialogBar
 
@@ -67,7 +61,7 @@ void CBoxGdrDialogBar::DoDataExchange(CDataExchange* pDX)
    CEAFApp* pApp = EAFGetApp();
    const WBFL::Units::IndirectMeasure* pDispUnits = pApp->GetDisplayUnits();
 
-   int i = (pApp->GetUnitsMode() == eafTypes::umUS ? 0 : 1);
+   int i = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? 0 : 1);
    DDX_Radio(pDX,IDC_US,i);
 
    AFX_MANAGE_STATE(AfxGetStaticModuleState());

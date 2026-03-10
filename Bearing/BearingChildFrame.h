@@ -34,15 +34,12 @@ public:
 
 	void SetBearingParameters(const WBFL::EngTools::Bearing&,
 		const WBFL::EngTools::BearingLoads&,
-		const WBFL::EngTools::BearingCalculator&);
+		const WBFL::EngTools::BearingDesignCriteria&);
 
+	afx_msg void MethodAControls(int);
+	afx_msg void MethodBControls(int);
 
-
-   void SetUnitsMode(eafTypes::UnitMode um);
-
-   
-
-
+   void SetUnitsMode(WBFL::EAF::UnitMode um);
 
    void UpdateData(BOOL bUpdate);
 
@@ -54,10 +51,7 @@ protected:
    afx_msg void OnUpdate();
    afx_msg void OnUSUnits();
    afx_msg void OnSIUnits();
-
-
-   afx_msg void MethodAControls(int);
-   afx_msg void MethodBControls(int);
+   afx_msg void OnSpecificationChanged();
    afx_msg void OnMethodA();
    afx_msg void OnMethodB();
 

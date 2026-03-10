@@ -30,12 +30,8 @@
 #include "ExampleToolView.h"
 #include "ExampleToolChildFrame.h"
 
-// {23CFD70B-F121-4122-821B-806F9685BE1A}
-DEFINE_GUID(CLSID_ExampleTool,
-   0x23cfd70b, 0xf121, 0x4122, 0x82, 0x1b, 0x80, 0x6f, 0x96, 0x85, 0xbe, 0x1a);
-class CExampleTool : public CToolImpl<CExampleTool, &CLSID_ExampleTool, IDR_EXAMPLETOOL, CExampleToolDoc, CExampleToolChildFrame, CExampleToolView, CExampleToolDocTemplate, IDR_EXAMPLE>
+class CExampleTool : public CToolImpl<CExampleToolDoc, CExampleToolChildFrame, CExampleToolView, CExampleToolDocTemplate, IDR_EXAMPLE>
 {
 public:
    virtual CString GetName() const override { return _T("ExampleTool"); }
 };
-OBJECT_ENTRY_AUTO(CLSID_ExampleTool, CExampleTool)

@@ -2,9 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by BEToolboxToolExample.rc
 //
-#define IDS_PROJNAME                    100
-#define IDR_BETOOLBOXTOOLEXAMPLE        101
-#define IDR_EXAMPLETOOL                 200
 #define IDR_EXAMPLE                     201
 
 // Next default values for new objects

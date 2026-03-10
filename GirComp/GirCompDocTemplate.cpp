@@ -24,16 +24,10 @@
 #include "..\resource.h"
 #include "GirCompDocTemplate.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 IMPLEMENT_DYNAMIC(CGirCompDocTemplate,CEAFDocTemplate)
 
 CGirCompDocTemplate::CGirCompDocTemplate(UINT nIDResource,
-                                       IEAFCommandCallback* pCallback,
+                                       std::shared_ptr<WBFL::EAF::ICommandCallback> pCallback,
                                        CRuntimeClass* pDocClass,
                                        CRuntimeClass* pFrameClass,
                                        CRuntimeClass* pViewClass,

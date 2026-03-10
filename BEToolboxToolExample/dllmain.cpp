@@ -2,10 +2,17 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "BEToolboxToolExample_i.h"
 #include "dllmain.h"
 
-CBEToolboxToolExampleModule _AtlModule;
+#include <EAF\ComponentModule.h>
+#include "ExampleTool/ExampleTool.h"
+#include "CLSID.h"
+
+WBFL::EAF::ComponentModule Module_;
+
+EAF_BEGIN_OBJECT_MAP(ObjectMap)
+   EAF_OBJECT_ENTRY(CLSID_ExampleTool, CExampleTool)
+EAF_END_OBJECT_MAP()
 
 class CBEToolboxToolExampleApp : public CWinApp
 {
@@ -25,10 +32,12 @@ CBEToolboxToolExampleApp theApp;
 
 BOOL CBEToolboxToolExampleApp::InitInstance()
 {
+   Module_.Init(ObjectMap);
 	return CWinApp::InitInstance();
 }
 
 int CBEToolboxToolExampleApp::ExitInstance()
 {
+   Module_.Term();
 	return CWinApp::ExitInstance();
 }

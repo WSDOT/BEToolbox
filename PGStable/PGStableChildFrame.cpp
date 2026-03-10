@@ -25,13 +25,6 @@
 #include "PGStableChildFrame.h"
 #include "PGStableDoc.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 IMPLEMENT_DYNCREATE(CPGStableChildFrame, CEAFChildFrame)
 
 CPGStableChildFrame::CPGStableChildFrame(void)
@@ -97,15 +90,15 @@ void CPGStableChildFrame::OnUpdate(LPARAM hint)
 
 void CPGStableChildFrame::OnUSUnits()
 {
-   SetUnitsMode(eafTypes::umUS);
+   SetUnitsMode(WBFL::EAF::UnitMode::US);
 }
 
 void CPGStableChildFrame::OnSIUnits()
 {
-   SetUnitsMode(eafTypes::umSI);
+   SetUnitsMode(WBFL::EAF::UnitMode::SI);
 }
 
-void CPGStableChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+void CPGStableChildFrame::SetUnitsMode(WBFL::EAF::UnitMode um)
 {
    CEAFApp* pApp = EAFGetApp();
    pApp->SetUnitsMode(um);

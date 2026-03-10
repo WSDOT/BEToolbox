@@ -31,13 +31,6 @@
 #include "PGStableHaulingView.h"
 #include "PGStableOneEndSeatedView.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CPGStableView
 
 IMPLEMENT_DYNCREATE(CPGStableTabView, CTabView)
@@ -79,6 +72,7 @@ int CPGStableTabView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
    CMFCTabCtrl& tabCtrl = GetTabControl();
    tabCtrl.SetActiveTabBoldFont();
+   tabCtrl.EnableTabSwap(FALSE); // don't allow reordering of tabs
 
 
    // NOTE: One assert for each tab control is going to fire, plus one additional assert
@@ -107,7 +101,23 @@ void CPGStableTabView::OnActivateView(CView* pView)
 {
    if ( m_pLastView )
    {
-      m_pLastView->OnDeactivateView();
+      if (m_pLastView->IsDataValid())
+      {
+         m_pLastView->OnDeactivateView();
+      }
+      else
+      {
+         int tabno = this->FindTab(m_pLastView->GetSafeHwnd());
+         if (tabno != -1)
+         {
+            this->SetActiveView(tabno);
+            return;
+         }
+         else
+         {
+            ATLASSERT(0);
+         }
+      }
    }
 
    if ( pView && pView->IsKindOf(RUNTIME_CLASS(CPGStableFormView)) )

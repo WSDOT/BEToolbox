@@ -30,14 +30,6 @@
 #include "PGStableEffectivePrestressDlg.h"
 #include <MFCTools\MFCTools.h>
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CPGStableLiftingView
 
 IMPLEMENT_DYNCREATE(CPGStableLiftingView, CPGStableFormView)
@@ -86,6 +78,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    Float64 L;
    problem.GetSupportLocations(&L,&L);
    DDX_UnitValueAndTag(pDX,IDC_LIFT,IDC_LIFT_UNIT,L,pDispUnits->SpanLength);
+   DDV_UnitValueZeroOrMore(pDX, IDC_LIFT_UNIT, L, pDispUnits->SpanLength);
 
    Float64 Fs,Fh,Ft;
    GetMaxFpe(&Fs,&Fh,&Ft);
@@ -97,7 +90,7 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    Float64 sweepGrowth = problem.GetSweepGrowth();
    Float64 supportPlacementTolerance = problem.GetSupportPlacementTolerance();
 
-   if ( pApp->GetUnitsMode() == eafTypes::umSI )
+   if ( pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI )
    {
       sweepTolerance *= 1000;
       DDX_Text(pDX,IDC_SWEEP_TOLERANCE,sweepTolerance);
@@ -163,11 +156,11 @@ void CPGStableLiftingView::DoDataExchange(CDataExchange* pDX)
    CString tag;
    if ( WBFL::LRFD::BDSManager::GetEdition() < WBFL::LRFD::BDSManager::Edition::SeventhEditionWith2016Interims )
    {
-      tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("sqrt(f'ci (MPa))") : _T("sqrt(f'ci (KSI))");
+      tag = pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("sqrt(f'ci (MPa))") : _T("sqrt(f'ci (KSI))");
    }
    else
    {
-      tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("(lambda)sqrt(f'ci (MPa))") : _T("(lambda)sqrt(f'ci (KSI))");
+      tag = pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("(lambda)sqrt(f'ci (MPa))") : _T("(lambda)sqrt(f'ci (KSI))");
    }
    DDX_Text(pDX,IDC_FR_COEFFICIENT_UNIT,tag);
 
@@ -426,26 +419,24 @@ void CPGStableLiftingView::OnEditFpe()
 
 void CPGStableLiftingView::OnInitialUpdate()
 {
+   // use exception safe older to prevent bad things to happen during initialization
+   OnInitBoolHolder holder(m_bViewInitialized);
+
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
-
-   CWnd* pWnd = GetDlgItem(IDC_BROWSER);
-   pWnd->ShowWindow(SW_HIDE);
-
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("Lifting"));
-   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
-
-   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
-   m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
-
-   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
-
-   m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbWindType = (CComboBox*)GetDlgItem(IDC_WIND_TYPE);
    pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Speed")),(DWORD_PTR)WBFL::Stability::WindLoadType::Speed);
    pcbWindType->SetItemData(pcbWindType->AddString(_T("Wind Pressure")),(DWORD_PTR)WBFL::Stability::WindLoadType::Pressure);
 
    CPGStableFormView::OnInitialUpdate();
+
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("Lifting"));
+   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
+   CWnd* pWnd = GetDlgItem(IDC_BROWSER);
+   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(pWnd->GetSafeHwnd(), WS_BORDER, m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   m_pBrowser->FitToParent();
 
    UpdateFpeControls();
 
@@ -454,6 +445,11 @@ void CPGStableLiftingView::OnInitialUpdate()
 
 void CPGStableLiftingView::RefreshReport()
 {
+   if (!m_bViewInitialized)
+   {
+      return;
+   }
+
    if ( m_pRptSpec == nullptr )
       return;
 
@@ -465,6 +461,20 @@ void CPGStableLiftingView::RefreshReport()
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 
+}
+
+BOOL CPGStableLiftingView::IsDataValid()
+{
+   try
+   {
+      CDataExchange DX(this,TRUE);
+      DoDataExchange(&DX);
+      return TRUE;
+   }
+   catch (...)
+   {
+      return FALSE;
+   }
 }
 
 void CPGStableLiftingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,Float64* pFpeTemp)
@@ -582,8 +592,8 @@ void CPGStableLiftingView::OnSize(UINT nType, int cx, int cy)
    if ( m_pBrowser )
    {
       // Convert a 7du x 7du rect into pixels
-      CRect sizeRect(0,0,7,7);
-      MapDialogRect(GetSafeHwnd(),&sizeRect);
+      CRect sizeRect(0, 0, 7, 7);
+      MapDialogRect(GetSafeHwnd(), &sizeRect);
 
       CRect clientRect;
       GetClientRect(&clientRect);
@@ -595,14 +605,12 @@ void CPGStableLiftingView::OnSize(UINT nType, int cx, int cy)
 
       CRect browserRect;
       browserRect.left = placeholderRect.left;
-      browserRect.top  = placeholderRect.top;
+      browserRect.top = placeholderRect.top;
       browserRect.right = clientRect.right - sizeRect.Width();
       browserRect.bottom = clientRect.bottom - sizeRect.Height();
+      pWnd->SetWindowPos(nullptr, browserRect.left, browserRect.top, browserRect.Width(), browserRect.Height(), SWP_NOZORDER | SWP_NOMOVE);
 
-      m_pBrowser->Move(browserRect.TopLeft());
-      m_pBrowser->Size(browserRect.Size() );
-
-      Invalidate();
+      m_pBrowser->FitToParent();
    }
 }
 

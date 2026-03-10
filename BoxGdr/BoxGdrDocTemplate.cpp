@@ -24,16 +24,10 @@
 #include "..\resource.h"
 #include "BoxGdrDocTemplate.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 IMPLEMENT_DYNAMIC(CBoxGdrDocTemplate,CEAFDocTemplate)
 
 CBoxGdrDocTemplate::CBoxGdrDocTemplate(UINT nIDResource,
-                                       IEAFCommandCallback* pCallback,
+                                       std::shared_ptr<WBFL::EAF::ICommandCallback> pCallback,
                                        CRuntimeClass* pDocClass,
                                        CRuntimeClass* pFrameClass,
                                        CRuntimeClass* pViewClass,

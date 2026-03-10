@@ -15,9 +15,10 @@ type doc\searchdata.xml >> %SEARCH_HTML%
 echo ^</script^> >> %SEARCH_HTML%
 
 rem document map
-%ARPDIR%\BridgeLink\RegFreeCOM\x64\Debug\MakeDocMap BEToolbox
+%ARPDIR%\BridgeLink\RegFreeCOM\x64\Release\MakeDocMap BEToolbox
 rmdir /S /Q %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
 mkdir %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
 xcopy /s /y /d %ARPDIR%\BEToolbox\Documentation\doc\html\* %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
 copy %ARPDIR%\BEToolbox\Documentation\BEToolbox.dm %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
+
 

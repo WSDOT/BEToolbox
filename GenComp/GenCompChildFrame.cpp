@@ -25,13 +25,6 @@
 #include "GenCompChildFrame.h"
 #include "GenCompDoc.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 IMPLEMENT_DYNCREATE(CGenCompChildFrame, CEAFChildFrame)
 
 CGenCompChildFrame::CGenCompChildFrame(void)
@@ -114,13 +107,13 @@ void CGenCompChildFrame::OnUpdate()
 void CGenCompChildFrame::OnUSUnits()
 {
    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == 1 );
-   SetUnitsMode(eafTypes::umUS);
+   SetUnitsMode(WBFL::EAF::UnitMode::US);
 }
 
 void CGenCompChildFrame::OnSIUnits()
 {
    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == 1 );
-   SetUnitsMode(eafTypes::umSI);
+   SetUnitsMode(WBFL::EAF::UnitMode::SI);
 }
 
 void CGenCompChildFrame::OnAddPrimary()
@@ -171,7 +164,7 @@ void CGenCompChildFrame::OnUpdateRemoveSecondary(CCmdUI* pCmdUI)
    pCmdUI->Enable(m_DlgBar.AreSecondaryPointsSelected() ? TRUE : FALSE);
 }
 
-void CGenCompChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+void CGenCompChildFrame::SetUnitsMode(WBFL::EAF::UnitMode um)
 {
    CEAFApp* pApp = EAFGetApp();
    if ( pApp->GetUnitsMode() != um )

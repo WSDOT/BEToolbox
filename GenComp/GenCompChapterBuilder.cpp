@@ -31,14 +31,6 @@
 #include <GeomModel/ElasticProperties.h>
 #include <GeomModel/ShapeProperties.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-//////////////////////////////////
 CGenCompChapterBuilder::CGenCompChapterBuilder(CGenCompDoc* pDoc)
 {
    m_pDoc = pDoc;
@@ -174,11 +166,6 @@ void CGenCompChapterBuilder::WriteSectionProperties(rptParagraph& para,WBFL::Geo
    para << _T("Ixx = ") << momentOfInertia.SetValue(Ixx) << rptNewLine;
    para << _T("Iyy = ") << momentOfInertia.SetValue(Iyy) << rptNewLine;
    para << _T("Ixy = ") << momentOfInertia.SetValue(Ixy) << rptNewLine;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CGenCompChapterBuilder::Clone() const
-{
-   return std::make_unique<CGenCompChapterBuilder>(m_pDoc);
 }
 
 rptRcImage* CGenCompChapterBuilder::CreateImage() const

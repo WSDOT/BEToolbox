@@ -26,6 +26,7 @@
 #include "PGStableStressPointGrid.h"
 #include "PGStablePointLoadGrid.h"
 #include "PGStableGirderControl.h"
+#include "PGStableLongRebarGrid.h"
 
 // CPGStablePrismaticGirder dialog
 
@@ -44,6 +45,9 @@ public:
    virtual std::vector<std::pair<Float64,Float64>> GetGirderProfile() override;
    virtual void GetStrandProfiles(std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) override;
 
+   // data validation to avoid tab changing when data is bad
+   BOOL IsDataValid();
+
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
@@ -52,9 +56,12 @@ protected:
    CPGStableGirderControl m_ctrlGirder;
    std::unique_ptr<CPGStablePointLoadGrid> m_pPointLoadGrid;
    std::unique_ptr<CPGStableStressPointGrid> m_pStressPointGrid;
+   std::unique_ptr<CPGStableLongRebarGrid> m_pPGStableLongRebarGrid;
 
    WBFL::Stability::Point m_pntTL, m_pntTR, m_pntBL, m_pntBR;
    WBFL::Stability::Point m_pntTLCache, m_pntTRCache, m_pntBLCache, m_pntBRCache;
+
+   CRebarMaterialComboBox m_cbRebar;
 
    void InitStressPoints(Float64 Wtf,Float64 Wbf,Float64 Ytop,Float64 Hg);
    void UpdateStressPoints();
@@ -72,10 +79,15 @@ public:
    afx_msg void OnGirderChanged();
    afx_msg void OnBnClickedComputeStressPoints();
    afx_msg void OnBnClickedDefineStressPoints();
+   afx_msg void OnBnClickedInsertRebarRow();
    afx_msg void OnChangedStressPointDimension();
    afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
+   afx_msg void OnRebarMaterialChanged();
+   afx_msg void OnRemoveRebarRows();
    virtual void OnCancel();
    virtual void OnOK();
+   void OnEnableDeleteRebarRow(bool canDelete);
 
    void OnUnitsChanged();
+   void UpdateRebarControls();
 };

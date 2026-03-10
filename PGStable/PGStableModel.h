@@ -29,6 +29,7 @@
 #include "PGStableLiftingCriteria.h"
 #include "PGStableHaulingCriteria.h"
 #include "PGStableOneEndSeatedCriteria.h"
+#include "PGStableLongitudinalRebarData.h"
 
 // Girder Type
 enum GirderType
@@ -121,6 +122,9 @@ public:
    Float64 GetHeightOfGirderBottomAboveRoadway() const;
    bool SetHeightOfGirderBottomAboveRoadway(Float64 Hgb);
 
+   void SetPGStableLongitudinalRebarData(const CPGStableLongitudinalRebarData& rData);
+   CPGStableLongitudinalRebarData GetPGStableLongitudinalRebarData() const;
+
    void ResolveStrandLocations(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXt,Float64* pYt);
    void GetStrandProfiles(const CPGStableStrands& strands,const WBFL::Stability::Girder& girder,std::vector<std::pair<Float64,Float64>>* pvStraight,std::vector<std::pair<Float64,Float64>>* pvHarped,std::vector<std::pair<Float64,Float64>>* pvTemp) const;
 
@@ -154,6 +158,8 @@ protected:
 
    Float64 m_Hgb; // height of the girder bottom above the roadway
 
+   CPGStableLongitudinalRebarData m_LongitudinalRebarData;
+
    CComPtr<IUnitServer> m_DocUnitServer;
    CComPtr<IUnitConvert> m_DocConvert;
 
@@ -173,4 +179,6 @@ protected:
    void GetSimplifiedStrandLocations(const CPGStableStrands* pStrands,const WBFL::Stability::Girder* pGirder,Float64* pXpsStraight,Float64* pYpsStraight,Float64* pXpsHarped,Float64* pXh1,Float64* pYh1,Float64* pXh2,Float64* pYh2,Float64* pXh3,Float64* pYh3,Float64* pXh4,Float64* pYh4,Float64* pXpsTemp,Float64* pYpsTemp) const;
    void GetStrandLocations(const CPGStableFpe& fpe,const WBFL::Stability::Girder* pGirder,Float64* pXs,Float64* pYs,Float64* pXh,Float64* pYh,Float64* pXt,Float64* pYt) const;
 
+   // Return true if UI input shows longitudinal rebar input
+   bool DoUseTensileLongRebar() const;
 };

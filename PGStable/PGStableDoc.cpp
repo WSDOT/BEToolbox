@@ -45,13 +45,7 @@
 
 #include <psgLib/LiftingCriteria.h>
 #include <psgLib/HaulingCriteria.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
+#include <psgLib/SpecificationCriteria.h>
 
 // CPGStableDoc
 
@@ -127,6 +121,9 @@ BOOL CPGStableDoc::Init()
 {
    if ( !CBEToolboxDoc::Init() )
       return FALSE;
+
+#pragma Reminder("Edge browser does not work with tabbed windows - Probably a bug in MSFTs code. Hard coding to IE")
+   GetReportManager()->SetReportBrowserType(WBFL::Reporting::ReportBrowser::Type::IE);
 
    LoadPGSLibrary();
 
@@ -872,6 +869,16 @@ Float64 CPGStableDoc::GetHeightOfGirderBottomAboveRoadway() const
    return m_Model.GetHeightOfGirderBottomAboveRoadway();
 }
 
+void CPGStableDoc::SetPGStableLongitudinalRebarData(const CPGStableLongitudinalRebarData& rData)
+{
+   m_Model.SetPGStableLongitudinalRebarData(rData);
+}
+
+CPGStableLongitudinalRebarData CPGStableDoc::GetPGStableLongitudinalRebarData() const
+{
+   return m_Model.GetPGStableLongitudinalRebarData();
+}
+
 void CPGStableDoc::SetHeightOfGirderBottomAboveRoadway(Float64 Hgb)
 {
    if ( m_Model.SetHeightOfGirderBottomAboveRoadway(Hgb) )
@@ -1012,10 +1019,9 @@ const GirderLibraryEntry* CPGStableDoc::GetGirderLibraryEntry() const
 bool CPGStableDoc::IsPermittedGirderEntry(const GirderLibraryEntry* pGirderEntry) const
 {
    const GirderLibraryEntry::Dimensions& dimensions = pGirderEntry->GetDimensions();
-   CComPtr<IBeamFactory> factory;
-   pGirderEntry->GetBeamFactory(&factory);
+   auto factory = pGirderEntry->GetBeamFactory();
 
-   // Stabilty analysis is only applicable to I-Beam type girders
+   // Stability analysis is only applicable to I-Beam type girders
    auto clsidFamily = factory->GetFamilyCLSID();
    return ::IsEqualGUID(clsidFamily, CLSID_WFBeamFamily) || ::IsEqualGUID(clsidFamily, CLSID_DeckBulbTeeBeamFamily);
 }

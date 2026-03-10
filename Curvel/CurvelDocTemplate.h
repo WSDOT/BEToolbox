@@ -28,7 +28,7 @@ class CCurvelDocTemplate : public CEAFDocTemplate
 {
 public:
    CCurvelDocTemplate(UINT nIDResource,
-                      IEAFCommandCallback* pCallback,
+                      std::shared_ptr<WBFL::EAF::ICommandCallback> pCallback,
                       CRuntimeClass* pDocClass,
                       CRuntimeClass* pFrameClass,
                       CRuntimeClass* pViewClass,

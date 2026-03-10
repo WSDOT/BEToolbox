@@ -28,13 +28,6 @@
 #include "UltColView.h"
 #include "UltColChildFrame.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CUltColView
 
 IMPLEMENT_DYNCREATE(CUltColView, CEAFReportView)
@@ -73,7 +66,7 @@ std::shared_ptr<WBFL::Reporting::ReportBrowser> CUltColView::CreateReportBrowser
       return nullptr;
 
    CUltColDoc* pDoc = (CUltColDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), 0, m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 }
 
 void CUltColView::RefreshReport()

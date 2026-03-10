@@ -21,12 +21,3 @@
 ///////////////////////////////////////////////////////////////////////
 
 // dllmain.h : Declaration of module class.
-
-class CBEToolboxModule : public CAtlDllModuleT< CBEToolboxModule >
-{
-public :
-	DECLARE_LIBID(LIBID_BEToolboxLib)
-	DECLARE_REGISTRY_APPID_RESOURCEID(IDR_BETOOLBOX, "{D71B67A8-4732-4ba8-A8D4-1F6A5F91A543}")
-};
-
-extern class CBEToolboxModule _AtlModule;

@@ -25,43 +25,29 @@
 #pragma once
 
 #include <Plugins\PGSuperIEPlugin.h>
-#include "..\resource.h"       // main symbols
-#include "PGStableModel.h"
+#include <EAF\ComponentObject.h>
+#include "..\BEToolboxCLSID.h"
+
+class CPGStableModel;
 
 /////////////////////////////////////////////////////////////////////////////
 // CPGStableExporter
-class ATL_NO_VTABLE CPGStableExporter : 
-	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CPGStableExporter, &CLSID_PGStableExporter>,
-   public IPGSDataExporter
+class CPGStableExporter : public WBFL::EAF::ComponentObject,
+   public PGS::IDataExporter
 {
 public:
-	CPGStableExporter()
-	{
-	}
-
-   HRESULT FinalConstruct();
+   CPGStableExporter();
 
    CBitmap m_Bitmap;
 
-DECLARE_REGISTRY_RESOURCEID(IDR_PGSTABLEEXPORTER)
-
-DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-BEGIN_COM_MAP(CPGStableExporter)
-   COM_INTERFACE_ENTRY(IPGSDataExporter)
-END_COM_MAP()
-
-// IPGSDataExporter
+// IDataExporter
 public:
-   STDMETHOD(Init)(UINT nCmdID);
-   STDMETHOD(GetMenuText)(/*[out,retval]*/BSTR*  bstrText) const;
-   STDMETHOD(GetBitmapHandle)(/*[out]*/HBITMAP* phBmp) const;
-   STDMETHOD(GetCommandHintText)(BSTR*  bstrText) const;
-   STDMETHOD(Export)(/*[in]*/IBroker* pBroker);
+   HRESULT Init(UINT nCmdID) override;
+   CString GetMenuText() const override;
+   HBITMAP GetBitmapHandle() const override;
+   CString GetCommandHintText() const override;
+   HRESULT Export(std::shared_ptr<WBFL::EAF::Broker> pBroker) override;
 
 protected:
-   bool ConfigureModel(IBroker* pBroker,const CSegmentKey& segmentKey,CPGStableModel& model);
+   bool ConfigureModel(std::shared_ptr<WBFL::EAF::Broker> pBroker,const CSegmentKey& segmentKey,CPGStableModel& model);
 };
-
-OBJECT_ENTRY_AUTO(__uuidof(PGStableExporter), CPGStableExporter)

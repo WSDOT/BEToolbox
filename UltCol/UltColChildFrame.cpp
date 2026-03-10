@@ -25,13 +25,6 @@
 #include "UltColChildFrame.h"
 #include "UltColDoc.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 IMPLEMENT_DYNCREATE(CUltColChildFrame, CEAFChildFrame)
 
 CUltColChildFrame::CUltColChildFrame(void)
@@ -129,7 +122,7 @@ void CUltColChildFrame::OnUSUnits()
 {
    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_US) == 1 );
    m_DlgBar.UpdateData(TRUE);
-   SetUnitsMode(eafTypes::umUS);
+   SetUnitsMode(WBFL::EAF::UnitMode::US);
    m_DlgBar.UpdateData(FALSE);
    OnUpdate();
 }
@@ -138,12 +131,12 @@ void CUltColChildFrame::OnSIUnits()
 {
    ASSERT(m_DlgBar.IsDlgButtonChecked(IDC_SI) == 1 );
    m_DlgBar.UpdateData(TRUE);
-   SetUnitsMode(eafTypes::umSI);
+   SetUnitsMode(WBFL::EAF::UnitMode::SI);
    m_DlgBar.UpdateData(FALSE);
    OnUpdate();
 }
 
-void CUltColChildFrame::SetUnitsMode(eafTypes::UnitMode um)
+void CUltColChildFrame::SetUnitsMode(WBFL::EAF::UnitMode um)
 {
    CEAFApp* pApp = EAFGetApp();
    pApp->SetUnitsMode(um);

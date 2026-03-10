@@ -24,14 +24,6 @@
 #include "PGStableHaulingSummaryChapterBuilder.h"
 #include <Reporter\Reporter.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-//////////////////////////////////
 CPGStableHaulingSummaryChapterBuilder::CPGStableHaulingSummaryChapterBuilder(CPGStableDoc* pDoc)
 {
    m_pDoc = pDoc;
@@ -64,9 +56,4 @@ rptChapter* CPGStableHaulingSummaryChapterBuilder::Build(const std::shared_ptr<c
    reporter.BuildSpecCheckChapter(&girder,&problem,&artifact,pChapter,pApp->GetDisplayUnits());
 
    return pChapter;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CPGStableHaulingSummaryChapterBuilder::Clone() const
-{
-   return std::make_unique<CPGStableHaulingSummaryChapterBuilder>(m_pDoc);
 }

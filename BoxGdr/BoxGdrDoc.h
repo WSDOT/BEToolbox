@@ -97,7 +97,4 @@ public:
 
    // over-ride default behavior by destroying column
    virtual void OnCloseDocument() override;
-
-private:
-   CEAFToolBar* m_pMyToolBar;
 };

@@ -26,11 +26,12 @@
 #include "..\BEToolboxDoc.h"
 #include <WBFLTools.h>
 #include <WBFLUnitServer.h>
+#include <LRFD/BDSManager.h>
 #include <ReportManager\ReportManager.h>
 #include <Math\PiecewiseFunction.h>
 #include <EngTools\Bearing.h>
 #include <EngTools\BearingLoads.h>
-#include <EngTools\BearingCalculator.h>
+#include <EngTools\BearingDesignCriteria.h>
 
 
 class CBearingDoc : public CBEToolboxDoc
@@ -54,10 +55,6 @@ protected:
    /// called when a document is created (New or Open)
    virtual BOOL Init(); 
 
-   void InitWSDOT();
-   void InitLRFD();
-   void InitGuideSpec();
-
    // Called by the framework when the document is to be loaded and saved
    virtual HRESULT WriteTheDocument(IStructuredSave* pStrSave) override;
    virtual HRESULT LoadTheDocument(IStructuredLoad* pStrLoad) override;
@@ -73,16 +70,17 @@ protected:
 public:
    virtual void OnCloseDocument() override;
 
-   void SetBearing(const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads, const WBFL::EngTools::BearingCalculator& brg_calc);
+   const WBFL::EngTools::BearingDesignCriteria& GetBearingDesignCriteria() const;
+
+   void SetBearing(const WBFL::EngTools::Bearing& brg, const WBFL::EngTools::BearingLoads& brg_loads, 
+	   const WBFL::EngTools::BearingDesignCriteria& brg_criteria);
    const WBFL::EngTools::Bearing& GetBearing() const;
    const WBFL::EngTools::BearingLoads& GetBearingLoads() const;
-   const WBFL::EngTools::BearingCalculator& GetBearingCalculator() const;
 
 private:
 
-
+	WBFL::EngTools::BearingDesignCriteria m_criteria;
 	WBFL::EngTools::Bearing m_bearing;
 	WBFL::EngTools::BearingLoads m_bearing_loads;
-	WBFL::EngTools::BearingCalculator m_bearing_calculator;
 
 };

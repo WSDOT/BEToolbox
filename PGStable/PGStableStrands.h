@@ -23,8 +23,8 @@
 #pragma once
 #include "..\BEToolboxLib.h"
 
-#define TOP 0
-#define BOTTOM 1
+#define TOP_STRANDS 0
+#define BOTTOM_STRANDS 1
 
 #define DISTANCE 0
 #define FRACTION 1

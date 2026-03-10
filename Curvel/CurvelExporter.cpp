@@ -22,22 +22,15 @@
 
 // CurvelExporter.cpp : Implementation of CCurvelExporter
 #include "stdafx.h"
-#include "..\BEToolbox_i.h"
+#include "..\resource.h"
 #include "CurvelExporter.h"
 
-#include <EAF\EAFAutoProgress.h>
+#include <EAF/AutoProgress.h>
 #include <IFace\Project.h>
 #include <EAF\EAFDisplayUnits.h>
 
 #include <Curvel.h>
 #include <MFCTools\Prompts.h>
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 
 class CSuperelevationValidator : public CMultiChoiceValidator
 {
@@ -81,41 +74,37 @@ void CSuperelevationValidator::DisplayValidationErrorMessage()
    AfxMessageBox(m_strMessage,MB_OK | MB_ICONEXCLAMATION);
 }
 
-HRESULT CCurvelExporter::FinalConstruct()
+
+
+
+CCurvelExporter::CCurvelExporter()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    VERIFY(m_Bitmap.LoadBitmap(IDB_CURVEL));
-   return S_OK;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CCurvelExporter
-
-STDMETHODIMP CCurvelExporter::Init(UINT nCmdID)
+HRESULT CCurvelExporter::Init(UINT nCmdID)
 {
    return S_OK;
 }
 
-STDMETHODIMP CCurvelExporter::GetMenuText(BSTR*  bstrText) const
+CString CCurvelExporter::GetMenuText() const
 {
-   *bstrText = CComBSTR("BEToolbox:Curvel vertical profile model");
-   return S_OK;
+   return CString("BEToolbox:Curvel vertical profile model");
 }
 
-STDMETHODIMP CCurvelExporter::GetBitmapHandle(HBITMAP* phBmp) const
+HBITMAP CCurvelExporter::GetBitmapHandle() const
 {
-   *phBmp = m_Bitmap;
-   return S_OK;
+   return m_Bitmap;
 }
 
-STDMETHODIMP CCurvelExporter::GetCommandHintText(BSTR*  bstrText) const
+CString CCurvelExporter::GetCommandHintText() const
 {
-   *bstrText = CComBSTR("Export BEToolbox:Curvel model\nTool tip text");
-   return S_OK;   
+   return CString("Export BEToolbox:Curvel model\nTool tip text");
 }
 
 #define xTEST_CODE
-STDMETHODIMP CCurvelExporter::Export(IBroker* pBroker)
+HRESULT CCurvelExporter::Export(std::shared_ptr<WBFL::EAF::Broker> pBroker)
 {
 #pragma Reminder("UPDATE: remove test code after creating example")
    // There are two block of code here, conditionally compiled with the TEST_CODE macro.

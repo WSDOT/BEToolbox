@@ -25,14 +25,6 @@
 #include <Reporter\Reporter.h>
 #include <Graphing/GraphXY.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-//////////////////////////////////
 CSpectraChapterBuilder::CSpectraChapterBuilder(CSpectraDoc* pDoc)
 {
    m_pDoc = pDoc;
@@ -432,11 +424,6 @@ rptChapter* CSpectraChapterBuilder::Build(const std::shared_ptr<const WBFL::Repo
    (*pPara) << CreateImage(values);
 
    return pChapter;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CSpectraChapterBuilder::Clone() const
-{
-   return std::make_unique<CSpectraChapterBuilder>(m_pDoc);
 }
 
 rptRcImage* CSpectraChapterBuilder::CreateImage(const std::vector<std::pair<Float64,Float64>>& values) const

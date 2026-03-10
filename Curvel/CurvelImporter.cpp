@@ -22,55 +22,41 @@
 
 // CurvelImporter.cpp : Implementation of CCurvelImporter
 #include "stdafx.h"
-#include "..\BEToolbox_i.h"
+#include "..\resource.h"
 #include "CurvelImporter.h"
 
-#include <EAF\EAFAutoProgress.h>
+#include <EAF/AutoProgress.h>
 #include <IFace\Project.h>
 
 #include <Curvel.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-HRESULT CCurvelImporter::FinalConstruct()
+CCurvelImporter::CCurvelImporter()
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
    VERIFY(m_Bitmap.LoadBitmap(IDB_CURVEL));
-   return S_OK;
 }
 
-
-/////////////////////////////////////////////////////////////////////////////
-// CCurvelImporter
-STDMETHODIMP CCurvelImporter::Init(UINT nCmdID)
+HRESULT CCurvelImporter::Init(UINT nCmdID)
 {
    return S_OK;
 }
 
-STDMETHODIMP CCurvelImporter::GetMenuText(BSTR*  bstrText) const
+CString CCurvelImporter::GetMenuText() const
 {
-   *bstrText = CComBSTR("BEToolbox:Curve vertical profile model");
-   return S_OK;
+   return CString("BEToolbox:Curve vertical profile model");
 }
 
-STDMETHODIMP CCurvelImporter::GetBitmapHandle(HBITMAP* phBmp) const
+HBITMAP CCurvelImporter::GetBitmapHandle() const
 {
-   *phBmp = m_Bitmap;
-   return S_OK;
+   return m_Bitmap;
 }
 
-STDMETHODIMP CCurvelImporter::GetCommandHintText(BSTR*  bstrText) const
+CString CCurvelImporter::GetCommandHintText() const
 {
-   *bstrText = CComBSTR("Import BEToolbox:Curvel model\nTool tip text");
-   return S_OK;   
+   return CString("Import BEToolbox:Curvel model\nTool tip text");
 }
 
-STDMETHODIMP CCurvelImporter::Import(IBroker* pBroker)
+HRESULT CCurvelImporter::Import(std::shared_ptr<WBFL::EAF::Broker> pBroker)
 {
 	CFileDialog  fileDlg(TRUE,_T("Curvel"),_T(""),OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Curvel File (*.Curvel)|*.Curvel||"));
 	if (fileDlg.DoModal() == IDOK)

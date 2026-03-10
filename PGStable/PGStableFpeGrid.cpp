@@ -28,12 +28,6 @@
 #include <EAF\EAFUtilities.h>
 #include <EAF\EAFApp.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //GRID_IMPLEMENT_REGISTER(CPGStableFpeGrid, CS_DBLCLKS, 0, 0, 0);
 
 /////////////////////////////////////////////////////////////////////////////
@@ -164,7 +158,7 @@ void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float
    *pYpsStraight = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   *pYpsStraightMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
+   *pYpsStraightMeasure = (strValue == _T("Top") ? TOP_STRANDS : BOTTOM_STRANDS);
 
    strValue = GetCellValue(row,col++);
    WBFL::System::Tokenizer::ParseDouble(strValue, &value);
@@ -179,7 +173,7 @@ void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float
    *pYpsHarped = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   *pYpsHarpedMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
+   *pYpsHarpedMeasure = (strValue == _T("Top") ? TOP_STRANDS : BOTTOM_STRANDS);
 
    strValue = GetCellValue(row,col++);
    WBFL::System::Tokenizer::ParseDouble(strValue, &value);
@@ -194,7 +188,7 @@ void CPGStableFpeGrid::GetFpe(ROWCOL row,Float64* pX,Float64* pFpeStraight,Float
    *pYpsTemp = WBFL::Units::ConvertToSysUnits(value, pDispUnits->ComponentDim.UnitOfMeasure);
 
    strValue = GetCellValue(row,col++);
-   *pYpsTempMeasure = (strValue == _T("Top") ? TOP : BOTTOM);
+   *pYpsTempMeasure = (strValue == _T("Top") ? TOP_STRANDS : BOTTOM_STRANDS);
 }
 
 void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 XpsStraight,Float64 YpsStraight,int YpsStraightMeasure,Float64 FpeHarped,Float64 XpsHarped,Float64 YpsHarped,int YpsHarpedMeasure,Float64 FpeTemp,Float64 XpsTemp,Float64 YpsTemp,int YpsTempMeasure)
@@ -241,7 +235,7 @@ void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 XpsStraig
       .SetHorizontalAlignment(DT_RIGHT)
       .SetControl(GX_IDS_CTRL_CBS_DROPDOWNLIST)
       .SetChoiceList(strChoiceList)
-      .SetValue(YpsStraightMeasure == TOP ? _T("Top") : _T("Bottom"))
+      .SetValue(YpsStraightMeasure == TOP_STRANDS ? _T("Top") : _T("Bottom"))
       );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
@@ -263,7 +257,7 @@ void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 XpsStraig
       .SetHorizontalAlignment(DT_RIGHT)
       .SetControl(GX_IDS_CTRL_CBS_DROPDOWNLIST)
       .SetChoiceList(strChoiceList)
-      .SetValue(YpsHarpedMeasure == TOP ? _T("Top") : _T("Bottom"))
+      .SetValue(YpsHarpedMeasure == TOP_STRANDS ? _T("Top") : _T("Bottom"))
       );
 
 	SetStyleRange(CGXRange(nRow,col++), CGXStyle()
@@ -285,7 +279,7 @@ void CPGStableFpeGrid::InsertFpe(Float64 X,Float64 FpeStraight,Float64 XpsStraig
       .SetHorizontalAlignment(DT_RIGHT)
       .SetControl(GX_IDS_CTRL_CBS_DROPDOWNLIST)
       .SetChoiceList(strChoiceList)
-      .SetValue(YpsTempMeasure == TOP ? _T("Top") : _T("Bottom"))
+      .SetValue(YpsTempMeasure == TOP_STRANDS ? _T("Top") : _T("Bottom"))
       );
 
    SetCurrentCell(nRow, GetLeftCol(), GX_SCROLLINVIEW|GX_DISPLAYEDITWND);

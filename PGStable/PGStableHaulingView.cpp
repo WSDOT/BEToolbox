@@ -30,12 +30,6 @@
 #include "PGStableEffectivePrestressDlg.h"
 #include <MFCTools\MFCTools.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 // CPGStableHaulingView
 
 IMPLEMENT_DYNCREATE(CPGStableHaulingView, CPGStableFormView)
@@ -129,11 +123,11 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    CString tag;
    if ( WBFL::LRFD::BDSManager::GetEdition() < WBFL::LRFD::BDSManager::Edition::SeventhEditionWith2016Interims )
    {
-      tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("sqrt(f'c (MPa))") : _T("sqrt(f'c (KSI))");
+      tag = pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("sqrt(f'c (MPa))") : _T("sqrt(f'c (KSI))");
    }
    else
    {
-      tag = pApp->GetUnitsMode() == eafTypes::umSI ? _T("(lambda)sqrt(f'c (MPa))") : _T("(lambda)sqrt(f'c (KSI))");
+      tag = pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("(lambda)sqrt(f'c (MPa))") : _T("(lambda)sqrt(f'c (KSI))");
    }
    DDX_Text(pDX,IDC_FR_COEFFICIENT_UNIT,tag);
 
@@ -147,7 +141,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    DDX_UnitValueAndTag(pDX,IDC_RADIUS,IDC_RADIUS_UNIT,radius,pDispUnits->AlignmentLength);
    DDX_CBEnum(pDX,IDC_CF_TYPE,cfType);
 
-   if ( pApp->GetUnitsMode() == eafTypes::umSI )
+   if ( pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI )
    {
       sweepTolerance *= 1000;
       DDX_Text(pDX,IDC_SWEEP_TOLERANCE,sweepTolerance);
@@ -187,7 +181,7 @@ void CPGStableHaulingView::DoDataExchange(CDataExchange* pDX)
    Float64 Hrc = problem.GetHeightOfRollAxis();
    DDX_UnitValueAndTag(pDX,IDC_HRC,IDC_HRC_UNIT,Hrc,pDispUnits->ComponentDim);
 
-   CString slope_unit(pApp->GetUnitsMode() == eafTypes::umSI ? _T("m/m") : _T("ft/ft"));
+   CString slope_unit(pApp->GetUnitsMode() == WBFL::EAF::UnitMode::SI ? _T("m/m") : _T("ft/ft"));
 
    Float64 crown_slope = problem.GetSupportSlope();
    DDX_Text(pDX,IDC_CROWN_SLOPE,crown_slope);
@@ -565,6 +559,9 @@ void CPGStableHaulingView::OnEditFpe()
 
 void CPGStableHaulingView::OnInitialUpdate()
 {
+   // use exception safe older to prevent bad things to happen during initialization
+   OnInitBoolHolder holder(m_bViewInitialized);
+
    CPGStableDoc* pDoc = (CPGStableDoc*)GetDocument();
 
    const HaulTruckLibrary* pLib = pDoc->GetHaulTruckLibrary();
@@ -576,19 +573,6 @@ void CPGStableHaulingView::OnInitialUpdate()
    {
       pcbHaulTruck->AddString(key.c_str());
    }
-
-   CWnd* pWnd = GetDlgItem(IDC_BROWSER);
-   pWnd->ShowWindow(SW_HIDE);
-
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("Hauling"));
-   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
-
-   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
-   m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
-
-   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
-
-   m_pBrowser->GetBrowserWnd()->ModifyStyle(0,WS_BORDER);
 
    CComboBox* pcbImpactUsage = (CComboBox*)GetDlgItem(IDC_IMPACT_USAGE);
    pcbImpactUsage->SetItemData(pcbImpactUsage->AddString(_T("Normal Crown Slope and Max. Superelevation Cases")),(DWORD_PTR)+WBFL::Stability::HaulingImpact::Both);
@@ -604,6 +588,13 @@ void CPGStableHaulingView::OnInitialUpdate()
    pcbCFType->SetItemData(pcbCFType->AddString(_T("Favorable")),(DWORD_PTR)+WBFL::Stability::CFType::Favorable);
 
    CPGStableFormView::OnInitialUpdate();
+
+   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("Hauling"));
+   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
+   CWnd* pWnd = GetDlgItem(IDC_BROWSER);
+   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(pWnd->GetSafeHwnd(), WS_BORDER, m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
 
    UpdateFpeControls();
    OnHaulTruckChanged();
@@ -643,6 +634,13 @@ void CPGStableHaulingView::GetMaxFpe(Float64* pFpeStraight,Float64* pFpeHarped,F
 
 void CPGStableHaulingView::RefreshReport()
 {
+   // use exception safe older to prevent bad things to happen during initialization
+   if (!m_bViewInitialized)
+   {
+      // don't generate report during init
+      return;
+   }
+
    if ( m_pRptSpec == nullptr )
       return;
 
@@ -654,6 +652,20 @@ void CPGStableHaulingView::RefreshReport()
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 
+}
+
+BOOL CPGStableHaulingView::IsDataValid()
+{
+   try
+   {
+      CDataExchange DX(this, TRUE);
+      DoDataExchange(&DX);
+      return TRUE;
+   }
+   catch (...)
+   {
+      return FALSE;
+   }
 }
 
 void CPGStableHaulingView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)
@@ -691,11 +703,11 @@ void CPGStableHaulingView::OnSize(UINT nType, int cx, int cy)
 {
    CPGStableFormView::OnSize(nType, cx, cy);
 
-   if ( m_pBrowser )
+   if (m_pBrowser)
    {
       // Convert a 7du x 7du rect into pixels
-      CRect sizeRect(0,0,7,7);
-      MapDialogRect(GetSafeHwnd(),&sizeRect);
+      CRect sizeRect(0, 0, 7, 7);
+      MapDialogRect(GetSafeHwnd(), &sizeRect);
 
       CRect clientRect;
       GetClientRect(&clientRect);
@@ -707,14 +719,12 @@ void CPGStableHaulingView::OnSize(UINT nType, int cx, int cy)
 
       CRect browserRect;
       browserRect.left = placeholderRect.left;
-      browserRect.top  = placeholderRect.top;
+      browserRect.top = placeholderRect.top;
       browserRect.right = clientRect.right - sizeRect.Width();
       browserRect.bottom = clientRect.bottom - sizeRect.Height();
+      pWnd->SetWindowPos(nullptr, browserRect.left, browserRect.top, browserRect.Width(), browserRect.Height(), SWP_NOZORDER | SWP_NOMOVE);
 
-      m_pBrowser->Move(browserRect.TopLeft());
-      m_pBrowser->Size(browserRect.Size() );
-
-      Invalidate();
+      m_pBrowser->FitToParent();
    }
 }
 

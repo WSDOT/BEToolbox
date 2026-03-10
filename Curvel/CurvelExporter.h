@@ -25,39 +25,25 @@
 #pragma once
 
 #include <Plugins\PGSuperIEPlugin.h>
-#include "..\resource.h"       // main symbols
+#include <EAF\ComponentObject.h>
+#include "..\BEToolboxCLSID.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CCurvelExporter
-class ATL_NO_VTABLE CCurvelExporter : 
-	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CCurvelExporter, &CLSID_CurvelExporter>,
-   public IPGSDataExporter
+class CCurvelExporter : public WBFL::EAF::ComponentObject,
+   public PGS::IDataExporter
 {
 public:
-	CCurvelExporter()
-	{
-	}
-
-   HRESULT FinalConstruct();
+   CCurvelExporter();
 
    CBitmap m_Bitmap;
 
-DECLARE_REGISTRY_RESOURCEID(IDR_CURVELEXPORTER)
-
-DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-BEGIN_COM_MAP(CCurvelExporter)
-   COM_INTERFACE_ENTRY(IPGSDataExporter)
-END_COM_MAP()
-
-// IPGSDataExporter
+// IDataExporter
 public:
-   STDMETHOD(Init)(UINT nCmdID);
-   STDMETHOD(GetMenuText)(/*[out,retval]*/BSTR*  bstrText) const;
-   STDMETHOD(GetBitmapHandle)(/*[out]*/HBITMAP* phBmp) const;
-   STDMETHOD(GetCommandHintText)(BSTR*  bstrText) const;
-   STDMETHOD(Export)(/*[in]*/IBroker* pBroker);
+   HRESULT Init(UINT nCmdID) override;
+   CString GetMenuText() const override;
+   HBITMAP GetBitmapHandle() const override;
+   CString GetCommandHintText() const override;
+   HRESULT Export(std::shared_ptr<WBFL::EAF::Broker> pBroker) override;
 };
-
-OBJECT_ENTRY_AUTO(__uuidof(CurvelExporter), CCurvelExporter)

@@ -27,16 +27,9 @@
 
 #include <Math\QuadraticSolver.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 IDType g_SurfaceID = 999;
 
 
-//////////////////////////////////
 CCurvelChapterBuilder::CCurvelChapterBuilder(CCurvelDoc* pDoc)
 {
    m_pDoc = pDoc;
@@ -546,11 +539,6 @@ rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Repor
    }
 
    return pChapter;
-}
-
-std::unique_ptr<WBFL::Reporting::ChapterBuilder> CCurvelChapterBuilder::Clone() const
-{
-   return std::make_unique<CCurvelChapterBuilder>(m_pDoc);
 }
 
 void CCurvelChapterBuilder::Init(const std::shared_ptr<const CCurvelReportSpecification>& pRptSpec) const
