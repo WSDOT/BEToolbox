@@ -57,9 +57,38 @@ void CCurvelReportWizardStep3::DoDataExchange(CDataExchange* pDX)
 
    if ( pDX->m_bSaveAndValidate )
    {
-      m_IndividualStations = m_IndividualStationGrid.GetStations();
-      m_StationRanges = m_StationRangeGrid.GetStations();
-      m_SkewLines = m_SkewLineGrid.GetSkewLines();
+      try
+      {
+         m_IndividualStations = m_IndividualStationGrid.GetStations();
+      }
+      catch (...)
+      {
+         pDX->PrepareCtrl(IDC_INDIVIDUAL_STATIONS);
+         AfxMessageBox(_T("Invalid station in Individual Stations grid"));
+         pDX->Fail();
+      }
+
+      try
+      {
+         m_StationRanges = m_StationRangeGrid.GetStations();
+      }
+      catch (...)
+      {
+         pDX->PrepareCtrl(IDC_STATION_RANGE);
+         AfxMessageBox(_T("Invalid station in Station Range grid"));
+         pDX->Fail();
+      }
+
+      try
+      {
+         m_SkewLines = m_SkewLineGrid.GetSkewLines();
+      }
+      catch (...)
+      {
+         pDX->PrepareCtrl(IDC_SKEW_LINE);
+         AfxMessageBox(_T("Invalid station in Skew Line grid"));
+         pDX->Fail();
+      }
    }
    else
    {
