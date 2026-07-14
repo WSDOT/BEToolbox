@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox - Bridge Engineering Toolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,8 @@
 #ifndef STRICT
 #define STRICT
 #endif
+
+#include <targetver.h>
 
 #include <WBFLMFC.h>
 #include <WBFLAll.h>
