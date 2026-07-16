@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolboxXML
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 #include "resource.h"
 #include "GenComp.h"
 #include "Helpers.h"
-#include <WBFLUnitServer\OpenBridgeML.h>
+#include <Units\UnitsXML.h>
 
 #include <fstream>
 
@@ -56,28 +56,23 @@ std::unique_ptr<GenComp> CreateGenCompModel()
    return genCompXML;
 }
 
-BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitServer* pDocUnitServer)
+BOOL ConvertToBaseUnits(GenComp* pGenComp, const WBFL::Units::DynamicUnitTypeManager& docUnitManager)
 {
    // Walk the XML data structure and make sure all units of measure are in base units
 
-   // The unit server will usually be an application level object, but
+   // The unit manager will usually be an application level object, but
    // I am using a local one here just because this is a test/proof of concept.
    // This represents one technique for applications to deal with units:
    // 1) Load document as is
    // 2) Walk document and convert all units to Consistent Base Units
    // 3) Do all work in consistent base units
    // 4) Save document with consistent base units
-   CComPtr<IUnitServer> xmlDocUnitServer;
-   HRESULT hr = xmlDocUnitServer.CoCreateInstance(CLSID_UnitServer);
-   ATLASSERT(SUCCEEDED(hr));
+   WBFL::Units::DynamicUnitTypeManager xmlDocUnitManager = WBFL::Units::UnitsXML::CreateUnitTypeManager();
 
    GenComp::UnitsDeclaration_optional& unitsDeclaration(pGenComp->UnitsDeclaration());
    if ( unitsDeclaration.present())
    {
-      if ( !InitializeWBFLUnitServer(&unitsDeclaration.get(),xmlDocUnitServer) )
-      {
-         return FALSE;
-      }
+      WBFL::Units::UnitsXML::Initialize(&unitsDeclaration.get(), xmlDocUnitManager);
    }
 
    // Primary Shape
@@ -87,8 +82,8 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitServer* pDocUnitServer)
    for ( ; iter != end; iter++ )
    {
       PointType& point(*iter);
-      ConvertBetweenBaseUnits(point.X(), xmlDocUnitServer, pDocUnitServer);
-      ConvertBetweenBaseUnits(point.Y(), xmlDocUnitServer, pDocUnitServer);
+      WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(point.X(), xmlDocUnitManager, docUnitManager);
+      WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(point.Y(), xmlDocUnitManager, docUnitManager);
    }
 
    // Secondary Shape
@@ -98,17 +93,16 @@ BOOL ConvertToBaseUnits(GenComp* pGenComp,IUnitServer* pDocUnitServer)
    for ( ; iter != end; iter++ )
    {
       PointType& point(*iter);
-      ConvertBetweenBaseUnits(point.X(), xmlDocUnitServer, pDocUnitServer);
-      ConvertBetweenBaseUnits(point.Y(), xmlDocUnitServer, pDocUnitServer);
+      WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(point.X(), xmlDocUnitManager, docUnitManager);
+      WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(point.Y(), xmlDocUnitManager, docUnitManager);
    }
 
    return TRUE;
 }
 
-std::unique_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer)
+std::unique_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath, const WBFL::Units::DynamicUnitTypeManager& docUnitManager)
 {
    ATLASSERT(lpszFilePath != nullptr);
-   ATLASSERT(pDocUnitServer != nullptr);
 
    // Creating is a two phase process.
    // Step 1 is to run the document through the Xalan XSLT engine,
@@ -222,7 +216,7 @@ std::unique_ptr<GenComp> CreateGenCompModel(LPCTSTR lpszFilePath,IUnitServer* pD
       return std::unique_ptr<GenComp>();
    }
 
-   if ( !ConvertToBaseUnits(genCompXML.get(),pDocUnitServer) )
+   if ( !ConvertToBaseUnits(genCompXML.get(),docUnitManager) )
    {
       // something went wrong in the unit conversion
 #pragma Reminder("UPDATE: provide better error handling")

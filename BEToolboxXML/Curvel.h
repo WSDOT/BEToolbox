@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolboxXML
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -24,13 +24,13 @@
 
 #include <BEToolboxXML.h>
 #include <Curvel_Version_2.0.hxx>
-#include <WBFLUnitServer.h>
+#include <Units\DynamicUnitTypeManager.h>
 
 // Creates a Curvel data model. If lpszFileName is nullptr, a default
 // model is created, otherwise the model is created from the
 // curvel dataset supplied in the specified file.
 std::unique_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel();
-std::unique_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer);
+std::unique_ptr<Curvel> BETOOLBOXXMLFUNC CreateCurvelModel(LPCTSTR lpszFilePath, const WBFL::Units::DynamicUnitTypeManager& docUnitManager);
 
 // Saves a curvel model to the specified file.
 BOOL BETOOLBOXXMLFUNC SaveCurvelModel(LPCTSTR lpszFilePath,Curvel* pCurvelXML);

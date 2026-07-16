@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 #include <IFace\Project.h>
 
 #include <Curvel.h>
+#include <Units\UnitsXML.h>
 
 CCurvelImporter::CCurvelImporter()
 {
@@ -62,15 +63,8 @@ HRESULT CCurvelImporter::Import(std::shared_ptr<WBFL::EAF::Broker> pBroker)
 	if (fileDlg.DoModal() == IDOK)
    {
       CString strFileName(fileDlg.GetPathName());
-      // PGSuper is using the old C++ units management system... we need the new C++/COM version
-      CComPtr<IUnitServer> unitServer;
-      unitServer.CoCreateInstance(CLSID_UnitServer);
-      unitServer->SetSystemUnits(CComBSTR(WBFL::Units::System::GetMassUnit().UnitTag().c_str()),
-                               CComBSTR(WBFL::Units::System::GetLengthUnit().UnitTag().c_str()),
-                               CComBSTR(WBFL::Units::System::GetTimeUnit().UnitTag().c_str()),
-                               CComBSTR(WBFL::Units::System::GetTemperatureUnit().UnitTag().c_str()),
-                               CComBSTR(WBFL::Units::System::GetAngleUnit().UnitTag().c_str()));
-      std::unique_ptr<Curvel> curvelXML(CreateCurvelModel(strFileName,unitServer));
+      WBFL::Units::DynamicUnitTypeManager docUnitManager = WBFL::Units::UnitsXML::CreateSystemUnitManager();
+      std::unique_ptr<Curvel> curvelXML(CreateCurvelModel(strFileName,docUnitManager));
       if ( curvelXML.get() == nullptr )
       {
          return E_FAIL;

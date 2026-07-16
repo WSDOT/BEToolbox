@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolboxXML
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "Curvel.h"
-#include <WBFLUnitServer\OpenBridgeML.h>
+#include <Units\UnitsXML.h>
 #include "Helpers.h"
 
 #include <fstream>
@@ -59,40 +59,36 @@ std::unique_ptr<Curvel> CreateCurvelModel()
 }
 
 
-BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitServer* pDocUnitServer)
+BOOL ConvertToBaseUnits(Curvel* pCurvel, const WBFL::Units::DynamicUnitTypeManager& docUnitManager)
 {
    // Walk the XML data structure and make sure all units of measure are in base units
 
-   // The unit server will usually be an application level object, but
+   // The unit manager will usually be an application level object, but
    // I am using a local one here just because this is a test/proof of concept.
    // This represents one technique for applications to deal with units:
    // 1) Load document as is
    // 2) Walk document and convert all units to Consistent Base Units
    // 3) Do all work in consistent base units
    // 4) Save document with consistent base units
-   CComPtr<IUnitServer> xmlDocUnitServer;
-   HRESULT hr = xmlDocUnitServer.CoCreateInstance(CLSID_UnitServer);
+   WBFL::Units::DynamicUnitTypeManager xmlDocUnitManager = WBFL::Units::UnitsXML::CreateUnitTypeManager();
 
    Curvel::UnitsDeclaration_optional& unitsDeclaration(pCurvel->UnitsDeclaration());
    if ( unitsDeclaration.present())
    {
-      if ( !InitializeWBFLUnitServer(&unitsDeclaration.get(),xmlDocUnitServer) )
-      {
-         return FALSE;
-      }
+      WBFL::Units::UnitsXML::Initialize(&unitsDeclaration.get(), xmlDocUnitManager);
    }
 
    // Convert Vertical Curve Parameters
    VerticalCurveDataType& vc(pCurvel->VerticalCurveData());
-   ConvertBetweenBaseUnits(vc.Length(),       xmlDocUnitServer, pDocUnitServer);
-   ConvertBetweenBaseUnits(vc.PVIStation(),   xmlDocUnitServer, pDocUnitServer);
-   ConvertBetweenBaseUnits(vc.PVIElevation(), xmlDocUnitServer, pDocUnitServer);
-   
+   WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(vc.Length(),       xmlDocUnitManager, docUnitManager);
+   WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(vc.PVIStation(),   xmlDocUnitManager, docUnitManager);
+   WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(vc.PVIElevation(), xmlDocUnitManager, docUnitManager);
+
    // Superelevation Data
    Curvel::SuperelevationData_optional& seData(pCurvel->SuperelevationData());
    if ( seData.present() )
    {
-      ConvertBetweenBaseUnits(seData->ProfileGradeOffset(), xmlDocUnitServer, pDocUnitServer);
+      WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(seData->ProfileGradeOffset(), xmlDocUnitManager, docUnitManager);
 
       CrownSlopeType& crownSlope( seData->CrownSlope() );
       CrownSlopeType::SuperelevationProfilePoint_sequence& superPP(crownSlope.SuperelevationProfilePoint());
@@ -100,10 +96,10 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitServer* pDocUnitServer)
       ATLASSERT(superPP.size() == 3);
       for ( int i = 0; i < 3; i++ )
       {
-         ConvertBetweenBaseUnits(superPP[i].Station(), xmlDocUnitServer, pDocUnitServer);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(superPP[i].Station(), xmlDocUnitManager, docUnitManager);
       }
    }
-   
+
    // Individual Stations
    Curvel::IndividualStations_optional& individualStationsOptional(pCurvel->IndividualStations());
    if ( individualStationsOptional.present() )
@@ -115,8 +111,8 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitServer* pDocUnitServer)
       {
          IndividualStationType& individualStation(*iter);
 
-         ConvertBetweenBaseUnits(individualStation.Station(), xmlDocUnitServer, pDocUnitServer);
-         ConvertBetweenBaseUnits(individualStation.Offset(),  xmlDocUnitServer, pDocUnitServer);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(individualStation.Station(), xmlDocUnitManager, docUnitManager);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(individualStation.Offset(),  xmlDocUnitManager, docUnitManager);
       }
    }
 
@@ -131,9 +127,9 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitServer* pDocUnitServer)
       {
          StationRangeType& stationRange(*iter);
 
-         ConvertBetweenBaseUnits(stationRange.StartStation(), xmlDocUnitServer, pDocUnitServer);
-         ConvertBetweenBaseUnits(stationRange.EndStation(),   xmlDocUnitServer, pDocUnitServer);
-         ConvertBetweenBaseUnits(stationRange.Offset(),       xmlDocUnitServer, pDocUnitServer);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(stationRange.StartStation(), xmlDocUnitManager, docUnitManager);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(stationRange.EndStation(),   xmlDocUnitManager, docUnitManager);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(stationRange.Offset(),       xmlDocUnitManager, docUnitManager);
       }
    }
 
@@ -148,20 +144,19 @@ BOOL ConvertToBaseUnits(Curvel* pCurvel,IUnitServer* pDocUnitServer)
       {
          SkewLineType& skewLine(*iter);
 
-         ConvertBetweenBaseUnits(skewLine.Station(),     xmlDocUnitServer, pDocUnitServer);
-         ConvertBetweenBaseUnits(skewLine.Offset(),      xmlDocUnitServer, pDocUnitServer);
-         ConvertBetweenBaseUnits(skewLine.Radius(),      xmlDocUnitServer, pDocUnitServer);
-         ConvertBetweenBaseUnits(skewLine.CrownOffset(), xmlDocUnitServer, pDocUnitServer);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(skewLine.Station(),     xmlDocUnitManager, docUnitManager);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(skewLine.Offset(),      xmlDocUnitManager, docUnitManager);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(skewLine.Radius(),      xmlDocUnitManager, docUnitManager);
+         WBFL::Units::UnitsXML::ConvertBetweenBaseUnits(skewLine.CrownOffset(), xmlDocUnitManager, docUnitManager);
       }
    }
 
    return TRUE;
 }
 
-std::unique_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDocUnitServer)
+std::unique_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath, const WBFL::Units::DynamicUnitTypeManager& docUnitManager)
 {
    ATLASSERT(lpszFilePath != nullptr);
-   ATLASSERT(pDocUnitServer != nullptr);
 
    USES_CONVERSION;
 
@@ -283,7 +278,7 @@ std::unique_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath,IUnitServer* pDoc
       return std::unique_ptr<Curvel>();
    }
 
-   if ( !ConvertToBaseUnits(curvelXML.get(),pDocUnitServer) )
+   if ( !ConvertToBaseUnits(curvelXML.get(),docUnitManager) )
    {
       // something went wrong in the unit conversion
 #pragma Reminder("UPDATE: provide better error handling")

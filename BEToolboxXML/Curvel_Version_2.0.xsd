@@ -9,7 +9,7 @@
     </xs:documentation>
   </xs:annotation>
 
-  <xs:import namespace="http://www.wsdot.wa.gov/WBFL/Units" schemaLocation="..\..\WBFL\UnitServer\Schema\WBFLUnitServer.xsd" />
+  <xs:import namespace="http://www.wsdot.wa.gov/WBFL/Units" schemaLocation="..\..\WBFL\Units\Schema\WBFLUnits.xsd" />
 
   <xs:element name="Curvel">
     <xs:complexType>

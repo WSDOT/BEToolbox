@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -28,6 +28,7 @@
 
 
 #include "CurvelDoc.h"
+#include <Units\UnitsXML.h>
 #include "CurvelTitlePageBuilder.h"
 #include "CurvelChapterBuilder.h"
 #include "CurvelChildFrame.h"
@@ -42,19 +43,13 @@ IMPLEMENT_DYNCREATE(CCurvelDoc, CBEToolboxDoc)
 
 CCurvelDoc::CCurvelDoc() : CBEToolboxDoc()
 {
-   // The reporting sub-system doesn't use the WBFLUnitServer implementation. It uses the old regular C++
-   // units sytem. That system is in kms units, so we will create a unit server here also in the kms system
+   // The reporting sub-system doesn't use WBFLUnits' UnitsXML support. It uses the old regular C++
+   // units sytem. That system is in kms units, so we will create a unit manager here also in the kms system
    // so that the curvel data, after loading is in set of consistent base units we want.
-   // If the report system could handle the WBFLUnitServer, the <ConsistentUnits> declaration in the
+   // If the report system could handle UnitsXML directly, the <ConsistentUnits> declaration in the
    // CurvelXML instance document would work throughout this program because Curvel works exclusively in
    // consistent units.
-   m_DocUnitServer.CoCreateInstance(CLSID_UnitServer);
-   m_DocUnitServer->SetSystemUnits(CComBSTR(WBFL::Units::System::GetMassUnit().UnitTag().c_str()),
-                            CComBSTR(WBFL::Units::System::GetLengthUnit().UnitTag().c_str()),
-                            CComBSTR(WBFL::Units::System::GetTimeUnit().UnitTag().c_str()),
-                            CComBSTR(WBFL::Units::System::GetTemperatureUnit().UnitTag().c_str()),
-                            CComBSTR(WBFL::Units::System::GetAngleUnit().UnitTag().c_str()));  
-   m_DocUnitServer->QueryInterface(&m_DocConvert);
+   m_DocUnitManager = WBFL::Units::UnitsXML::CreateSystemUnitManager();
 
    // Setup the reporting mechanism
    std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder( std::make_shared<CCurvelReportSpecificationBuilder>() );
@@ -132,7 +127,7 @@ BOOL CCurvelDoc::OpenTheDocument(LPCTSTR lpszPathName)
 {
    USES_CONVERSION;
 
-   m_CurvelXML = CreateCurvelModel(lpszPathName,m_DocUnitServer);
+   m_CurvelXML = CreateCurvelModel(lpszPathName,m_DocUnitManager);
    if ( m_CurvelXML.get() == nullptr )
       return FALSE;
 

@@ -88,5 +88,4 @@
 
 #include "SpectraBuilder\SpectraValues.h"
 
-#include <WBFLUnitServer.hxx>
 #include <BEToolboxXML.h>

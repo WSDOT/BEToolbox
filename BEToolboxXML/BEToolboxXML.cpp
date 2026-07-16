@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolboxXML
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -25,10 +25,6 @@
 
 #include "stdafx.h"
 #include "BEToolboxXMLApp.h"
-
-#include <initguid.h>
-#include <WBFLUnitServer.h>
-#include <WBFLUnitServer_i.c>
 
 
 

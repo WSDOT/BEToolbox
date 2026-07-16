@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -79,8 +79,7 @@ protected:
    virtual void OnOldFormat(LPCTSTR lpszPathName) override;
 
    std::unique_ptr<GenComp> m_GenCompXML;
-   CComPtr<IUnitServer> m_DocUnitServer;
-   CComPtr<IUnitConvert> m_DocConvert;
+   WBFL::Units::DynamicUnitTypeManager m_DocUnitManager;
 
    afx_msg void OnHelpFinder();
    DECLARE_MESSAGE_MAP()

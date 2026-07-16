@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -103,182 +103,8 @@ CString CCurvelExporter::GetCommandHintText() const
    return CString("Export BEToolbox:Curvel model\nTool tip text");
 }
 
-#define xTEST_CODE
 HRESULT CCurvelExporter::Export(std::shared_ptr<WBFL::EAF::Broker> pBroker)
 {
-#pragma Reminder("UPDATE: remove test code after creating example")
-   // There are two block of code here, conditionally compiled with the TEST_CODE macro.
-   // The TEST_CODE was used to prototype and test the OpenBridgeML Units implementation
-   // RAB left it here for an example until such time a simple example is developed
-   // to demonstrate OpenBridgeML
-#if defined TEST_CODE
-	CFileDialog fileDlg(FALSE,_T("curvel"),_T("Example1a.curvel"),OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Curvel File (*.curvel)|*.curvel||"));
-	if (fileDlg.DoModal() == IDOK)
-	{
-      std::unique_ptr<Curvel> curvelXML( CreateCurvelModel() ); // create an empty/default model
-
-      // Provide a <UnitsDeclaration>
-      OpenBridgeML::Units::UnitsDeclarationType unitsDeclaration;
-
-      // Provide an <ExtendedUnit>
-      OpenBridgeML::Units::ExtendedUnitsType extendedUnits;
-
-      // First, just extend the Standard "Length" unit type by adding a new unit of measure
-      // funny unit type... one length will be in number of half-feet
-      // so for example if the value is 100 ft, the value in halfFoot would be 50hft.
-      // one-half foot = 0.1524 meter
-      OpenBridgeML::Units::UnitOfMeasureExType halfFoot(0.1524,OpenBridgeML::Units::UnitSystemEnum::unitsUS,_T("hft"),_T("Length"));
-      extendedUnits.UnitOfMeasure().push_back(halfFoot);
-
-      // Now, extend the Standard unit types by adding a new unit type and the units
-      // of measure that go along with it. Curvel wont use it, but we can test
-      // the creation end here and the interpretation end in Curvel.
-
-      // declare container that will hold all of the extnded unit types
-      OpenBridgeML::Units::ExtendedUnitTypeType extendedUnitTypes;
-
-      // create my unit type
-      OpenBridgeML::Units::UnitTypeType myUnitType(_T("MyUnitType"),1.0,1.0,1.0,1.0,1.0);
-
-      // create units of measure for my unit type
-      OpenBridgeML::Units::UnitOfMeasureType unit1(2.0,OpenBridgeML::Units::UnitSystemEnum::unitsSI,_T("a"));
-      OpenBridgeML::Units::UnitOfMeasureType unit2(3.0,OpenBridgeML::Units::UnitSystemEnum::unitsUS,_T("b"));
-
-      // add the units of measure to the definition of my unit type
-      myUnitType.UnitOfMeasure().push_back(unit1);
-      myUnitType.UnitOfMeasure().push_back(unit2);
-
-      // add my unit type to the collection of extended unit types
-      extendedUnitTypes.UnitType().push_back(myUnitType);
-
-      // add the extended unit types to the extended unit type element
-      extendedUnits.UnitTypes(extendedUnitTypes);
-
-      // done defining all the units extensions, add them to the units declaration
-      unitsDeclaration.ExtendedUnits(extendedUnits);
-
-
-      // Provide <ConsistentUnits> (use slug,ft,sec,F,deg so that length units are all in feet
-      // this is different than the internal PGSuper units and the internal Curvel units)
-      OpenBridgeML::Units::ConsistentUnitsType consistentUnits(_T("slug"),_T("ft"),_T("sec"),_T("F"),_T("deg"));
-      unitsDeclaration.ConsistentUnits(consistentUnits);
-
-      curvelXML->UnitsDeclaration(unitsDeclaration);
-
-      GET_IFACE2(pBroker,IRoadwayData,pRoadway);
-      const ProfileData2& profileData = pRoadway->GetProfileData2();
-      VerticalCurveDataType& vCurveXML = curvelXML->VerticalCurveData();
-
-      if ( profileData.VertCurves.size() == 0 )
-      {
-         // No vertical curves in PGSuper/PGSplice... create a zero length
-         // curve Curvel
-         vCurveXML.g1( profileData.Grade );
-         vCurveXML.g2( profileData.Grade );
-         vCurveXML.Length(0.0);
-         vCurveXML.PVIStation(profileData.Station);
-         vCurveXML.PVIElevation(profileData.Elevation);
-      }
-      else if ( profileData.VertCurves.size() == 1 )
-      {
-         VertCurveData& vCurve(profileData.VertCurves.front());
-         if ( !IsEqual(vCurve.L1,vCurve.L2) && !IsZero(vCurve.L2) )
-         {
-            AfxMessageBox(_T("Curvel does not support unsymmetric vertical curves"));
-            return FALSE;
-         }
-
-         vCurveXML.g1( profileData.Grade );
-         vCurveXML.g2( vCurve.ExitGrade );
-
-         /////////////////////////////////////////////////
-         // Write Curve Length in inch units... OpenBridgeML Units Test
-         Float64 length = vCurve.L1 + vCurve.L2;
-         length = WBFL::Units::ConvertFromSysUnits(length,WBFL::Units::Measure::Feet);
-         length *= 2.0; // number of half feet (using the silly half-foot unit)
-         vCurveXML.Length(length);
-         vCurveXML.Length().unit().set(_T("hft"));
-
-         // The consistent units that we want to write into the XML file
-         // have length units of feet. Convert the consistent values in PGSuper
-         // to units of feet.
-         if ( IsEqual(profileData.Station,vCurve.PVIStation) )
-         {
-            vCurveXML.PVIStation(WBFL::Units::ConvertFromSysUnits(profileData.Station,WBFL::Units::Measure::Feet));
-            vCurveXML.PVIElevation(WBFL::Units::ConvertFromSysUnits(profileData.Elevation,WBFL::Units::Measure::Feet));
-         }
-         else
-         {
-            // Reference station and PVI of vertical curve are at different locations... compute
-            // the PVI elevation
-            Float64 pviElevation = profileData.Elevation + profileData.Grade*(vCurve.PVIStation - profileData.Station);
-            vCurveXML.PVIStation(WBFL::Units::ConvertFromSysUnits(vCurve.PVIStation,WBFL::Units::Measure::Feet));
-            vCurveXML.PVIElevation(WBFL::Units::ConvertFromSysUnits(pviElevation,WBFL::Units::Measure::Feet));
-         }
-      }
-      else
-      {
-#pragma Reminder("UPDATE: need to have user select the vertical curve")
-         AfxMessageBox(_T("Too many vertical curves"));
-         return FALSE;
-      }
-
-#pragma Reminder("IMPLEMENT: add export for crown slopes")
-      CrownSlopeType crownXML;
-      CrownSlopeType::SuperelevationProfilePoint_sequence& superelevationPointsXML(crownXML.SuperelevationProfilePoint());
-
-      const RoadwaySectionData& sectionData = pRoadway->GetRoadwaySectionData();
-      std::size_t nSections = sectionData.Superelevations.size();
-      if ( nSections <= 3 )
-      {
-         Float64 crownPointOffset;
-         for ( std::size_t i = 0; i < nSections; i++ )
-         {
-            CrownData2& crown = sectionData.Superelevations[i];
-            if ( i == 0 )
-            {
-               crownPointOffset = crown.CrownPointOffset;
-            }
-            else
-            {
-               if ( !IsEqual(crownPointOffset,crown.CrownPointOffset) )
-               {
-#pragma Reminder("UPDATE: be more forgiving... don't have to error out here")
-                  // this has to be a way to make this work
-                  AfxMessageBox(_T("The crown point offset must be the same at all sections"));
-                  return FALSE;
-               }
-            }
-
-            Float64 station = WBFL::Units::ConvertFromSysUnits(crown.Station,WBFL::Units::Measure::Feet);
-            superelevationPointsXML.push_back(SuperelevationProfilePointType(station,crown.Left,crown.Right));
-         }
-
-         if ( nSections < 3 )
-         {
-            std::size_t nTempSections = 3 - nSections;
-            for ( std::size_t i = 0; i < nTempSections; i++ )
-            {
-               SuperelevationProfilePointType pp = superelevationPointsXML.back();
-               pp.Station(WBFL::Units::ConvertFromSysUnits(pp.Station() + WBFL::Units::ConvertToSysUnits(50,WBFL::Units::Measure::Feet),WBFL::Units::Measure::Feet));
-               superelevationPointsXML.push_back(pp);
-            }
-         }
-         SuperelevationDataType superelevationXML(WBFL::Units::ConvertFromSysUnits(crownPointOffset,WBFL::Units::Measure::Feet),crownXML);
-         curvelXML->SuperelevationData(superelevationXML);
-      }
-      else
-      {
-#pragma Reminder("UPDATE: be more forgiving... don't have to error out here")
-         // this has to be a way to make this work
-         AfxMessageBox(_T("There cannot be more than three sections"));
-         return FALSE;
-      }
-
-		CString strPathName = fileDlg.GetPathName();
-      return SaveCurvelModel(strPathName,curvelXML.get());
-	}		
-#else
    // write some bridge data to a text file
 	CFileDialog fileDlg(FALSE,_T("Curvel"),_T("PGSuperExport.Curvel"),OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Curvel File (*.Curvel)|*.Curvel||"));
 	if (fileDlg.DoModal() == IDOK)
@@ -479,8 +305,7 @@ HRESULT CCurvelExporter::Export(std::shared_ptr<WBFL::EAF::Broker> pBroker)
          AfxMessageBox(_T("Export complete"),MB_OK | MB_ICONEXCLAMATION);
          return S_OK;
       }
-	}	
-#endif // TEST_CODE
+	}
 
    return S_FALSE;
 }
