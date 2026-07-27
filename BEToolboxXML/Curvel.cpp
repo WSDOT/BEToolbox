@@ -45,11 +45,11 @@
 
 
 
-//XALAN_USING_XERCES(DOMDocument)
+//using xercesc::DOMDocument;
 
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanParsedSource;
+using xalanc::XalanTransformer;
 
 std::unique_ptr<Curvel> CreateCurvelModel()
 {
@@ -172,7 +172,7 @@ std::unique_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath, const WBFL::Unit
    std::unique_ptr<Curvel> curvelXML;
    try
    {
-      XALAN_USING_XERCES(XMLPlatformUtils)
+      using xercesc::XMLPlatformUtils;
       XMLPlatformUtils::Initialize();
       XalanTransformer::initialize();
 
@@ -180,7 +180,10 @@ std::unique_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath, const WBFL::Unit
       XalanTransformer  theTransformer;
       const XalanParsedSource* theParsedSource = 0;
 
-      int theResult = theTransformer.parseSource(lpszFilePath, theParsedSource);
+      // XMLCh is char16_t (xerces-c 3.2+); LPCTSTR is wchar_t. Identical representation on
+      // Windows, so reinterpret_cast is the standard way to bridge the two (same pattern
+      // Xerces-based Windows code has always used for this).
+      int theResult = theTransformer.parseSource(reinterpret_cast<const XMLCh*>(lpszFilePath), theParsedSource);
 
       if (theResult != 0)
       {
@@ -222,10 +225,10 @@ std::unique_ptr<Curvel> CreateCurvelModel(LPCTSTR lpszFilePath, const WBFL::Unit
            }
            else
            {
-                XALAN_USING_XERCES(DOMDocument)
-                XALAN_USING_XERCES(DOMImplementation)
-                XALAN_USING_XALAN(FormatterToXercesDOM)
-                XALAN_USING_XALAN(XalanAutoPtr)
+                using xercesc::DOMDocument;
+                using xercesc::DOMImplementation;
+                using xalanc::FormatterToXercesDOM;
+                using xalanc::XalanAutoPtr;
 
                 // This is the document which we'll build...
                 const XalanAutoPtr<DOMDocument>     theDocument(DOMImplementation::getImplementation()->createDocument());
