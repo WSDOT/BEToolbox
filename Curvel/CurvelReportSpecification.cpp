@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -150,7 +150,7 @@ void CCurvelReportSpecification::SetSuperelevationPoint(IndexType idx,Supereleva
    CrownSlopeType::SuperelevationProfilePoint_sequence& superPP = crownSlope.SuperelevationProfilePoint();
 
    if ( superPP.size() < 3 )
-      superPP.resize(3,SuperelevationProfilePointType(0,0,0));
+      superPP.resize(3,SuperelevationProfilePointType(WBFL::Units::LengthValueType(0.0),0.0,0.0));
 
    ATLASSERT(superPP.size() == 3);
    ATLASSERT(0 <= idx && idx <= 2);
