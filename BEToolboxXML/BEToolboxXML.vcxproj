@@ -74,6 +74,7 @@
       <Command>xcopy /y /d "$(XSDDIR)\bin\xerces-c-3.2d.dll" $(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
 xcopy /y /d "$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\Xalan-C_1_12D.dll" $(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
 xcopy /y /d "$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\XalanMessages_1_12D.dll" $(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\</Command>
+      <Inputs>$(XSDDIR)\bin\xerces-c-3.2d.dll;$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\Xalan-C_1_12D.dll;$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\XalanMessages_1_12D.dll;%(Inputs)</Inputs>
       <Outputs>$(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c-3.2d.dll;$(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_12D.dll;$(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_12D.dll</Outputs>
     </CustomBuildStep>
     <CXX_Tree_Mapping_Rule>
@@ -117,6 +118,7 @@ xcopy /y /d "$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\XalanMessages
 xcopy /y /d "$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\Xalan-C_1_12.dll" $(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
 xcopy /y /d "$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\XalanMessages_1_12.dll" $(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\
 </Command>
+      <Inputs>$(XSDDIR)\bin\xerces-c-3.2.dll;$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\Xalan-C_1_12.dll;$(ARPDIR)\WBFL\Apache\XALANCPKG-112-324-X64-VC143\bin\XalanMessages_1_12.dll;%(Inputs)</Inputs>
       <Outputs>$(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\xerces-c-3.2.dll;$(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\Xalan-C_1_12.dll;$(ARPDIR)\BridgeLink\RegFreeCOM\$(PlatformName)\$(ConfigurationName)\XalanMessages_1_12.dll</Outputs>
     </CustomBuildStep>
     <CXX_Tree_Mapping_Rule>
