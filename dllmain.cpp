@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -26,11 +26,6 @@
 #include "resource.h"
 #include "BEToolboxApp.h"
 #include "dllmain.h"
-
-#pragma Reminder("Move to std::filesystem once we get BEToolbox to C++17 or more")
-// once we update to C++17, also need to remove the "FORCE" option in the linker
-// that setting is on because of the boost::filesystem library
-#include <boost/filesystem.hpp>
 
 #include <Reporter\Reporter.h>
 
