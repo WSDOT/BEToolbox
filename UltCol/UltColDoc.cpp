@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,7 @@ CUltColDoc::CUltColDoc() : CBEToolboxDoc()
    GetReportManager()->AddReportBuilder(pRptBuilder);
 
    std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CUltColTitlePageBuilder>());
-   pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
+   pRptBuilder->SetTitlePageBuilder( pTitlePageBuilder );
 
    std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CUltColChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);

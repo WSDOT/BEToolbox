@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // BEToolbox
-// Copyright © 1999-2026  Washington State Department of Transportation
+// Copyright ï¿½ 1999-2026  Washington State Department of Transportation
 //                        Bridge and Structures Office
 //
 // This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,7 @@ CPGStableDoc::CPGStableDoc() : CBEToolboxDoc()
    std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pLiftingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
    std::shared_ptr<WBFL::Reporting::ReportBuilder> pLiftingReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Lifting")));
-   pLiftingReportBuilder->AddTitlePageBuilder(pLiftingTitlePageBuilder);
+   pLiftingReportBuilder->SetTitlePageBuilder(pLiftingTitlePageBuilder);
    pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableLiftingSummaryChapterBuilder>(this)));
    pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableLiftingDetailsChapterBuilder>(this)));
    GetReportManager()->AddReportBuilder(pLiftingReportBuilder);
@@ -64,7 +64,7 @@ CPGStableDoc::CPGStableDoc() : CBEToolboxDoc()
    std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pHaulingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
    std::shared_ptr<WBFL::Reporting::ReportBuilder> pHaulingReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Hauling")));
-   pHaulingReportBuilder->AddTitlePageBuilder(pHaulingTitlePageBuilder);
+   pHaulingReportBuilder->SetTitlePageBuilder(pHaulingTitlePageBuilder);
    pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableHaulingSummaryChapterBuilder>(this)));
    pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableHaulingDetailsChapterBuilder>(this)));
 
@@ -73,7 +73,7 @@ CPGStableDoc::CPGStableDoc() : CBEToolboxDoc()
    std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pOneEndSeatedTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
    std::shared_ptr<WBFL::Reporting::ReportBuilder> pOneEndSeatedReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("OneEndSeated")));
-   pOneEndSeatedReportBuilder->AddTitlePageBuilder(pOneEndSeatedTitlePageBuilder);
+   pOneEndSeatedReportBuilder->SetTitlePageBuilder(pOneEndSeatedTitlePageBuilder);
    pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedSummaryChapterBuilder>(this)));
    pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedDetailsChapterBuilder>(this)));
 

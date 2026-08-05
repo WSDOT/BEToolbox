@@ -60,7 +60,7 @@ CCurvelDoc::CCurvelDoc() : CBEToolboxDoc()
    GetReportManager()->AddReportBuilder(pRptBuilder);
 
    std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CCurvelTitlePageBuilder>());
-   pRptBuilder->AddTitlePageBuilder( pTitlePageBuilder );
+   pRptBuilder->SetTitlePageBuilder( pTitlePageBuilder );
 
    std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CCurvelChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
