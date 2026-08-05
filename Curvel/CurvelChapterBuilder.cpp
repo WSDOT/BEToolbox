@@ -56,7 +56,7 @@ Uint16 CCurvelChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
+rptChapter* CCurvelChapterBuilder::Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    auto pTheRptSpec = std::dynamic_pointer_cast<const CCurvelReportSpecification>(pRptSpec);
    Init(pTheRptSpec);

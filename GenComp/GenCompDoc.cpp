@@ -49,13 +49,13 @@ CGenCompDoc::CGenCompDoc() : CBEToolboxDoc()
    // consistent units.
    m_DocUnitManager = WBFL::Units::UnitsXML::CreateSystemUnitManager();
 
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("GenComp")));
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pRptBuilder(std::make_shared<WBFL::ReportMgr::ReportBuilder>(_T("GenComp")));
    GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CGenCompTitlePageBuilder>());
+   std::shared_ptr<WBFL::ReportMgr::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CGenCompTitlePageBuilder>());
    pRptBuilder->SetTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CGenCompChapterBuilder>(this) );
+   std::shared_ptr<WBFL::ReportMgr::ChapterBuilder> pChBuilder(std::make_shared<CGenCompChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    EnableUIHints(FALSE); // not using UIHints feature

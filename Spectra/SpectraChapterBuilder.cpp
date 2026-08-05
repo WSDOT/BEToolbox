@@ -48,7 +48,7 @@ Uint16 CSpectraChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CSpectraChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
+rptChapter* CSpectraChapterBuilder::Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    Float64 lat,lng;
    m_pDoc->GetLocation(&lat,&lng);

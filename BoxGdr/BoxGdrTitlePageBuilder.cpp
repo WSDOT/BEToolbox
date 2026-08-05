@@ -31,7 +31,7 @@ CBoxGdrTitlePageBuilder::CBoxGdrTitlePageBuilder(void)
 }
 
 CBoxGdrTitlePageBuilder::CBoxGdrTitlePageBuilder(const CBoxGdrTitlePageBuilder& other) :
-WBFL::Reporting::TitlePageBuilder(other)
+WBFL::ReportMgr::TitlePageBuilder(other)
 {
 }
 
@@ -39,7 +39,7 @@ CBoxGdrTitlePageBuilder::~CBoxGdrTitlePageBuilder(void)
 {
 }
 
-rptChapter* CBoxGdrTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
+rptChapter* CBoxGdrTitlePageBuilder::Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -89,7 +89,7 @@ rptChapter* CBoxGdrTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Rep
    return pTitlePage;
 }
 
-std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CBoxGdrTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::ReportMgr::TitlePageBuilder> CBoxGdrTitlePageBuilder::Clone() const
 {
    return std::make_unique<CBoxGdrTitlePageBuilder>(*this);
 }

@@ -32,7 +32,7 @@ CPGStableTitlePageBuilder::CPGStableTitlePageBuilder()
 }
 
 CPGStableTitlePageBuilder::CPGStableTitlePageBuilder(const CPGStableTitlePageBuilder& other) :
-WBFL::Reporting::TitlePageBuilder(other)
+WBFL::ReportMgr::TitlePageBuilder(other)
 {
 }
 
@@ -40,7 +40,7 @@ CPGStableTitlePageBuilder::~CPGStableTitlePageBuilder(void)
 {
 }
 
-rptChapter* CPGStableTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
+rptChapter* CPGStableTitlePageBuilder::Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -119,7 +119,7 @@ rptChapter* CPGStableTitlePageBuilder::Build(const std::shared_ptr<const WBFL::R
    return pTitlePage;
 }
 
-std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CPGStableTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::ReportMgr::TitlePageBuilder> CPGStableTitlePageBuilder::Clone() const
 {
    return std::make_unique<CPGStableTitlePageBuilder>(*this);
 }

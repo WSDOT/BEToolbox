@@ -25,7 +25,7 @@
 #include "CurvelDoc.h"
 
 CCurvelReportSpecification::CCurvelReportSpecification(const std::_tstring& strReportName) :
-WBFL::Reporting::ReportSpecification(strReportName)
+WBFL::ReportMgr::ReportSpecification(strReportName)
 {
 }
 

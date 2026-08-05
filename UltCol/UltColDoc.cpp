@@ -39,13 +39,13 @@ IMPLEMENT_DYNCREATE(CUltColDoc, CBEToolboxDoc)
 
 CUltColDoc::CUltColDoc() : CBEToolboxDoc()
 {
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("UltCol")));
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pRptBuilder(std::make_shared<WBFL::ReportMgr::ReportBuilder>(_T("UltCol")));
    GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CUltColTitlePageBuilder>());
+   std::shared_ptr<WBFL::ReportMgr::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CUltColTitlePageBuilder>());
    pRptBuilder->SetTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CUltColChapterBuilder>(this) );
+   std::shared_ptr<WBFL::ReportMgr::ChapterBuilder> pChBuilder(std::make_shared<CUltColChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    EnableUIHints(FALSE); // not using UIHints feature

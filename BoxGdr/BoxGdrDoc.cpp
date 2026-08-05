@@ -43,13 +43,13 @@ IMPLEMENT_DYNCREATE(CBoxGdrDoc, CBEToolboxDoc)
 
 CBoxGdrDoc::CBoxGdrDoc() : CBEToolboxDoc()
 {
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("BoxGdr")));
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pRptBuilder(std::make_shared<WBFL::ReportMgr::ReportBuilder>(_T("BoxGdr")));
    GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CBoxGdrTitlePageBuilder>());
+   std::shared_ptr<WBFL::ReportMgr::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CBoxGdrTitlePageBuilder>());
    pRptBuilder->SetTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CBoxGdrChapterBuilder>(this) );
+   std::shared_ptr<WBFL::ReportMgr::ChapterBuilder> pChBuilder(std::make_shared<CBoxGdrChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    EnableUIHints(FALSE); // not using UIHints feature

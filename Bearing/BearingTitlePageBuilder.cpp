@@ -33,7 +33,7 @@ CBearingTitlePageBuilder::CBearingTitlePageBuilder(void)
 }
 
 CBearingTitlePageBuilder::CBearingTitlePageBuilder(const CBearingTitlePageBuilder& other) :
-WBFL::Reporting::TitlePageBuilder(other)
+WBFL::ReportMgr::TitlePageBuilder(other)
 {
 }
 
@@ -41,7 +41,7 @@ CBearingTitlePageBuilder::~CBearingTitlePageBuilder(void)
 {
 }
 
-rptChapter* CBearingTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
+rptChapter* CBearingTitlePageBuilder::Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -93,7 +93,7 @@ rptChapter* CBearingTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Re
    return pTitlePage;
 }
 
-std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CBearingTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::ReportMgr::TitlePageBuilder> CBearingTitlePageBuilder::Clone() const
 {
    return std::make_unique<CBearingTitlePageBuilder>(*this);
 }

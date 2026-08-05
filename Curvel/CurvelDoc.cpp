@@ -52,22 +52,22 @@ CCurvelDoc::CCurvelDoc() : CBEToolboxDoc()
    m_DocUnitManager = WBFL::Units::UnitsXML::CreateSystemUnitManager();
 
    // Setup the reporting mechanism
-   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder( std::make_shared<CCurvelReportSpecificationBuilder>() );
+   std::shared_ptr<WBFL::ReportMgr::ReportSpecificationBuilder> pRptSpecBuilder( std::make_shared<CCurvelReportSpecificationBuilder>() );
    m_pRptSpecBuilder = pRptSpecBuilder;
 
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Curvel")));
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pRptBuilder(std::make_shared<WBFL::ReportMgr::ReportBuilder>(_T("Curvel")));
    pRptBuilder->SetReportSpecificationBuilder(pRptSpecBuilder);
    GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CCurvelTitlePageBuilder>());
+   std::shared_ptr<WBFL::ReportMgr::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CCurvelTitlePageBuilder>());
    pRptBuilder->SetTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CCurvelChapterBuilder>(this) );
+   std::shared_ptr<WBFL::ReportMgr::ChapterBuilder> pChBuilder(std::make_shared<CCurvelChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
-   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   WBFL::ReportMgr::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
    std::shared_ptr<CCurvelReportSpecification> pCurvelRptSpec(std::make_shared<CCurvelReportSpecification>(rptDesc.GetReportName()) );
-   std::shared_ptr<WBFL::Reporting::ReportSpecification> pRptSpec = std::dynamic_pointer_cast<WBFL::Reporting::ReportSpecification,CCurvelReportSpecification>(pCurvelRptSpec);
+   std::shared_ptr<WBFL::ReportMgr::ReportSpecification> pRptSpec = std::dynamic_pointer_cast<WBFL::ReportMgr::ReportSpecification,CCurvelReportSpecification>(pCurvelRptSpec);
    rptDesc.ConfigureReportSpecification(pRptSpec);
 
    m_pDefaultRptSpec = pCurvelRptSpec;
@@ -163,12 +163,12 @@ void CCurvelDoc::OnOldFormat(LPCTSTR lpszPathName)
    AfxMessageBox(_T("Error: Invalid file format.\n\nThis is not a Curvel file or it is in a legacy format that is not supported"),MB_OK | MB_ICONEXCLAMATION);
 }
 
-const std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder>& CCurvelDoc::GetReportSpecificationBuilder() const
+const std::shared_ptr<WBFL::ReportMgr::ReportSpecificationBuilder>& CCurvelDoc::GetReportSpecificationBuilder() const
 {
    return m_pRptSpecBuilder;
 }
 
-const std::shared_ptr<WBFL::Reporting::ReportSpecification>& CCurvelDoc::GetDefaultReportSpecification() const
+const std::shared_ptr<WBFL::ReportMgr::ReportSpecification>& CCurvelDoc::GetDefaultReportSpecification() const
 {
    return m_pDefaultRptSpec;
 }

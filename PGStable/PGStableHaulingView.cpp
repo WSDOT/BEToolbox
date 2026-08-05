@@ -589,12 +589,12 @@ void CPGStableHaulingView::OnInitialUpdate()
 
    CPGStableFormView::OnInitialUpdate();
 
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("Hauling"));
-   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
-   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(_T("Hauling"));
+   WBFL::ReportMgr::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   std::shared_ptr<WBFL::ReportMgr::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
    m_pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
    CWnd* pWnd = GetDlgItem(IDC_BROWSER);
-   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(pWnd->GetSafeHwnd(), WS_BORDER, m_pRptSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   m_pBrowser = pDoc->GetReportManager()->CreateReportBrowser(pWnd->GetSafeHwnd(), WS_BORDER, m_pRptSpec, std::shared_ptr<const WBFL::ReportMgr::ReportSpecificationBuilder>());
 
    UpdateFpeControls();
    OnHaulTruckChanged();
@@ -648,7 +648,7 @@ void CPGStableHaulingView::RefreshReport()
 
    // refresh the report
    m_pRptSpec = m_pBrowser->GetReportSpecification();
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pBuilder = pDoc->GetReportManager()->GetReportBuilder( m_pRptSpec->GetReportName() );
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pBuilder = pDoc->GetReportManager()->GetReportBuilder( m_pRptSpec->GetReportName() );
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pRptSpec );
    m_pBrowser->UpdateReport( pReport, true );
 

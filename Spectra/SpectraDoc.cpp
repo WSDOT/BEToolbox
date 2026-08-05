@@ -40,13 +40,13 @@ IMPLEMENT_DYNCREATE(CSpectraDoc, CBEToolboxDoc)
 
 CSpectraDoc::CSpectraDoc() : CBEToolboxDoc()
 {
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Spectra")));
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pRptBuilder(std::make_shared<WBFL::ReportMgr::ReportBuilder>(_T("Spectra")));
    GetReportManager()->AddReportBuilder(pRptBuilder);
 
-   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CSpectraTitlePageBuilder>());
+   std::shared_ptr<WBFL::ReportMgr::TitlePageBuilder> pTitlePageBuilder(std::make_shared<CSpectraTitlePageBuilder>());
    pRptBuilder->SetTitlePageBuilder( pTitlePageBuilder );
 
-   std::shared_ptr<WBFL::Reporting::ChapterBuilder> pChBuilder(std::make_shared<CSpectraChapterBuilder>(this) );
+   std::shared_ptr<WBFL::ReportMgr::ChapterBuilder> pChBuilder(std::make_shared<CSpectraChapterBuilder>(this) );
    pRptBuilder->AddChapterBuilder(pChBuilder);
 
    EnableUIHints(FALSE); // not using UIHints feature

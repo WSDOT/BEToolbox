@@ -30,7 +30,7 @@ CUltColTitlePageBuilder::CUltColTitlePageBuilder(void)
 }
 
 CUltColTitlePageBuilder::CUltColTitlePageBuilder(const CUltColTitlePageBuilder& other) :
-WBFL::Reporting::TitlePageBuilder(other)
+WBFL::ReportMgr::TitlePageBuilder(other)
 {
 }
 
@@ -38,7 +38,7 @@ CUltColTitlePageBuilder::~CUltColTitlePageBuilder(void)
 {
 }
 
-rptChapter* CUltColTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
+rptChapter* CUltColTitlePageBuilder::Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -85,7 +85,7 @@ rptChapter* CUltColTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Rep
    return pTitlePage;
 }
 
-std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CUltColTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::ReportMgr::TitlePageBuilder> CUltColTitlePageBuilder::Clone() const
 {
    return std::make_unique<CUltColTitlePageBuilder>(*this);
 }

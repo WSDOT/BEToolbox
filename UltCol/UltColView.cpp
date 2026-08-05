@@ -45,14 +45,14 @@ BEGIN_MESSAGE_MAP(CUltColView, CEAFReportView)
    ON_COMMAND(ID_FILE_PRINT_DIRECT,&CUltColView::OnFilePrint)
 END_MESSAGE_MAP()
 
-std::shared_ptr<const WBFL::Reporting::ReportSpecification> CUltColView::CreateReportSpecification() const
+std::shared_ptr<const WBFL::ReportMgr::ReportSpecification> CUltColView::CreateReportSpecification() const
 {
    CUltColDoc* pDoc = (CUltColDoc*)GetDocument();
 
    std::vector<std::_tstring> rptNames = pDoc->GetReportManager()->GetReportNames();
 
    auto pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(rptNames.front());
-   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   WBFL::ReportMgr::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
    auto pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
    auto pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
@@ -60,13 +60,13 @@ std::shared_ptr<const WBFL::Reporting::ReportSpecification> CUltColView::CreateR
    return pRptSpec;
 }
 
-std::shared_ptr<WBFL::Reporting::ReportBrowser> CUltColView::CreateReportBrowser()
+std::shared_ptr<WBFL::ReportMgr::ReportBrowser> CUltColView::CreateReportBrowser()
 {
    if (m_pReportSpec == nullptr)
       return nullptr;
 
    CUltColDoc* pDoc = (CUltColDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), 0, m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(), 0, m_pReportSpec, std::shared_ptr<const WBFL::ReportMgr::ReportSpecificationBuilder>());
 }
 
 void CUltColView::RefreshReport()

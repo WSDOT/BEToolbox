@@ -89,7 +89,7 @@ BOOL CBEToolboxDoc::Init()
 
    CEAFApp* pApp = EAFGetApp();
    auto strBrowserType = pApp->GetProfileString(_T("Settings"), _T("ReportBrowser"), _T("Edge"));
-   WBFL::Reporting::ReportBrowser::Type browserType = (strBrowserType.CompareNoCase(_T("IE")) == 0 ? WBFL::Reporting::ReportBrowser::Type::IE : WBFL::Reporting::ReportBrowser::Type::Edge);
+   WBFL::ReportMgr::ReportBrowser::Type browserType = (strBrowserType.CompareNoCase(_T("IE")) == 0 ? WBFL::ReportMgr::ReportBrowser::Type::IE : WBFL::ReportMgr::ReportBrowser::Type::Edge);
    m_pRptMgr->SetReportBrowserType(browserType);
 
    return TRUE;
@@ -234,12 +234,12 @@ BOOL CBEToolboxDoc::GetToolTipMessageString(UINT nID, CString& rMessage) const
    return __super::GetToolTipMessageString(nID,rMessage);
 }
 
-const std::shared_ptr<WBFL::Reporting::ReportBuilderManager>& CBEToolboxDoc::GetReportManager()
+const std::shared_ptr<WBFL::ReportMgr::ReportBuilderManager>& CBEToolboxDoc::GetReportManager()
 {
    return m_pRptMgr;
 }
 
-const std::shared_ptr<const WBFL::Reporting::ReportBuilderManager>& CBEToolboxDoc::GetReportManager() const
+const std::shared_ptr<const WBFL::ReportMgr::ReportBuilderManager>& CBEToolboxDoc::GetReportManager() const
 {
    return m_pConstRptMgr;
 }

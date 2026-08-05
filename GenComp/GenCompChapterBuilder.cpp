@@ -56,7 +56,7 @@ Uint16 CGenCompChapterBuilder::GetMaxLevel() const
    return 1;
 }
 
-rptChapter* CGenCompChapterBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const
+rptChapter* CGenCompChapterBuilder::Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec,Uint16 level) const
 {
    rptChapter* pChapter = new rptChapter;
    rptParagraph* pPara;

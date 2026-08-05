@@ -39,8 +39,8 @@ public:
    virtual BOOL GetStatusBarMessageString(UINT nID,CString& rMessage) const override;
    virtual BOOL GetToolTipMessageString(UINT nID, CString& rMessage) const override;
 
-   const std::shared_ptr<WBFL::Reporting::ReportBuilderManager>& GetReportManager();
-   const std::shared_ptr<const WBFL::Reporting::ReportBuilderManager>& GetReportManager() const;
+   const std::shared_ptr<WBFL::ReportMgr::ReportBuilderManager>& GetReportManager();
+   const std::shared_ptr<const WBFL::ReportMgr::ReportBuilderManager>& GetReportManager() const;
 
 #ifdef _DEBUG
 	virtual void AssertValid() const override;
@@ -79,6 +79,6 @@ protected:
    HICON m_hMainFrameSmallIcon;
 
 private:
-   std::shared_ptr<WBFL::Reporting::ReportBuilderManager> m_pRptMgr{ WBFL::Reporting::ReportBuilderManager::Create() };
-   std::shared_ptr<const WBFL::Reporting::ReportBuilderManager> m_pConstRptMgr{ m_pRptMgr };
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilderManager> m_pRptMgr{ WBFL::ReportMgr::ReportBuilderManager::Create() };
+   std::shared_ptr<const WBFL::ReportMgr::ReportBuilderManager> m_pConstRptMgr{ m_pRptMgr };
 };

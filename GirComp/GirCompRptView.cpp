@@ -47,28 +47,28 @@ BEGIN_MESSAGE_MAP(CGirCompRptView, CEAFReportView)
    ON_COMMAND(ID_FILE_PRINT_DIRECT,&CGirCompRptView::OnFilePrint)
 END_MESSAGE_MAP()
 
-std::shared_ptr<const WBFL::Reporting::ReportSpecification> CGirCompRptView::CreateReportSpecification() const
+std::shared_ptr<const WBFL::ReportMgr::ReportSpecification> CGirCompRptView::CreateReportSpecification() const
 {
    CGirCompDoc* pDoc = (CGirCompDoc*)GetDocument();
 
    std::vector<std::_tstring> rptNames = pDoc->GetReportManager()->GetReportNames();
 
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(rptNames.front());
-   WBFL::Reporting::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pRptBuilder = pDoc->GetReportManager()->GetReportBuilder(rptNames.front());
+   WBFL::ReportMgr::ReportDescription rptDesc = pRptBuilder->GetReportDescription();
 
-   std::shared_ptr<WBFL::Reporting::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
+   std::shared_ptr<WBFL::ReportMgr::ReportSpecificationBuilder> pRptSpecBuilder = pRptBuilder->GetReportSpecificationBuilder();
    auto pRptSpec = pRptSpecBuilder->CreateDefaultReportSpec(rptDesc);
 
    return pRptSpec;
 }
 
-std::shared_ptr<WBFL::Reporting::ReportBrowser> CGirCompRptView::CreateReportBrowser()
+std::shared_ptr<WBFL::ReportMgr::ReportBrowser> CGirCompRptView::CreateReportBrowser()
 {
    if (m_pReportSpec == nullptr)
       return nullptr;
 
    CGirCompDoc* pDoc = (CGirCompDoc*)GetDocument();
-   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),0,m_pReportSpec, std::shared_ptr<const WBFL::Reporting::ReportSpecificationBuilder>());
+   return pDoc->GetReportManager()->CreateReportBrowser(GetSafeHwnd(),0,m_pReportSpec, std::shared_ptr<const WBFL::ReportMgr::ReportSpecificationBuilder>());
 }
 
 void CGirCompRptView::RefreshReport()
@@ -87,7 +87,7 @@ void CGirCompRptView::RefreshReport()
    pDocTemplate->SetViewCreationData((void*)&data);
 
    // refresh the report
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pBuilder = pDoc->GetReportManager()->GetReportBuilder( m_pReportSpec->GetReportName() );
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pBuilder = pDoc->GetReportManager()->GetReportBuilder( m_pReportSpec->GetReportName() );
    std::shared_ptr<rptReport> pReport = pBuilder->CreateReport( m_pReportSpec );
    m_pReportBrowser->UpdateReport( pReport, true );
 }

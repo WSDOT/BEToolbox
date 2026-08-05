@@ -33,7 +33,7 @@ CGenCompTitlePageBuilder::CGenCompTitlePageBuilder(void)
 }
 
 CGenCompTitlePageBuilder::CGenCompTitlePageBuilder(const CGenCompTitlePageBuilder& other) :
-WBFL::Reporting::TitlePageBuilder(other)
+WBFL::ReportMgr::TitlePageBuilder(other)
 {
 }
 
@@ -41,7 +41,7 @@ CGenCompTitlePageBuilder::~CGenCompTitlePageBuilder(void)
 {
 }
 
-rptChapter* CGenCompTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec) const
+rptChapter* CGenCompTitlePageBuilder::Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec) const
 {
    AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -87,7 +87,7 @@ rptChapter* CGenCompTitlePageBuilder::Build(const std::shared_ptr<const WBFL::Re
    return pTitlePage;
 }
 
-std::unique_ptr<WBFL::Reporting::TitlePageBuilder> CGenCompTitlePageBuilder::Clone() const
+std::unique_ptr<WBFL::ReportMgr::TitlePageBuilder> CGenCompTitlePageBuilder::Clone() const
 {
    return std::make_unique<CGenCompTitlePageBuilder>(*this);
 }

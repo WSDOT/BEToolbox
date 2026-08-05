@@ -25,7 +25,7 @@
 #include "UltColDoc.h"
 
 class CUltColChapterBuilder :
-   public WBFL::Reporting::ChapterBuilder
+   public WBFL::ReportMgr::ChapterBuilder
 {
 public:
    CUltColChapterBuilder(CUltColDoc* pDoc);
@@ -33,7 +33,7 @@ public:
 
    virtual LPCTSTR GetName() const override;
    virtual Uint16 GetMaxLevel() const override;
-   virtual rptChapter* Build(const std::shared_ptr<const WBFL::Reporting::ReportSpecification>& pRptSpec,Uint16 level) const override;
+   virtual rptChapter* Build(const std::shared_ptr<const WBFL::ReportMgr::ReportSpecification>& pRptSpec,Uint16 level) const override;
    virtual bool Select() const override { return true; }
 
 private:

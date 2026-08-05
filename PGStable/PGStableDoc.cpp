@@ -53,29 +53,29 @@ IMPLEMENT_DYNCREATE(CPGStableDoc, CBEToolboxDoc)
 
 CPGStableDoc::CPGStableDoc() : CBEToolboxDoc()
 {
-   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pLiftingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
+   std::shared_ptr<WBFL::ReportMgr::TitlePageBuilder> pLiftingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pLiftingReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Lifting")));
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pLiftingReportBuilder(std::make_shared<WBFL::ReportMgr::ReportBuilder>(_T("Lifting")));
    pLiftingReportBuilder->SetTitlePageBuilder(pLiftingTitlePageBuilder);
-   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableLiftingSummaryChapterBuilder>(this)));
-   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableLiftingDetailsChapterBuilder>(this)));
+   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::ReportMgr::ChapterBuilder>(std::make_shared<CPGStableLiftingSummaryChapterBuilder>(this)));
+   pLiftingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::ReportMgr::ChapterBuilder>(std::make_shared<CPGStableLiftingDetailsChapterBuilder>(this)));
    GetReportManager()->AddReportBuilder(pLiftingReportBuilder);
 
-   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pHaulingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
+   std::shared_ptr<WBFL::ReportMgr::TitlePageBuilder> pHaulingTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pHaulingReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("Hauling")));
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pHaulingReportBuilder(std::make_shared<WBFL::ReportMgr::ReportBuilder>(_T("Hauling")));
    pHaulingReportBuilder->SetTitlePageBuilder(pHaulingTitlePageBuilder);
-   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableHaulingSummaryChapterBuilder>(this)));
-   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableHaulingDetailsChapterBuilder>(this)));
+   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::ReportMgr::ChapterBuilder>(std::make_shared<CPGStableHaulingSummaryChapterBuilder>(this)));
+   pHaulingReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::ReportMgr::ChapterBuilder>(std::make_shared<CPGStableHaulingDetailsChapterBuilder>(this)));
 
    GetReportManager()->AddReportBuilder(pHaulingReportBuilder);
 
-   std::shared_ptr<WBFL::Reporting::TitlePageBuilder> pOneEndSeatedTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
+   std::shared_ptr<WBFL::ReportMgr::TitlePageBuilder> pOneEndSeatedTitlePageBuilder(std::make_shared<CPGStableTitlePageBuilder>());
 
-   std::shared_ptr<WBFL::Reporting::ReportBuilder> pOneEndSeatedReportBuilder(std::make_shared<WBFL::Reporting::ReportBuilder>(_T("OneEndSeated")));
+   std::shared_ptr<WBFL::ReportMgr::ReportBuilder> pOneEndSeatedReportBuilder(std::make_shared<WBFL::ReportMgr::ReportBuilder>(_T("OneEndSeated")));
    pOneEndSeatedReportBuilder->SetTitlePageBuilder(pOneEndSeatedTitlePageBuilder);
-   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedSummaryChapterBuilder>(this)));
-   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::Reporting::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedDetailsChapterBuilder>(this)));
+   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::ReportMgr::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedSummaryChapterBuilder>(this)));
+   pOneEndSeatedReportBuilder->AddChapterBuilder(std::dynamic_pointer_cast<WBFL::ReportMgr::ChapterBuilder>(std::make_shared<CPGStableOneEndSeatedDetailsChapterBuilder>(this)));
 
    GetReportManager()->AddReportBuilder(pOneEndSeatedReportBuilder);
 
@@ -123,7 +123,7 @@ BOOL CPGStableDoc::Init()
       return FALSE;
 
 #pragma Reminder("Edge browser does not work with tabbed windows - Probably a bug in MSFTs code. Hard coding to IE")
-   GetReportManager()->SetReportBrowserType(WBFL::Reporting::ReportBrowser::Type::IE);
+   GetReportManager()->SetReportBrowserType(WBFL::ReportMgr::ReportBrowser::Type::IE);
 
    LoadPGSLibrary();
 

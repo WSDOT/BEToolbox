@@ -24,7 +24,7 @@
 #include <ReportManager\ReportSpecification.h>
 
 class CCurvelReportSpecification :
-   public WBFL::Reporting::ReportSpecification
+   public WBFL::ReportMgr::ReportSpecification
 {
 public:
 	CCurvelReportSpecification(const std::_tstring& strReportName);

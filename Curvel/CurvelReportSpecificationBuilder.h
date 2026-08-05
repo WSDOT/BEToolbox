@@ -24,11 +24,11 @@
 #include <ReportManager\ReportSpecificationBuilder.h>
 
 class CCurvelReportSpecificationBuilder :
-   public WBFL::Reporting::ReportSpecificationBuilder
+   public WBFL::ReportMgr::ReportSpecificationBuilder
 {
 public:
    CCurvelReportSpecificationBuilder();
    ~CCurvelReportSpecificationBuilder();
 
-   virtual std::shared_ptr<WBFL::Reporting::ReportSpecification> CreateReportSpec(const WBFL::Reporting::ReportDescription& rptDesc,std::shared_ptr<WBFL::Reporting::ReportSpecification> pRptSpec) const override;
+   virtual std::shared_ptr<WBFL::ReportMgr::ReportSpecification> CreateReportSpec(const WBFL::ReportMgr::ReportDescription& rptDesc,std::shared_ptr<WBFL::ReportMgr::ReportSpecification> pRptSpec) const override;
 };
