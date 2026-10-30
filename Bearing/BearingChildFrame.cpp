@@ -183,6 +183,7 @@ void CBearingChildFrame::MethodAControls(int s)
 
 void CBearingChildFrame::MethodBControls(int s)
 {
+    m_DlgBar.GetDlgItem(IDC_ABSOLUTE_STRAIN_SUM)->ShowWindow(s);
 
     CWnd* w_rot_st_text = m_DlgBar.GetDlgItem(IDC_STATIC_ROT_TEXT);
     w_rot_st_text->ShowWindow(s);

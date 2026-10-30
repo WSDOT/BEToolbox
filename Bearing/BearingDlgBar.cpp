@@ -85,6 +85,7 @@ void CBearingDialogBar::DoDataExchange(CDataExchange* pDX)
    int i = (pApp->GetUnitsMode() == WBFL::EAF::UnitMode::US ? 0 : 1);
    DDX_Radio(pDX, IDC_US, i);
    DDX_Radio(pDX, IDC_METHOD_A, m_method);
+   DDX_Check_Bool(pDX, IDC_ABSOLUTE_STRAIN_SUM, m_useAbsoluteStrainSum);
    CComboBox* pcbSpecification = (CComboBox*)GetDlgItem(IDC_SPECIFICATION2);
    if (pDX->m_bSaveAndValidate)
    {
@@ -161,6 +162,7 @@ void CBearingDialogBar::SetBearingParameters(CBearingDialogBar& dlgBar,
 {
 
 
+    dlgBar.m_useAbsoluteStrainSum = brg_criteria.bUseAbsoluteStrainSum;
     dlgBar.m_method = (brg_criteria.AnalysisMethod==WBFL::EngTools::BearingAnalysisMethod::MethodA? 0:1);
 
 
@@ -214,6 +216,7 @@ void CBearingDialogBar::SetBearing(
     brg_loads.SetDeadLoad(m_DL);
     brg_loads.SetLiveLoad(m_LL);
     brg_loads.SetShearDeformation(m_shear_def);
+    brg_criteria.bUseAbsoluteStrainSum = m_useAbsoluteStrainSum;
     brg_loads.SetRotationX(m_rot_x);
     brg_loads.SetRotationY(m_rot_y);
     brg_loads.SetStaticRotation(m_rot_st);
