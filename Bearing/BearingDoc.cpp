@@ -168,7 +168,7 @@ void CBearingDoc::OnCloseDocument()
 
 HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
 {
-   HRESULT hr = pStrSave->BeginUnit(_T("Bearing"),1.2);
+   HRESULT hr = pStrSave->BeginUnit(_T("Bearing"),1.3);
    if ( FAILED(hr) )
       return hr;
 
@@ -205,6 +205,10 @@ HRESULT CBearingDoc::WriteTheDocument(IStructuredSave* pStrSave)
    // added in version 1.2
    WBFL::LRFD::BDSManager::Edition specification = m_criteria.GetSpecification();
 
+   // added in version 1.3
+   hr = pStrSave->put_Property(_T("Use_Absolute_Strain_Sum"), CComVariant(m_criteria.bUseAbsoluteStrainSum));
+   if (FAILED(hr))
+       return hr;
 
    hr = pStrSave->put_Property(_T("Specification"), CComVariant((int)specification));
    if (FAILED(hr))
@@ -334,6 +338,17 @@ HRESULT CBearingDoc::LoadTheDocument(IStructuredLoad* pStrLoad)
    CComVariant var;
 
    CEAFApp* pApp = EAFGetApp();
+
+   // Preserve signed summation for documents saved before root version 1.1.
+   m_criteria.bUseAbsoluteStrainSum = false;
+   if (1.3 <= version)
+   {
+       var.vt = VT_BOOL;
+       hr = pStrLoad->get_Property(_T("Use_Absolute_Strain_Sum"), &var);
+       if (FAILED(hr))
+           return hr;
+       m_criteria.bUseAbsoluteStrainSum = var.boolVal != VARIANT_FALSE;
+   }
 
    if (1.1 < version)
    {

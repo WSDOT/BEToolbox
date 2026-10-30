@@ -53,6 +53,7 @@ public:
 private:
 
 	int m_method;
+	bool m_useAbsoluteStrainSum{ true };
 	Float64 m_length;
 	Float64 m_width;
 	Float64 m_cover;

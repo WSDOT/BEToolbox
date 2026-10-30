@@ -484,13 +484,15 @@
 #define ID_HELP_ABOUTBETOOLBOX          36865
 #define ID_OPTIONS_AUTOSAVE             36871
 
+#define IDC_ABSOLUTE_STRAIN_SUM         1782
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        228
 #define _APS_NEXT_COMMAND_VALUE         36873
-#define _APS_NEXT_CONTROL_VALUE         498
+#define _APS_NEXT_CONTROL_VALUE         1783
 #define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif
