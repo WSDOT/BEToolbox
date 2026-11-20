@@ -16,9 +16,11 @@ echo ^</script^> >> %SEARCH_HTML%
 
 rem document map
 %ARPDIR%\BridgeLink\RegFreeCOM\x64\Release\MakeDocMap BEToolbox
-rmdir /S /Q %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
-mkdir %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
-xcopy /s /y /d %ARPDIR%\BEToolbox\Documentation\doc\html\* %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
-copy %ARPDIR%\BEToolbox\Documentation\BEToolbox.dm %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\
+rem ** Make the BridgeLink copy the same as the build, copying only changed files so unchanged files keep
+rem    their timestamps (PublishDocumentation.bat then sends only what changed to the server)
+powershell -NoProfile -ExecutionPolicy Bypass -File %ARPDIR%\BridgeLink\SyncFolder.ps1 -Source %ARPDIR%\BEToolbox\Documentation\doc\html -Target %ARPDIR%\BridgeLink\Docs\BEToolbox\%1 -Keep *.dm
+if errorlevel 1 exit /B 1
+powershell -NoProfile -ExecutionPolicy Bypass -File %ARPDIR%\BridgeLink\SyncFolder.ps1 -Source %ARPDIR%\BEToolbox\Documentation\BEToolbox.dm -Target %ARPDIR%\BridgeLink\Docs\BEToolbox\%1\BEToolbox.dm
+if errorlevel 1 exit /B 1
 
 
